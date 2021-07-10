@@ -13,6 +13,7 @@ int
 main(int argc, char** argv) {
   if (argc != 2) {
     std::cerr << OUTLINER_ERRPREFIX "Expected an argument -- exit\n";
+    return(1);
   }
   const char* input = argv[1];
 
