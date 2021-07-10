@@ -8,14 +8,35 @@
 static const aiScene* processImport(Assimp::Importer& importer,
                                     const char* file);
 static bool processScene(const aiScene* scene);
+static void processHelp(void);
+
+static bool debug = 0;
 
 int
 main(int argc, char** argv) {
-  if (argc != 2) {
-    std::cerr << OUTLINER_ERRPREFIX "Expected an argument -- exit\n";
+
+  while (argc > 1 && argv[1][0] == '-') {
+    if (strcmp(argv[1],"--debug") == 0) {
+        debug = 1;
+    } else if (strcmp(argv[1],"--help") == 0) {
+      processHelp();
+      return(0);
+    } else {
+      std::cerr << OUTLINER_ERRPREFIX "Unrecognised option: ";
+      std::cerr << argv[1];
+      std::cerr << " -- exit\n";
+      return(1);
+    }
+    argc--;
+    argv++;
+  }
+  
+  if (argc != 3) {
+    std::cerr << OUTLINER_ERRPREFIX "Expected two arguments, an input and output file name -- exit\n";
     return(1);
   }
   const char* input = argv[1];
+  const char* output = argv[2];
 
   // Import the model
   Assimp::Importer importer;
@@ -64,3 +85,17 @@ processScene(const aiScene* scene) {
   return(1);
 }
 
+static void
+processHelp(void) {
+  std::cout << "\n";
+  std::cout << OUTLINER_PROG " [options] inputfile outputfile\n";
+  std::cout << "\n";
+  std::cout << "Processes an input 3D model in STL format to a SVG picture that";
+  std::cout << "represents the cave horizontal plane. This can be used to produce";
+  std::cout << "maps.\n";
+  std::cout << "\n";
+  std::cout << "Options:\n";
+  std::cout << "\n";
+  std::cout << "  --debug     Turn on debugging messages\n";
+  std::cout << "\n";
+}
