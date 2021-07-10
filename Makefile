@@ -4,7 +4,7 @@ HDRS=src/outlinertypes.hh
 SRCS=src/main.cc
 CPPFLAGS=-g
 LDFLAGS=-g
-LDLIBUS=-lassimp
+LDLIBS=-lassimp
 
 all:	cave-outliner
 
