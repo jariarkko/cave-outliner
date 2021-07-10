@@ -22,7 +22,7 @@ main(int argc, char** argv) {
   if (scene == 0) return(1);
 
   // Process the model
-  if (!processModel(scene)) {
+  if (!processScene(scene)) {
     return(1);
   }
   
@@ -34,7 +34,7 @@ static const aiScene*
 processImport(Assimp::Importer& importer,
               const std::string& pFile) {
   
-  cerr << OUTLINER_DEBUGPREFIX "processImport\n";
+  std::cerr << OUTLINER_DEBUGPREFIX "processImport\n";
   
   // Have the importer read the given file with some example postprocessing
   // Usually - if speed is not the most important aspect for you - you'll
@@ -59,7 +59,7 @@ processImport(Assimp::Importer& importer,
 
 static bool
 processScene(const aiScene* scene) {
-  cerr << OUTLINER_DEBUGPREFIX "processScene\n";
+  std::cerr << OUTLINER_DEBUGPREFIX "processScene\n";
   return(1);
 }
 
