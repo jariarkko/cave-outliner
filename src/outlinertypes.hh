@@ -1,0 +1,9 @@
+
+#ifndef OUTLINERTYPES_HH
+#define OUTLINERTYPES_HH
+
+#define OUTLINER_PROG "cave-outliner"
+#define OUTLINER_ERRPREFIX OUTLINER_PROG ": Error: "
+#define OUTLINER_DEBUGPREFIX OUTLINER_PROG ": Debug: "
+
+#endif // OUTLINERTYPES_HH
