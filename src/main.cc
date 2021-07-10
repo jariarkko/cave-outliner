@@ -32,19 +32,19 @@ main(int argc, char** argv) {
 
 static const aiScene*
 processImport(Assimp::Importer& importer,
-              const std::string& pFile) {
+              const char* fileName) {
   
   std::cerr << OUTLINER_DEBUGPREFIX "processImport\n";
   
   // Have the importer read the given file with some example postprocessing
   // Usually - if speed is not the most important aspect for you - you'll
   // probably to request more postprocessing than we do in this example.
-  const aiScene* scene = importer.ReadFile( pFile,
-    aiProcess_CalcTangentSpace       |
-    aiProcess_Triangulate            |
-    aiProcess_JoinIdenticalVertices  |
-    aiProcess_SortByPType);
-
+  const aiScene* scene = importer.ReadFile(fileName,
+                                           aiProcess_CalcTangentSpace       |
+                                           aiProcess_Triangulate            |
+                                           aiProcess_JoinIdenticalVertices  |
+                                           aiProcess_SortByPType);
+  
   // If the import failed, report it
   if (scene == 0) {
     std::cerr << OUTLINER_ERRPREFIX "Import failed: ";
