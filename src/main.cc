@@ -5,7 +5,8 @@
 #include <assimp/postprocess.h> 
 #include "outlinertypes.hh"
 
-static const aiScene* processImport(const char* file);
+static const aiScene* processImport(Assimp::Importer& importer,
+                                    const char* file);
 static bool processScene(const aiScene* scene);
 
 int
