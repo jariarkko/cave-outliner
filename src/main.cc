@@ -90,8 +90,8 @@ processHelp(void) {
   std::cout << "\n";
   std::cout << OUTLINER_PROG " [options] inputfile outputfile\n";
   std::cout << "\n";
-  std::cout << "Processes an input 3D model in STL format to a SVG picture that";
-  std::cout << "represents the cave horizontal plane. This can be used to produce";
+  std::cout << "Processes an input 3D model in STL format to a SVG picture that\n";
+  std::cout << "represents the cave horizontal plane. This can be used to produce\n";
   std::cout << "maps.\n";
   std::cout << "\n";
   std::cout << "Options:\n";
