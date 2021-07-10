@@ -65,7 +65,8 @@ processImport(Assimp::Importer& importer,
                                            aiProcess_CalcTangentSpace       |
                                            aiProcess_Triangulate            |
                                            aiProcess_JoinIdenticalVertices  |
-                                           aiProcess_SortByPType);
+                                           aiProcess_SortByPType            |
+                                           aiProcess_GenBoundingBoxes);
   
   // If the import failed, report it
   if (scene == 0) {
