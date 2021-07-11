@@ -17,6 +17,8 @@ static bool processScene(const aiScene* scene);
 static void describeScene(const aiScene* scene);
 static void describeNode(const aiScene* scene,
                          const aiNode* node);
+static void describeMesh(const aiScene* scene,
+                         const aiMesh* mesh);
 static void describeTransformation(const aiMatrix4x4& x,
                                    char* buf,
                                    unsigned bufsiz);
@@ -158,6 +160,9 @@ describeScene(const aiScene* scene) {
   deepdebugf("  mNumLights = %u", scene->mNumLights);
   deepdebugf("  mNumCameras = %u", scene->mNumCameras);
   describeNode(scene,scene->mRootNode);
+  for (unsigned int m = 0; m < scene->mNumMeshes) {
+    describeMesh(scene,m,scene->mMeshes[m]);
+  }
 }
 
 static void
@@ -216,6 +221,18 @@ describeNode(const aiScene* scene,
       describeNode(scene,node->mChildren[i]);
     }
   }
+}
+
+static void
+describeMesh(const aiScene* scene,
+             unsigned int no,
+             const aiMesh* mesh) {
+  assert(scene != 0);
+  assert(mesh != 0);
+  deepdebugf("  mesh %u", no);
+  deepdebugf("    mPrimitiveTypes = %u", mesh->mPrimitiveTypes);
+  deepdebugf("    mNumVertices = %u", mesh->mNumVertices);
+  deepdebugf("    mNumFaces = %u", mesh->mNumFaces);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
