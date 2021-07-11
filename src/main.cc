@@ -240,10 +240,10 @@ describeMesh(const aiScene* scene,
   deepdebugf("    mNumFaces = %u", mesh->mNumFaces);
   if (deepdeepdebug) {
     for (unsigned int v = 0; v < mesh->mNumVertices; v++) {
-      describeVertex(scene,mesh->mVertices[v]);
+      describeVertex(scene,6mesh->mVertices[v]);
     }
     for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
-      describeFace(scene,mesh->mFaces[f]);
+      describeFace(scene,&mesh->mFaces[f]);
     }
   }
 }
