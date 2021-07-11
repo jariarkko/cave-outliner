@@ -206,6 +206,32 @@ static bool
 sceneHasMaterial(const aiScene* scene,
                  float x,
                  float y) {
+  return(nodeHasMaterial(scene,scene->mRootNode,x,y));
+}
+
+static bool
+nodeHasMaterial(const aiScene* scene,
+                const aiNode* node,
+                float x,
+                float y) {
+  if (!node->mTransformation.IsIdentity()) {
+    errf("Cannot handle transformations yet");
+    exit(1);
+  }
+  for (unsigned int j = 0; j < node->mNumMeshes; j++) {
+    meshHasMaterial(scene,scene->mMeshes[node->mMeshes[j]],x,y);
+  }
+  for (unsigned int i = 0; i < node->mNumChildren; i++) {
+    nodeHasMaterial(scene,node->mChildren[i],x,y);
+  }
+  return(0);
+}
+
+static bool
+meshHasMaterial(const aiScene* scene,
+                const aiMesh* node,
+                float x,
+                float y) {
   return(0);
 }
 
