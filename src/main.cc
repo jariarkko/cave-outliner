@@ -427,7 +427,7 @@ vectorTo(const aiVector2D* from,
 static float
 determinant2x2(const aiVector2D* u,
                const aiVector2D* v) {
-  return(u.x * v.y - u.y * v.x);
+  return(u->x * v->y - u->y * v->x);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
