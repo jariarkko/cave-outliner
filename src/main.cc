@@ -17,6 +17,10 @@ static bool processScene(const aiScene* scene);
 static void describeScene(const aiScene* scene);
 static void describeNode(const aiScene* scene,
                          const aiNode* node);
+static void describeFace(const aiScene* scene,
+                         const aiFace* face);
+static void describeVertex(const aiScene* scene,
+                           const aiVector3D* vertex);
 static void describeMesh(const aiScene* scene,
                          unsigned int no,
                          const aiMesh* mesh);
@@ -231,9 +235,27 @@ describeMesh(const aiScene* scene,
   assert(scene != 0);
   assert(mesh != 0);
   deepdebugf("  mesh %u", no);
-  deepdebugf("    mPrimitiveTypes = %u", mesh->mPrimitiveTypes);
+  deepdebugf("    mPrimitiveTypes = 0x%x", mesh->mPrimitiveTypes);
   deepdebugf("    mNumVertices = %u", mesh->mNumVertices);
   deepdebugf("    mNumFaces = %u", mesh->mNumFaces);
+  if (deepdeepdebug) {
+    for (unsigned int v = 0; v < mesh->mNumVertices; v++) {
+      describeVertex(scene,mesh->mVertices[v]);
+    }
+    for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
+      describeFace(scene,mesh->mFaces[f]);
+    }
+  }
+}
+
+static void
+describeFace(const aiScene* scene,
+             const aiFace* face) {
+}
+
+static void
+describeVertex(const aiScene* scene,
+               const aiVector3D* vertex) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
