@@ -153,7 +153,7 @@ describeNode(const aiScene* scene,
              const aiNode* node) {
   assert(scene != 0);
   assert(node != 0);
-  deepdebugf("  node %s", node->mName);
+  deepdebugf("  node %s", node->mName.C_Str());
   deepdebugf("    mNumChildren = %u", node->mNumChildren);
   deepdebugf("    mNumMeshes = %u", node->mNumMeshes);
 }
