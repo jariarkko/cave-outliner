@@ -4,7 +4,7 @@
 SvgCreator::SvgCreator(const char* fileName,
                        unsigned int xSize,
                        unsigned int ySize) {
-  this.file.open(fileName);
+  this.file->open(fileName);
   preamble();
   this.xSize = xSize;
   this.ySize = ySize;
@@ -12,7 +12,7 @@ SvgCreator::SvgCreator(const char* fileName,
 
 SvgCreator::~SvgCreator() {
   postamble();
-  file.close();
+  file->close();
 }
 
 void SvgCreator::line(unsigned int fromX,
@@ -27,7 +27,7 @@ void SvgCreator::pixel(unsigned int x,
 }
 
 bool SvgCreator::ok() {
-  return(file.good());
+  return(file->good());
 }
   
 void SvgCreator::preamble() {
