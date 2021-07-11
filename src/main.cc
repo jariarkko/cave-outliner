@@ -410,8 +410,8 @@ pointInsideTriangle2D(const aiVector2D* triangleA,
   aiVector2D v0 = *triangleA;
   aiVector2D v1; vectorTo(triangleA,triangleB,&v1);
   aiVector2D v2; vectorTo(triangleA,triangleC,&v2);
-  float a = (determinant2x2(v,v2) - determinant2x2(v0,v2)) / determinant2x2(v1,v2);
-  float b = (determinant2x2(v,v1) - determinant2x2(v0,v1)) / determinant2x2(v1,v2);
+  float a = (determinant2x2(&v,&v2) - determinant2x2(&v0,&v2)) / determinant2x2(&v1,&v2);
+  float b = (determinant2x2(&v,&v1) - determinant2x2(&v0,&v1)) / determinant2x2(&v1,&v2);
   return(a => 0 && b => 0 && a+b <= 1);
 }
 
