@@ -203,6 +203,9 @@ describeNode(const aiScene* scene,
   deepdebugf("  node %s", node->mName.C_Str());
   deepdebugf("    mNumChildren = %u", node->mNumChildren);
   deepdebugf("    mNumMeshes = %u", node->mNumMeshes);
+  for (unsigned int j = 0; j < node->mNumMeshes; j++) {
+    deepdebugf("      mesh %u", node->mMeshes[j]);
+  }
   if (deepdebug) {
     char buf[200];
     describeTransformation(node->mTransformation,buf,sizeof(buf));
