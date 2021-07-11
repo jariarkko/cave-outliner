@@ -18,6 +18,7 @@ static void describeScene(const aiScene* scene);
 static void describeNode(const aiScene* scene,
                          const aiNode* node);
 static void describeMesh(const aiScene* scene,
+                         unsigned int no,
                          const aiMesh* mesh);
 static void describeTransformation(const aiMatrix4x4& x,
                                    char* buf,
@@ -160,7 +161,7 @@ describeScene(const aiScene* scene) {
   deepdebugf("  mNumLights = %u", scene->mNumLights);
   deepdebugf("  mNumCameras = %u", scene->mNumCameras);
   describeNode(scene,scene->mRootNode);
-  for (unsigned int m = 0; m < scene->mNumMeshes) {
+  for (unsigned int m = 0; m < scene->mNumMeshes; m++) {
     describeMesh(scene,m,scene->mMeshes[m]);
   }
 }

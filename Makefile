@@ -2,6 +2,7 @@
 OBJS=src/main.o
 HDRS=src/outlinertypes.hh
 SRCS=src/main.cc
+SUPP=Makefile
 CPPFLAGS=-g
 LDFLAGS=-g
 LDLIBS=-lassimp
@@ -16,3 +17,5 @@ $(OBJS): $(HDRS) $(SRCS)
 cave-outliner:	$(OBJS)
 	g++ $(LDFLAGS) -o cave-outliner $(OBJS) $(LDLIBS)
 
+wc:
+	wc $(HDRS) $(SRCS) $(SUPP)
