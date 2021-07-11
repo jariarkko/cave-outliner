@@ -180,7 +180,7 @@ describeTransformation(const aiMatrix4x4& x,
     aiVector3t<TReal> rotationAxis;
     TReal rotationAngle;
     aiVector3t<TReal> position;
-    node->mTransformation.Decompose(scaling,rotationAxis,rotationAngle,position);
+    x.Decompose(scaling,rotationAxis,rotationAngle,position);
     char scalingBuf[100];
     char rotationAxisBuf[100];
     char positionBuf[100];
