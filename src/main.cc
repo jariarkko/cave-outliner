@@ -20,6 +20,9 @@ static void describeNode(const aiScene* scene,
 static void describeTransformation(const aiMatrix4x4& x,
                                    char* buf,
                                    unsigned bufsiz);
+static void describeVector3D(const aiVector3D& x,
+                             char* buf,
+                             unsigned bufsiz);
 static void processHelp(void);
 static void errf(const char* format, ...);
 static void debugf(const char* format, ...);
@@ -158,9 +161,9 @@ describeScene(const aiScene* scene) {
 }
 
 static void
-describeVector3(const aiVector3D& x,
-                char* buf,
-                unsigned bufsiz) {
+describeVector3D(const aiVector3D& x,
+                 char* buf,
+                 unsigned bufsiz) {
   memset(buf,0,bufsiz);
   snprintf(buf,bufsiz-1,"<%f,%f,%f>",
            x.x,
@@ -173,7 +176,7 @@ describeTransformation(const aiMatrix4x4& x,
                        char* buf,
                        unsigned bufsiz) {
   memset(buf,0,bufsiz);
-  if (node->mTransformation.isIdentity()) {
+  if (x.isIdentity()) {
     strncpy(buf,"identity",bufsiz-1);
   } else {
     aiVector3D scaling;
@@ -184,9 +187,9 @@ describeTransformation(const aiMatrix4x4& x,
     char scalingBuf[100];
     char rotationAxisBuf[100];
     char positionBuf[100];
-    describeVector(scaling,scalingBuf,sizeof(scalingBuf));
-    describeVector(rotationAxis,rotationAxisBuf,sizeof(rotationAxisBuf));
-    describeVector(position,positionBuf,sizeof(positionBuf));
+    describeVector3D(scaling,scalingBuf,sizeof(scalingBuf));
+    describeVector3D(rotationAxis,rotationAxisBuf,sizeof(rotationAxisBuf));
+    describeVector3D(position,positionBuf,sizeof(positionBuf));
     snprintf(buf,bufsiz-1,"scale %s, rotation %s, angle %f, position %s",
              scalingBuf,rotationAxisBuf,rotationAngle,positionBuf);
   }
