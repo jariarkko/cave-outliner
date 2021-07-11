@@ -52,9 +52,16 @@ static bool pointInsideTriangle2D(const aiVector2D* a,
                                   const aiVector2D* b,
                                   const aiVector2D* c,
                                   const aiVector2D* point);
+static void vectorTo(const aiVector2D* from,
+                     const aiVector2D* to,
+                     aiVector2D* result);
+static float determinant2x2(const aiVector2D* u,
+                            const aiVector2D* v);
 static void processHelp(void);
 static void runTests(void);
 static void mathTests(void);
+static void vectorTests(void);
+static void triangleTests(void);
 static void errf(const char* format, ...);
 static void debugf(const char* format, ...);
 static void deepdebugf(const char* format, ...);
@@ -399,13 +406,22 @@ pointInsideTriangle2D(const aiVector2D* a,
                       const aiVector2D* c,
                       const aiVector2D* point) {
   // Algorithm from https://mathworld.wolfram.com/TriangleInterior.html
-  aiVector2D v = point;
-  aiVector2D v0 = a;
+  aiVector2D v = *point;
+  aiVector2D v0 = *a;
   aiVector2D v1; vectorTo(a,b,&v1);
   aiVector2D v2; vectorTo(a,c,&v2);
   float a = (det(v,v2) - det(v0,v2)) / det(v1,v2);
   float b = (det(v,v1) - det(v0,v1)) / det(v1,v2);
   return(a => 0 && b => 0 && a+b <= 1);
+}
+
+static void
+vectorTo(const aiVector2D* from,
+         const aiVector2D* to,
+         aiVector2D* result) {
+  *result = *to;
+  result->x -= from->x;
+  result->y -= from->y;
 }
 
 static float
@@ -425,8 +441,26 @@ runTests(void) {
   debugf("tests OK");
 }
 
-static void mathTests(void) {
+static void
+mathTests(void) {
   debugf("running math tests");
+  vectorTests();
+  triangleTests();
+}
+
+static void
+vectorTests(void) {
+  aiVector2D a(2,2);
+  aiVector2D b(3,3);
+  aiVector2D result;
+  vectorTo(&a,&b,&result);
+  deepdebugf("vector test: result: (%f,%f)", result.x, result.y);
+  assert(result.x == 1);
+  assert(result.y == 1);
+}
+
+static void
+triangleTests(void) {
   aiVector2D a(0,0);
   aiVector2D b(0,2);
   aiVector2D c(2,0);
