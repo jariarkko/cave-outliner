@@ -32,7 +32,7 @@ static void describeTransformation(const aiMatrix4x4& x,
 static void describeVector3D(const aiVector3D& x,
                              char* buf,
                              unsigned bufsiz);
-static void sceneHasMaterial(const aiScene* scene,
+static bool sceneHasMaterial(const aiScene* scene,
                              float x,
                              float y);
 static void processHelp(void);
@@ -202,7 +202,7 @@ processScene(const aiScene* scene) {
   return(1);
 }
 
-static void
+static bool
 scenehasMaterial(const aiScene* scene,
                  float x,
                  float y) {
