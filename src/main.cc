@@ -236,6 +236,7 @@ static bool
 sceneHasMaterial(const aiScene* scene,
                  float x,
                  float y) {
+  assert(scene != 0);
   return(nodeHasMaterial(scene,scene->mRootNode,x,y));
 }
 
@@ -244,6 +245,8 @@ nodeHasMaterial(const aiScene* scene,
                 const aiNode* node,
                 float x,
                 float y) {
+  assert(scene != 0);
+  assert(node != 0);
   if (!node->mTransformation.IsIdentity()) {
     errf("Cannot handle transformations yet");
     exit(1);
@@ -262,6 +265,8 @@ meshHasMaterial(const aiScene* scene,
                 const aiMesh* mesh,
                 float x,
                 float y) {
+  assert(scene != 0);
+  assert(mesh != 0);
   for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
     faceHasMaterial(scene,mesh,&mesh->mFaces[f],x,y);
   }
@@ -274,6 +279,20 @@ faceHasMaterial(const aiScene* scene,
                 const aiFace* face,
                 float x,
                 float y) {
+  assert(scene != 0);
+  assert(mesh != 0);
+  assert(face != 0);
+  if (face->mNumIndices != 3) {
+    errf("Cannot handle a face with %u indices", face->mNumIndices);
+  }
+  aiVector2D a(face->mIndices[0].x,face->mIndices[0].y);
+  aiVector2D b(face->mIndices[1].x,face->mIndices[1].y);
+  aiVector2D c(face->mIndices[2].x,face->mIndices[2].y);
+  aiVector2D point(x,y);
+  if (pointInsideTriangle2D(&a,&b,&c,&point)) {
+    debugf("found out that (%.2f,%.2f) is hitting a face");
+    return(1);
+  }
   return(0);
 }
 
@@ -407,7 +426,7 @@ pointInsideTriangle2D(const aiVector2D* triangleA,
                       const aiVector2D* triangleC,
                       const aiVector2D* point) {
   // Algorithm from https://mathworld.wolfram.com/TriangleInterior.html
-  aiVector2D v = *point;
+  aiVector2D v = *point; 
   aiVector2D v0 = *triangleA;
   aiVector2D v1; vectorTo(triangleA,triangleB,&v1);
   aiVector2D v2; vectorTo(triangleA,triangleC,&v2);
