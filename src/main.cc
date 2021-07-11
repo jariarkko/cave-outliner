@@ -45,6 +45,9 @@ static void deepdeepdebugf(const char* format, ...);
 static bool debug = 0;
 static bool deepdebug = 0;
 static bool deepdeepdebug = 0;
+static float step = 1.0;
+static aiVector3D boundingboxstart = {-2,-2,-2};
+static aiVector3D boundingboxend = {2,2,2};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program and option handling ///////////////////////////////////////////////////////////
@@ -106,7 +109,11 @@ processHelp(void) {
   std::cout << "\n";
   std::cout << "Options:\n";
   std::cout << "\n";
-  std::cout << "  --debug     Turn on debugging messages\n";
+  std::cout << "  --bounding x x y y z z   Set the bounding box area. Default is -2 2 -2 2 -2 2.\n";
+  std::cout << "  --step i                 Set the granularity increment. Default is 1.\n";
+  std::cout << "  --debug                  Turn on debugging messages (level 0, least)\n";
+  std::cout << "  --deepdebug              Turn on debugging messages (level 1)\n";
+  std::cout << "  --deepdeepdebug          Turn on debugging messages (level 2, most)\n";
   std::cout << "\n";
 }
 
