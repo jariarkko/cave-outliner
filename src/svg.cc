@@ -27,7 +27,7 @@ void SvgCreator::pixel(unsigned int x,
 }
 
 bool SvgCreator::ok() {
-  return(file.good());
+  return(xSize > 0 && ySize > 0 && file.good());
 }
   
 void SvgCreator::preamble() {
@@ -35,7 +35,7 @@ void SvgCreator::preamble() {
   file << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n";
   file << "          \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
   file << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n";
-  file << "width=\"" << xSize << "\" height=\"" << ySize << "\">\n";
+  file << "     width=\"" << xSize << "\" height=\"" << ySize << "\">\n";
 }
 
 void SvgCreator::postamble() {

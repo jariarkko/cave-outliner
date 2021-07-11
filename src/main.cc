@@ -171,9 +171,21 @@ main(int argc, char** argv) {
   unsigned int ySize = (boundingboxend.y - boundingboxstart.y) / step;
   SvgCreator svg(output,xSize,ySize);
   
+  // Check that we were able to open the file
+  if (!svg.ok()) {
+    errf("File open for writing  to %s failed", output);
+    return(0);
+  }
+  
   // Process the model
   if (!processScene(scene,svg)) {
     return(1);
+  }
+
+  // Check that file I/O was ok
+  if (!svg.ok()) {
+    errf("File output to %s failed", output);
+    return(0);
   }
   
   // Done
