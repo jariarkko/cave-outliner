@@ -117,6 +117,11 @@ main(int argc, char** argv) {
   const aiScene* scene = processImport(importer,input);
   if (scene == 0) return(1);
 
+  // Describe the model if needed
+  if (deepdebug) {
+    describeScene(scene);
+  }
+  
   // Process the model
   if (!processScene(scene)) {
     return(1);
@@ -184,10 +189,21 @@ static bool
 processScene(const aiScene* scene) {
   debugf("processScene");
   assert(scene != 0);
-  if (deepdebug) {
-    describeScene(scene);
+  for (float x = boundingboxstart.x; x <= boundingboxend.x; x += step)  {
+    for (float y = boundingboxstart.y; y <= boundingboxend.y; y += step)  {
+      if (hasMaterial(scene,x,y)) {
+        deepdebugf("material at (%.2f,%.2f)",x,y);
+      }
+    }
   }
   return(1);
+}
+
+static void
+hasMaterial(const aiScene* scene,
+            float x,
+            float y) {
+  return(0);
 }
 
 static void
