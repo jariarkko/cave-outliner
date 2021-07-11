@@ -1,5 +1,6 @@
 
 #include <stdarg.h>
+#include <assert.h>
 #include <iostream>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
