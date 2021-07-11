@@ -285,10 +285,26 @@ faceHasMaterial(const aiScene* scene,
   assert(face != 0);
   if (face->mNumIndices != 3) {
     errf("Cannot handle a face with %u indices", face->mNumIndices);
+    exit(1);
   }
-  aiVector2D a(face->mIndices[0].x,face->mIndices[0].y);
-  aiVector2D b(face->mIndices[1].x,face->mIndices[1].y);
-  aiVector2D c(face->mIndices[2].x,face->mIndices[2].y);
+  if (face->mIndices[0] >= mesh->mNumVertices) {
+    errf("Face points to a vertex %u that does not exist", face->mIndices[0]);
+    exit(1);
+  }
+  if (face->mIndices[1] >= mesh->mNumVertices) {
+    errf("Face points to a vertex %u that does not exist", face->mIndices[1]);
+    exit(1);
+  }
+  if (face->mIndices[2] >= mesh->mNumVertices) {
+    errf("Face points to a vertex %u that does not exist", face->mIndices[2]);
+    exit(1);
+  }
+  aiVector3D* vertexA = &mesh->mVertices[face->mIndices[0]];
+  aiVector3D* vertexB = &mesh->mVertices[face->mIndices[1]];
+  aiVector3D* vertexC = &mesh->mVertices[face->mIndices[2]];
+  aiVector2D a(vertexA->x,vertexA->y);
+  aiVector2D b(vertexB->x,vertexB->y);
+  aiVector2D c(vertexC->x,vertexC->y);
   aiVector2D point(x,y);
   if (pointInsideTriangle2D(&a,&b,&c,&point)) {
     debugf("found out that (%.2f,%.2f) is hitting a face");
