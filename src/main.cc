@@ -253,10 +253,14 @@ nodeHasMaterial(const aiScene* scene,
     exit(1);
   }
   for (unsigned int j = 0; j < node->mNumMeshes; j++) {
-    meshHasMaterial(scene,scene->mMeshes[node->mMeshes[j]],x,y);
+    if (meshHasMaterial(scene,scene->mMeshes[node->mMeshes[j]],x,y)) {
+      return(1);
+    }
   }
   for (unsigned int i = 0; i < node->mNumChildren; i++) {
-    nodeHasMaterial(scene,node->mChildren[i],x,y);
+    if (nodeHasMaterial(scene,node->mChildren[i],x,y)) {
+      return(1);
+    }
   }
   return(0);
 }
@@ -269,7 +273,9 @@ meshHasMaterial(const aiScene* scene,
   assert(scene != 0);
   assert(mesh != 0);
   for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
-    faceHasMaterial(scene,mesh,&mesh->mFaces[f],x,y);
+    if (faceHasMaterial(scene,mesh,&mesh->mFaces[f],x,y)) {
+      return(1);
+    }
   }
   return(0);
 }
