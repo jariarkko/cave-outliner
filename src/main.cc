@@ -224,6 +224,7 @@ processScene(const aiScene* scene) {
   assert(scene != 0);
   for (float x = boundingboxstart.x; x <= boundingboxend.x; x += step)  {
     for (float y = boundingboxstart.y; y <= boundingboxend.y; y += step)  {
+      deepdebugf("checking (%.2f,%.2f)",x,y);
       if (sceneHasMaterial(scene,x,y)) {
         deepdebugf("material at (%.2f,%.2f)",x,y);
       }
@@ -237,7 +238,7 @@ sceneHasMaterial(const aiScene* scene,
                  float x,
                  float y) {
   assert(scene != 0);
-  deepdeepdebugf("checking for material at (%f,%f)", x, y);
+  deepdeepdebugf("checking for material at (%.2f,%.2f)", x, y);
   return(nodeHasMaterial(scene,scene->mRootNode,x,y));
 }
 
