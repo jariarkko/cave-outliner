@@ -66,6 +66,34 @@ main(int argc, char** argv) {
         debug = 1;
         deepdebug = 1;
         deepdeepdebug = 1;
+    } else if (strcmp(argv[1],"--step") == 0 && argc > 2) {
+      step = atof(argv[2]);
+      if (step < 0.0001) {
+        errf("Invalid step value");
+        return(0);
+      }
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--bounding") == 0 && argc > 1 + 2*3) {
+      argc--;argv++; float startx = atof(argv[1]);
+      argc--;argv++; float endx = atof(argv[1]);
+      argc--;argv++; float starty = atof(argv[1]);
+      argc--;argv++; float endy = atof(argv[1]);
+      argc--;argv++; float startz = atof(argv[1]);
+      argc--;argv++; float endz = atof(argv[1]);
+      if (endx - startx < 0.0001) {
+        errf("Invalid bounding box x range");
+        return(0);
+      }
+      if (endy - starty < 0.0001) {
+        errf("Invalid bounding box y range");
+        return(0);
+      }
+      if (endz - startz < 0.0001) {
+        errf("Invalid bounding box z range");
+        return(0);
+      }
+      boundboxstart = aiVector3D(startx,starty,startz);
+      boundboxend = aiVector3D(endx,endy,endz);
     } else if (strcmp(argv[1],"--help") == 0) {
       processHelp();
       return(0);
