@@ -163,9 +163,9 @@ describeVector3(const aiVector3t<TReal>& x,
                 unsigned bufsiz) {
   memset(buf,0,bufsiz);
   sprintf(buf,bufsiz-1,"<%f,%f,%f>",
-          x->x,
-          x->y,
-          x->z);
+          x.x,
+          x.y,
+          x.z);
 }
 
 static void
