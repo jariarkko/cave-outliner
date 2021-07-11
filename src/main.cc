@@ -92,8 +92,8 @@ main(int argc, char** argv) {
         errf("Invalid bounding box z range");
         return(0);
       }
-      boundboxstart = aiVector3D(startx,starty,startz);
-      boundboxend = aiVector3D(endx,endy,endz);
+      boundingboxstart = aiVector3D(startx,starty,startz);
+      boundingboxend = aiVector3D(endx,endy,endz);
     } else if (strcmp(argv[1],"--help") == 0) {
       processHelp();
       return(0);
