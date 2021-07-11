@@ -466,6 +466,7 @@ triangleTests(void) {
   aiVector2D c(2,0);
   aiVector2D pointfar(2,2);
   aiVector2D pointnear(0.5,0.5);
+  aiVector2D pointverynear(0.1,0.2);
   aiVector2D pointata = a;
   aiVector2D pointatb = b;
   aiVector2D pointatc = c;
@@ -473,6 +474,8 @@ triangleTests(void) {
   deepdebugf("triangle test: pointfar = %u", ans);
   ans = pointInsideTriangle2D(&a,&b,&c,&pointnear);
   deepdebugf("triangle test: pointnear = %u", ans);
+  ans = pointInsideTriangle2D(&a,&b,&c,&pointverynear);
+  deepdebugf("triangle test: pointverynear = %u", ans);
   ans = pointInsideTriangle2D(&a,&b,&c,&pointata);
   deepdebugf("triangle test: pointata = %u", ans);
   ans = pointInsideTriangle2D(&a,&b,&c,&pointatb);
