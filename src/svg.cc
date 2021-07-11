@@ -31,13 +31,18 @@ bool SvgCreator::ok() {
 }
   
 void SvgCreator::preamble() {
+  // Basics for all SVGs
   file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
   file << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n";
   file << "          \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
   file << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n";
   file << "     width=\"" << xSize << "\" height=\"" << ySize << "\">\n";
+
+  // Make the background white
+  file << "<rect x=\"0\" y=\"0\" width=\"" << xSize << "\" height=\"" << ySize << "\" fill=\"white\" stroke=\"white\" stroke-width=\"0\"/>\n";
 }
 
 void SvgCreator::postamble() {
+  // Just close the full SVG XML
   file << "</svg>\n";
 }
