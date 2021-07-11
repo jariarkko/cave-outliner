@@ -48,6 +48,10 @@ static bool faceHasMaterial(const aiScene* scene,
                             const aiFace* face,
                             float x,
                             float y);
+static bool pointInsideTriangle2D(const aiVector2D* a,
+                                  const aiVector2D* b,
+                                  const aiVector2D* c,
+                                  const aiVector2D* point);
 static void processHelp(void);
 static void runTests(void);
 static void mathTests(void);
@@ -389,10 +393,11 @@ describeVertex(const aiScene* scene,
 // Math functions /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-static pointInsideTriangle2D(const aiVector2D* a,
-                             const aiVector2D* b,
-                             const aiVector2D* c,
-                             const aiVector2D* point) {
+static bool
+pointInsideTriangle2D(const aiVector2D* a,
+                      const aiVector2D* b,
+                      const aiVector2D* c,
+                      const aiVector2D* point) {
   // Algorithm from https://mathworld.wolfram.com/TriangleInterior.html
   aiVector2D v = point;
   aiVector2D v0 = a;
