@@ -18,8 +18,10 @@ static void describeScene(const aiScene* scene);
 static void describeNode(const aiScene* scene,
                          const aiNode* node);
 static void describeFace(const aiScene* scene,
+                         const aiMesh* mesh,
                          const aiFace* face);
 static void describeVertex(const aiScene* scene,
+                           const aiMesh* mesh,
                            const aiVector3D* vertex);
 static void describeMesh(const aiScene* scene,
                          unsigned int no,
@@ -240,22 +242,33 @@ describeMesh(const aiScene* scene,
   deepdebugf("    mNumFaces = %u", mesh->mNumFaces);
   if (deepdeepdebug) {
     for (unsigned int v = 0; v < mesh->mNumVertices; v++) {
-      describeVertex(scene,&mesh->mVertices[v]);
+      describeVertex(scene,mesh,&mesh->mVertices[v]);
     }
     for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
-      describeFace(scene,&mesh->mFaces[f]);
+      describeFace(scene,mesh,&mesh->mFaces[f]);
     }
   }
 }
 
 static void
 describeFace(const aiScene* scene,
+             const aiMesh* mesh,
              const aiFace* face) {
+  deepdebugf("      face mNumIndices = %u", face->mNumIndices);
+  for (unsigned int i = 0; i < face->mNumIndices; i++) {
+    deepdeepdebugf("        indice %u", face-<mIndices[i]);
+  }
 }
 
 static void
 describeVertex(const aiScene* scene,
+               const aiMesh* mesh,
                const aiVector3D* vertex) {
+  char buf[100];
+  describeVector3D(*vertex,
+                   buf,
+                   sizeof(buf));
+  deepdebugf("      vertex %s", buf);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
