@@ -262,10 +262,6 @@ faceHasMaterial(const aiScene* scene,
                 const aiFace* face,
                 float x,
                 float y) {
-  if (!node->mTransformation.IsIdentity()) {
-    errf("Cannot handle transformations yet");
-    exit(1);
-  }
   return(0);
 }
 
