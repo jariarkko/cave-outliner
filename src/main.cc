@@ -44,6 +44,8 @@ static bool meshHasMaterial(const aiScene* scene,
                             float x,
                             float y);
 static void processHelp(void);
+static void runTests(void);
+static void mathTests(void);
 static void errf(const char* format, ...);
 static void debugf(const char* format, ...);
 static void deepdebugf(const char* format, ...);
@@ -105,6 +107,9 @@ main(int argc, char** argv) {
       }
       boundingboxstart = aiVector3D(startx,starty,startz);
       boundingboxend = aiVector3D(endx,endy,endz);
+    } else if (strcmp(argv[1],"--test") == 0) {
+      runTests();
+      return(0);
     } else if (strcmp(argv[1],"--help") == 0) {
       processHelp();
       return(0);
@@ -237,9 +242,25 @@ nodeHasMaterial(const aiScene* scene,
 
 static bool
 meshHasMaterial(const aiScene* scene,
-                const aiMesh* node,
+                const aiMesh* mesh,
                 float x,
                 float y) {
+  for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
+    faceHasMaterial(scene,mesh,&mesh->mFaces[f],x,y);
+  }
+  return(0);
+}
+
+static bool
+faceHasMaterial(const aiScene* scene,
+                const aiMesh* mesh,
+                const aiFace* face,
+                float x,
+                float y) {
+  if (!node->mTransformation.IsIdentity()) {
+    errf("Cannot handle transformations yet");
+    exit(1);
+  }
   return(0);
 }
 
@@ -362,6 +383,63 @@ describeVertex(const aiScene* scene,
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Output picture file IO /////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Math functions /////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+static pointInsideTriangle2D(const aiVector2D* a,
+                             const aiVector2D* b,
+                             const aiVector2D* c,
+                             const aiVector2D* point) {
+  // Algorithm from https://mathworld.wolfram.com/TriangleInterior.html
+  aiVector2D v = point;
+  aiVector2D v0 = a;
+  aiVector2D v1; vectorTo(a,b,&v1);
+  aiVector2D v2; vectorTo(a,c,&v2);
+  float a = (det(v,v2) - det(v0,v2)) / det(v1,v2);
+  float b = (det(v,v1) - det(v0,v1)) / det(v1,v2);
+  return(a => 0 && b => 0 && a+b <= 1);
+}
+
+static float
+determinant2x2(const aiVector2D* u,
+               const aiVector2D* v) {
+  return(u.x * v.y - u.y * v.x);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Test functions /////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+static void
+runTests(void) {
+  debugf("running tests");
+  mathTests();
+  debugf("tests OK");
+}
+
+static void mathTests(void) {
+  debugf("running math tests");
+  aiVector2D a(0,0);
+  aiVector2D b(0,2);
+  aiVector2D c(2,0);
+  aiVector2D pointfar(2,2);
+  aiVector2D pointnear(0.5,0.5);
+  aiVector2D pointata = a;
+  aiVector2D pointatb = b;
+  aiVector2D pointatc = c;
+  bool ans = pointInsideTriangle2D(&a,&b,&c,&pointfar);
+  deepdebugf("triangle test: pointfar = %u", ans);
+  ans = pointInsideTriangle2D(&a,&b,&c,&pointnear);
+  deepdebugf("triangle test: pointnear = %u", ans);
+  ans = pointInsideTriangle2D(&a,&b,&c,&pointata);
+  deepdebugf("triangle test: pointata = %u", ans);
+  ans = pointInsideTriangle2D(&a,&b,&c,&pointatb);
+  deepdebugf("triangle test: pointatb = %u", ans);
+  ans = pointInsideTriangle2D(&a,&b,&c,&pointatc);
+  deepdebugf("triangle test: pointatc = %u", ans);
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Debug and output functions /////////////////////////////////////////////////////////////////
