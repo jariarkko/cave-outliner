@@ -35,6 +35,14 @@ static void describeVector3D(const aiVector3D& x,
 static bool sceneHasMaterial(const aiScene* scene,
                              float x,
                              float y);
+static bool nodeHasMaterial(const aiScene* scene,
+                            const aiNode* node,
+                            float x,
+                            float y);
+static bool meshHasMaterial(const aiScene* scene,
+                            const aiMesh* node,
+                            float x,
+                            float y);
 static void processHelp(void);
 static void errf(const char* format, ...);
 static void debugf(const char* format, ...);
