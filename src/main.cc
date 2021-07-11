@@ -1,5 +1,5 @@
 
-#include <varargs.h>
+#include <stdarg.h>
 #include <iostream>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
