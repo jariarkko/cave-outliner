@@ -237,6 +237,7 @@ sceneHasMaterial(const aiScene* scene,
                  float x,
                  float y) {
   assert(scene != 0);
+  deepdeepdebugf("checking for material at (%f,%f)", x, y);
   return(nodeHasMaterial(scene,scene->mRootNode,x,y));
 }
 
