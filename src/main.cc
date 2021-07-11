@@ -61,6 +61,7 @@ static void processHelp(void);
 static void runTests(void);
 static void mathTests(void);
 static void vectorTests(void);
+static void detTests(void);
 static void triangleTests(void);
 static void errf(const char* format, ...);
 static void debugf(const char* format, ...);
@@ -450,6 +451,7 @@ static void
 mathTests(void) {
   debugf("running math tests");
   vectorTests();
+  detTests();
   triangleTests();
 }
 
@@ -462,6 +464,16 @@ vectorTests(void) {
   deepdebugf("vector test: result: (%f,%f)", result.x, result.y);
   assert(result.x == 1);
   assert(result.y == 1);
+}
+
+static void
+detTests(void) {
+  aiVector2D C1(4,2);
+  aiVector2D C2(1,3);
+  ai_real result;
+  determinant2x2(&C1,&C2,&result);
+  deepdebugf("determinant result = %.2f", result);
+  assert(result == 10);
 }
 
 static void
