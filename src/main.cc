@@ -203,7 +203,7 @@ processScene(const aiScene* scene) {
 }
 
 static bool
-scenehasMaterial(const aiScene* scene,
+sceneHasMaterial(const aiScene* scene,
                  float x,
                  float y) {
   return(0);
