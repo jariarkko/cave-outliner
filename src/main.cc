@@ -37,6 +37,7 @@ main(int argc, char** argv) {
     if (strcmp(argv[1],"--debug") == 0) {
         debug = 1;
     } else if (strcmp(argv[1],"--deepdebug") == 0) {
+        debug = 1;
         deepdebug = 1;
     } else if (strcmp(argv[1],"--help") == 0) {
       processHelp();
@@ -93,7 +94,7 @@ static const aiScene*
 processImport(Assimp::Importer& importer,
               const char* fileName) {
   
-  std::cerr << OUTLINER_DEBUGPREFIX "processImport\n";
+  debugf("processImport");
   
   // Have the importer read the given file with some example postprocessing
   // Usually - if speed is not the most important aspect for you - you'll
