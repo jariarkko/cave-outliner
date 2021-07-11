@@ -4,10 +4,10 @@
 SvgCreator::SvgCreator(const char* fileName,
                        unsigned int xSize,
                        unsigned int ySize) {
-  this.file->open(fileName);
+  this->file->open(fileName);
   preamble();
-  this.xSize = xSize;
-  this.ySize = ySize;
+  this->xSize = xSize;
+  this->ySize = ySize;
 }
 
 SvgCreator::~SvgCreator() {
