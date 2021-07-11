@@ -256,7 +256,7 @@ describeFace(const aiScene* scene,
              const aiFace* face) {
   deepdebugf("      face mNumIndices = %u", face->mNumIndices);
   for (unsigned int i = 0; i < face->mNumIndices; i++) {
-    deepdeepdebugf("        indice %u", face-<mIndices[i]);
+    deepdeepdebugf("        indice %u", face->mIndices[i]);
   }
 }
 
