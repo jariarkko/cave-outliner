@@ -1,5 +1,5 @@
 
-OBJS=src/main.o
+OBJS=src/main.o src/svg.o
 HDRS=src/outlinertypes.hh src/svg.hh
 SRCS=src/main.cc src/svg.cc
 SUPP=Makefile
