@@ -6,6 +6,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h> 
 #include "outlinertypes.hh"
+#include "svg.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Function prototypes ////////////////////////////////////////////////////////////////////////
@@ -13,7 +14,8 @@
 
 static const aiScene* processImport(Assimp::Importer& importer,
                                     const char* file);
-static bool processScene(const aiScene* scene);
+static bool processScene(const aiScene* scene,
+                         SvgCreator& svg);
 static void describeScene(const aiScene* scene);
 static void describeNode(const aiScene* scene,
                          const aiNode* node);
@@ -78,6 +80,11 @@ static bool deepdeepdebug = 0;
 static float step = 1.0;
 static aiVector3D boundingboxstart = {-2,-2,-2};
 static aiVector3D boundingboxend = {2,2,2};
+enum algorithm {
+  alg_pixel,
+  alg_border
+};
+static enum algorithm alg = alg_pixel;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program and option handling ///////////////////////////////////////////////////////////
@@ -96,6 +103,10 @@ main(int argc, char** argv) {
         debug = 1;
         deepdebug = 1;
         deepdeepdebug = 1;
+    } else if (strcmp(argv[1],"--pixel") == 0) {
+        alg = alg_pixel;
+    } else if (strcmp(argv[1],"--border") == 0) {
+        alg = alg_border;
     } else if (strcmp(argv[1],"--step") == 0 && argc > 2) {
       step = atof(argv[2]);
       if (step < 0.0001) {
@@ -154,9 +165,14 @@ main(int argc, char** argv) {
   if (deepdebug) {
     describeScene(scene);
   }
+
+  // Open the output
+  unsigned int xSize = (boundingboxend.x - boundingboxstart.x) / step;
+  unsigned int ySize = (boundingboxend.y - boundingboxstart.y) / step;
+  SvgCreator svg(output,xSize,ySize);
   
   // Process the model
-  if (!processScene(scene)) {
+  if (!processScene(scene,svg)) {
     return(1);
   }
   
@@ -219,7 +235,8 @@ processImport(Assimp::Importer& importer,
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 static bool
-processScene(const aiScene* scene) {
+processScene(const aiScene* scene,
+             SvgCreator& svg) {
   debugf("processScene");
   assert(scene != 0);
   for (float x = boundingboxstart.x; x <= boundingboxend.x; x += step)  {
@@ -227,6 +244,10 @@ processScene(const aiScene* scene) {
       deepdebugf("checking (%.2f,%.2f)",x,y);
       if (sceneHasMaterial(scene,x,y)) {
         debugf("material at (%.2f,%.2f)",x,y);
+        if (alg == alg_pixel) {
+          svg.pixel((x - boundingboxstart.x) / step,
+                    (y - boundingboxstart.y) / step);
+        }
       }
     }
   }
