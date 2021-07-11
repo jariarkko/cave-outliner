@@ -401,15 +401,15 @@ describeVertex(const aiScene* scene,
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 static bool
-pointInsideTriangle2D(const aiVector2D* a,
-                      const aiVector2D* b,
-                      const aiVector2D* c,
+pointInsideTriangle2D(const aiVector2D* triangleA,
+                      const aiVector2D* triangleB,
+                      const aiVector2D* triangleC,
                       const aiVector2D* point) {
   // Algorithm from https://mathworld.wolfram.com/TriangleInterior.html
   aiVector2D v = *point;
-  aiVector2D v0 = *a;
-  aiVector2D v1; vectorTo(a,b,&v1);
-  aiVector2D v2; vectorTo(a,c,&v2);
+  aiVector2D v0 = *triangleA;
+  aiVector2D v1; vectorTo(triangleA,triangleB,&v1);
+  aiVector2D v2; vectorTo(triangleA,triangleC,&v2);
   float a = (det(v,v2) - det(v0,v2)) / det(v1,v2);
   float b = (det(v,v1) - det(v0,v1)) / det(v1,v2);
   return(a => 0 && b => 0 && a+b <= 1);
