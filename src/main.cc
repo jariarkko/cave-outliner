@@ -43,6 +43,11 @@ static bool meshHasMaterial(const aiScene* scene,
                             const aiMesh* node,
                             float x,
                             float y);
+static bool faceHasMaterial(const aiScene* scene,
+                            const aiMesh* mesh,
+                            const aiFace* face,
+                            float x,
+                            float y);
 static void processHelp(void);
 static void runTests(void);
 static void mathTests(void);
