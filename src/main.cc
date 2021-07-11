@@ -162,10 +162,10 @@ describeVector3(const aiVector3D& x,
                 char* buf,
                 unsigned bufsiz) {
   memset(buf,0,bufsiz);
-  sprintf(buf,bufsiz-1,"<%f,%f,%f>",
-          x.x,
-          x.y,
-          x.z);
+  snprintf(buf,bufsiz-1,"<%f,%f,%f>",
+           x.x,
+           x.y,
+           x.z);
 }
 
 static void
