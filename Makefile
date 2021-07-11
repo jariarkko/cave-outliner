@@ -3,7 +3,7 @@ OBJS=src/main.o
 HDRS=src/outlinertypes.hh
 SRCS=src/main.cc
 SUPP=Makefile
-CPPFLAGS=-g
+CPPFLAGS=-g -Wall
 LDFLAGS=-g
 LDLIBS=-lassimp
 

@@ -314,7 +314,7 @@ faceHasMaterial(const aiScene* scene,
   aiVector2D c(vertexC->x,vertexC->y);
   aiVector2D point(x,y);
   if (pointInsideTriangle2D(&a,&b,&c,&point)) {
-    debugf("found out that (%.2f,%.2f) is hitting a face");
+    debugf("found out that (%.2f,%.2f) is hitting a face",x,y);
     return(1);
   }
   return(0);
