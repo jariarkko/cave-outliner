@@ -226,7 +226,7 @@ processScene(const aiScene* scene) {
     for (float y = boundingboxstart.y; y <= boundingboxend.y; y += step)  {
       deepdebugf("checking (%.2f,%.2f)",x,y);
       if (sceneHasMaterial(scene,x,y)) {
-        deepdebugf("material at (%.2f,%.2f)",x,y);
+        debugf("material at (%.2f,%.2f)",x,y);
       }
     }
   }
