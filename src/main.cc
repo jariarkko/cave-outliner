@@ -17,6 +17,9 @@ static bool processScene(const aiScene* scene);
 static void describeScene(const aiScene* scene);
 static void describeNode(const aiScene* scene,
                          const aiNode* node);
+static void describeTransformation(const aiMatrix4x4& x,
+                                   char* buf,
+                                   unsigned bufsiz);
 static void processHelp(void);
 static void errf(const char* format, ...);
 static void debugf(const char* format, ...);
@@ -166,7 +169,7 @@ describeVector3(const aiVector3t<TReal>& x,
 }
 
 static void
-describeTransformation(const aiTransformation& x,
+describeTransformation(const aiMatrix4x4& x,
                        char* buf,
                        unsigned bufsiz) {
   memset(buf,0,bufsiz);
