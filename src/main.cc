@@ -14,6 +14,9 @@
 static const aiScene* processImport(Assimp::Importer& importer,
                                     const char* file);
 static bool processScene(const aiScene* scene);
+static void describeScene(const aiScene* scene);
+static void describeNode(const aiScene* scene,
+                         const aiNode* node);
 static void processHelp(void);
 static void errf(const char* format, ...);
 static void debugf(const char* format, ...);
@@ -124,7 +127,35 @@ processImport(Assimp::Importer& importer,
 static bool
 processScene(const aiScene* scene) {
   debugf("processScene");
+  assert(scene != 0);
+  if (deepdebug) {
+    describeScene(scene);
+  }
   return(1);
+}
+
+static void
+describeScene(const aiScene* scene) {
+  assert(scene != 0);
+  deepdebugf("scene:");
+  deepdebugf("  mFlags = 0x%x", scene->mFlags);
+  deepdebugf("  mNumMeshes = %u", scene->mNumMeshes);
+  deepdebugf("  mNumMaterials = %u", scene->mNumMaterials);
+  deepdebugf("  mNumAnimations = %u", scene->mNumAnimations);
+  deepdebugf("  mNumTextures = %u", scene->mNumTextures);
+  deepdebugf("  mNumLights = %u", scene->mNumLights);
+  deepdebugf("  mNumCameras = %u", scene->mNumCameras);
+  describeNode(scene,scene->mRootNode);
+}
+
+static void
+describeNode(const aiScene* scene,
+             const aiNode* node) {
+  assert(scene != 0);
+  assert(node != 0);
+  deepdebugf("  node %s", node->mName);
+  deepdebugf("    mNumChildren = %u", node->mNumChildren);
+  deepdebugf("    mNumMeshes = %u", node->mNumMeshes);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
