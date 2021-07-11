@@ -146,7 +146,7 @@ debugf(const char* format, ...) {
     char buf[500];
     memset(buf,0,sizeof(buf));
     va_start (args, format);
-    snvprintf(buf,sizeof(buf)-1,format,args);
+    vsnprintf(buf,sizeof(buf)-1,format,args);
     va_end (args);
     std::cerr << OUTLINER_DEBUGPREFIX;
     std::cerr << buf;
@@ -168,7 +168,7 @@ deepdebugf(const char* format, ...) {
     char buf[500];
     memset(buf,0,sizeof(buf));
     va_start (args, format);
-    snvprintf(buf,sizeof(buf)-1,format,args);
+    vsnprintf(buf,sizeof(buf)-1,format,args);
     va_end (args);
     std::cerr << OUTLINER_DEBUGPREFIX;
     std::cerr << buf;
@@ -188,7 +188,7 @@ errf(const char* format, ...) {
   char buf[500];
   memset(buf,0,sizeof(buf));
   va_start (args, format);
-  snvprintf(buf,sizeof(buf)-1,format,args);
+  vsnprintf(buf,sizeof(buf)-1,format,args);
   va_end (args);
   std::cerr << OUTLINER_ERRPREFIX;
   std::cerr << buf;
