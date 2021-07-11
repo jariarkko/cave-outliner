@@ -3,6 +3,7 @@
 #define SVG_HH
 
 #include <iostream>
+#include <fstream>
 
 class SvgCreator {
   
