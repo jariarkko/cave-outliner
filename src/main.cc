@@ -169,6 +169,7 @@ main(int argc, char** argv) {
   // Open the output
   unsigned int xSize = (boundingboxend.x - boundingboxstart.x) / step;
   unsigned int ySize = (boundingboxend.y - boundingboxstart.y) / step;
+  debugf("SVG size will be %u x %u", xSize, ySize);
   SvgCreator svg(output,xSize,ySize);
   
   // Check that we were able to open the file
