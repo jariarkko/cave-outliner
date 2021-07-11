@@ -176,7 +176,7 @@ describeTransformation(const aiMatrix4x4& x,
                        char* buf,
                        unsigned bufsiz) {
   memset(buf,0,bufsiz);
-  if (x.isIdentity()) {
+  if (x.IsIdentity()) {
     strncpy(buf,"identity",bufsiz-1);
   } else {
     aiVector3D scaling;
