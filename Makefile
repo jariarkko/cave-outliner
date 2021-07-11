@@ -4,7 +4,7 @@ HDRS=src/outlinertypes.hh src/svg.hh
 SRCS=src/main.cc src/svg.cc
 SUPP=Makefile
 CPPFLAGS=-g -Wall
-LDFLAGS=-g
+LDFLAGS=-O4
 LDLIBS=-lassimp
 
 all:	cave-outliner
