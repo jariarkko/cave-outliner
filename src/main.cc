@@ -32,6 +32,9 @@ static void describeTransformation(const aiMatrix4x4& x,
 static void describeVector3D(const aiVector3D& x,
                              char* buf,
                              unsigned bufsiz);
+static void scenehasMaterial(const aiScene* scene,
+                             float x,
+                             float y);
 static void processHelp(void);
 static void errf(const char* format, ...);
 static void debugf(const char* format, ...);
@@ -191,7 +194,7 @@ processScene(const aiScene* scene) {
   assert(scene != 0);
   for (float x = boundingboxstart.x; x <= boundingboxend.x; x += step)  {
     for (float y = boundingboxstart.y; y <= boundingboxend.y; y += step)  {
-      if (hasMaterial(scene,x,y)) {
+      if (sceneHasMaterial(scene,x,y)) {
         deepdebugf("material at (%.2f,%.2f)",x,y);
       }
     }
@@ -200,9 +203,9 @@ processScene(const aiScene* scene) {
 }
 
 static void
-hasMaterial(const aiScene* scene,
-            float x,
-            float y) {
+scenehasMaterial(const aiScene* scene,
+                 float x,
+                 float y) {
   return(0);
 }
 
