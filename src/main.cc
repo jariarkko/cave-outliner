@@ -470,8 +470,7 @@ static void
 detTests(void) {
   aiVector2D C1(4,2);
   aiVector2D C2(1,3);
-  ai_real result;
-  determinant2x2(&C1,&C2,&result);
+  ai_real result = determinant2x2(&C1,&C2);
   deepdebugf("determinant result = %.2f", result);
   assert(result == 10);
 }
