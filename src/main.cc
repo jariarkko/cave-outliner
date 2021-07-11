@@ -158,7 +158,7 @@ describeScene(const aiScene* scene) {
 }
 
 static void
-describeVector3(const aiVector3t<TReal>& x,
+describeVector3(const aiVector3D& x,
                 char* buf,
                 unsigned bufsiz) {
   memset(buf,0,bufsiz);
@@ -176,10 +176,10 @@ describeTransformation(const aiMatrix4x4& x,
   if (node->mTransformation.isIdentity()) {
     strncpy(buf,"identity",bufsiz-1);
   } else {
-    aiVector3t<TReal> scaling;
-    aiVector3t<TReal> rotationAxis;
-    TReal rotationAngle;
-    aiVector3t<TReal> position;
+    aiVector3D scaling;
+    aiVector3D rotationAxis;
+    ai_real rotationAngle;
+    aiVector3D position;
     x.Decompose(scaling,rotationAxis,rotationAngle,position);
     char scalingBuf[100];
     char rotationAxisBuf[100];
