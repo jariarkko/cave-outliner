@@ -4,7 +4,6 @@
 SvgCreator::SvgCreator(const char* fileName,
                        unsigned int xSize,
                        unsigned int ySize) {
-  std::cerr << "SvgCreator::SvgCreator xs=" << xSize << " ys=" << ySize;
   this->file.open(fileName);
   this->xSize = xSize;
   this->ySize = ySize;
