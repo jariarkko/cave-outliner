@@ -21,6 +21,7 @@ static void processHelp(void);
 static void errf(const char* format, ...);
 static void debugf(const char* format, ...);
 static void deepdebugf(const char* format, ...);
+static void deepdeepdebugf(const char* format, ...);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Local variables ////////////////////////////////////////////////////////////////////////////
@@ -28,6 +29,7 @@ static void deepdebugf(const char* format, ...);
 
 static bool debug = 0;
 static bool deepdebug = 0;
+static bool deepdeepdebug = 0;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program and option handling ///////////////////////////////////////////////////////////
@@ -42,6 +44,10 @@ main(int argc, char** argv) {
     } else if (strcmp(argv[1],"--deepdebug") == 0) {
         debug = 1;
         deepdebug = 1;
+    } else if (strcmp(argv[1],"--deepdeepdebug") == 0) {
+        debug = 1;
+        deepdebug = 1;
+        deepdeepdebug = 1;
     } else if (strcmp(argv[1],"--help") == 0) {
       processHelp();
       return(0);
@@ -149,6 +155,41 @@ describeScene(const aiScene* scene) {
 }
 
 static void
+describeVector3(const aiVector3t<TReal>& x,
+                char* buf,
+                unsigned bufsiz) {
+  memset(buf,0,bufsiz);
+  sprintf(buf,bufsiz-1,"<%f,%f,%f>",
+          x->x,
+          x->y,
+          x->z);
+}
+
+static void
+describeTransformation(const aiTransformation& x,
+                       char* buf,
+                       unsigned bufsiz) {
+  memset(buf,0,bufsiz);
+  if (node->mTransformation.isIdentity()) {
+    strncpy(buf,"identity",bufsiz-1);
+  } else {
+    aiVector3t<TReal> scaling;
+    aiVector3t<TReal> rotationAxis;
+    TReal rotationAngle;
+    aiVector3t<TReal> position;
+    node->mTransformation.Decompose(scaling,rotationAxis,rotationAngle,position);
+    char scalingBuf[100];
+    char rotationAxisBuf[100];
+    char positionBuf[100];
+    describeVector(scaling,scalingBuf,sizeof(scalingBuf));
+    describeVector(rotationAxis,rotationAxisBuf,sizeof(rotationAxisBuf));
+    describeVector(position,positionBuf,sizeof(positionBuf));
+    snprintf(buf,bufsiz-1,"scale %s, rotation %s, angle %f, position %s",
+             scalingBuf,rotationAxisBuf,rotationAngle,positionBuf);
+  }
+}
+
+static void
 describeNode(const aiScene* scene,
              const aiNode* node) {
   assert(scene != 0);
@@ -156,6 +197,16 @@ describeNode(const aiScene* scene,
   deepdebugf("  node %s", node->mName.C_Str());
   deepdebugf("    mNumChildren = %u", node->mNumChildren);
   deepdebugf("    mNumMeshes = %u", node->mNumMeshes);
+  if (deepdebug) {
+    char buf[200];
+    describeTransformation(node->mTransformation,buf,sizeof(buf));
+    deepdebugf("    mTransformation = %s", buf);
+  }
+  if (deepdeepdebug) {
+    for (unsigned int i = 0; i < node->mNumChildren; i++) {
+      describeNode(scene,node->mChildren[i]);
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,6 +246,28 @@ deepdebugf(const char* format, ...) {
   assert(format != 0);
 
   if (deepdebug) {
+
+    va_list args;
+    char buf[500];
+    memset(buf,0,sizeof(buf));
+    va_start (args, format);
+    vsnprintf(buf,sizeof(buf)-1,format,args);
+    va_end (args);
+    std::cerr << OUTLINER_DEBUGPREFIX;
+    std::cerr << buf;
+    std::cerr << "\n";
+    
+  }
+  
+}
+
+__attribute__((__format__ (__printf__, 1, 0)))
+void
+deepdeepdebugf(const char* format, ...) {
+
+  assert(format != 0);
+
+  if (deepdeepdebug) {
 
     va_list args;
     char buf[500];
