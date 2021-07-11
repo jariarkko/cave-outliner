@@ -23,7 +23,7 @@ class SvgCreator {
   
  private:
 
-  ofstream file;
+  std::ofstream file;
   unsigned int xSize;
   unsigned int ySize;
 
