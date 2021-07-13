@@ -36,6 +36,8 @@ static bool faceHasMaterial(const aiScene* scene,
 
 bool
 processScene(const aiScene* scene,
+             aiVector3D boundingboxstart,
+             aiVector3D boundingboxend,
              SvgCreator& svg) {
   debugf("processScene");
   assert(scene != 0);

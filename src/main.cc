@@ -135,7 +135,10 @@ main(int argc, char** argv) {
   }
   
   // Process the model
-  if (!processScene(scene,svg)) {
+  if (!processScene(scene,
+                    boundingboxstart,
+                    boundingboxend,
+                    svg)) {
     return(1);
   }
 

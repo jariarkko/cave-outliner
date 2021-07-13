@@ -10,6 +10,8 @@
 #include "svg.hh"
 
 bool processScene(const aiScene* scene,
+                  aiVector3D boundingboxstart,
+                  aiVector3D boundingboxend,
                   SvgCreator& svg);
 
 #endif // PROCESSOR_HH
