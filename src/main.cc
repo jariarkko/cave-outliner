@@ -11,6 +11,7 @@
 #include "indexedmesh.hh"
 #include "processor.hh"
 #include "describe.hh"
+#include "outlinermath.hh"
 #include "svg.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
