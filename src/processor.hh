@@ -7,6 +7,7 @@
 #include <assimp/postprocess.h> 
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
+#include "svg.hh"
 
 bool processScene(const aiScene* scene,
                   SvgCreator& svg);
