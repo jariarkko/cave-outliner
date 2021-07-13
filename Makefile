@@ -1,7 +1,26 @@
 
-OBJS=src/main.o src/processor.o src/debug.o src/svg.o
-HDRS=src/outlinertypes.hh src/outlinerconstants.hh src/debug.hh src/processor.hh src/svg.hh
-SRCS=src/main.cc src/debug.cc src/processor.cc src/svg.cc
+OBJS=	src/main.o \
+	src/processor.o \
+	src/indexedmesh.o \
+	src/describe.o \
+	src/debug.o \
+	src/outlinermath.o \
+	src/svg.o
+HDRS=	src/outlinertypes.hh \
+	src/outlinerconstants.hh \
+	src/debug.hh \
+	src/processor.hh \
+	src/indexedmesh.hh \
+	src/describe.hh \
+	src/outlinermath.hh \
+	src/svg.hh
+SRCS=	src/main.cc \
+	src/debug.cc \
+	src/processor.cc \
+	src/indexedmesh.cc \
+	src/describe.cc \
+	src/outlinermath.cc \
+	src/svg.cc
 SUPP=Makefile
 CPPFLAGS=-g -Wall
 LDFLAGS=-O4
