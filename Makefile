@@ -19,7 +19,7 @@ SRCS=	src/main.cc \
 	src/outlinerprocessor.cc \
 	src/outlinerindexedmesh.cc \
 	src/outlinerdescribe.cc \
-<	src/outlinermath.cc \
+	src/outlinermath.cc \
 	src/outlinersvg.cc
 SUPP=Makefile
 CPPFLAGS=-g -Wall
