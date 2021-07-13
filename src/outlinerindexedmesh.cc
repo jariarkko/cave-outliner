@@ -4,11 +4,11 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h> 
-#include "debug.hh"
-#include "indexedmesh.hh"
+#include "outlinerdebug.hh"
+#include "outlinerindexedmesh.hh"
 
 IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
-              unsigned int subdivisionsIn) {
+                         unsigned int subdivisionsIn) {
   assert(maxMeshesIn >= 1);
   assert(subdivisionsIn >= 1);
   maxMeshes = maxMeshesIn;

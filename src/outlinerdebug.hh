@@ -1,6 +1,6 @@
 
-#ifndef DEBUG_HH
-#define DEBUG_HH
+#ifndef OUTLINERDEBUG_HH
+#define OUTLINERDEBUG_HH
 
 void debuginit(bool debug,
                bool deepdebug,
@@ -10,4 +10,4 @@ void debugf(const char* format, ...);
 void deepdebugf(const char* format, ...);
 void deepdeepdebugf(const char* format, ...);
 
-#endif // DEBUG_HH
+#endif // OUTLINERDEBUG_HH

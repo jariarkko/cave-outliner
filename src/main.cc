@@ -7,12 +7,12 @@
 #include <assimp/postprocess.h> 
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
-#include "debug.hh"
-#include "indexedmesh.hh"
-#include "processor.hh"
-#include "describe.hh"
+#include "outlinerdebug.hh"
+#include "outlinerindexedmesh.hh"
+#include "outlinerprocessor.hh"
+#include "outlinerdescribe.hh"
 #include "outlinermath.hh"
-#include "svg.hh"
+#include "outlinersvg.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Function prototypes ////////////////////////////////////////////////////////////////////////

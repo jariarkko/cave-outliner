@@ -6,8 +6,9 @@
 #include <assimp/postprocess.h> 
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
-#include "debug.hh"
-#include "processor.hh"
+#include "outlinermath.hh"
+#include "outlinerdebug.hh"
+#include "outlinerprocessor.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Function prototypes ////////////////////////////////////////////////////////////////////////
