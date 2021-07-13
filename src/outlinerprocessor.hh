@@ -7,7 +7,7 @@
 #include <assimp/postprocess.h> 
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
-#include "svg.hh"
+#include "outlinersvg.hh"
 
 bool processScene(const aiScene* scene,
                   aiVector3D boundingboxstart,
