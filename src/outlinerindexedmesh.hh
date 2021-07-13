@@ -23,7 +23,7 @@ public:
 private:
 
   unsigned int nMeshes;
-  unsigned int maxMeshesIn;
+  unsigned int maxMeshes;
   unsigned int subdivisions;
   
   struct IndexedMeshOneMesh* meshes;
