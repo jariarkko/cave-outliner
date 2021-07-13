@@ -4,8 +4,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <iostream>
-#include "outlinertypes.h"
-#include "outlinerconstants.h"
+#include "outlinertypes.hh"
+#include "outlinerconstants.hh"
 #include "debug.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
