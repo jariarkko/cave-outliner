@@ -82,12 +82,12 @@ describeNode(const aiScene* scene,
   for (unsigned int j = 0; j < node->mNumMeshes; j++) {
     deepdebugf("      mesh %u", node->mMeshes[j]);
   }
-  if (deepdebug) {
+  if (transforms) {
     char buf[200];
     describeTransformation(node->mTransformation,buf,sizeof(buf));
     deepdebugf("    mTransformation = %s", buf);
   }
-  if (deepdeepdebug) {
+  if (recurse) {
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
       describeNode(scene,node->mChildren[i]);
     }
