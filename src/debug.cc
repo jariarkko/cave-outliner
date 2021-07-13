@@ -1,7 +1,11 @@
 
 #include <stdarg.h>
 #include <assert.h>
+#include <string.h>
+#include <stdlib.h>
 #include <iostream>
+#include "outlinertypes.h"
+#include "outlinerconstants.h"
 #include "debug.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
