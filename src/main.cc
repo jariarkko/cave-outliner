@@ -6,6 +6,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h> 
 #include "outlinertypes.hh"
+#include "outlinerconstants.hh"
+#include "debug.hh"
+#include "processor.hh"
 #include "svg.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,10 +68,6 @@ static void mathTests(void);
 static void vectorTests(void);
 static void detTests(void);
 static void triangleTests(void);
-static void errf(const char* format, ...);
-static void debugf(const char* format, ...);
-static void deepdebugf(const char* format, ...);
-static void deepdeepdebugf(const char* format, ...);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Local variables ////////////////////////////////////////////////////////////////////////////
@@ -155,7 +154,10 @@ main(int argc, char** argv) {
   }
   const char* input = argv[1];
   const char* output = argv[2];
-
+  
+  // Initialize debug
+  debuginit(debug,deepdebug,deepdeepdebug);
+  
   // Import the model
   Assimp::Importer importer;
   const aiScene* scene = processImport(importer,input);
@@ -206,6 +208,7 @@ processHelp(void) {
   std::cout << "\n";
   std::cout << "  --bounding x x y y z z   Set the bounding box area. Default is -2 2 -2 2 -2 2.\n";
   std::cout << "  --step i                 Set the granularity increment. Default is 1.\n";
+  std::cout << "  --pixel or --border      Choose the output drawing algorithm. Default is pixel.\n");
   std::cout << "  --debug                  Turn on debugging messages (level 0, least)\n";
   std::cout << "  --deepdebug              Turn on debugging messages (level 1)\n";
   std::cout << "  --deepdeepdebug          Turn on debugging messages (level 2, most)\n";
@@ -601,90 +604,3 @@ triangleTests(void) {
   assert(ansbefore3 == 0);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-// Debug and output functions /////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-__attribute__((__format__ (__printf__, 1, 0)))
-void
-debugf(const char* format, ...) {
-
-  assert(format != 0);
-
-  if (debug) {
-
-    va_list args;
-    char buf[500];
-    memset(buf,0,sizeof(buf));
-    va_start (args, format);
-    vsnprintf(buf,sizeof(buf)-1,format,args);
-    va_end (args);
-    std::cerr << OUTLINER_DEBUGPREFIX;
-    std::cerr << buf;
-    std::cerr << "\n";
-    
-  }
-  
-}
-
-__attribute__((__format__ (__printf__, 1, 0)))
-void
-deepdebugf(const char* format, ...) {
-
-  assert(format != 0);
-
-  if (deepdebug) {
-
-    va_list args;
-    char buf[500];
-    memset(buf,0,sizeof(buf));
-    va_start (args, format);
-    vsnprintf(buf,sizeof(buf)-1,format,args);
-    va_end (args);
-    std::cerr << OUTLINER_DEBUGPREFIX;
-    std::cerr << buf;
-    std::cerr << "\n";
-    
-  }
-  
-}
-
-__attribute__((__format__ (__printf__, 1, 0)))
-void
-deepdeepdebugf(const char* format, ...) {
-
-  assert(format != 0);
-
-  if (deepdeepdebug) {
-
-    va_list args;
-    char buf[500];
-    memset(buf,0,sizeof(buf));
-    va_start (args, format);
-    vsnprintf(buf,sizeof(buf)-1,format,args);
-    va_end (args);
-    std::cerr << OUTLINER_DEBUGPREFIX;
-    std::cerr << buf;
-    std::cerr << "\n";
-    
-  }
-  
-}
-
-__attribute__((__format__ (__printf__, 1, 0)))
-void
-errf(const char* format, ...) {
-
-  assert(format != 0);
-
-  va_list args;
-  char buf[500];
-  memset(buf,0,sizeof(buf));
-  va_start (args, format);
-  vsnprintf(buf,sizeof(buf)-1,format,args);
-  va_end (args);
-  std::cerr << OUTLINER_ERRPREFIX;
-  std::cerr << buf;
-  std::cerr << " -- exit\n";
-  
-}

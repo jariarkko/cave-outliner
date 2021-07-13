@@ -1,0 +1,8 @@
+
+#ifndef OUTLINERCONSTANTS_HH
+#define OUTLINERCONSTANTS_HH
+
+#define tiledivision 30
+
+#endif // OUTLINERCONSTANTS_HH
+

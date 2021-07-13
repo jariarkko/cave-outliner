@@ -1,7 +1,7 @@
 
-OBJS=src/main.o src/svg.o
-HDRS=src/outlinertypes.hh src/svg.hh
-SRCS=src/main.cc src/svg.cc
+OBJS=src/main.o src/processor.o src/debug.o src/svg.o
+HDRS=src/outlinertypes.hh src/outlinerconstants.hh src/debug.hh src/processor.hh src/svg.hh
+SRCS=src/main.cc src/debug.cc src/processor.cc src/svg.cc
 SUPP=Makefile
 CPPFLAGS=-g -Wall
 LDFLAGS=-O4

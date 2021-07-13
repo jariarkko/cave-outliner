@@ -1,4 +1,7 @@
 
+#include "outlinertypes.hh"
+#include "outlinerconstants.hh"
+#include "debug.hh"
 #include "svg.hh"
 
 SvgCreator::SvgCreator(const char* fileName,
