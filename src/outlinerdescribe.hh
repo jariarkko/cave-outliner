@@ -2,6 +2,10 @@
 #ifndef DESCRIBE_HH
 #define DESCRIBE_HH
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Includes ///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h> 
@@ -26,7 +30,7 @@ void describeVertex(const aiScene* scene,
 void describeMesh(const aiScene* scene,
                   unsigned int no,
                   const aiMesh* mesh,
-                  bool vertexes,
+                   bool vertexes,
                   bool faces);
 void describeTransformation(const aiMatrix4x4& x,
                             char* buf,
