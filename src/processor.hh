@@ -12,6 +12,8 @@
 bool processScene(const aiScene* scene,
                   aiVector3D boundingboxstart,
                   aiVector3D boundingboxend,
+                  float step,
+                  enum outlineralgorithm alg,
                   SvgCreator& svg);
 
 #endif // PROCESSOR_HH

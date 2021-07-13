@@ -33,11 +33,7 @@ static bool deepdeepdebug = 0;
 static float step = 1.0;
 static aiVector3D boundingboxstart = {-2,-2,-2};
 static aiVector3D boundingboxend = {2,2,2};
-enum algorithm {
-  alg_pixel,
-  alg_border
-};
-static enum algorithm alg = alg_pixel;
+static enum outlineralgorithm alg = alg_pixel;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program and option handling ///////////////////////////////////////////////////////////
@@ -138,6 +134,8 @@ main(int argc, char** argv) {
   if (!processScene(scene,
                     boundingboxstart,
                     boundingboxend,
+                    step,
+                    alg,
                     svg)) {
     return(1);
   }
