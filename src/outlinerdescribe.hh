@@ -8,9 +8,15 @@
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
 
-void describeScene(const aiScene* scene);
+void describeScene(const aiScene* scene,
+                   bool transforms,
+                   bool recurse,
+                   bool vertexes,
+                   bool faces);
 void describeNode(const aiScene* scene,
-                  const aiNode* node);
+                  const aiNode* node,
+                  bool transforms,
+                  bool recurse);
 void describeFace(const aiScene* scene,
                   const aiMesh* mesh,
                   const aiFace* face);
@@ -19,7 +25,9 @@ void describeVertex(const aiScene* scene,
                     const aiVector3D* vertex);
 void describeMesh(const aiScene* scene,
                   unsigned int no,
-                  const aiMesh* mesh);
+                  const aiMesh* mesh,
+                  bool vertexes,
+                  bool faces);
 void describeTransformation(const aiMatrix4x4& x,
                             char* buf,
                             unsigned bufsiz);

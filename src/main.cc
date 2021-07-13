@@ -115,7 +115,7 @@ main(int argc, char** argv) {
 
   // Describe the model if needed
   if (deepdebug) {
-    describeScene(scene);
+    describeScene(scene,deepdebug,deepdeepdebug,deepdeepdebug,deepdeepdebug);
   }
 
   // Open the output

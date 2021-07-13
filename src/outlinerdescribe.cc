@@ -14,7 +14,11 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void
-describeScene(const aiScene* scene) {
+describeScene(const aiScene* scene,
+              bool transforms,
+              bool recurse,
+              bool vertexes,
+              bool faces) {
   assert(scene != 0);
   deepdebugf("scene:");
   deepdebugf("  mFlags = 0x%x", scene->mFlags);
@@ -24,9 +28,9 @@ describeScene(const aiScene* scene) {
   deepdebugf("  mNumTextures = %u", scene->mNumTextures);
   deepdebugf("  mNumLights = %u", scene->mNumLights);
   deepdebugf("  mNumCameras = %u", scene->mNumCameras);
-  describeNode(scene,scene->mRootNode);
+  describeNode(scene,scene->mRootNode,transforms,recurse);
   for (unsigned int m = 0; m < scene->mNumMeshes; m++) {
-    describeMesh(scene,m,scene->mMeshes[m]);
+    describeMesh(scene,m,scene->mMeshes[m],vertexes,faces);
   }
 }
 
@@ -67,7 +71,9 @@ describeTransformation(const aiMatrix4x4& x,
 
 void
 describeNode(const aiScene* scene,
-             const aiNode* node) {
+             const aiNode* node,
+             bool transforms,
+             bool recurse) {
   assert(scene != 0);
   assert(node != 0);
   deepdebugf("  node %s", node->mName.C_Str());
@@ -91,17 +97,21 @@ describeNode(const aiScene* scene,
 void
 describeMesh(const aiScene* scene,
              unsigned int no,
-             const aiMesh* mesh) {
+             const aiMesh* mesh,
+             bool vertexes,
+             bool faces) {
   assert(scene != 0);
   assert(mesh != 0);
   deepdebugf("  mesh %u", no);
   deepdebugf("    mPrimitiveTypes = 0x%x", mesh->mPrimitiveTypes);
   deepdebugf("    mNumVertices = %u", mesh->mNumVertices);
   deepdebugf("    mNumFaces = %u", mesh->mNumFaces);
-  if (deepdeepdebug) {
+  if (vertexes) {
     for (unsigned int v = 0; v < mesh->mNumVertices; v++) {
       describeVertex(scene,mesh,&mesh->mVertices[v]);
     }
+  }
+  if (faces) {
     for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
       describeFace(scene,mesh,&mesh->mFaces[f]);
     }
