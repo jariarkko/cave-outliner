@@ -89,7 +89,7 @@ describeNode(const aiScene* scene,
   }
   if (recurse) {
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
-      describeNode(scene,node->mChildren[i]);
+      describeNode(scene,node->mChildren[i],transforms,recurse);
     }
   }
 }
