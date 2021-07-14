@@ -30,7 +30,12 @@ public:
 
   IndexedMesh(unsigned int maxMeshesIn,
               unsigned int subdivisionsIn);
-  ~IndexedMesh();
+  void addScene(const aiScene* scene);
+  void addNode(const aiScene* scene,
+               const aiNode* node);
+  void addMesh(const aiScene* scene,
+               const aiMesh* mesh);
+   ~IndexedMesh();
    
 private:
 
@@ -40,6 +45,12 @@ private:
   
   struct IndexedMeshOneMesh* meshes;
   
+  void addFaces(struct IndexedMeshOneMesh& shadow,
+                const aiScene* scene,
+                const aiMesh* mesh);
+  void addFace(struct IndexedMeshOneMesh& shadow,
+               const aiScene* scene,
+               const aiFace* face);
 };
 
 #endif // INDEXEDMESH_HH

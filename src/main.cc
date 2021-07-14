@@ -133,6 +133,10 @@ main(int argc, char** argv) {
     describeScene(scene,deepdebug,deepdeepdebug,deepdeepdebug,deepdeepdebug);
   }
 
+  // Build our own data structure
+  IndexedMesh indexed(outlinermaxmeshes,outlinertiledivision);
+  indexed.addMeshes(scene);
+  
   // Open the output
   unsigned int xSize = (boundingboxend.x - boundingboxstart.x) / step;
   unsigned int ySize = (boundingboxend.y - boundingboxstart.y) / step;

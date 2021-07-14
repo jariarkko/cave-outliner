@@ -20,6 +20,7 @@ IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
   assert(maxMeshesIn >= 1);
   assert(subdivisionsIn >= 1);
   maxMeshes = maxMeshesIn;
+  nMeshes = 0;
   subdivisions = subdivisionsIn;
   meshes = new IndexedMeshOneMesh [maxMeshes];
   if (meshes == 0) {
@@ -29,6 +30,46 @@ IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
   for (unsigned int i = 0; i < maxMeshes; i++) {
     meshes[i].mesh = 0;
   }
+}
+
+void
+IndexedMesh::addScene(const aiScene* scene) {
+  addNode(scene,scene->mRootNode);
+}
+
+void
+IndexedMesh::addNode(const aiScene* scene,
+                     const aiNode* node) {
+  for (unsigned int j = 0; j < node->mNumMeshes; j++) {
+    addMesh(scene,scene->mMeshes[node->mMeshes[j]]);
+  }
+  for (unsigned int i = 0; i < node->mNumChildren; i++) {
+    addNode(scene,node->mChildren[i]);
+  }
+}
+
+void
+IndexedMesh::addMesh(const aiScene* scene,
+                     const aiMesh* mesh) {
+  if (nMeshes == maxMeshes) {
+    errf("Cannot another mesh, already have %u", maxMeshes);
+    exit(1);
+  }
+  meshes[nMeshes].mesh = mesh;
+  nMeshes++;
+  addFaces(meshes[nMeshes],mesh);
+}
+
+void
+IndexedMesh::addFaces(struct IndexedMeshOneMesh& shadow,
+                      const aiScene* scene,
+                      const aiMesh* mesh) {
+}
+
+void
+IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
+                     const aiScene* scene,
+                     const aiFace* face) {
 }
 
 IndexedMesh::~IndexedMesh() {
