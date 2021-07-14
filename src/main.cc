@@ -135,7 +135,7 @@ main(int argc, char** argv) {
 
   // Build our own data structure
   IndexedMesh indexed(outlinermaxmeshes,outlinertiledivision);
-  indexed.addMeshes(scene);
+  indexed.addScene(scene);
   
   // Open the output
   unsigned int xSize = (boundingboxend.x - boundingboxstart.x) / step;
