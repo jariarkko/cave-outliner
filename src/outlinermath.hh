@@ -16,6 +16,11 @@
 // Function prototypes ////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+void triangleBoundingBox2D(const aiVector2D* a,
+                           const aiVector2D* b,
+                           const aiVector2D* c,
+                           aiVector2D* boundingBoxStart,
+                           aiVector2D* boundingBoxEnd)
 bool pointInsideTriangle2D(const aiVector2D* a,
                            const aiVector2D* b,
                            const aiVector2D* c,

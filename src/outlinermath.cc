@@ -19,11 +19,138 @@
 
 static void vectorTests(void);
 static void detTests(void);
+static void boundingBoxTests(void);
 static void triangleTests(void);
+static void sortVectorsX(const aiVector2D* a,
+                         const aiVector2D* b,
+                         const aiVector2D* c,
+                         const aiVector2D** nth0,
+                         const aiVector2D** nth1,
+                         const aiVector2D** nth2);
+static void sortVectorsY(const aiVector2D* a,
+                         const aiVector2D* b,
+                         const aiVector2D* c,
+                         const aiVector2D** nth0,
+                         const aiVector2D** nth1,
+                         const aiVector2D** nth2);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Math functions /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+void triangleBoundingBox2D(const aiVector2D* a,
+                           const aiVector2D* b,
+                           const aiVector2D* c,
+                           aiVector2D* boundingBoxStart,
+                           aiVector2D* boundingBoxEnd) {
+
+  const aiVector2D* nth1;
+  const aiVector2D* nth2;
+  const aiVector2D* nth3;
+  float xStart;
+  float xEnd;
+  float yStart;
+  float yEnd;
+  
+  // Order the points a,b,c so that the one with smallest x comes first
+  sortVectorsX(a,b,c,&nth1,&nth2,&nth3);
+  
+  // Fill in xStart and xEnd
+  xStart = nth1->x;
+  xEnd = nth3->x;
+  
+  // Order the points a,b,c so that the one with smallest y comes first
+  sortVectorsY(a,b,c,&nth1,&nth2,&nth3);
+  
+  // Fill in yStart and yEnd
+  yStart = nth1->y;
+  yEnd = nth3->y;
+
+  // Construct the result
+  boundingBoxStart->x = xStart;
+  boundingBoxStart->y = yStart;
+  boundingBoxEnd->x = xEnd;
+  boundingBoxEnd->y = yEnd;
+}
+
+static void
+sortVectorsX(const aiVector2D* a,
+             const aiVector2D* b,
+             const aiVector2D* c,
+             const aiVector2D** nth0,
+             const aiVector2D** nth1,
+             const aiVector2D** nth2) {
+
+  // There are 6 permutations of three numbers. Simply test for each condition.
+  if (a->x < b->x) {
+    if (c->x < a->x) {
+      *nth0 = c;
+      *nth1 = a;
+      *nth2 = b;
+    } else if (c->x < b->x) {
+      *nth0 = a;
+      *nth1 = c;
+      *nth2 = b;
+    } else {
+      *nth0 = a;
+      *nth1 = b;
+      *nth2 = c;
+    }
+  } else {
+    if (c->x < b->x) {
+      *nth0 = c;
+      *nth1 = b;
+      *nth2 = a;
+    } else if (c->x < a->x) {
+      *nth0 = b;
+      *nth1 = c;
+      *nth2 = a;
+    } else {
+      *nth0 = b;
+      *nth1 = a;
+      *nth2 = c;
+    }
+  }
+}
+
+static void
+sortVectorsY(const aiVector2D* a,
+             const aiVector2D* b,
+             const aiVector2D* c,
+             const aiVector2D** nth0,
+             const aiVector2D** nth1,
+             const aiVector2D** nth2) {
+  // There are 6 permutations of three numbers. Simply test for each condition.
+  if (a->y < b->y) {
+    if (c->y < a->y) {
+      *nth0 = c;
+      *nth1 = a;
+      *nth2 = b;
+    } else if (c->y < b->y) {
+      *nth0 = a;
+      *nth1 = c;
+      *nth2 = b;
+    } else {
+      *nth0 = a;
+      *nth1 = b;
+      *nth2 = c;
+    }
+  } else {
+    if (c->y < b->y) {
+      *nth0 = c;
+      *nth1 = b;
+      *nth2 = a;
+    } else if (c->y < a->y) {
+      *nth0 = b;
+      *nth1 = c;
+      *nth2 = a;
+    } else {
+      *nth0 = b;
+      *nth1 = a;
+      *nth2 = c;
+    }
+  }
+}
 
 bool
 pointInsideTriangle2D(const aiVector2D* triangleA,
@@ -90,6 +217,24 @@ detTests(void) {
   ai_real result = determinant2x2(&C1,&C2);
   deepdebugf("determinant result = %.2f", result);
   assert(result == 10);
+}
+
+static void
+boundingBoxTests(void) {
+  aiVector2D a(0,0);
+  aiVector2D b(0,3);
+  aiVector2D c(2,0);
+  aiVector2D boundingBoxStart;
+  aiVector2D boundingBoxEnd;
+  triangleBoundingBox2D(&a,&a,&a);
+  assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
+  assert(boundingBoxEnd.x == 0 && boundingBoxEnd.y == 0);
+  triangleBoundingBox2D(&a,&b,&c);
+  assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
+  assert(boundingBoxEnd.x == 2 && boundingBoxEnd.y == 3);
+  triangleBoundingBox2D(&c,&b,&a);
+  assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
+  assert(boundingBoxEnd.x == 2 && boundingBoxEnd.y == 3);
 }
 
 static void
