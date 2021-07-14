@@ -5,6 +5,7 @@
 
 #include <stdarg.h>
 #include <assert.h>
+#include <string.h>
 #include <iostream>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -24,7 +25,7 @@
 
 static const aiScene* processImport(Assimp::Importer& importer,
                                     const char* file);
-static void checkFileExtension(const char* filename,
+static bool checkFileExtension(const char* filename,
                                const char* extension);
 static void processHelp(void);
 static void runTests(void);
@@ -218,7 +219,7 @@ processImport(Assimp::Importer& importer,
 // Utilit functions ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-static void
+static bool
 checkFileExtension(const char* filename,
                    const char* extension) {
   assert(filename != 0);
