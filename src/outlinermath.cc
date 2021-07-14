@@ -34,7 +34,7 @@ static void sortVectorsY(const aiVector2D* a,
                          const aiVector2D** nth1,
                          const aiVector2D** nth2);
 
-///////////////////////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////////////////////////////////////////////////////////////////////////
 // Math functions /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -226,13 +226,13 @@ boundingBoxTests(void) {
   aiVector2D c(2,0);
   aiVector2D boundingBoxStart;
   aiVector2D boundingBoxEnd;
-  triangleBoundingBox2D(&a,&a,&a);
+  triangleBoundingBox2D(&a,&a,&a,&boundingBoxStart,&boundingBoxEnd);
   assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
   assert(boundingBoxEnd.x == 0 && boundingBoxEnd.y == 0);
-  triangleBoundingBox2D(&a,&b,&c);
+  triangleBoundingBox2D(&a,&b,&c,&boundingBoxStart,&boundingBoxEnd);
   assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
   assert(boundingBoxEnd.x == 2 && boundingBoxEnd.y == 3);
-  triangleBoundingBox2D(&c,&b,&a);
+  triangleBoundingBox2D(&c,&b,&a,&boundingBoxStart,&boundingBoxEnd);
   assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
   assert(boundingBoxEnd.x == 2 && boundingBoxEnd.y == 3);
 }
