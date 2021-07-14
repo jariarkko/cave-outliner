@@ -24,6 +24,8 @@
 
 static const aiScene* processImport(Assimp::Importer& importer,
                                     const char* file);
+static void checkFileExtension(const char* filename,
+                               const char* extension);
 static void processHelp(void);
 static void runTests(void);
 
@@ -101,13 +103,20 @@ main(int argc, char** argv) {
     argc--;
     argv++;
   }
-  
+
+  // Check input and output file names
   if (argc != 3) {
     errf("Expected two arguments, an input and output file name");
     return(1);
   }
   const char* input = argv[1];
   const char* output = argv[2];
+  if (outlineralgorithm_generatespicture(alg)) {
+    if (!checkFileExtension(output,"svg")) {
+      errf("Output file must be an SVG file, %s given", output);
+      return(1);
+    }
+  }
   
   // Initialize debug
   debuginit(debug,deepdebug,deepdeepdebug);
@@ -203,6 +212,22 @@ processImport(Assimp::Importer& importer,
 
   return(scene);
 
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Utilit functions ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+static void
+checkFileExtension(const char* filename,
+                   const char* extension) {
+  assert(filename != 0);
+  assert(extension != 0);
+  const char* foundExtension = rindex(filename,'.');
+  if (foundExtension == 0) return(0);
+  foundExtension++;
+  if (strcasecmp(foundExtension,extension) != 0) return(0);
+  else return(1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

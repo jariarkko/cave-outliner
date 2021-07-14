@@ -19,4 +19,7 @@ enum outlineralgorithm {
   alg_border
 };
 
+#define outlineralgorithm_generatespicture(a) \
+  ((a) == alg_pixel ||  (a) == alg_border)
+
 #endif // OUTLINERTYPES_HH
