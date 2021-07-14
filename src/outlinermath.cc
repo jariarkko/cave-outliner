@@ -197,6 +197,7 @@ mathTests(void) {
   vectorTests();
   detTests();
   triangleTests();
+  boundingBoxTests();
 }
 
 static void
