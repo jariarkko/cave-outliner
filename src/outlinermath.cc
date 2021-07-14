@@ -251,6 +251,11 @@ boundingBoxTests(void) {
          boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
   assert(boundingBoxStart.x == -10 && boundingBoxStart.y == -10);
   assert(boundingBoxEnd.x == 30 && boundingBoxEnd.y == 10);
+  triangleBoundingBox2D(&y,&z,&x,&boundingBoxStart,&boundingBoxEnd);
+  debugf("y,z,x bounding box [%.2f,%.2f] to [%.2f,%.2f]",
+         boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
+  assert(boundingBoxStart.x == -10 && boundingBoxStart.y == -10);
+  assert(boundingBoxEnd.x == 30 && boundingBoxEnd.y == 10);
 }
 
 static void
