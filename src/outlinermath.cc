@@ -227,15 +227,30 @@ boundingBoxTests(void) {
   aiVector2D c(2,0);
   aiVector2D boundingBoxStart;
   aiVector2D boundingBoxEnd;
+  debugf("bounding box tests");
   triangleBoundingBox2D(&a,&a,&a,&boundingBoxStart,&boundingBoxEnd);
+  debugf("a,a,a bounding box [%.2f,%.2f] to [%.2f,%.2f]",
+         boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
   assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
   assert(boundingBoxEnd.x == 0 && boundingBoxEnd.y == 0);
   triangleBoundingBox2D(&a,&b,&c,&boundingBoxStart,&boundingBoxEnd);
+  debugf("a,b,c bounding box [%.2f,%.2f] to [%.2f,%.2f]",
+         boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
   assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
   assert(boundingBoxEnd.x == 2 && boundingBoxEnd.y == 3);
   triangleBoundingBox2D(&c,&b,&a,&boundingBoxStart,&boundingBoxEnd);
+  debugf("c,b,a bounding box [%.2f,%.2f] to [%.2f,%.2f]",
+         boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
   assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
   assert(boundingBoxEnd.x == 2 && boundingBoxEnd.y == 3);
+  aiVector2D x(-10,-10);
+  aiVector2D y(10,10);
+  aiVector2D z(30,9);
+  triangleBoundingBox2D(&z,&y,&x,&boundingBoxStart,&boundingBoxEnd);
+  debugf("z,y,x bounding box [%.2f,%.2f] to [%.2f,%.2f]",
+         boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
+  assert(boundingBoxStart.x == -10 && boundingBoxStart.y == -10);
+  assert(boundingBoxEnd.x == 30 && boundingBoxEnd.y == 10);
 }
 
 static void
