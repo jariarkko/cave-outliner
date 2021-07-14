@@ -92,6 +92,7 @@ main(int argc, char** argv) {
       boundingboxstart = aiVector3D(startx,starty,startz);
       boundingboxend = aiVector3D(endx,endy,endz);
     } else if (strcmp(argv[1],"--test") == 0) {
+      debuginit(debug,deepdebug,deepdeepdebug);
       runTests();
       return(0);
     } else if (strcmp(argv[1],"--help") == 0) {
