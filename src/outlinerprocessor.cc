@@ -57,6 +57,7 @@ processScene(const aiScene* scene,
         case alg_pixel:
           svg.pixel((x - boundingboxstart.x) / step,
                     (y - boundingboxstart.y) / step);
+          break;
         case alg_border:
           errf("Border algorithm is not yet implemented");
           exit(1);
