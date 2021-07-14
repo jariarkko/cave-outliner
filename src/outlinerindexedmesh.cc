@@ -57,7 +57,7 @@ IndexedMesh::addMesh(const aiScene* scene,
   }
   meshes[nMeshes].mesh = mesh;
   nMeshes++;
-  addFaces(meshes[nMeshes],mesh);
+  addFaces(meshes[nMeshes],scene,mesh);
 }
 
 void
