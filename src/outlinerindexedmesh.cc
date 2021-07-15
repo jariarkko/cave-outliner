@@ -29,6 +29,24 @@ IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
   }
   for (unsigned int i = 0; i < maxMeshes; i++) {
     meshes[i].mesh = 0;
+    meshes[i].tileMatrix = new struct IndexedMeshOneMeshOneTileFaces* [subdivisions];
+    if (meshes[i].tileMatrix == 0) {
+      errf("Cannot allocate %u tile matrix", subdivisions);
+      exit(1);
+    }
+    memset(meshes[i].tileMatrix,0,sizeof(struct IndexedMeshOneMeshOneTileFaces*) * subdivisions);
+    for (unsigned int j = 0; j < subdivisions; j++) {
+      meshes[i].tileMatrix[j] = new struct IndexMeshOneMeshOneTileFaces [subdivisions];
+      if (meshes[i].tileMatrix[j] == 0) {
+        errf("Cannot allocate %u tile matrix second dimension", subdivisions);
+        exit(1);
+      }
+      for (unsigned int k = 0; k < subdivisions;k++) {
+        meshes[i].tileMatrix[j][k].nFaces = 0;
+        meshes[i].tileMatrix[j][k].maxNFaces = 0;
+        meshes[i].tileMatrix[j][k].faces = 0;
+      }
+    }
   }
 }
 
@@ -73,8 +91,25 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
 }
 
 IndexedMesh::~IndexedMesh() {
-  delete meshes;
-  meshes = 0;
+  if (meshes != 0) {
+    for (unsigned int i = 0; i < maxMeshes; i++) {
+      if (meshes[i].tileMatrix == 0) continue;
+      for (unsigned int j = 0; j < subdivisions; j++) {
+        if (meshes[i].tileMatrix[j] == 0) continue;
+        for (unsigned int k = 0; k < subdivisions;k++) {
+          if (meshes[i].tileMatrix[j][k].faces != 0) {
+            delete meshes[i].tileMatrix[j][k].faces;
+          }
+        }
+        delete meshes[i].tileMatrix[j];
+      }
+      delete meshes[i].tileMatrix;
+    }
+    
+    delete meshes;
+    meshes = 0;
+  }
+  
   maxMeshes = 0;
   subdivisions = 0;
 }

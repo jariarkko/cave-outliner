@@ -16,8 +16,15 @@
 // Internal data types ////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+struct IndexedMeshOneMeshOneTileFaces {
+  unsigned int nFaces;
+  unsigned int maxNFaces;
+  const aiFace** faces;
+};
+
 struct IndexedMeshOneMesh {
   const aiMesh* mesh;
+  struct IndexedMeshOneMeshOneTileFaces** tileMatrix;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,6 +42,8 @@ public:
                const aiNode* node);
   void addMesh(const aiScene* scene,
                const aiMesh* mesh);
+  void getFaces(unsigned int* p_nFaces,
+                const aiFace** p_faces);
    ~IndexedMesh();
    
 private:
@@ -51,6 +60,10 @@ private:
   void addFace(struct IndexedMeshOneMesh& shadow,
                const aiScene* scene,
                const aiFace* face);
+  void getFacesTile(unsigned int xTile,
+                    unsigned int yTile,
+                    unsigned int* p_nFaces,
+                    const aiFace** p_faces);
 };
 
 #endif // INDEXEDMESH_HH
