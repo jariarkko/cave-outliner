@@ -26,6 +26,8 @@ SvgCreator::SvgCreator(const char* fileName,
   this->yStart = yStart;
   this->xFactor = xFactor;
   this->yFactor = yFactor;
+  debugf("coordinate normalization starts (%.2f,%.2f) factors (%f,%f)",
+         xStart, yStart, xFactor, yFactor);
   preamble();
 }
 
