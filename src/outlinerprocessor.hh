@@ -14,6 +14,8 @@
 #include "outlinersvg.hh"
 #include "outlinerindexedmesh.hh"
 
+class IndexedMesh;
+
 bool processScene(const aiScene* scene,
                   aiVector3D boundingboxstart,
                   aiVector3D boundingboxend,
