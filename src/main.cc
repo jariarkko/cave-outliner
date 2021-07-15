@@ -146,10 +146,12 @@ main(int argc, char** argv) {
   indexed.addScene(scene);
   
   // Open the output
-  unsigned int xSize = (boundingboxend.x - boundingboxstart.x) / step;
-  unsigned int ySize = (boundingboxend.y - boundingboxstart.y) / step;
+  float xFactor = (boundingboxend.x - boundingboxstart.x) / step;
+  float yFactor = (boundingboxend.y - boundingboxstart.y) / step;
+  unsigned int xSize = xFactor;
+  unsigned int ySize = yFactor;
   debugf("SVG size will be %u x %u", xSize, ySize);
-  SvgCreator svg(output,xSize,ySize);
+  SvgCreator svg(output,xSize,ySize,boundingboxstart.x,boundingboxstart.y,xFactor,yFactor);
   
   // Check that we were able to open the file
   if (!svg.ok()) {

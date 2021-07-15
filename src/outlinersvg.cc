@@ -14,10 +14,18 @@
 
 SvgCreator::SvgCreator(const char* fileName,
                        unsigned int xSize,
-                       unsigned int ySize) {
+                       unsigned int ySize,
+                       float xStart,
+                       float yStart,
+                       float xFactor,
+                       float yFactor) {
   this->file.open(fileName);
   this->xSize = xSize;
   this->ySize = ySize;
+  this->xStart = xStart;
+  this->yStart = yStart;
+  this->xFactor = xFactor;
+  this->yFactor = yFactor;
   preamble();
 }
 
@@ -26,15 +34,43 @@ SvgCreator::~SvgCreator() {
   file.close();
 }
 
-void SvgCreator::line(unsigned int fromX,
-                      unsigned int fromY,
-                      unsigned int toX,
-                      unsigned int toY) {
+void SvgCreator::line(float fromX,
+                      float fromY,
+                      float toX,
+                      float toY) {
+  unsigned int fromXInt;
+  unsigned int fromYInt;
+  coordinateNormalization(fromX,fromy,fromXInt,fromYInt);
+  
+  unsigned int toXInt;
+  unsigned int toYInt;
+  coordinateNormalization(toX,toY,toXInt,toYInt);
+
+  file << "<line x1=\"" << fromXInt << "\" y1=\"" << fromYInt << "\"";
+  file << "<line x2=\"" << toXInt << "\" y2=\"" << toYInt << "\"";
+  file << " style=\"stroke:black;stroke-width=1\" />\n";
 }
   
-void SvgCreator::pixel(unsigned int x,
-                       unsigned int y) {
-  file << "<rect x=\"" << x << "\" y=\"" << y << "\" width=\"1\" height=\"1\" fill=\"none\" stroke=\"black\" />\n";
+void SvgCreator::pixel(float x,
+                       float y) {
+  unsigned int xInt;
+  unsigned int yInt;
+  coordinateNormalization(x,y,xInt,yInt);
+  file << "<rect x=\"" << xInt << "\" y=\"" << yInt << "\" width=\"1\" height=\"1\" fill=\"none\" stroke=\"black\" />\n";
+}
+
+void
+SvgCreator::coordinateNormalization(float x,
+                                    float y,
+                                    unsigned int& xInt,
+                                    unsigned int& yInt) {
+  float xNormalized = (x - xStart) * xFactor;
+  float yNormalized = (y - yStart) * yFactor;
+  xInt = xNormalized;
+  yInt = yNormalized;
+  deepdebugf("coordinate normalization (%.2f,%.2f) to (%u,%u)",
+             x, y,
+             xInt, yInt);
 }
 
 bool SvgCreator::ok() {

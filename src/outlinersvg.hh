@@ -18,15 +18,19 @@ class SvgCreator {
  public:
   
   SvgCreator(const char* fileName,
-             unsigned int xSize,
-             unsigned int ySize);
+             unsigned int xSize, 
+             unsigned int ySize,
+             float xStart,
+             float yStart,
+             float xFactor,
+             float yFactor);
   ~SvgCreator();
-  void line(unsigned int fromX,
-            unsigned int fromY,
-            unsigned int toX,
-            unsigned int toY);
-  void pixel(unsigned int x,
-             unsigned int y);
+  void line(float fromX,
+            float fromY,
+            float toX,
+            float toY);
+  void pixel(float x,
+             float y);
   bool ok();
   
  private:
@@ -34,6 +38,10 @@ class SvgCreator {
   std::ofstream file;
   unsigned int xSize;
   unsigned int ySize;
+  float xStart;
+  float yStart;
+  float xFactor;
+  float yFactor;
 
   void preamble();
   void postamble();
