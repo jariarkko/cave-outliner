@@ -68,7 +68,7 @@ main(int argc, char** argv) {
       step = atof(argv[2]);
       if (step < 0.0001) {
         errf("Invalid step value");
-        return(0);
+        return(1);
       }
       argc--;argv++;
     } else if (strcmp(argv[1],"--bounding") == 0 && argc > 1 + 2*3) {
@@ -80,21 +80,22 @@ main(int argc, char** argv) {
       argc--;argv++; float endz = atof(argv[1]);
       if (endx - startx < 0.0001) {
         errf("Invalid bounding box x range");
-        return(0);
+        return(1);
       }
       if (endy - starty < 0.0001) {
         errf("Invalid bounding box y range");
-        return(0);
+        return(1);
       }
       if (endz - startz < 0.0001) {
         errf("Invalid bounding box z range");
-        return(0);
+        return(1);
       }
       boundingboxstart = aiVector3D(startx,starty,startz);
       boundingboxend = aiVector3D(endx,endy,endz);
     } else if (strcmp(argv[1],"--tiling") == 0 && argc > 2) {
       if (atoi(argv[2]) < 1 || atoi(argv[2]) > 10000) {
         errf("Invalid tile count, must be at least one and a not too big for memory, %s given", argv[2]);
+        return(1);
       }
       tiles = atoi(argv[2]);
       argc--;argv++;
@@ -153,7 +154,7 @@ main(int argc, char** argv) {
   // Check that we were able to open the file
   if (!svg.ok()) {
     errf("File open for writing  to %s failed", output);
-    return(0);
+    return(1);
   }
   
   // Process the model
@@ -170,7 +171,7 @@ main(int argc, char** argv) {
   // Check that file I/O was ok
   if (!svg.ok()) {
     errf("File output to %s failed", output);
-    return(0);
+    return(1);
   }
   
   // Done
