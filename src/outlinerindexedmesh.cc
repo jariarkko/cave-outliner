@@ -22,6 +22,7 @@ IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
   maxMeshes = maxMeshesIn;
   nMeshes = 0;
   subdivisions = subdivisionsIn;
+  debugf("%u x %u tiles, or %u tiles", subdivisions, subdivisions, subdivisions * subdivisions):
   meshes = new IndexedMeshOneMesh [maxMeshes];
   if (meshes == 0) {
     errf("Cannot allocate %u indexed meshes", maxMeshes);
