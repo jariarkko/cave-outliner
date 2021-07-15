@@ -19,19 +19,23 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 static bool sceneHasMaterial(const aiScene* scene,
+                  IndexedMesh& indexed,
                              float x,
                              float y);
 static bool nodeHasMaterial(const aiScene* scene,
                             const aiNode* node,
+                            IndexedMesh& indexed,
                             float x,
                             float y);
 static bool meshHasMaterial(const aiScene* scene,
                             const aiMesh* node,
+                            IndexedMesh& indexed,
                             float x,
                             float y);
 static bool faceHasMaterial(const aiScene* scene,
                             const aiMesh* mesh,
                             const aiFace* face,
+                            IndexedMesh& indexed,
                             float x,
                             float y);
 
@@ -45,13 +49,14 @@ processScene(const aiScene* scene,
              aiVector3D boundingboxend,
              float step,
              enum outlineralgorithm alg,
+             IndexedMesh& indexed,
              SvgCreator& svg) {
   debugf("processScene");
   assert(scene != 0);
   for (float x = boundingboxstart.x; x <= boundingboxend.x; x += step)  {
     for (float y = boundingboxstart.y; y <= boundingboxend.y; y += step)  {
       deepdebugf("checking (%.2f,%.2f)",x,y);
-      if (sceneHasMaterial(scene,x,y)) {
+      if (sceneHasMaterial(scene,indexed,x,y)) {
         debugf("material at (%.2f,%.2f)",x,y);
         switch (alg) {
         case alg_pixel:
@@ -73,16 +78,18 @@ processScene(const aiScene* scene,
 
 static bool
 sceneHasMaterial(const aiScene* scene,
+                 IndexedMesh& indexed,
                  float x,
                  float y) {
   assert(scene != 0);
   deepdeepdebugf("checking for material at (%.2f,%.2f)", x, y);
-  return(nodeHasMaterial(scene,scene->mRootNode,x,y));
+  return(nodeHasMaterial(scene,scene->mRootNode,indexed,x,y));
 }
 
 static bool
 nodeHasMaterial(const aiScene* scene,
                 const aiNode* node,
+                IndexedMesh& indexed,
                 float x,
                 float y) {
   assert(scene != 0);
@@ -92,12 +99,12 @@ nodeHasMaterial(const aiScene* scene,
     exit(1);
   }
   for (unsigned int j = 0; j < node->mNumMeshes; j++) {
-    if (meshHasMaterial(scene,scene->mMeshes[node->mMeshes[j]],x,y)) {
+    if (meshHasMaterial(scene,scene->mMeshes[node->mMeshes[j]],indexed,x,y)) {
       return(1);
     }
   }
   for (unsigned int i = 0; i < node->mNumChildren; i++) {
-    if (nodeHasMaterial(scene,node->mChildren[i],x,y)) {
+    if (nodeHasMaterial(scene,node->mChildren[i],indexed,x,y)) {
       return(1);
     }
   }
@@ -107,12 +114,13 @@ nodeHasMaterial(const aiScene* scene,
 static bool
 meshHasMaterial(const aiScene* scene,
                 const aiMesh* mesh,
+                IndexedMesh& indexed,
                 float x,
                 float y) {
   assert(scene != 0);
   assert(mesh != 0);
   for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
-    if (faceHasMaterial(scene,mesh,&mesh->mFaces[f],x,y)) {
+    if (faceHasMaterial(scene,mesh,&mesh->mFaces[f],indexed,x,y)) {
       return(1);
     }
   }
@@ -123,6 +131,7 @@ static bool
 faceHasMaterial(const aiScene* scene,
                 const aiMesh* mesh,
                 const aiFace* face,
+                IndexedMesh& indexed,
                 float x,
                 float y) {
   assert(scene != 0);

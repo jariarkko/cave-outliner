@@ -18,6 +18,7 @@ bool processScene(const aiScene* scene,
                   aiVector3D boundingboxend,
                   float step,
                   enum outlineralgorithm alg,
+                  IndexedMesh& indexed,
                   SvgCreator& svg);
 
 #endif // PROCESSOR_HH

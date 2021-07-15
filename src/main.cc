@@ -41,6 +41,7 @@ static float step = 1.0;
 static aiVector3D boundingboxstart = {-2,-2,-2};
 static aiVector3D boundingboxend = {2,2,2};
 static enum outlineralgorithm alg = alg_pixel;
+static unsigned int tiles = outlinertiledivision;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program and option handling ///////////////////////////////////////////////////////////
@@ -91,6 +92,12 @@ main(int argc, char** argv) {
       }
       boundingboxstart = aiVector3D(startx,starty,startz);
       boundingboxend = aiVector3D(endx,endy,endz);
+    } else if (strcmp(argv[1],"--tiles") == 0 && argc > 2) {
+      if (atoi(argv[2]) < 1 || atoi(argv[2]) > 10000) {
+        errf("Invalid tile count, must be at least one and a not too big for memory, %s given", argv[2]);
+      }
+      tiles = atoi(argv[2]);
+      argc--;argv++;
     } else if (strcmp(argv[1],"--test") == 0) {
       debuginit(debug,deepdebug,deepdeepdebug);
       runTests();
@@ -134,7 +141,7 @@ main(int argc, char** argv) {
   }
 
   // Build our own data structure
-  IndexedMesh indexed(outlinermaxmeshes,outlinertiledivision);
+  IndexedMesh indexed(outlinermaxmeshes,tiles);
   indexed.addScene(scene);
   
   // Open the output
@@ -155,6 +162,7 @@ main(int argc, char** argv) {
                     boundingboxend,
                     step,
                     alg,
+                    indexed,
                     svg)) {
     return(1);
   }
@@ -183,9 +191,13 @@ processHelp(void) {
   std::cout << "  --bounding x x y y z z   Set the bounding box area. Default is -2 2 -2 2 -2 2.\n";
   std::cout << "  --step i                 Set the granularity increment. Default is 1.\n";
   std::cout << "  --pixel or --border      Choose the output drawing algorithm. Default is pixel.\n";
+  std::cout << "  --tiling n               Optimize search process with n x n tiles. ";
+  std::cout <<                            "Default is " << outlinertiledivision << ",\n";
+  std::cout << "                           and --tiling 1 implies no optimization.\n";
   std::cout << "  --debug                  Turn on debugging messages (level 0, least)\n";
   std::cout << "  --deepdebug              Turn on debugging messages (level 1)\n";
   std::cout << "  --deepdeepdebug          Turn on debugging messages (level 2, most)\n";
+  std::cout << "  --help                   Print this message\n";
   std::cout << "\n";
 }
 
