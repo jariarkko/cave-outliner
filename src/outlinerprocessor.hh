@@ -19,7 +19,8 @@ class IndexedMesh;
 bool processScene(const aiScene* scene,
                   aiVector3D boundingboxstart,
                   aiVector3D boundingboxend,
-                  float step,
+                  float stepx,
+                  float stepy,
                   enum outlineralgorithm alg,
                   IndexedMesh& indexed,
                   SvgCreator& svg);

@@ -46,21 +46,21 @@ bool
 processScene(const aiScene* scene,
              aiVector3D boundingboxstart,
              aiVector3D boundingboxend,
-             float step,
+             float stepx,
+             float stepy,
              enum outlineralgorithm alg,
              IndexedMesh& indexed,
              SvgCreator& svg) {
   debugf("processScene");
   assert(scene != 0);
-  for (float x = boundingboxstart.x; x <= boundingboxend.x; x += step)  {
-    for (float y = boundingboxstart.y; y <= boundingboxend.y; y += step)  {
+  for (float x = boundingboxstart.x; x <= boundingboxend.x; x += stepx)  {
+    for (float y = boundingboxstart.y; y <= boundingboxend.y; y += stepy)  {
       deepdebugf("checking (%.2f,%.2f)",x,y);
       if (sceneHasMaterial(scene,indexed,x,y)) {
         debugf("material at (%.2f,%.2f)",x,y);
         switch (alg) {
         case alg_pixel:
-          svg.pixel((x - boundingboxstart.x) / step,
-                    (y - boundingboxstart.y) / step);
+          svg.pixel(x,y);
           break;
         case alg_border:
           errf("Border algorithm is not yet implemented");

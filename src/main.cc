@@ -37,7 +37,8 @@ static void runTests(void);
 static bool debug = 0;
 static bool deepdebug = 0;
 static bool deepdeepdebug = 0;
-static float step = 1.0;
+static float stepx = 1.0;
+static float stepy = 1.0;
 static aiVector3D boundingboxstart = {-2,-2,-2};
 static aiVector3D boundingboxend = {2,2,2};
 static enum outlineralgorithm alg = alg_pixel;
@@ -65,8 +66,8 @@ main(int argc, char** argv) {
     } else if (strcmp(argv[1],"--border") == 0) {
         alg = alg_border;
     } else if (strcmp(argv[1],"--step") == 0 && argc > 2) {
-      step = atof(argv[2]);
-      if (step < 0.0001) {
+      stepx = stepy = atof(argv[2]);
+      if (stepx < 0.0001) {
         errf("Invalid step value");
         return(1);
       }
@@ -146,12 +147,14 @@ main(int argc, char** argv) {
   indexed.addScene(scene);
   
   // Open the output
-  float xFactor = (boundingboxend.x - boundingboxstart.x) / step;
-  float yFactor = (boundingboxend.y - boundingboxstart.y) / step;
-  unsigned int xSize = xFactor;
-  unsigned int ySize = yFactor;
+  float xSize = (boundingboxend.x - boundingboxstart.x) / stepx;
+  float ySize = (boundingboxend.y - boundingboxstart.y) / stepy;
+  unsigned int xSizeInt = xSize;
+  unsigned int ySizeInt = ySize;
+  float xFactor = 1 / stepx;
+  float yFactor = 1 / stepy;
   debugf("SVG size will be %u x %u", xSize, ySize);
-  SvgCreator svg(output,xSize,ySize,boundingboxstart.x,boundingboxstart.y,xFactor,yFactor);
+  SvgCreator svg(output,xSizeInt,ySizeInt,boundingboxstart.x,boundingboxstart.y,xFactor,yFactor);
   
   // Check that we were able to open the file
   if (!svg.ok()) {
@@ -163,7 +166,8 @@ main(int argc, char** argv) {
   if (!processScene(scene,
                     boundingboxstart,
                     boundingboxend,
-                    step,
+                    stepx,
+                    stepy,
                     alg,
                     indexed,
                     svg)) {
