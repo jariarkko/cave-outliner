@@ -40,7 +40,7 @@ void SvgCreator::line(float fromX,
                       float toY) {
   unsigned int fromXInt;
   unsigned int fromYInt;
-  coordinateNormalization(fromX,fromy,fromXInt,fromYInt);
+  coordinateNormalization(fromX,fromY,fromXInt,fromYInt);
   
   unsigned int toXInt;
   unsigned int toYInt;

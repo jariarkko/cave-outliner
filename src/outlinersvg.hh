@@ -45,7 +45,10 @@ class SvgCreator {
 
   void preamble();
   void postamble();
-  
+  void coordinateNormalization(float x,
+                               float y,
+                               unsigned int& xInt,
+                               unsigned int& yInt);
 };
 
 #endif // SVG_HH
