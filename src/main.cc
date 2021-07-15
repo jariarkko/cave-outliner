@@ -92,7 +92,7 @@ main(int argc, char** argv) {
       }
       boundingboxstart = aiVector3D(startx,starty,startz);
       boundingboxend = aiVector3D(endx,endy,endz);
-    } else if (strcmp(argv[1],"--tiles") == 0 && argc > 2) {
+    } else if (strcmp(argv[1],"--tiling") == 0 && argc > 2) {
       if (atoi(argv[2]) < 1 || atoi(argv[2]) > 10000) {
         errf("Invalid tile count, must be at least one and a not too big for memory, %s given", argv[2]);
       }
