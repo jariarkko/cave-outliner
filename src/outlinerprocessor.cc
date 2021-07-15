@@ -117,7 +117,7 @@ meshHasMaterial(const aiScene* scene,
                 float x,
                 float y) {
   assert(scene != 0);
-  assert(mesh != 0);
+  assert(mesh != 0); 
   for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
     if (faceHasMaterial(scene,mesh,&mesh->mFaces[f],x,y)) {
       return(1);

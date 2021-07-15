@@ -36,7 +36,7 @@ IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
     }
     memset(meshes[i].tileMatrix,0,sizeof(struct IndexedMeshOneMeshOneTileFaces*) * subdivisions);
     for (unsigned int j = 0; j < subdivisions; j++) {
-      meshes[i].tileMatrix[j] = new struct IndexMeshOneMeshOneTileFaces [subdivisions];
+      meshes[i].tileMatrix[j] = new struct IndexedMeshOneMeshOneTileFaces [subdivisions];
       if (meshes[i].tileMatrix[j] == 0) {
         errf("Cannot allocate %u tile matrix second dimension", subdivisions);
         exit(1);
