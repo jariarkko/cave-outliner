@@ -168,7 +168,11 @@ pointInsideTriangle2D(const aiVector2D* triangleA,
   deepdebugf("triangle v2 = (%.2f,%.2f)", v2.x, v2.y);
   float a = (determinant2x2(&v,&v2) - determinant2x2(&v0,&v2)) / determinant2x2(&v1,&v2);
   float b = -((determinant2x2(&v,&v1) - determinant2x2(&v0,&v1)) / determinant2x2(&v1,&v2));
-  deepdebugf("triangle check a %.2f b %.2f a+b %.2f", a, b, a+b);
+  deepdebugf("triangle (%.1f,%.1f)-(%.1f,%.1f)-(%.1f,%.1f) check a %.2f b %.2f a+b %.2f",
+             triangleA->x, triangleA->y,
+             triangleB->x, triangleB->y,
+             triangleC->x, triangleC->y,
+             a, b, a+b);
   return(a >= 0 && b >= 0 && a+b <= 1);
 }
 
