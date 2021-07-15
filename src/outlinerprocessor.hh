@@ -12,6 +12,7 @@
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
 #include "outlinersvg.hh"
+#include "outlinerindexedmesh.hh"
 
 bool processScene(const aiScene* scene,
                   aiVector3D boundingboxstart,
