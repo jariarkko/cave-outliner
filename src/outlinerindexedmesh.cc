@@ -144,10 +144,9 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
     for (float y = outlinermax(viewBoundingBoxStart.y,boundingBoxStart.y);
          y <= boundingBoxEnd.y && y <= viewBoundingBoxEnd.y;
          y += tileSizeY) {
-      float xInView = x - viewBoundingBoxStart.x;
-      float yInView = y - viewBoundingBoxStart.y;
-      unsigned int tileX = xInView / tileSizeX;
-      unsigned int tileY = yInView / tileSizeY;
+      unsigned int tileX;
+      unsigned int tileY;
+      coordsToTile(x,y,tileX,tileY);
       addToTile(shadow,scene,mesh,face,tileX,tileY);
     }
   }
@@ -160,10 +159,52 @@ IndexedMesh::addToTile(struct IndexedMeshOneMesh& shadow,
                        const aiFace* face,
                        unsigned int tileX,
                        unsigned int tileY) {
+
+  // Sanity checks
+  assert(shadow.mesh == mesh);
+  assert(scene != 0);
+  assert(mesh != 0);
+  assert(face != 0);
+  assert(tileX < subdivisions);
+  assert(tileY < subdivisions);
+  assert(shadow.tileMatrix != 0);
+  deepdebugf("adding face to tile (%u/%u,%u/%u)",
+             tileX, subdivisions, tileY, subdivisions);
+
+  // Find the right row (x) in a matrix of tiles
+  struct IndexedMeshOneMeshOneTileFaces* row = shadow.tileMatrix[tileX];
+  assert(row != 0);
+
+  // Find the right cell (y) in that row
+  struct IndexedMeshOneMeshOneTileFaces* tile = &row[tileY];
+  assert(tile->maxNFaces > 0 ||  tile->faces == 0);
+
+  // Did we allocate a face table for this cell yet? If not, do it
+  if (tile->maxNFaces == 0) {
+    tile->maxNFaces = 200;
+    tile->nFaces = 0;
+    tile->faces = new const aiFace* [tile->maxNFaces];
+    if (tile->faces == 0) {
+      errf("Cannot allocate face table in tile (%u,%u)", tileX, tileY);
+      exit(1);
+    }
+    memset(tile->faces,0,sizeof(const aiFace*) * tile->maxNFaces);
+  }
+
+  // Check to see if face table is big enough. If not, expand.
+  if (tile->nFaces == tile->maxNFaces) {
+    errf("Cannot expand face table yet, running out of space in tile (%u,%u)", tileX, tileY);
+    exit(1);
+  }
+  
+  // Add the face to the table
+  tile->faces[tile->nFaces++] = face;
 }
 
 void
-IndexedMesh::getFaces(unsigned int* p_nFaces,
+IndexedMesh::getFaces(float x,
+                      float y,
+                      unsigned int* p_nFaces,
                       const aiFace*** p_faces) {
 }
 
@@ -172,6 +213,20 @@ IndexedMesh::getFacesTile(unsigned int xTile,
                           unsigned int yTile,
                           unsigned int* p_nFaces,
                           const aiFace*** p_faces) {
+}
+
+void
+IndexedMesh::coordsToTile(float x,
+                          float y,
+                          unsigned int& tileX,
+                          unsigned int& tileY) {
+  float xInView = x - viewBoundingBoxStart.x;
+  float yInView = y - viewBoundingBoxStart.y;
+  tileX = xInView / tileSizeX;
+  tileY = yInView / tileSizeY;
+  deepdebugf("coordinate (%f,%f) tile is (%u,%u)",
+             x, y,
+             tileX, tileY);
 }
 
 IndexedMesh::~IndexedMesh() {

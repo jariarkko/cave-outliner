@@ -44,7 +44,9 @@ public:
                const aiNode* node);
   void addMesh(const aiScene* scene,
                const aiMesh* mesh);
-  void getFaces(unsigned int* p_nFaces,
+  void getFaces(float x,
+                float y,
+                unsigned int* p_nFaces,
                 const aiFace*** p_faces);
    ~IndexedMesh();
    
@@ -77,6 +79,10 @@ private:
                     unsigned int yTile,
                     unsigned int* p_nFaces,
                     const aiFace*** p_faces);
+  void coordsToTile(float x,
+                    float y,
+                    unsigned int& tileX,
+                    unsigned int& tileY);
 };
 
 #endif // INDEXEDMESH_HH
