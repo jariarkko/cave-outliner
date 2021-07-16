@@ -94,7 +94,7 @@ IndexedMesh::addFaces(struct IndexedMeshOneMesh& shadow,
                       const aiScene* scene,
                       const aiMesh* mesh) {
   for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
-    addFace(shadow,scene,mesh->mFaces[f]);
+    addFace(shadow,scene,mesh,mesh->mFaces[f]);
   }
 }
 
