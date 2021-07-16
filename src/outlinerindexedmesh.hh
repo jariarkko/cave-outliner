@@ -75,7 +75,9 @@ private:
                  const aiFace* face,
                  unsigned int tileX,
                  unsigned int tileY);
-  void getFacesTile(unsigned int xTile,
+  void getFacesTile(struct IndexedMeshOneMesh& shadow,
+                    const aiMesh* mesh,
+                    unsigned int xTile,
                     unsigned int yTile,
                     unsigned int* p_nFaces,
                     const aiFace*** p_faces);

@@ -202,17 +202,75 @@ IndexedMesh::addToTile(struct IndexedMeshOneMesh& shadow,
 }
 
 void
-IndexedMesh::getFaces(float x,
-                      float y,
-                      unsigned int* p_nFaces,
-                      const aiFace*** p_faces) {
+IndexedMesh::getShadow(const aiMesh* mesh,
+                       struct IndexedMeshOneMesh** shadow) {
+  for (unsigned int i = 0; i < nMeshes; i++) {
+    if (meshes[i].mesh == mesh) {
+      *shadow = &meshes[i];
+      return;
+    }
+  }
+  *shadow = 0;
 }
 
 void
-IndexedMesh::getFacesTile(unsigned int xTile,
+IndexedMesh::getFaces(const aiMesh* mesh,
+                      float x,
+                      float y,
+                      unsigned int* p_nFaces,
+                      const aiFace*** p_faces) {
+  unsigned int tileX;
+  unsigned int tileY;
+  coordsToTile(x,y,tileX,tileY);
+  struct IndexedMeshOneMesh* shadow = 0;
+  getShadow(mesh,&shadow);
+  assert(shadow != 0);
+  getFacesTile(*shadow,
+               mesh,
+               tileX,
+               tileY,
+               p_nFaces,
+               p_faces);
+}
+
+void
+IndexedMesh::getFacesTile(struct IndexedMeshOneMesh& shadow,
+                          const aiMesh* mesh,
+                          unsigned int xTile,
                           unsigned int yTile,
                           unsigned int* p_nFaces,
                           const aiFace*** p_faces) {
+  // Sanity checks
+  assert(shadow.mesh == mesh);
+  assert(scene != 0);
+  assert(mesh != 0);
+  assert(face != 0);
+  assert(tileX < subdivisions);
+  assert(tileY < subdivisions);
+  assert(shadow.tileMatrix != 0);
+  assert(p_nFaces != 0);
+  assert(p_faces != 0);
+  deepdebugf("faces faces in tile (%u/%u,%u/%u)",
+             tileX, subdivisions, tileY, subdivisions);
+  
+  // Find the right row (x) in a matrix of tiles
+  struct IndexedMeshOneMeshOneTileFaces* row = shadow.tileMatrix[tileX];
+  assert(row != 0);
+  
+  // Find the right cell (y) in that row
+  struct IndexedMeshOneMeshOneTileFaces* tile = &row[tileY];
+  assert(tile->maxNFaces > 0 ||  tile->faces == 0);
+
+  // Return the result
+  if (tile->nFaces == 0) {
+    *p_nFaces = 0;
+    *p_faces = 0;
+  } else {
+    *p_nFaces = tile->nFaces;
+    *p_faces = tile->faces;
+  }
+
+  deepdebugf("returning %u faces", *p_nFaces);
 }
 
 void

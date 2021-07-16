@@ -121,7 +121,7 @@ meshHasMaterial(const aiScene* scene,
   if (1) {
     unsigned int nFaces = 0;
     const aiFace** faces = 0;
-    indexed.getFaces(x,y,&nFaces,&faces);
+    indexed.getFaces(mesh,x,y,&nFaces,&faces);
     debugf("meshHasMaterial normally %u faces but on this tile %u faces", mesh->mNumFaces,nFaces);
     for (unsigned int f = 0; f < nFaces; f++) {
       if (faceHasMaterial(scene,mesh,faces[f],x,y)) {
