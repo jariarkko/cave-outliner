@@ -36,7 +36,9 @@ class IndexedMesh {
 public:
 
   IndexedMesh(unsigned int maxMeshesIn,
-              unsigned int subdivisionsIn);
+              unsigned int subdivisionsIn,
+              const aiVector2D& viewBoundingBoxStart,
+              const aiVector2D& viewBoundingBoxEnd);
   void addScene(const aiScene* scene);
   void addNode(const aiScene* scene,
                const aiNode* node);
@@ -51,6 +53,10 @@ private:
   unsigned int nMeshes;
   unsigned int maxMeshes;
   unsigned int subdivisions;
+  aiVector2D viewBoundingBoxStart;
+  aiVector2D viewBoundingBoxEnd;
+  float tileSizeX;
+  float tileSizeY;
   
   struct IndexedMeshOneMesh* meshes;
   
@@ -59,7 +65,14 @@ private:
                 const aiMesh* mesh);
   void addFace(struct IndexedMeshOneMesh& shadow,
                const aiScene* scene,
+               const aiMesh* mesh,
                const aiFace* face);
+  void addToTile(struct IndexedMeshOneMesh& shadow,
+                 const aiScene* scene,
+                 const aiMesh* mesh,
+                 const aiFace* face,
+                 unsigned int tileX,
+                 unsigned int tileY);
   void getFacesTile(unsigned int xTile,
                     unsigned int yTile,
                     unsigned int* p_nFaces,

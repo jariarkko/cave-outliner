@@ -142,10 +142,6 @@ main(int argc, char** argv) {
     describeScene(scene,deepdebug,deepdeepdebug,deepdeepdebug,deepdeepdebug);
   }
 
-  // Build our own data structure
-  IndexedMesh indexed(outlinermaxmeshes,tiles);
-  indexed.addScene(scene);
-  
   // Open the output
   float xSize = (boundingboxend.x - boundingboxstart.x) / stepx;
   float ySize = (boundingboxend.y - boundingboxstart.y) / stepy;
@@ -161,6 +157,10 @@ main(int argc, char** argv) {
     errf("File open for writing  to %s failed", output);
     return(1);
   }
+  
+  // Build our own data structure
+  IndexedMesh indexed(outlinermaxmeshes,tiles,boundingBoxStart,boundingBoxEnd);
+  indexed.addScene(scene);
   
   // Process the model
   if (!processScene(scene,

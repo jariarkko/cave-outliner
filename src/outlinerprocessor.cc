@@ -117,10 +117,22 @@ meshHasMaterial(const aiScene* scene,
                 float x,
                 float y) {
   assert(scene != 0);
-  assert(mesh != 0); 
-  for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
-    if (faceHasMaterial(scene,mesh,&mesh->mFaces[f],x,y)) {
-      return(1);
+  assert(mesh != 0);
+  if (1) {
+    unsigned int nFaces = 0;
+    const aiFace* faces = 0;
+    indexed.getFaces(&nFaces,&faces);
+    debugf("meshHasMaterial normally %u faces but on this tile %u faces", mesh->mNumFaces,nFaces);
+    for (unsigned int f = 0; f < nFaces; f++) {
+      if (faceHasMaterial(scene,mesh,faces[f],x,y)) {
+        return(1);
+      }
+    }
+  } else {
+    for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
+      if (faceHasMaterial(scene,mesh,&mesh->mFaces[f],x,y)) {
+        return(1);
+      }
     }
   }
   return(0);
