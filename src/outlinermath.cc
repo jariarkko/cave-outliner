@@ -328,9 +328,9 @@ boundingBoxTests(void) {
 
 static void
 pointTests(void) {
-  aiVector2 a(1,1);
-  aiVector2 b(1,2);
-  aiVector2 c(1,1);
+  aiVector2D a(1,1);
+  aiVector2D b(1,2);
+  aiVector2D c(1,1);
   assert(vectorEqual(a,b) == 0);
   assert(vectorEqual(b,c) == 0);
   assert(vectorEqual(a,c) == 1);
@@ -341,10 +341,10 @@ lineTests(void) {
 
   // Horizontal
   {
-    aiVector2 a(0,0);
-    aiVector2 b(1,0);
-    aiVector2 c(2,0);
-    aiVector2 d(0.5,2);
+    aiVector2D a(0,0);
+    aiVector2D b(1,0);
+    aiVector2D c(2,0);
+    aiVector2D d(0.5,2);
     bool ans = pointOnLine2D(a,c,d);
     assert(ans == 0);
     bool ans = pointOnLine2D(a,b,c);
@@ -355,10 +355,10 @@ lineTests(void) {
   
   // Vertical
   {
-    aiVector2 a(0,0);
-    aiVector2 b(0,1);
-    aiVector2 c(0,2);
-    aiVector2 d(0.5,1);
+    aiVector2D a(0,0);
+    aiVector2D b(0,1);
+    aiVector2D c(0,2);
+    aiVector2D d(0.5,1);
     bool ans = pointOnLine2D(a,c,d);
     assert(ans == 0);
     bool ans = pointOnLine2D(a,b,c);
@@ -369,10 +369,10 @@ lineTests(void) {
   
   // Sloping line
   {
-    aiVector2 a(0,0);
-    aiVector2 b(1,1);
-    aiVector2 c(2,2);
-    aiVector2 d(1,2);
+    aiVector2D a(0,0);
+    aiVector2D b(1,1);
+    aiVector2D c(2,2);
+    aiVector2D d(1,2);
     bool ans = pointOnLine2D(a,c,d);
     assert(ans == 0);
     bool ans = pointOnLine2D(a,b,c);
