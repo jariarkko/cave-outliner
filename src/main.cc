@@ -91,7 +91,7 @@ main(int argc, char** argv) {
         errf("Invalid bounding box z range");
         return(1);
       }
-      boundingBoxstart = aiVector3D(startx,starty,startz);
+      boundingBoxStart = aiVector3D(startx,starty,startz);
       boundingBoxEnd = aiVector3D(endx,endy,endz);
     } else if (strcmp(argv[1],"--tiling") == 0 && argc > 2) {
       if (atoi(argv[2]) < 1 || atoi(argv[2]) > 10000) {
@@ -160,7 +160,7 @@ main(int argc, char** argv) {
   
   // Build our own data structure
   aiVector2D bounding2DBoxStart(boundingBoxStart.x,boundingBoxStart.y);
-  aiVector2D bounding2DBoxEnd(boundingBoxEnd.x,boundingBoxEnd.y9;
+  aiVector2D bounding2DBoxEnd(boundingBoxEnd.x,boundingBoxEnd.y);
   IndexedMesh indexed(outlinermaxmeshes,tiles,bounding2DBoxStart,bounding2DBoxEnd);
   indexed.addScene(scene);
   
