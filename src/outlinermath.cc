@@ -20,6 +20,8 @@
 static void vectorTests(void);
 static void detTests(void);
 static void boundingBoxTests(void);
+static void pointTests(void);
+static void lineTests(void);
 static void triangleTests(void);
 static void sortVectorsX(const aiVector2D* a,
                          const aiVector2D* b,
@@ -153,11 +155,65 @@ sortVectorsY(const aiVector2D* a,
 }
 
 bool
+pointOnLine2D(const aiVector2D* a,
+              const aiVector2D* b,
+              const aiVector2D* point) {
+  
+  // Check for a special case: line points are equal, resulting in
+  // comparing to a point, not a line.
+  
+  if (vectorEqual(a,b))  {
+    return(vectorEqual(a,point));
+  }
+
+  // Check for a special case: line is horizontal
+  if (a->y == b->y) {
+    if (point->y != a->y) return(0);
+    return(a->x <= point->x && point->x <= b->x);
+  }
+  
+  // Check for a special case: line is vertical
+  if (a->x == b->x) {
+    if (point->x != a->x) return(0);
+    return(a->y <= point->y && point->y <= b->y);
+  }
+  
+  // Not a special case. Run the general check, taking algorithm from
+  // https://stackoverflow.com/questions/17692922/check-is-a-point-x-y-is-between-two-points-drawn-on-a-straight-line
+
+  float alpha1 = (point->x - a->x) / (b->x - a->x);
+  float alpha2 = (point->y - a->y) / (b->y - a->y);
+  if (alpha1 != alpha2) return(0);
+  if (alpha1 < 0) return(0);
+  if (alpha1 > 1) return(0);
+  return(1);
+}
+
+bool
 pointInsideTriangle2D(const aiVector2D* triangleA,
                       const aiVector2D* triangleB,
                       const aiVector2D* triangleC,
                       const aiVector2D* point) {
-  // Algorithm from https://mathworld.wolfram.com/TriangleInterior.html
+
+  // Check for a special case: all points are equal (resulting in
+  // comparing to a point, not a triangle).
+  if (vectorEqual(triangleA,triangleB) && vectorEqual(triangleA,triangleC)) {
+    return(vectorEqual(triangleA,point));
+  }
+  
+  // Check for a special case: triangle collapses to a line (at least
+  // in 2D).
+  if (vectorEqual(triangleA,triangleB)) {
+    return(pointOnLine2D(triangleA,triangleC));
+  } else if (vectorEqual(triangleA,triangleC)) {
+    return(pointOnLine2D(triangleA,triangleB));
+  } else if (vectorEqual(triangleB,triangleC)) {
+    return(pointOnLine2D(triangleA,triangleB));
+  }
+  
+  // Not a special case. For the general case, we take the algorithm
+  // from https://mathworld.wolfram.com/TriangleInterior.html
+  
   aiVector2D v = *point; 
   aiVector2D v0 = *triangleA;
   aiVector2D v1; vectorTo(triangleA,triangleB,&v1);
@@ -167,13 +223,19 @@ pointInsideTriangle2D(const aiVector2D* triangleA,
   deepdebugf("triangle v1 = (%.2f,%.2f)", v1.x, v1.y);
   deepdebugf("triangle v2 = (%.2f,%.2f)", v2.x, v2.y);
   float a = (determinant2x2(&v,&v2) - determinant2x2(&v0,&v2)) / determinant2x2(&v1,&v2);
-  float b = -((determinant2x2(&v,&v1) - determinant2x2(&v0,&v1)) / determinant2x2(&v1,&v2));
+   float b = -((determinant2x2(&v,&v1) - determinant2x2(&v0,&v1)) / determinant2x2(&v1,&v2));
   deepdebugf("triangle (%.1f,%.1f)-(%.1f,%.1f)-(%.1f,%.1f) check a %.2f b %.2f a+b %.2f",
              triangleA->x, triangleA->y,
              triangleB->x, triangleB->y,
              triangleC->x, triangleC->y,
              a, b, a+b);
   return(a >= 0 && b >= 0 && a+b <= 1);
+}
+
+bool
+vectorEqual(const aiVector2D* a,
+            const aiVector2D* b) {
+  return(a->x == b->x && a->y == b->y);
 }
 
 void
@@ -200,6 +262,8 @@ mathTests(void) {
   debugf("running math tests");
   vectorTests();
   detTests();
+  pointTests();
+  lineTests();
   triangleTests();
   boundingBoxTests();
 }
@@ -260,6 +324,62 @@ boundingBoxTests(void) {
          boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
   assert(boundingBoxStart.x == -10 && boundingBoxStart.y == -10);
   assert(boundingBoxEnd.x == 30 && boundingBoxEnd.y == 10);
+}
+
+static void
+pointTests(void) {
+  aiVector2 a(1,1);
+  aiVector2 b(1,2);
+  aiVector2 c(1,1);
+  assert(vectorEqual(a,b) == 0);
+  assert(vectorEqual(b,c) == 0);
+  assert(vectorEqual(a,c) == 1);
+}
+
+static void
+lineTests(void) {
+
+  // Horizontal
+  {
+    aiVector2 a(0,0);
+    aiVector2 b(1,0);
+    aiVector2 c(2,0);
+    aiVector2 d(0.5,2);
+    bool ans = pointOnLine2D(a,c,d);
+    assert(ans == 0);
+    bool ans = pointOnLine2D(a,b,c);
+    assert(ans == 0);
+    bool ans = pointOnLine2D(a,c,b);
+    assert(ans == 1);
+  }
+  
+  // Vertical
+  {
+    aiVector2 a(0,0);
+    aiVector2 b(0,1);
+    aiVector2 c(0,2);
+    aiVector2 d(0.5,1);
+    bool ans = pointOnLine2D(a,c,d);
+    assert(ans == 0);
+    bool ans = pointOnLine2D(a,b,c);
+    assert(ans == 0);
+    bool ans = pointOnLine2D(a,c,b);
+    assert(ans == 1);
+  }
+  
+  // Sloping line
+  {
+    aiVector2 a(0,0);
+    aiVector2 b(1,1);
+    aiVector2 c(2,2);
+    aiVector2 d(1,2);
+    bool ans = pointOnLine2D(a,c,d);
+    assert(ans == 0);
+    bool ans = pointOnLine2D(a,b,c);
+    assert(ans == 0);
+    bool ans = pointOnLine2D(a,c,b);
+    assert(ans == 1);
+  }
 }
 
 static void

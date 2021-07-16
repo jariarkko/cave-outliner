@@ -25,6 +25,11 @@ bool pointInsideTriangle2D(const aiVector2D* a,
                            const aiVector2D* b,
                            const aiVector2D* c,
                            const aiVector2D* point);
+bool pointOnLine2D(const aiVector2D* a,
+                   const aiVector2D* b,
+                   const aiVector2D* point);
+bool vectorEqual(const aiVector2D* a,
+                 const aiVector2D* b);
 void vectorTo(const aiVector2D* from,
               const aiVector2D* to,
               aiVector2D* result);
