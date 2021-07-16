@@ -37,8 +37,8 @@ public:
 
   IndexedMesh(unsigned int maxMeshesIn,
               unsigned int subdivisionsIn,
-              const aiVector2D& viewBoundingBoxStart,
-              const aiVector2D& viewBoundingBoxEnd);
+              const aiVector2D& viewBoundingBoxStartIn,
+              const aiVector2D& viewBoundingBoxEndIn);
   void addScene(const aiScene* scene);
   void addNode(const aiScene* scene,
                const aiNode* node);

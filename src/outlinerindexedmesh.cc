@@ -17,16 +17,16 @@
 
 IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
                          unsigned int subdivisionsIn,
-                         const aiVector2D& viewBoundingBoxStart,
-                         const aiVector2D& viewBoundingBoxEnd) {
+                         const aiVector2D& viewBoundingBoxStartIn,
+                         const aiVector2D& viewBoundingBoxEndIn) {
   assert(maxMeshesIn >= 1);
   assert(subdivisionsIn >= 1);
   maxMeshes = maxMeshesIn;
   nMeshes = 0;
   subdivisions = subdivisionsIn;
   debugf("%u x %u tiles, or %u tiles", subdivisions, subdivisions, subdivisions * subdivisions);
-  this.viewBoundingBoxStart = viewBoundingBoxStart;
-  this.viewBoundingBoxEnd = viewBoundingBoxEnd;
+  viewBoundingBoxStart = viewBoundingBoxStartIn;
+  viewBoundingBoxEnd = viewBoundingBoxEndIn;
   float viewX = viewBoundingBoxEnd.x - viewBoundingBoxStart.x;
   float viewY = viewBoundingBoxEnd.y - viewBoundingBoxStart.y;
   tileSizeX = viewX / subdivisions;
