@@ -39,8 +39,8 @@ static bool deepdebug = 0;
 static bool deepdeepdebug = 0;
 static float stepx = 1.0;
 static float stepy = 1.0;
-static aiVector3D boundingboxstart = {-2,-2,-2};
-static aiVector3D boundingboxend = {2,2,2};
+static aiVector3D boundingBoxStart = {-2,-2,-2};
+static aiVector3D boundingBoxEnd = {2,2,2};
 static enum outlineralgorithm alg = alg_pixel;
 static unsigned int tiles = outlinertiledivision;
 
@@ -91,8 +91,8 @@ main(int argc, char** argv) {
         errf("Invalid bounding box z range");
         return(1);
       }
-      boundingboxstart = aiVector3D(startx,starty,startz);
-      boundingboxend = aiVector3D(endx,endy,endz);
+      boundingBoxstart = aiVector3D(startx,starty,startz);
+      boundingBoxEnd = aiVector3D(endx,endy,endz);
     } else if (strcmp(argv[1],"--tiling") == 0 && argc > 2) {
       if (atoi(argv[2]) < 1 || atoi(argv[2]) > 10000) {
         errf("Invalid tile count, must be at least one and a not too big for memory, %s given", argv[2]);
@@ -143,14 +143,14 @@ main(int argc, char** argv) {
   }
 
   // Open the output
-  float xSize = (boundingboxend.x - boundingboxstart.x) / stepx;
-  float ySize = (boundingboxend.y - boundingboxstart.y) / stepy;
+  float xSize = (boundingBoxEnd.x - boundingBoxStart.x) / stepx;
+  float ySize = (boundingBoxEnd.y - boundingBoxStart.y) / stepy;
   unsigned int xSizeInt = xSize;
   unsigned int ySizeInt = ySize;
   float xFactor = 1 / stepx;
   float yFactor = 1 / stepy;
   debugf("SVG size will be %u x %u", xSize, ySize);
-  SvgCreator svg(output,xSizeInt,ySizeInt,boundingboxstart.x,boundingboxstart.y,xFactor,yFactor);
+  SvgCreator svg(output,xSizeInt,ySizeInt,boundingBoxStart.x,boundingBoxStart.y,xFactor,yFactor);
   
   // Check that we were able to open the file
   if (!svg.ok()) {
