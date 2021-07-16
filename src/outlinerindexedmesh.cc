@@ -9,6 +9,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h> 
 #include "outlinerdebug.hh"
+#include "outlinermath.hh"
 #include "outlinerindexedmesh.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
