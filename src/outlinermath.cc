@@ -331,9 +331,9 @@ pointTests(void) {
   aiVector2D a(1,1);
   aiVector2D b(1,2);
   aiVector2D c(1,1);
-  assert(vectorEqual(a,b) == 0);
-  assert(vectorEqual(b,c) == 0);
-  assert(vectorEqual(a,c) == 1);
+  assert(vectorEqual(&a,&b) == 0);
+  assert(vectorEqual(&b,&c) == 0);
+  assert(vectorEqual(&a,&c) == 1);
 }
 
 static void
@@ -345,11 +345,11 @@ lineTests(void) {
     aiVector2D b(1,0);
     aiVector2D c(2,0);
     aiVector2D d(0.5,2);
-    bool ans = pointOnLine2D(a,c,d);
+    bool ans = pointOnLine2D(&a,&c,&d);
     assert(ans == 0);
-    bool ans = pointOnLine2D(a,b,c);
+    bool ans = pointOnLine2D(&a,&b,&c);
     assert(ans == 0);
-    bool ans = pointOnLine2D(a,c,b);
+    bool ans = pointOnLine2D(&a,&c,&b);
     assert(ans == 1);
   }
   
@@ -359,11 +359,11 @@ lineTests(void) {
     aiVector2D b(0,1);
     aiVector2D c(0,2);
     aiVector2D d(0.5,1);
-    bool ans = pointOnLine2D(a,c,d);
+    bool ans = pointOnLine2D(&a,&c,&d);
     assert(ans == 0);
-    bool ans = pointOnLine2D(a,b,c);
+    bool ans = pointOnLine2D(&a,&b,&c);
     assert(ans == 0);
-    bool ans = pointOnLine2D(a,c,b);
+    bool ans = pointOnLine2D(&a,&c,&b);
     assert(ans == 1);
   }
   
@@ -373,11 +373,11 @@ lineTests(void) {
     aiVector2D b(1,1);
     aiVector2D c(2,2);
     aiVector2D d(1,2);
-    bool ans = pointOnLine2D(a,c,d);
+    bool ans = pointOnLine2D(&a,&c,&d);
     assert(ans == 0);
-    bool ans = pointOnLine2D(a,b,c);
+    bool ans = pointOnLine2D(&a,&b,&c);
     assert(ans == 0);
-    bool ans = pointOnLine2D(a,c,b);
+    bool ans = pointOnLine2D(&a,&c,&b);
     assert(ans == 1);
   }
 }
