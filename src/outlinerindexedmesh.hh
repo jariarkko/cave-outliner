@@ -78,8 +78,8 @@ private:
                  unsigned int tileY);
   void getFacesTile(struct IndexedMeshOneMesh& shadow,
                     const aiMesh* mesh,
-                    unsigned int xTile,
-                    unsigned int yTile,
+                    unsigned int tileX,
+                    unsigned int tileY,
                     unsigned int* p_nFaces,
                     const aiFace*** p_faces);
   void coordsToTile(float x,

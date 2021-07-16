@@ -236,15 +236,13 @@ IndexedMesh::getFaces(const aiMesh* mesh,
 void
 IndexedMesh::getFacesTile(struct IndexedMeshOneMesh& shadow,
                           const aiMesh* mesh,
-                          unsigned int xTile,
-                          unsigned int yTile,
+                          unsigned int tileX,
+                          unsigned int tileY,
                           unsigned int* p_nFaces,
                           const aiFace*** p_faces) {
   // Sanity checks
   assert(shadow.mesh == mesh);
-  assert(scene != 0);
   assert(mesh != 0);
-  assert(face != 0);
   assert(tileX < subdivisions);
   assert(tileY < subdivisions);
   assert(shadow.tileMatrix != 0);
