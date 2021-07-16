@@ -159,13 +159,15 @@ main(int argc, char** argv) {
   }
   
   // Build our own data structure
-  IndexedMesh indexed(outlinermaxmeshes,tiles,boundingBoxStart,boundingBoxEnd);
+  aiVector2D bounding2DBoxStart(boundingBoxStart.x,boundingBoxStart.y);
+  aiVector2D bounding2DBoxEnd(boundingBoxEnd.x,boundingBoxEnd.y9;
+  IndexedMesh indexed(outlinermaxmeshes,tiles,bounding2DBoxStart,bounding2DBoxEnd);
   indexed.addScene(scene);
   
   // Process the model
   if (!processScene(scene,
-                    boundingboxstart,
-                    boundingboxend,
+                    boundingBoxStart,
+                    boundingBoxEnd,
                     stepx,
                     stepy,
                     alg,
