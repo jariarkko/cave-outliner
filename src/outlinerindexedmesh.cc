@@ -81,19 +81,27 @@ IndexedMesh::addNode(const aiScene* scene,
 void
 IndexedMesh::addMesh(const aiScene* scene,
                      const aiMesh* mesh) {
+  assert(scene != 0);
+  assert(mesh != 0);
   if (nMeshes == maxMeshes) {
     errf("Cannot another mesh, already have %u", maxMeshes);
     exit(1);
   }
-  meshes[nMeshes].mesh = mesh;
+  struct IndexedMeshOneMesh& newMesh = meshes[nMeshes];
+  newMesh.mesh = mesh;
+  assert(newMesh.mesh == mesh);
   nMeshes++;
-  addFaces(meshes[nMeshes],scene,mesh);
+  addFaces(newMesh,scene,mesh);
 }
 
 void
 IndexedMesh::addFaces(struct IndexedMeshOneMesh& shadow,
                       const aiScene* scene,
                       const aiMesh* mesh) {
+  assert(&shadow != 0);
+  assert(scene != 0);
+  assert(shadow.mesh == mesh);
+  assert(mesh != 0);
   for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
     addFace(shadow,scene,mesh,&mesh->mFaces[f]);
   }
@@ -106,6 +114,12 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
                      const aiFace* face) {
 
   // Sanity checks
+  assert(&shadow != 0);
+  assert(shadow.mesh != 0);
+  assert(shadow.mesh == mesh);
+  assert(scene != 0);
+  assert(mesh != 0);
+  assert(face != 0);
   if (face->mNumIndices != 3) {
     errf("Cannot handle a face with %u indices", face->mNumIndices);
     exit(1);
@@ -241,6 +255,8 @@ IndexedMesh::getFacesTile(struct IndexedMeshOneMesh& shadow,
                           unsigned int* p_nFaces,
                           const aiFace*** p_faces) {
   // Sanity checks
+  assert(&shadow != 0);
+  assert(shadow.mesh != 0);
   assert(shadow.mesh == mesh);
   assert(mesh != 0);
   assert(tileX < subdivisions);
