@@ -98,7 +98,6 @@ void
 IndexedMesh::addFaces(struct IndexedMeshOneMesh& shadow,
                       const aiScene* scene,
                       const aiMesh* mesh) {
-  assert(&shadow != 0);
   assert(scene != 0);
   assert(shadow.mesh == mesh);
   assert(mesh != 0);
@@ -114,7 +113,6 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
                      const aiFace* face) {
 
   // Sanity checks
-  assert(&shadow != 0);
   assert(shadow.mesh != 0);
   assert(shadow.mesh == mesh);
   assert(scene != 0);
@@ -255,7 +253,6 @@ IndexedMesh::getFacesTile(struct IndexedMeshOneMesh& shadow,
                           unsigned int* p_nFaces,
                           const aiFace*** p_faces) {
   // Sanity checks
-  assert(&shadow != 0);
   assert(shadow.mesh != 0);
   assert(shadow.mesh == mesh);
   assert(mesh != 0);
