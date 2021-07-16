@@ -204,11 +204,11 @@ pointInsideTriangle2D(const aiVector2D* triangleA,
   // Check for a special case: triangle collapses to a line (at least
   // in 2D).
   if (vectorEqual(triangleA,triangleB)) {
-    return(pointOnLine2D(triangleA,triangleC));
+    return(pointOnLine2D(triangleA,triangleC,point));
   } else if (vectorEqual(triangleA,triangleC)) {
-    return(pointOnLine2D(triangleA,triangleB));
+    return(pointOnLine2D(triangleA,triangleB,point));
   } else if (vectorEqual(triangleB,triangleC)) {
-    return(pointOnLine2D(triangleA,triangleB));
+    return(pointOnLine2D(triangleA,triangleB,point));
   }
   
   // Not a special case. For the general case, we take the algorithm
