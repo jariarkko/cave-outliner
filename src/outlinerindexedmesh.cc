@@ -289,10 +289,18 @@ IndexedMesh::coordsToTile(float x,
                           float y,
                           unsigned int& tileX,
                           unsigned int& tileY) {
-  float xInView = x - viewBoundingBoxStart.x;
-  float yInView = y - viewBoundingBoxStart.y;
-  tileX = xInView / tileSizeX;
-  tileY = yInView / tileSizeY;
+  if (x == viewBoundingBoxEnd.x) {
+    tileX = subdivisions - 1;
+  } else {
+    float xInView = x - viewBoundingBoxStart.x;
+    tileX = xInView / tileSizeX;
+  }
+  if (y == viewBoundingBoxEnd.y) {
+    tileY = subdivisions - 1;
+  } else {
+    float yInView = y - viewBoundingBoxStart.y;
+    tileY = yInView / tileSizeY;
+  }
   deepdebugf("coordinate (%f,%f) tile is (%u,%u)",
              x, y,
              tileX, tileY);
