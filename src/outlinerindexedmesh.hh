@@ -44,7 +44,8 @@ public:
                const aiNode* node);
   void addMesh(const aiScene* scene,
                const aiMesh* mesh);
-  void getFaces(float x,
+  void getFaces(const aiMesh* mesh,
+                float x,
                 float y,
                 unsigned int* p_nFaces,
                 const aiFace*** p_faces);
