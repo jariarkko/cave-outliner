@@ -160,7 +160,19 @@ IndexedMesh::addToTile(struct IndexedMeshOneMesh& shadow,
                        unsigned int tileX,
                        unsigned int tileY) {
 }
-  
+
+void
+IndexedMesh::getFaces(unsigned int* p_nFaces,
+                      const aiFace*** p_faces) {
+}
+
+void
+IndexedMesh::getFacesTile(unsigned int xTile,
+                          unsigned int yTile,
+                          unsigned int* p_nFaces,
+                          const aiFace*** p_faces) {
+}
+
 IndexedMesh::~IndexedMesh() {
   if (meshes != 0) {
     for (unsigned int i = 0; i < maxMeshes; i++) {

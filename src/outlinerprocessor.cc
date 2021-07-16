@@ -120,7 +120,7 @@ meshHasMaterial(const aiScene* scene,
   assert(mesh != 0);
   if (1) {
     unsigned int nFaces = 0;
-    const aiFace* faces = 0;
+    const aiFace** faces = 0;
     indexed.getFaces(&nFaces,&faces);
     debugf("meshHasMaterial normally %u faces but on this tile %u faces", mesh->mNumFaces,nFaces);
     for (unsigned int f = 0; f < nFaces; f++) {
