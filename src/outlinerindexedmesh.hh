@@ -86,6 +86,8 @@ private:
                     float y,
                     unsigned int& tileX,
                     unsigned int& tileY);
+  void getShadow(const aiMesh* mesh,
+                 struct IndexedMeshOneMesh** shadow);
 };
 
 #endif // INDEXEDMESH_HH
