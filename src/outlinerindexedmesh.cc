@@ -205,11 +205,26 @@ IndexedMesh::addToTile(struct IndexedMeshOneMesh& shadow,
 
   // Check to see if face table is big enough. If not, expand.
   if (tile->nFaces == tile->maxNFaces) {
-    errf("Cannot expand face table yet, running out of space in tile (%u,%u)", tileX, tileY);
-    exit(1);
+    unsigned int oldMaxNFaces = tile->maxNFaces;
+    const aiFace** oldFaces = tile->faces;
+    unsigned int newMaxNFaces = tile->maxNFaces * 2 + 3;
+    const aiFace** newFaces = new const aiFace* [newMaxNFaces];
+    if (newFaces == 0) {
+      errf("Cannot expand face table in tile (%u,%u) from %u to %u",
+           tileX, tileY, oldMaxNFaces, newMaxNFaces);
+      exit(1);
+    }
+    debugf("Expanded face table in tile (%u,%u) from %u to %u",
+           tileX, tileY, oldMaxNFaces, newMaxNFaces);
+    memset(newFaces,0,sizeof(const aiFace*) * newMaxNFaces);
+    memcpy(newFaces,oldFaces,sizeof(const aiFace*) * tile->nFaces);
+    tile->faces = newFaces;
+    tile->maxNFaces = newMaxNFaces;
+    delete oldFaces;
   }
   
   // Add the face to the table
+  assert(tile->nFaces < tile->maxNFaces);
   tile->faces[tile->nFaces++] = face;
 }
 
