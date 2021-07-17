@@ -21,8 +21,8 @@ MaterialMatrix::MaterialMatrix(aiVector3D boundingboxstart,
                                aiVector3D boundingboxend,
                                float stepx,
                                float stepy) {
-  xIndexSize = ((boundingboxend.x - boundingboxstart.x) / stepx) + 1;
-  yIndexSize = ((boundingboxend.y - boundingboxstart.y) / stepy) + 1;
+  xIndexSize = ((boundingboxend.x - boundingboxstart.x) / stepx) + 2;
+  yIndexSize = ((boundingboxend.y - boundingboxstart.y) / stepy) + 2;
   nBits = xIndexSize * yIndexSize;
   nChars = (nBits / 8) + 1;
   bitMatrix = new unsigned char [nChars];
