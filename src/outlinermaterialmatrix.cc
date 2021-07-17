@@ -23,15 +23,15 @@ MaterialMatrix::MaterialMatrix(aiVector3D boundingboxstart,
                                float stepy) {
   xIndexSize = ((boundingboxend.x - boundingboxstart.x) / stepx) + 1;
   yIndexSize = ((boundingboxend.y - boundingboxstart.y) / stepy) + 1;
-  unsigned int n = xIndexSize * yIndexSize;
-  unsigned int nChars = (n / 8) + 1;
+  nBits = xIndexSize * yIndexSize;
+  nChars = (nBits / 8) + 1;
   bitMatrix = new unsigned char [nChars];
   if (bitMatrix == 0) {
     errf("Cannot allocate bit matrix for %u bytes", nChars);
     exit(1);
   }
   memset(bitMatrix,0,nChars);
-  debugf("created a matrix of %u x %u, nChars %u", xIndexSize, yIndexSize, nChars);
+  debugf("created a matrix of %u x %u, nBits %u nChars %u", xIndexSize, yIndexSize, nBits, nChars);
 }
 
 MaterialMatrix::~MaterialMatrix() {
@@ -50,6 +50,8 @@ MaterialMatrix::setMaterialMatrix(unsigned int xIndex,
   unsigned int bitpart = index % 8;
   unsigned char bitMask = (1 << bitpart);
   debugf("setting material matrix %u (%u,%u) elem %u with mask %x", index, xIndex, yIndex, charpart, bitMask);
+  assert(index < nBits);
+  assert(charpart < nChars);
   bitMatrix[charpart] |= bitMask;
 }
 
@@ -66,6 +68,8 @@ MaterialMatrix::getMaterialMatrix(unsigned int xIndex,
   unsigned char bitMask = (1 << bitpart);
   deepdebugf("getting material matrix %u (%u,%u) elem %u value %x with mask %x",
              index, xIndex, yIndex, charpart, thechar, bitMask);
+  assert(index < nBits);
+  assert(charpart < nChars);
   if ((thechar & bitMask) != 0) return(1);
   else return(0);
 }
@@ -75,6 +79,7 @@ MaterialMatrix::count(void) {
   unsigned int theCount = 0;
   unsigned int maxChar = (xIndexSize-1)*(yIndexSize-1)+1;
   for (unsigned int i = 0; i <= maxChar; i++) {
+    assert(i < nChars);
     unsigned char theChar = bitMatrix[i];
     if (theChar != 0) {
       deepdebugf("found non-zero char %x in index %u",

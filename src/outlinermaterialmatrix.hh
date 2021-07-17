@@ -21,7 +21,9 @@ public:
   unsigned int yIndexSize;
 
 private:
-  
+
+  unsigned int nBits;
+  unsigned int nChars;
   unsigned char* bitMatrix;
 
 };
