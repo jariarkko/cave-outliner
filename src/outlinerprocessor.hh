@@ -26,6 +26,7 @@ public:
             float stepyIn,
             enum outlinerdirection directionIn,
             enum outlineralgorithm algorithmIn,
+            unsigned int holethresholdIn,
             IndexedMesh& indexedIn);
   ~Processor();
   
@@ -40,6 +41,7 @@ private:
   float stepy;
   enum outlinerdirection direction;
   enum outlineralgorithm algorithm;
+  unsigned int holethreshold;
   MaterialMatrix matrix;
   IndexedMesh& indexed;
   

@@ -45,6 +45,7 @@ static aiVector3D boundingBoxEnd = {2,2,2};
 static enum outlinerdirection direction = dir_horizontal;
 static enum outlineralgorithm algorithm = alg_pixel;
 static unsigned int tiles = outlinertiledivision;
+static unsigned int holethreshold = 1;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program and option handling ///////////////////////////////////////////////////////////
@@ -82,6 +83,14 @@ main(int argc, char** argv) {
      } else if (strcmp(argv[1],"--borderactual") == 0) {
         algorithm = alg_borderactual;
         debugf("algorithm now %u", algorithm);
+    } else if (strcmp(argv[1],"--holethreshold") == 0 && argc > 2) {
+      int num = atoi(argv[2]);
+      if (num < 0 || num > 100) {
+        errf("Hole threshold value needs to be non-negative and max 100, %s given", argv[2]);
+        return(1);
+      }
+      holethreshold = num;
+      argc--;argv++;
     } else if (strcmp(argv[1],"--step") == 0 && argc > 2) {
       stepx = stepy = atof(argv[2]);
       if (stepx < 0.0001) {
@@ -220,6 +229,7 @@ processHelp(void) {
   std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave walls, with pixels.\n";
   std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave walls, with lines.\n";
   std::cout << "  --borderactual           Use the border-only drawing algorithm, draws the cave walls using model triangle sides.\n";
+  std::cout << "  --holethreshold n        Ignore holes in the model if they are n or less pixels.\n";
   std::cout << "  --tiling n               Optimize search process with n x n tiles. ";
   std::cout <<                            "Default is " << outlinertiledivision << ",\n";
   std::cout << "                           and --tiling 1 implies no optimization.\n";

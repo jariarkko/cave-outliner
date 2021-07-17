@@ -1,4 +1,4 @@
-
+ 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Includes ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,6 +30,7 @@ Processor::Processor(aiVector3D boundingboxstartIn,
                                                stepy(stepyIn),
                                                direction(directionIn),
                                                algorithm(algorithmIn),
+                                               holethreshold(holethresholdIn),
                                                matrix(boundingboxstartIn,
                                                       boundingboxendIn,
                                                       stepxIn,
