@@ -223,6 +223,7 @@ Processor::setMaterialMatrix(unsigned int xIndex,
   unsigned int charpart = index / 8;
   unsigned int bitpart = index % 8;
   unsigned char bitMask = (1 << bitpart);
+  debugf("setting material matrix %u (%u,%u) elem %u with mask %x", index, xIndex, yIndex, charpart, bitMask);
   bitMatrix[charpart] |= bitMask;
 }
 
@@ -237,6 +238,7 @@ Processor::getMaterialMatrix(unsigned int xIndex,
   unsigned int bitpart = index % 8;
   unsigned char thechar = bitMatrix[charpart];
   unsigned char bitMask = (1 << bitpart);
+  debugf("getting material matrix %u (%u,%u) elem %u value %x with mask %x", index, xIndex, yIndex, charpart, thechar, bitMask);
   if ((thechar & bitMask) != 0) return(1);
   else return(0);
 }
