@@ -41,8 +41,8 @@ private:
   float stepy;
   enum outlinerdirection direction;
   enum outlineralgorithm algorithm;
-  IndexedMesh& indexed;
   MaterialMatrix matrix;
+  IndexedMesh& indexed;
   
   bool sceneHasMaterial(const aiScene* scene,
                         IndexedMesh& indexed,
