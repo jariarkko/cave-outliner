@@ -53,7 +53,7 @@ Processor::processScene(const aiScene* scene,
       deepdebugf("checking (%.2f,%.2f)",x,y);
       if (sceneHasMaterial(scene,indexed,x,y)) {
         debugf("material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
-        setMaterialMatrix(xIndex,yIndex);
+        matrix.setMaterialMatrix(xIndex,yIndex);
       }
       yIndex++;
     }
@@ -65,7 +65,7 @@ Processor::processScene(const aiScene* scene,
   // that.
   for (xIndex = 0; xIndex < matrix.xIndexSize; xIndex++) {
     for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
-      if (getMaterialMatrix(xIndex,yIndex)) {
+      if (matrix.getMaterialMatrix(xIndex,yIndex)) {
         float x = boundingboxstart.x + xIndex * stepx;
         float y = boundingboxstart.y + yIndex * stepy;
         switch (algorithm) {
