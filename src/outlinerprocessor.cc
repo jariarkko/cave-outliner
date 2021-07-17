@@ -69,9 +69,10 @@ Processor::processScene(const aiScene* scene,
   // that.
   for (xIndex = 0; xIndex < xIndexSize; xIndex++) {
     for (unsigned int yIndex = 0; yIndex < yIndexSize; yIndex++) {
-      float x = boundingboxstart.x + xIndex * stepx;
-      float y = boundingboxstart.y + yIndex * stepy;
-      switch (algorithm) {
+      if (getMaterialMatrix(xIndex,yIndex)) {
+        float x = boundingboxstart.x + xIndex * stepx;
+        float y = boundingboxstart.y + yIndex * stepy;
+        switch (algorithm) {
         case alg_pixel:
           svg.pixel(x,y);
           break;
@@ -88,6 +89,7 @@ Processor::processScene(const aiScene* scene,
           errf("Invalid algorithm %u", algorithm);
           exit(1);
         }
+      }
     }
   }
   
@@ -238,7 +240,7 @@ Processor::getMaterialMatrix(unsigned int xIndex,
   unsigned int bitpart = index % 8;
   unsigned char thechar = bitMatrix[charpart];
   unsigned char bitMask = (1 << bitpart);
-  debugf("getting material matrix %u (%u,%u) elem %u value %x with mask %x", index, xIndex, yIndex, charpart, thechar, bitMask);
+  deepdebugf("getting material matrix %u (%u,%u) elem %u value %x with mask %x", index, xIndex, yIndex, charpart, thechar, bitMask);
   if ((thechar & bitMask) != 0) return(1);
   else return(0);
 }
