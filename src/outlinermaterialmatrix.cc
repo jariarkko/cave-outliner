@@ -67,6 +67,16 @@ MaterialMatrix::getMaterialMatrix(unsigned int xIndex,
 
 unsigned int
 MaterialMatrix::count(void) {
+  unsigned int theCount = 0;
+  unsigned int maxChar = (xIndexSize-1)*(yIndexSize-1)+1;
+  for (unsigned int i = 0; i <= maxChar; i++) {
+    unsigned char theChar = bitMatrix[i];
+    while (theChar != 0) {
+      theCount++;
+      theCar >>= 1;
+    }
+  }
+  return(theCount);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
