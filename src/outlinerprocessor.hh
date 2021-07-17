@@ -53,6 +53,6 @@ private:
                        const aiFace* face,
                        float x,
                        float y);  
-}
+};
 
 #endif // PROCESSOR_HH
