@@ -237,6 +237,6 @@ Processor::getMaterialMatrix(unsigned int xIndex,
   unsigned int bitpart = index % 8;
   unsigned char thechar = bitMatrix[charpart];
   unsigned char bitMask = (1 << bitpart);
-  if ((thecar & bitMask) != 0) return(1);
+  if ((thechar & bitMask) != 0) return(1);
   else return(0);
 }
