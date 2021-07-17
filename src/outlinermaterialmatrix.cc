@@ -45,7 +45,7 @@ MaterialMatrix::setMaterialMatrix(unsigned int xIndex,
                                   unsigned int yIndex) {
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
-  unsigned int index = xIndex * xIndexSize + yIndex;
+  unsigned int index = xIndex * yIndexSize + yIndex;
   unsigned int charpart = index / 8;
   unsigned int bitpart = index % 8;
   unsigned char bitMask = (1 << bitpart);
@@ -63,7 +63,7 @@ MaterialMatrix::getMaterialMatrix(unsigned int xIndex,
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
   assert(bitMatrix != 0);
-  unsigned int index = xIndex * xIndexSize + yIndex;
+  unsigned int index = xIndex * yIndexSize + yIndex;
   unsigned int charpart = index / 8;
   unsigned int bitpart = index % 8;
   unsigned char thechar = bitMatrix[charpart];
