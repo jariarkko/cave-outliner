@@ -19,9 +19,15 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 Processor::Processor() {
+  xIndexSize = 0;
+  yIndexSize = 0;
+  bitMatrix = 0;
 }
 
 Processor::~Processor() {
+  if (bitMatrix != 0) {
+    delete bitMatrix;
+  }
 }
 
 bool
@@ -37,12 +43,35 @@ Processor::processScene(const aiScene* scene,
   
   debugf("processScene");
   assert(scene != 0);
-  for (float x = boundingboxstart.x; x <= boundingboxend.x; x += stepx)  {
-    for (float y = boundingboxstart.y; y <= boundingboxend.y; y += stepy)  {
+  setUpMaterialMatrix(boundingboxstart,boundingboxend,stepx,stepy);
+
+  // First, go through each part of the picture, and determine if
+  // there's material in it. Construct a matrix representing the
+  // results.
+  unsigned int xIndex = 0;
+  for (float x = boundingboxstart.x; x <= boundingboxend.x; x += stepx) {
+    unsigned int yIndex = 0;
+    assert(xIndex < xIndexSize);
+    for (float y = boundingboxstart.y; y <= boundingboxend.y; y += stepy) {
+      assert(yIndex < yIndexSize);
       deepdebugf("checking (%.2f,%.2f)",x,y);
       if (sceneHasMaterial(scene,indexed,x,y)) {
         debugf("material at (%.2f,%.2f)",x,y);
-        switch (algorithm) {
+        setMaterialMatrix(xIndex,yIndex);
+      }
+      yIndex++;
+    }
+    xindex++;
+  }
+  
+  // Now there's a matrix filled with a flag for each coordinate,
+  // whether there was material or not. Draw the output based on
+  // that.
+  for (xIndex = 0; xIndex < xIndexSize; xIndex++) {
+    for (yIndex = 0; yIndex < yIndexSize; yIndex++) {
+      float x = boundingboxstart.x + xIndex * stepx;
+      float y = boundingboxstart.y + yIndex * stepy;
+      switch (algorithm) {
         case alg_pixel:
           svg.pixel(x,y);
           break;
@@ -59,9 +88,10 @@ Processor::processScene(const aiScene* scene,
           errf("Invalid algorithm %u", algorithm);
           exit(1);
         }
-      }
     }
   }
+  
+  // Done, all good
   return(1);
 }
 
@@ -167,4 +197,46 @@ Processor::faceHasMaterial(const aiScene* scene,
   return(0);
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Material matrix maintenance ////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
+void
+Processor::setUpMaterialMatrix(aiVector3D boundingboxstart,
+                               aiVector3D boundingboxend,
+                               float stepx,
+                               float stepy) {
+  xIndexSize = ((boundingboxend.x - boundingboxstart.x) / stepx) + 1;
+  yIndexSize = ((boundingboxend.y - boundingboxstart.y) / stepy) + 1;
+  unsigned int n = xIndexSize * yIndexSize;
+  unsigned int nChars = (n / 8) + 1;
+  bitMatrix = new unsigned char [nChars];
+  memset(bitMatrix,0,nChars);
+}
+
+void
+Processor::setMaterialMatrix(unsigned int xIndex,
+                             unsigned int yIndex) {
+  assert(xIndex < xIndexSize);
+  assert(yIndex < yIndexSize);
+  unsigned int index = xIndex * xIndexSize + yIndex;
+  unsigned int charpart = index / 8;
+  unsigned int bitpart = index % 8;
+  unsigned char bitMask = (1 << bitpart);
+  bitMatrix[charpart] |= bitMask;
+}
+
+bool
+Processor::getMaterialMatrix(unsigned int xIndex,
+                             unsigned int yIndex) {
+  assert(xIndex < xIndexSize);
+  assert(yIndex < yIndexSize);
+  assert(bitMatrix != 0);
+  unsigned int index = xIndex * xIndexSize + yIndex;
+  unsigned int charpart = index / 8;
+  unsigned int bitpart = index % 8;
+  unsigned char thechar = bitMatrix[charpart];
+  unsigned char bitMask = (1 << bitpart);
+  if ((thecar & bitMask) != 0) return(1);
+  else return(0);
+}

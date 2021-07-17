@@ -34,6 +34,9 @@ public:
 
 private:
 
+  unsigned int xIndexSize;
+  unsigned int yIndexSize;
+  unsigned char* bitMatrix;
   bool sceneHasMaterial(const aiScene* scene,
                         IndexedMesh& indexed,
                         float x,
@@ -52,7 +55,15 @@ private:
                        const aiMesh* mesh,
                        const aiFace* face,
                        float x,
-                       float y);  
+                       float y);
+  void setUpMaterialMatrix(aiVector3D boundingboxstart,
+                           aiVector3D boundingboxend,
+                           float stepx,
+                           float stepy);
+  void setMaterialMatrix(unsigned int xIndex,
+                         unsigned int yIndex);
+  bool getMaterialMatrix(unsigned int xIndex,
+                         unsigned int yIndex);
 };
 
 #endif // PROCESSOR_HH
