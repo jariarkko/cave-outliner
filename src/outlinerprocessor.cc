@@ -248,6 +248,7 @@ Processor::isBorder(unsigned int xIndex,
   unsigned int tableX[tableSize];
   unsigned int tableY[tableSize];
   getNeighbours(xIndex,yIndex,n,tableSize,tableX,tableY);
+  debugf("point %u,%u has %u neighbors", xIndex, yIndex, n);
   for (unsigned int i = 0; i < n; i++) {
     if (!matrix.getMaterialMatrix(tableX[i],tableY[i])) {
       debugf("point %u,%u is a border due to %u,%u", xIndex, yIndex, tableX[i], tableY[i]);
