@@ -85,7 +85,7 @@ MaterialMatrix::count(void) {
                  theChar, i, nChars);
     }
     while (theChar != 0) {
-      theCount++;
+      if ((theChar & 1) != 0) theCount++;
       theChar >>= 1;
     }
   }
