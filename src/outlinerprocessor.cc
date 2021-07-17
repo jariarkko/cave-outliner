@@ -56,7 +56,7 @@ Processor::processScene(const aiScene* scene,
           errf("Borderactual algorithm is not yet implemented");
           exit(1);
         default:
-          errf("Invalid algorithm %u", alg);
+          errf("Invalid algorithm %u", algorithm);
           exit(1);
         }
       }
