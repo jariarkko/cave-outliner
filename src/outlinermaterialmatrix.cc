@@ -77,7 +77,7 @@ MaterialMatrix::getMaterialMatrix(unsigned int xIndex,
 unsigned int
 MaterialMatrix::count(void) {
   unsigned int theCount = 0;
-  for (unsigned int i = 0; i <= nChars; i++) {
+  for (unsigned int i = 0; i < nChars; i++) {
     assert(i < nChars);
     unsigned char theChar = bitMatrix[i];
     if (theChar != 0) {
