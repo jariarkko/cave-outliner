@@ -47,8 +47,14 @@ Processor::processScene(const aiScene* scene,
   unsigned int xIndex = 0;
   for (float x = boundingboxstart.x; x <= boundingboxend.x; x += stepx) {
     unsigned int yIndex = 0;
+    if (xIndex >= matrix.xIndexSize) {
+      debugf("processScene %u/%u", xIndex, matrix.xIndexSize);
+    }
     assert(xIndex < matrix.xIndexSize);
     for (float y = boundingboxstart.y; y <= boundingboxend.y; y += stepy) {
+      if (yIndex >= matrix.yIndexSize) {
+        debugf("processScene %u,%u/%u,%u", xIndex, yIndex, matrix.xIndexSize, matrix.yIndexSize);
+      }
       assert(yIndex < matrix.yIndexSize);
       deepdebugf("checking (%.2f,%.2f)",x,y);
       if (sceneHasMaterial(scene,indexed,x,y)) {
