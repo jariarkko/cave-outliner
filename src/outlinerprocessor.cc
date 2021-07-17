@@ -224,17 +224,17 @@ Processor::getNeighbours(unsigned int xIndex,
   
   // Left side three neighbours
   if (xIndex > 0 && yIndex > 0)                                       { tableX[n] = xIndex-1; tableY[n] = yIndex-1; n++; }
-  if (xIndex > 0)                                                     { tableX[n] = xIndex-1; tableY[n] = yIndex; n++; }
+  if (xIndex > 0)                                                     { tableX[n] = xIndex-1; tableY[n] = yIndex;   n++; }
   if (xIndex > 0 && yIndex < matrix.yIndexSize-1)                     { tableX[n] = xIndex-1; tableY[n] = yIndex+1; n++; }
 
   // Top and bottom neighbours
-  if (yIndex > 0)                                                     { tableX[n] = xIndex; tableY[n] = yIndex-1; n++; }
-  if (yIndex < matrix.yIndexSize-1)                                   { tableX[n] = xIndex; tableY[n] = yIndex+1; n++; }
+  if (yIndex > 0)                                                     { tableX[n] = xIndex;   tableY[n] = yIndex-1; n++; }
+  if (yIndex < matrix.yIndexSize-1)                                   { tableX[n] = xIndex;   tableY[n] = yIndex+1; n++; }
   
   // Right side three neighbours
-  if (xIndex < matrix.xIndexSize-1 && yIndex > 0)                     { tableX[n] = xIndex+1; tableY[n]  = yIndex-1; n++; }
-  if (xIndex < matrix.xIndexSize-1)                                   { tableX[n] = xIndex+1; tableY[n]  = yIndex; n++; }
-  if (xIndex < matrix.xIndexSize-1 0 && yIndex < matrix.yIndexSize-1) { tableX[n] = xIndex+1; tableY[n] = yIndex+1; n++; }
+  if (xIndex < matrix.xIndexSize-1 && yIndex > 0)                     { tableX[n] = xIndex+1; tableY[n] = yIndex-1; n++; }
+  if (xIndex < matrix.xIndexSize-1)                                   { tableX[n] = xIndex+1; tableY[n] = yIndex;   n++; }
+  if (xIndex < matrix.xIndexSize-1 && yIndex < matrix.yIndexSize-1) { tableX[n] = xIndex+1; tableY[n] = yIndex+1; n++; }
   
   // Done
   assert(n <= tableSize);
