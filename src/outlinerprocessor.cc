@@ -28,7 +28,7 @@ Processor::Processor(aiVector3D boundingboxstartIn,
                                                       boundingboxendIn,
                                                       stepxIn,
                                                       stepyIn),
-                                               indexed(indexedin) {
+                                               indexed(indexedIn) {
 }
 
 Processor::~Processor() {
@@ -40,7 +40,6 @@ Processor::processScene(const aiScene* scene,
   
   debugf("processScene");
   assert(scene != 0);
-  setUpMaterialMatrix(boundingboxstart,boundingboxend,stepx,stepy);
 
   // First, go through each part of the picture, and determine if
   // there's material in it. Construct a matrix representing the
@@ -48,9 +47,9 @@ Processor::processScene(const aiScene* scene,
   unsigned int xIndex = 0;
   for (float x = boundingboxstart.x; x <= boundingboxend.x; x += stepx) {
     unsigned int yIndex = 0;
-    assert(xIndex < xIndexSize);
+    assert(xIndex < matrix.xIndexSize);
     for (float y = boundingboxstart.y; y <= boundingboxend.y; y += stepy) {
-      assert(yIndex < yIndexSize);
+      assert(yIndex < matrix.yIndexSize);
       deepdebugf("checking (%.2f,%.2f)",x,y);
       if (sceneHasMaterial(scene,indexed,x,y)) {
         debugf("material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
@@ -64,8 +63,8 @@ Processor::processScene(const aiScene* scene,
   // Now there's a matrix filled with a flag for each coordinate,
   // whether there was material or not. Draw the output based on
   // that.
-  for (xIndex = 0; xIndex < xIndexSize; xIndex++) {
-    for (unsigned int yIndex = 0; yIndex < yIndexSize; yIndex++) {
+  for (xIndex = 0; xIndex < matrix.xIndexSize; xIndex++) {
+    for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
       if (getMaterialMatrix(xIndex,yIndex)) {
         float x = boundingboxstart.x + xIndex * stepx;
         float y = boundingboxstart.y + yIndex * stepy;
