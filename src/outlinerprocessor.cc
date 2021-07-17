@@ -42,7 +42,7 @@ Processor::processScene(const aiScene* scene,
       deepdebugf("checking (%.2f,%.2f)",x,y);
       if (sceneHasMaterial(scene,indexed,x,y)) {
         debugf("material at (%.2f,%.2f)",x,y);
-        switch (alg) {
+        switch (algorithm) {
         case alg_pixel:
           svg.pixel(x,y);
           break;
