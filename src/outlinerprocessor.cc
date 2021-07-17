@@ -24,7 +24,13 @@ Processor::Processor(aiVector3D boundingboxstartIn,
                      float stepyIn,
                      enum outlinerdirection directionIn,
                      enum outlineralgorithm algorithmIn,
-                     IndexedMesh& indexedIn) : matrix(boundingboxstartIn,
+                       IndexedMesh& indexedIn) : boundingboxstart(boundingboxstartIn),
+                                                 boundingboxend(boundingboxendIn),
+                                                 stepx(stepxIn),
+                                                 stepy(stepyIn),
+                                                 direction(directionIn),
+                                                 algorithm(algorithmIn),
+                                                 matrix(boundingboxstartIn,
                                                       boundingboxendIn,
                                                       stepxIn,
                                                       stepyIn),
@@ -46,12 +52,15 @@ Processor::processScene(const aiScene* scene,
   // results.
   unsigned int xIndex = 0;
   for (float x = boundingboxstart.x; x <= boundingboxend.x; x += stepx) {
+    assert(x >= boundingboxstart.x && x <= boundingboxend.x);
     unsigned int yIndex = 0;
     if (xIndex >= matrix.xIndexSize) {
       debugf("processScene %u/%u", xIndex, matrix.xIndexSize);
     }
     assert(xIndex < matrix.xIndexSize);
     for (float y = boundingboxstart.y; y <= boundingboxend.y; y += stepy) {
+      assert(x >= boundingboxstart.x && x <= boundingboxend.x);
+      assert(y >= boundingboxstart.y && y <= boundingboxend.y);
       if (yIndex >= matrix.yIndexSize) {
         debugf("processScene %u,%u/%u,%u", xIndex, yIndex, matrix.xIndexSize, matrix.yIndexSize);
       }

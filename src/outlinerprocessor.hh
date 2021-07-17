@@ -22,7 +22,6 @@ class Processor {
 public:
   Processor(aiVector3D boundingboxstartIn,
             aiVector3D boundingboxendIn,
-
             float stepxIn,
             float stepyIn,
             enum outlinerdirection directionIn,
