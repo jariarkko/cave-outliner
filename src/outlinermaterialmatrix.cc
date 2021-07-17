@@ -31,7 +31,7 @@ MaterialMatrix::MaterialMatrix(aiVector3D boundingboxstart,
     exit(1);
   }
   memset(bitMatrix,0,nChars);
-  debugf("created a matrix of %u x %u, nChars %u", xIndexSize, yIndexsize, nChars);
+  debugf("created a matrix of %u x %u, nChars %u", xIndexSize, yIndexSize, nChars);
 }
 
 MaterialMatrix::~MaterialMatrix() {
