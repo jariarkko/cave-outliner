@@ -17,7 +17,6 @@
 // Material matrix maintenance ////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-void
 MaterialMatrix::MaterialMatrix(aiVector3D boundingboxstart,
                                aiVector3D boundingboxend,
                                float stepx,
@@ -30,6 +29,12 @@ MaterialMatrix::MaterialMatrix(aiVector3D boundingboxstart,
   memset(bitMatrix,0,nChars);
 }
 
+MaterialMatrix::~MaterialMatrix() {
+  if (bitMatrix != 0) {
+    delete bitMatrix;
+  }
+}
+  
 void
 MaterialMatrix::setMaterialMatrix(unsigned int xIndex,
                                   unsigned int yIndex) {

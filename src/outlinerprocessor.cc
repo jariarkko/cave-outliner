@@ -27,13 +27,11 @@ Processor::Processor(aiVector3D boundingboxstartIn,
                      IndexedMesh& indexedIn) : matrix(boundingboxstartIn,
                                                       boundingboxendIn,
                                                       stepxIn,
-                                                      stepyIn) {
+                                                      stepyIn),
+                                               indexed(indexedin) {
 }
 
 Processor::~Processor() {
-  if (bitMatrix != 0) {
-    delete bitMatrix;
-  }
 }
 
 bool
