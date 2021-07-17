@@ -73,7 +73,7 @@ MaterialMatrix::count(void) {
     unsigned char theChar = bitMatrix[i];
     while (theChar != 0) {
       theCount++;
-      theCar >>= 1;
+      theChar >>= 1;
     }
   }
   return(theCount);
