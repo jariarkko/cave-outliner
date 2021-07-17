@@ -61,14 +61,14 @@ Processor::processScene(const aiScene* scene,
       }
       yIndex++;
     }
-    xindex++;
+    xIndex++;
   }
   
   // Now there's a matrix filled with a flag for each coordinate,
   // whether there was material or not. Draw the output based on
   // that.
   for (xIndex = 0; xIndex < xIndexSize; xIndex++) {
-    for (yIndex = 0; yIndex < yIndexSize; yIndex++) {
+    for (unsigned int yIndex = 0; yIndex < yIndexSize; yIndex++) {
       float x = boundingboxstart.x + xIndex * stepx;
       float y = boundingboxstart.y + yIndex * stepy;
       switch (algorithm) {
