@@ -15,42 +15,26 @@
 #include "outlinerprocessor.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// Function prototypes ////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-static bool sceneHasMaterial(const aiScene* scene,
-                  IndexedMesh& indexed,
-                             float x,
-                             float y);
-static bool nodeHasMaterial(const aiScene* scene,
-                            const aiNode* node,
-                            IndexedMesh& indexed,
-                            float x,
-                            float y);
-static bool meshHasMaterial(const aiScene* scene,
-                            const aiMesh* node,
-                            IndexedMesh& indexed,
-                            float x,
-                            float y);
-static bool faceHasMaterial(const aiScene* scene,
-                            const aiMesh* mesh,
-                            const aiFace* face,
-                            float x,
-                            float y);
-
-///////////////////////////////////////////////////////////////////////////////////////////////
 // Model processing ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+Processor::Processor() {
+}
+
+Processor::~Processor() {
+}
+
 bool
-processScene(const aiScene* scene,
-             aiVector3D boundingboxstart,
-             aiVector3D boundingboxend,
-             float stepx,
-             float stepy,
-             enum outlineralgorithm alg,
-             IndexedMesh& indexed,
-             SvgCreator& svg) {
+Processor::processScene(const aiScene* scene,
+                        aiVector3D boundingboxstart,
+                        aiVector3D boundingboxend,
+                        float stepx,
+                        float stepy,
+                        enum outlinerdirection direction,
+                        enum outlineralgorithm algorithm,
+                        IndexedMesh& indexed,
+                        SvgCreator& svg) {
+  
   debugf("processScene");
   assert(scene != 0);
   for (float x = boundingboxstart.x; x <= boundingboxend.x; x += stepx)  {
@@ -75,22 +59,22 @@ processScene(const aiScene* scene,
   return(1);
 }
 
-static bool
-sceneHasMaterial(const aiScene* scene,
-                 IndexedMesh& indexed,
-                 float x,
-                 float y) {
+bool
+Processor::sceneHasMaterial(const aiScene* scene,
+                            IndexedMesh& indexed,
+                            float x,
+                            float y) {
   assert(scene != 0);
   deepdeepdebugf("checking for material at (%.2f,%.2f)", x, y);
   return(nodeHasMaterial(scene,scene->mRootNode,indexed,x,y));
 }
 
-static bool
-nodeHasMaterial(const aiScene* scene,
-                const aiNode* node,
-                IndexedMesh& indexed,
-                float x,
-                float y) {
+bool
+Processor::nodeHasMaterial(const aiScene* scene,
+                           const aiNode* node,
+                           IndexedMesh& indexed,
+                           float x,
+                           float y) {
   assert(scene != 0);
   assert(node != 0);
   if (!node->mTransformation.IsIdentity()) {
@@ -110,12 +94,12 @@ nodeHasMaterial(const aiScene* scene,
   return(0);
 }
 
-static bool
-meshHasMaterial(const aiScene* scene,
-                const aiMesh* mesh,
-                IndexedMesh& indexed,
-                float x,
-                float y) {
+bool
+Processor::meshHasMaterial(const aiScene* scene,
+                           const aiMesh* mesh,
+                           IndexedMesh& indexed,
+                           float x,
+                           float y) {
   assert(scene != 0);
   assert(mesh != 0);
   if (1) {
@@ -138,12 +122,12 @@ meshHasMaterial(const aiScene* scene,
   return(0);
 }
 
-static bool
-faceHasMaterial(const aiScene* scene,
-                const aiMesh* mesh,
-                const aiFace* face,
-                float x,
-                float y) {
+bool
+Processor::faceHasMaterial(const aiScene* scene,
+                           const aiMesh* mesh,
+                           const aiFace* face,
+                           float x,
+                           float y) {
   assert(scene != 0);
   assert(mesh != 0);
   assert(face != 0);

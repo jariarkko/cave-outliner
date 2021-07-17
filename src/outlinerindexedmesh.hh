@@ -38,7 +38,8 @@ public:
   IndexedMesh(unsigned int maxMeshesIn,
               unsigned int subdivisionsIn,
               const aiVector2D& viewBoundingBoxStartIn,
-              const aiVector2D& viewBoundingBoxEndIn);
+              const aiVector2D& viewBoundingBoxEndIn,
+              enum outlinerdirection directionIn);
   void addScene(const aiScene* scene);
   void addNode(const aiScene* scene,
                const aiNode* node);
@@ -58,6 +59,7 @@ private:
   unsigned int subdivisions;
   aiVector2D viewBoundingBoxStart;
   aiVector2D viewBoundingBoxEnd;
+  enum outlinerdirection direction;
   float tileSizeX;
   float tileSizeY;
   

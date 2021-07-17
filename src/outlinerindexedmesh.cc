@@ -19,7 +19,8 @@
 IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
                          unsigned int subdivisionsIn,
                          const aiVector2D& viewBoundingBoxStartIn,
-                         const aiVector2D& viewBoundingBoxEndIn) {
+                         const aiVector2D& viewBoundingBoxEndIn,
+                         enum outlinerdirection directionIn) {
   assert(maxMeshesIn >= 1);
   assert(subdivisionsIn >= 1);
   maxMeshes = maxMeshesIn;
@@ -28,6 +29,7 @@ IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
   debugf("%u x %u tiles, or %u tiles", subdivisions, subdivisions, subdivisions * subdivisions);
   viewBoundingBoxStart = viewBoundingBoxStartIn;
   viewBoundingBoxEnd = viewBoundingBoxEndIn;
+  direction = directionIn;
   float viewX = viewBoundingBoxEnd.x - viewBoundingBoxStart.x;
   float viewY = viewBoundingBoxEnd.y - viewBoundingBoxStart.y;
   tileSizeX = viewX / subdivisions;

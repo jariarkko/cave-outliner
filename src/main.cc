@@ -41,7 +41,8 @@ static float stepx = 1.0;
 static float stepy = 1.0;
 static aiVector3D boundingBoxStart = {-2,-2,-2};
 static aiVector3D boundingBoxEnd = {2,2,2};
-static enum outlineralgorithm alg = alg_pixel;
+static enum outlinerdirection direction = dir_horizontal;
+static enum outlineralgorithm algorithm = alg_pixel;
 static unsigned int tiles = outlinertiledivision;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,10 +62,18 @@ main(int argc, char** argv) {
         debug = 1;
         deepdebug = 1;
         deepdeepdebug = 1;
+    } else if (strcmp(argv[1],"--horizontal") == 0) {
+        direction = dir_horizontal;
+    } else if (strcmp(argv[1],"--vertical") == 0) {
+        direction = dir_vertical;
     } else if (strcmp(argv[1],"--pixel") == 0) {
-        alg = alg_pixel;
-    } else if (strcmp(argv[1],"--border") == 0) {
-        alg = alg_border;
+        algorithm = alg_pixel;
+     } else if (strcmp(argv[1],"--borderpixel") == 0) {
+        algorithm = alg_borderpixel;
+     } else if (strcmp(argv[1],"--borderline") == 0) {
+        algorithm = alg_borderline;
+     } else if (strcmp(argv[1],"--borderactual") == 0) {
+        algorithm = alg_borderactual;
     } else if (strcmp(argv[1],"--step") == 0 && argc > 2) {
       stepx = stepy = atof(argv[2]);
       if (stepx < 0.0001) {
@@ -122,7 +131,7 @@ main(int argc, char** argv) {
   }
   const char* input = argv[1];
   const char* output = argv[2];
-  if (outlineralgorithm_generatespicture(alg)) {
+  if (outlineralgorithm_generatespicture(algorithm)) {
     if (!checkFileExtension(output,"svg")) {
       errf("Output file must be an SVG file, %s given", output);
       return(1);
@@ -161,18 +170,19 @@ main(int argc, char** argv) {
   // Build our own data structure
   aiVector2D bounding2DBoxStart(boundingBoxStart.x,boundingBoxStart.y);
   aiVector2D bounding2DBoxEnd(boundingBoxEnd.x,boundingBoxEnd.y);
-  IndexedMesh indexed(outlinermaxmeshes,tiles,bounding2DBoxStart,bounding2DBoxEnd);
+  IndexedMesh indexed(outlinermaxmeshes,tiles,bounding2DBoxStart,bounding2DBoxEnd,direction);
   indexed.addScene(scene);
   
   // Process the model
-  if (!processScene(scene,
-                    boundingBoxStart,
-                    boundingBoxEnd,
-                    stepx,
-                    stepy,
-                    alg,
-                    indexed,
-                    svg)) {
+  Processor processor;
+  if (!processor.processScene(scene,
+                              boundingBoxStart,
+                              boundingBoxEnd,
+                              stepx,
+                              stepy,
+                              algorithm,
+                              indexed,
+                              svg)) {
     return(1);
   }
 
@@ -199,7 +209,10 @@ processHelp(void) {
   std::cout << "\n";
   std::cout << "  --bounding x x y y z z   Set the bounding box area. Default is -2 2 -2 2 -2 2.\n";
   std::cout << "  --step i                 Set the granularity increment. Default is 1.\n";
-  std::cout << "  --pixel or --border      Choose the output drawing algorithm. Default is pixel.\n";
+  std::cout << "  --pixel                  Use the pixel output drawing algorithm (default, fills cave with pixels).\n";
+  std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave walls, with pixels.\n";
+  std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave walls, with lines.\n";
+  std::cout << "  --borderactual           Use the border-only drawing algorithm, draws the cave walls using model triangle sides.\n";
   std::cout << "  --tiling n               Optimize search process with n x n tiles. ";
   std::cout <<                            "Default is " << outlinertiledivision << ",\n";
   std::cout << "                           and --tiling 1 implies no optimization.\n";
