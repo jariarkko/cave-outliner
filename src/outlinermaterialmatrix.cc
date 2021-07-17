@@ -82,7 +82,7 @@ MaterialMatrix::count(void) {
     unsigned char theChar = bitMatrix[i];
     if (theChar != 0) {
       deepdebugf("found non-zero char %x in index %u",
-                 theChar, i, maxChar);
+                 theChar, i, nChars);
     }
     while (theChar != 0) {
       theCount++;
