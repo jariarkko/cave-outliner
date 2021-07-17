@@ -132,11 +132,11 @@ MaterialMatrix::test(void) {
     float stepx = 0.1;
     float stepy = 0.1;
     MaterialMatrix test2(boundingboxstart,boundingboxend,stepx,stepy);
-    debugf("test2 initial count = %u", n);
     unsigned int xSize = test2.xIndexSize;
     unsigned int ySize = test2.yIndexSize;
     debugf("test2 sizes %u and %u", xSize, ySize);
     unsigned int n = test2.count();
+    debugf("test2 initial count = %u", n);
     assert(n == 0);
   }
 }
