@@ -62,6 +62,14 @@ private:
                        const aiFace* face,
                        float x,
                        float y);
+  bool isBorder(unsigned int xIndex,
+                unsigned int yIndex);
+  void getNeighbours(unsigned int xIndex,
+                     unsigned int yIndex,
+                     unsigned int& n,
+                     unsigned int tableSize,
+                     unsigned int* tableX,
+                     unsigned int* tableY);
 };
 
 #endif // PROCESSOR_HH

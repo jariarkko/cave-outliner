@@ -88,8 +88,10 @@ Processor::processScene(const aiScene* scene,
           svg.pixel(x,y);
           break;
         case alg_borderpixel:
-          errf("Borderpixel algorithm is not yet implemented");
-          exit(1);
+          if (isBorder(xIndex,yIndex)) {
+            svg.pixel(x,y);
+          }
+          break;
         case alg_borderline:
           errf("Borderline algorithm is not yet implemented");
           exit(1);
@@ -210,3 +212,46 @@ Processor::faceHasMaterial(const aiScene* scene,
   return(0);
 }
 
+void
+Processor::getNeighbours(unsigned int xIndex,
+                         unsigned int yIndex,
+                         unsigned int& n,
+                         unsigned int tableSize,
+                         unsigned int* tableX,
+                         unsigned int* tableY) {
+  assert(tableSize <= 8);
+  n = 0;
+  
+  // Left side three neighbours
+  if (xIndex > 0 && yIndex > 0)                                       { tableX[n] = xIndex-1; tableY[n] = yIndex-1; n++; }
+  if (xIndex > 0)                                                     { tableX[n] = xIndex-1; tableY[n] = yIndex; n++; }
+  if (xIndex > 0 && yIndex < matrix.yIndexSize-1)                     { tableX[n] = xIndex-1; tableY[n] = yIndex+1; n++; }
+
+  // Top and bottom neighbours
+  if (yIndex > 0)                                                     { tableX[n] = xIndex; tableY[n] = yIndex-1; n++; }
+  if (yIndex < matrix.yIndexSize-1)                                   { tableX[n] = xIndex; tableY[n] = yIndex+1; n++; }
+  
+  // Right side three neighbours
+  if (xIndex < matrix.xIndexSize-1 && yIndex > 0)                     { tableX[n] = xIndex+1; tableY[n]  = yIndex-1; n++; }
+  if (xIndex < matrix.xIndexSize-1)                                   { tableX[n] = xIndex+1; tableY[n]  = yIndex; n++; }
+  if (xIndex < matrix.xIndexSize-1 0 && yIndex < matrix.yIndexSize-1) { tableX[n] = xIndex+1; tableY[n] = yIndex+1; n++; }
+  
+  // Done
+  assert(n <= tableSize);
+}
+
+bool
+Processor::isBorder(unsigned int xIndex,
+                    unsigned int yIndex) {
+  unsigned int n;
+  const unsigned int tableSize = 8;
+  unsigned int tableX[tableSize];
+  unsigned int tableY[tableSize];
+  getNeighbours(xIndex,yIndex,n,tableSize,tableX,tableY);
+  for (unsigned int i = 0; i < n; i++) {
+    if (!matrix.getMaterialMatrix(tableX[i],tableY[i])) {
+      return(1);
+    }
+  }
+  return(0);
+}
