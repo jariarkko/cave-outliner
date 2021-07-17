@@ -46,8 +46,14 @@ Processor::processScene(const aiScene* scene,
         case alg_pixel:
           svg.pixel(x,y);
           break;
-        case alg_border:
-          errf("Border algorithm is not yet implemented");
+        case alg_borderpixel:
+          errf("Borderpixel algorithm is not yet implemented");
+          exit(1);
+        case alg_borderline:
+          errf("Borderline algorithm is not yet implemented");
+          exit(1);
+        case alg_borderactual:
+          errf("Borderactual algorithm is not yet implemented");
           exit(1);
         default:
           errf("Invalid algorithm %u", alg);
