@@ -180,6 +180,7 @@ main(int argc, char** argv) {
                               boundingBoxEnd,
                               stepx,
                               stepy,
+                              direction,
                               algorithm,
                               indexed,
                               svg)) {
