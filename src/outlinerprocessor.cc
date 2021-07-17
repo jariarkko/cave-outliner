@@ -85,9 +85,11 @@ Processor::processScene(const aiScene* scene,
         float y = boundingboxstart.y + yIndex * stepy;
         switch (algorithm) {
         case alg_pixel:
+          debugf("pixel alg %u,%u", xIndex, yIndex);
           svg.pixel(x,y);
           break;
         case alg_borderpixel:
+          debugf("borderpixel alg %u,%u", xIndex, yIndex);
           if (isBorder(xIndex,yIndex)) {
             svg.pixel(x,y);
           }
