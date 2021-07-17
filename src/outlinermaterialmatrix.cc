@@ -52,7 +52,7 @@ MaterialMatrix::setMaterialMatrix(unsigned int xIndex,
   debugf("setting material matrix %u (%u,%u) elem %u with mask %x", index, xIndex, yIndex, charpart, bitMask);
   assert(index < nBits);
   assert(charpart < nChars);
-  asset(bitpart < 8);
+  assert(bitpart < 8);
   bitMatrix[charpart] |= bitMask;
 }
 
@@ -71,7 +71,7 @@ MaterialMatrix::getMaterialMatrix(unsigned int xIndex,
              index, xIndex, yIndex, charpart, thechar, bitMask);
   assert(index < nBits);
   assert(charpart < nChars);
-  asset(bitpart < 8);
+  assert(bitpart < 8);
   if ((thechar & bitMask) != 0) return(1);
   else return(0);
 }
