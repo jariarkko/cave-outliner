@@ -14,6 +14,7 @@
 #include "outlinerconstants.hh"
 #include "outlinerdebug.hh"
 #include "outlinerindexedmesh.hh"
+#include "outlinermaterialmatrix.hh"
 #include "outlinerprocessor.hh"
 #include "outlinerdescribe.hh"
 #include "outlinermath.hh"
@@ -174,16 +175,14 @@ main(int argc, char** argv) {
   indexed.addScene(scene);
   
   // Process the model
-  Processor processor;
-  if (!processor.processScene(scene,
-                              boundingBoxStart,
-                              boundingBoxEnd,
-                              stepx,
-                              stepy,
-                              direction,
-                              algorithm,
-                              indexed,
-                              svg)) {
+  Processor processor(boundingBoxStart,
+                      boundingBoxEnd,
+                      stepx,
+                      stepy,
+                      direction,
+                      algorithm,
+                      indexed);
+  if (!processor.processScene(scene,svg)) {
     return(1);
   }
 
@@ -279,6 +278,7 @@ static void
 runTests(void) {
   debugf("running tests");
   mathTests();
+  MaterialMatrix::test();
   debugf("tests OK");
 }
 

@@ -18,10 +18,16 @@
 // Model processing ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-Processor::Processor() {
-  xIndexSize = 0;
-  yIndexSize = 0;
-  bitMatrix = 0;
+Processor::Processor(aiVector3D boundingboxstartIn,
+                     aiVector3D boundingboxendIn,
+                     float stepxIn,
+                     float stepyIn,
+                     enum outlinerdirection directionIn,
+                     enum outlineralgorithm algorithmIn,
+                     IndexedMesh& indexedIn) : matrix(boundingboxstartIn,
+                                                      boundingboxendIn,
+                                                      stepxIn,
+                                                      stepyIn) {
 }
 
 Processor::~Processor() {
@@ -32,13 +38,6 @@ Processor::~Processor() {
 
 bool
 Processor::processScene(const aiScene* scene,
-                        aiVector3D boundingboxstart,
-                        aiVector3D boundingboxend,
-                        float stepx,
-                        float stepy,
-                        enum outlinerdirection direction,
-                        enum outlineralgorithm algorithm,
-                        IndexedMesh& indexed,
                         SvgCreator& svg) {
   
   debugf("processScene");
@@ -199,48 +198,3 @@ Processor::faceHasMaterial(const aiScene* scene,
   return(0);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-// Material matrix maintenance ////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-void
-Processor::setUpMaterialMatrix(aiVector3D boundingboxstart,
-                               aiVector3D boundingboxend,
-                               float stepx,
-                               float stepy) {
-  xIndexSize = ((boundingboxend.x - boundingboxstart.x) / stepx) + 1;
-  yIndexSize = ((boundingboxend.y - boundingboxstart.y) / stepy) + 1;
-  unsigned int n = xIndexSize * yIndexSize;
-  unsigned int nChars = (n / 8) + 1;
-  bitMatrix = new unsigned char [nChars];
-  memset(bitMatrix,0,nChars);
-}
-
-void
-Processor::setMaterialMatrix(unsigned int xIndex,
-                             unsigned int yIndex) {
-  assert(xIndex < xIndexSize);
-  assert(yIndex < yIndexSize);
-  unsigned int index = xIndex * xIndexSize + yIndex;
-  unsigned int charpart = index / 8;
-  unsigned int bitpart = index % 8;
-  unsigned char bitMask = (1 << bitpart);
-  debugf("setting material matrix %u (%u,%u) elem %u with mask %x", index, xIndex, yIndex, charpart, bitMask);
-  bitMatrix[charpart] |= bitMask;
-}
-
-bool
-Processor::getMaterialMatrix(unsigned int xIndex,
-                             unsigned int yIndex) {
-  assert(xIndex < xIndexSize);
-  assert(yIndex < yIndexSize);
-  assert(bitMatrix != 0);
-  unsigned int index = xIndex * xIndexSize + yIndex;
-  unsigned int charpart = index / 8;
-  unsigned int bitpart = index % 8;
-  unsigned char thechar = bitMatrix[charpart];
-  unsigned char bitMask = (1 << bitpart);
-  deepdebugf("getting material matrix %u (%u,%u) elem %u value %x with mask %x", index, xIndex, yIndex, charpart, thechar, bitMask);
-  if ((thechar & bitMask) != 0) return(1);
-  else return(0);
-}

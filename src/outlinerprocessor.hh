@@ -13,30 +13,37 @@
 #include "outlinerconstants.hh"
 #include "outlinersvg.hh"
 #include "outlinerindexedmesh.hh"
+#include "outlinermaterialmatrix.hh"
 
 class IndexedMesh;
 
 class Processor {
 
 public:
-  Processor();
+  Processor(aiVector3D boundingboxstartIn,
+            aiVector3D boundingboxendIn,
+
+            float stepxIn,
+            float stepyIn,
+            enum outlinerdirection directionIn,
+            enum outlineralgorithm algorithmIn,
+            IndexedMesh& indexedIn);
   ~Processor();
   
   bool processScene(const aiScene* scene,
-                    aiVector3D boundingboxstart,
-                    aiVector3D boundingboxend,
-                    float stepx,
-                    float stepy,
-                    enum outlinerdirection direction,
-                    enum outlineralgorithm algorithm,
-                    IndexedMesh& indexed,
                     SvgCreator& svg);
 
 private:
-
-  unsigned int xIndexSize;
-  unsigned int yIndexSize;
-  unsigned char* bitMatrix;
+  
+  aiVector3D boundingboxstart;
+  aiVector3D boundingboxend;
+  float stepx;
+  float stepy;
+  enum outlinerdirection direction;
+  enum outlineralgorithm algorithm;
+  IndexedMesh& indexed;
+  MaterialMatrix matrix;
+  
   bool sceneHasMaterial(const aiScene* scene,
                         IndexedMesh& indexed,
                         float x,
@@ -56,14 +63,6 @@ private:
                        const aiFace* face,
                        float x,
                        float y);
-  void setUpMaterialMatrix(aiVector3D boundingboxstart,
-                           aiVector3D boundingboxend,
-                           float stepx,
-                           float stepy);
-  void setMaterialMatrix(unsigned int xIndex,
-                         unsigned int yIndex);
-  bool getMaterialMatrix(unsigned int xIndex,
-                         unsigned int yIndex);
 };
 
 #endif // PROCESSOR_HH
