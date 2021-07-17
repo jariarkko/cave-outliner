@@ -97,6 +97,7 @@ MaterialMatrix::test(void) {
     unsigned int ySize = test1.yIndexSize;
     debugf("test1 sizes %u and %u", xSize, ySize);
     unsigned int n = test1.count();
+    debugf("test1 initial count = %u", n);
     assert(n == 0);
     test1.setMaterialMatrix(5,5);
     n = test1.count();
@@ -131,6 +132,7 @@ MaterialMatrix::test(void) {
     float stepx = 0.1;
     float stepy = 0.1;
     MaterialMatrix test2(boundingboxstart,boundingboxend,stepx,stepy);
+    debugf("test2 initial count = %u", n);
     unsigned int xSize = test2.xIndexSize;
     unsigned int ySize = test2.yIndexSize;
     debugf("test2 sizes %u and %u", xSize, ySize);
