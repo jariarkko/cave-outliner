@@ -56,7 +56,7 @@ Processor::processScene(const aiScene* scene,
       assert(yIndex < yIndexSize);
       deepdebugf("checking (%.2f,%.2f)",x,y);
       if (sceneHasMaterial(scene,indexed,x,y)) {
-        debugf("material at (%.2f,%.2f)",x,y);
+        debugf("material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
         setMaterialMatrix(xIndex,yIndex);
       }
       yIndex++;
