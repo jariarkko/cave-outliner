@@ -273,6 +273,9 @@ IndexedMesh::getFacesTile(struct IndexedMeshOneMesh& shadow,
   assert(shadow.mesh != 0);
   assert(shadow.mesh == mesh);
   assert(mesh != 0);
+  if (tileX >= subdivisions || tileY >= subdivisions) {
+    debugf("getFacesTile(%u,%u)", tileX, tileY);
+  }
   assert(tileX < subdivisions);
   assert(tileY < subdivisions);
   assert(shadow.tileMatrix != 0);
