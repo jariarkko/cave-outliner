@@ -56,13 +56,16 @@ main(int argc, char** argv) {
   while (argc > 1 && argv[1][0] == '-') {
     if (strcmp(argv[1],"--debug") == 0) {
         debug = 1;
+        debuginit(debug,deepdebug,deepdeepdebug);
     } else if (strcmp(argv[1],"--deepdebug") == 0) {
         debug = 1;
         deepdebug = 1;
+        debuginit(debug,deepdebug,deepdeepdebug);
     } else if (strcmp(argv[1],"--deepdeepdebug") == 0) {
         debug = 1;
         deepdebug = 1;
         deepdeepdebug = 1;
+        debuginit(debug,deepdebug,deepdeepdebug);
     } else if (strcmp(argv[1],"--horizontal") == 0) {
         direction = dir_horizontal;
     } else if (strcmp(argv[1],"--vertical") == 0) {
