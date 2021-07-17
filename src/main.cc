@@ -69,12 +69,16 @@ main(int argc, char** argv) {
         direction = dir_vertical;
     } else if (strcmp(argv[1],"--pixel") == 0) {
         algorithm = alg_pixel;
+        debugf("algorithm now %u", algorithm);
      } else if (strcmp(argv[1],"--borderpixel") == 0) {
         algorithm = alg_borderpixel;
+        debugf("algorithm now %u", algorithm);
      } else if (strcmp(argv[1],"--borderline") == 0) {
         algorithm = alg_borderline;
+        debugf("algorithm now %u", algorithm);
      } else if (strcmp(argv[1],"--borderactual") == 0) {
         algorithm = alg_borderactual;
+        debugf("algorithm now %u", algorithm);
     } else if (strcmp(argv[1],"--step") == 0 && argc > 2) {
       stepx = stepy = atof(argv[2]);
       if (stepx < 0.0001) {

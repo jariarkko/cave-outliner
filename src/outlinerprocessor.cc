@@ -24,17 +24,18 @@ Processor::Processor(aiVector3D boundingboxstartIn,
                      float stepyIn,
                      enum outlinerdirection directionIn,
                      enum outlineralgorithm algorithmIn,
-                       IndexedMesh& indexedIn) : boundingboxstart(boundingboxstartIn),
-                                                 boundingboxend(boundingboxendIn),
-                                                 stepx(stepxIn),
-                                                 stepy(stepyIn),
-                                                 direction(directionIn),
-                                                 algorithm(algorithmIn),
-                                                 matrix(boundingboxstartIn,
+                     IndexedMesh& indexedIn) : boundingboxstart(boundingboxstartIn),
+                                               boundingboxend(boundingboxendIn),
+                                               stepx(stepxIn),
+                                               stepy(stepyIn),
+                                               direction(directionIn),
+                                               algorithm(algorithmIn),
+                                               matrix(boundingboxstartIn,
                                                       boundingboxendIn,
                                                       stepxIn,
                                                       stepyIn),
                                                indexed(indexedIn) {
+  debugf("algorithm %u=%u", algorithm, algorithmIn);
 }
 
 Processor::~Processor() {
@@ -83,6 +84,7 @@ Processor::processScene(const aiScene* scene,
       if (matrix.getMaterialMatrix(xIndex,yIndex)) {
         float x = boundingboxstart.x + xIndex * stepx;
         float y = boundingboxstart.y + yIndex * stepy;
+        debugf("algorithm %u", algorithm);
         switch (algorithm) {
         case alg_pixel:
           debugf("pixel alg %u,%u", xIndex, yIndex);
