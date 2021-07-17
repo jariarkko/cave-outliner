@@ -197,6 +197,7 @@ main(int argc, char** argv) {
                       stepy,
                       direction,
                       algorithm,
+                      holethreshold,
                       indexed);
   if (!processor.processScene(scene,svg)) {
     return(1);
