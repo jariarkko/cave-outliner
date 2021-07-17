@@ -151,6 +151,12 @@ MaterialMatrix::test(void) {
     unsigned int n = test2.count();
     debugf("test2 initial count = %u", n);
     assert(n == 0);
+    test2.setMaterialMatrix(5000,4900);
+    unsigned int n = test2.count();
+    assert(n == 1);
+    test2.setMaterialMatrix(9999,9999);
+    unsigned int n = test2.count();
+    assert(n == 2);
   }
 }
 
