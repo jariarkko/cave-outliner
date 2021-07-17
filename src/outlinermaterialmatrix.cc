@@ -26,7 +26,12 @@ MaterialMatrix::MaterialMatrix(aiVector3D boundingboxstart,
   unsigned int n = xIndexSize * yIndexSize;
   unsigned int nChars = (n / 8) + 1;
   bitMatrix = new unsigned char [nChars];
+  if (bitMatrix == 0) {
+    errf("Cannot allocate bit matrix for %u bytes", nChars);
+    exit(1);
+  }
   memset(bitMatrix,0,nChars);
+  debugf("created a matrix of %u x %u, nChars %u", xIndexSize, yIndexsize, nChars);
 }
 
 MaterialMatrix::~MaterialMatrix() {
@@ -71,6 +76,10 @@ MaterialMatrix::count(void) {
   unsigned int maxChar = (xIndexSize-1)*(yIndexSize-1)+1;
   for (unsigned int i = 0; i <= maxChar; i++) {
     unsigned char theChar = bitMatrix[i];
+    if (theChar != 0) {
+      deepdebugf("found non-zero char %x in index %u",
+                 theChar, i, maxChar);
+    }
     while (theChar != 0) {
       theCount++;
       theChar >>= 1;
