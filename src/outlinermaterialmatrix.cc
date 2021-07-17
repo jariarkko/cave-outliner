@@ -49,7 +49,8 @@ MaterialMatrix::setMaterialMatrix(unsigned int xIndex,
   unsigned int charpart = index / 8;
   unsigned int bitpart = index % 8;
   unsigned char bitMask = (1 << bitpart);
-  debugf("setting material matrix %u (%u,%u) elem %u with mask %x", index, xIndex, yIndex, charpart, bitMask);
+  debugf("setting material matrix %u/%u (%u,%u) elem %u/%u with mask %x",
+         index, nBits, xIndex, yIndex, charpart, nChars, bitMask);
   assert(index < nBits);
   assert(charpart < nChars);
   assert(bitpart < 8);
