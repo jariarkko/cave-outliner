@@ -11,7 +11,7 @@ DirectionOperations::outputx(enum outlinerdirection direction,
   case dir_z:
     return(point.x);
   case dir_x:
-    return(point.z);
+    return(point.y);
   case dir_y:
     return(point.x);
   default:
@@ -27,7 +27,7 @@ DirectionOperations::outputy(enum outlinerdirection direction,
   case dir_z:
     return(point.y);
   case dir_x:
-    return(point.y);
+    return(point.z);
   case dir_y:
     return(point.z);
   default:

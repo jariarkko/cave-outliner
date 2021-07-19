@@ -69,7 +69,7 @@ SvgCreator::coordinateNormalization(float x,
   float xNormalized = (x - xStart) * xFactor;
   float yNormalized = (y - yStart) * yFactor;
   xInt = xNormalized;
-  yInt = yNormalized;
+  yInt = ySize - yNormalized;
   deepdebugf("coordinate normalization (%.2f,%.2f) to (%u,%u)",
              x, y,
              xInt, yInt);
