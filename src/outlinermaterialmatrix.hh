@@ -9,6 +9,7 @@ class MaterialMatrix {
 public:
   MaterialMatrix(aiVector3D boundingboxstart,
                  aiVector3D boundingboxend,
+                 enum outlinerdirection directionIn,
                  float stepx,
                  float stepy);
   ~MaterialMatrix();
@@ -24,6 +25,7 @@ public:
 
 private:
 
+  enum outlinerdirection direction;
   unsigned int nBits;
   unsigned int nChars;
   unsigned char* bitMatrix;

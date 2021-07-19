@@ -1,4 +1,4 @@
- 
+  
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Includes ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,7 +24,7 @@ Processor::Processor(aiVector3D boundingboxstartIn,
                      float stepyIn,
                      enum outlinerdirection directionIn,
                      enum outlineralgorithm algorithmIn,
-                      unsigned int holethresholdIn,
+                     unsigned int holethresholdIn,
                      IndexedMesh& indexedIn) : boundingboxstart(boundingboxstartIn),
                                                boundingboxend(boundingboxendIn),
                                                stepx(stepxIn),
@@ -34,6 +34,7 @@ Processor::Processor(aiVector3D boundingboxstartIn,
                                                holethreshold(holethresholdIn),
                                                matrix(boundingboxstartIn,
                                                       boundingboxendIn,
+                                                      directionIn,
                                                       stepxIn,
                                                       stepyIn),
                                                indexed(indexedIn) {
@@ -54,16 +55,20 @@ Processor::processScene(const aiScene* scene,
   // there's material in it. Construct a matrix representing the
   // results.
   unsigned int xIndex = 0;
-  for (float x = boundingboxstart.x; x <= boundingboxend.x; x += stepx) {
-    assert(x >= boundingboxstart.x && x <= boundingboxend.x);
+  for (float x = DirectionOperations::outputx(direction,boundingboxstart); x <= DirectionOperations::outputx(direction,boundingboxend); x += stepx) {
+    assert(x >= DirectionOperations::outputx(direction,boundingboxstart) && x <= DirectionOperations::outputx(direction,boundingboxend));
     unsigned int yIndex = 0;
     if (xIndex >= matrix.xIndexSize) {
       debugf("processScene %u/%u", xIndex, matrix.xIndexSize);
     }
     assert(xIndex < matrix.xIndexSize);
-    for (float y = boundingboxstart.y; y <= boundingboxend.y; y += stepy) {
-      assert(x >= boundingboxstart.x && x <= boundingboxend.x);
-      assert(y >= boundingboxstart.y && y <= boundingboxend.y);
+    for (float y = DirectionOperations::outputy(direction,boundingboxstart);
+         y <= DirectionOperations::outputy(direction,boundingboxend);
+         y += stepy) {
+      assert(x >= DirectionOperations::outputx(direction,boundingboxstart) &&
+             x <= DirectionOperations::outputx(direction,boundingboxend));
+      assert(y >= DirectionOperations::outputy(direction,boundingboxstart) &&
+             y <= DirectionOperations::outputy(direction,boundingboxend));
       if (yIndex >= matrix.yIndexSize) {
         debugf("processScene %u,%u/%u,%u", xIndex, yIndex, matrix.xIndexSize, matrix.yIndexSize);
       }
@@ -84,8 +89,8 @@ Processor::processScene(const aiScene* scene,
   for (xIndex = 0; xIndex < matrix.xIndexSize; xIndex++) {
     for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
       if (matrix.getMaterialMatrix(xIndex,yIndex)) {
-        float x = boundingboxstart.x + xIndex * stepx;
-        float y = boundingboxstart.y + yIndex * stepy;
+        float x = DirectionOperations::outputx(direction,boundingboxstart) + xIndex * stepx;
+        float y = DirectionOperations::outputy(direction,boundingboxstart) + yIndex * stepy;
         debugf("algorithm %u", algorithm);
         switch (algorithm) {
         case alg_pixel:
@@ -207,9 +212,9 @@ Processor::faceHasMaterial(const aiScene* scene,
   aiVector3D* vertexA = &mesh->mVertices[face->mIndices[0]];
   aiVector3D* vertexB = &mesh->mVertices[face->mIndices[1]];
   aiVector3D* vertexC = &mesh->mVertices[face->mIndices[2]];
-  aiVector2D a(vertexA->x,vertexA->y);
-  aiVector2D b(vertexB->x,vertexB->y);
-  aiVector2D c(vertexC->x,vertexC->y);
+  aiVector2D a(DirectionOperations::outputx(direction,*vertexA),DirectionOperations::outputy(direction,*vertexA));
+  aiVector2D b(DirectionOperations::outputx(direction,*vertexB),DirectionOperations::outputy(direction,*vertexB));
+  aiVector2D c(DirectionOperations::outputx(direction,*vertexC),DirectionOperations::outputy(direction,*vertexC));
   aiVector2D point(x,y);
   if (pointInsideTriangle2D(&a,&b,&c,&point)) {
     debugf("found out that (%.2f,%.2f) is hitting a face",x,y);

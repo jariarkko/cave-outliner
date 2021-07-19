@@ -9,6 +9,7 @@
 #include <assimp/postprocess.h> 
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
+#include "outlinerdirection.hh"
 #include "outlinermath.hh"
 #include "outlinerdebug.hh"
 #include "outlinermaterialmatrix.hh"
@@ -19,10 +20,14 @@
 
 MaterialMatrix::MaterialMatrix(aiVector3D boundingboxstart,
                                aiVector3D boundingboxend,
+                               enum outlinerdirection directionIn,
                                float stepx,
                                float stepy) {
-  xIndexSize = ((boundingboxend.x - boundingboxstart.x) / stepx) + 2;
-  yIndexSize = ((boundingboxend.y - boundingboxstart.y) / stepy) + 2;
+  direction = directionIn;
+  xIndexSize = ((DirectionOperations::outputx(direction,boundingboxend) -
+                 DirectionOperations::outputx(direction,boundingboxstart)) / stepx) + 2;
+  yIndexSize = ((DirectionOperations::outputy(direction,boundingboxend) -
+                 DirectionOperations::outputy(direction,boundingboxstart)) / stepy) + 2;
   nBits = xIndexSize * yIndexSize;
   nChars = (nBits / 8) + 1;
   bitMatrix = new unsigned char [nChars];
@@ -106,9 +111,10 @@ MaterialMatrix::test(void) {
   {
     aiVector3D boundingboxstart(0,0,0);
     aiVector3D boundingboxend(10,10,10);
+    enum outlinerdirection thisdir = dir_z;
     float stepx = 1.0;
     float stepy = 1.0;
-    MaterialMatrix test1(boundingboxstart,boundingboxend,stepx,stepy);
+    MaterialMatrix test1(boundingboxstart,boundingboxend,thisdir,stepx,stepy);
     unsigned int xSize = test1.xIndexSize;
     unsigned int ySize = test1.yIndexSize;
     debugf("test1 sizes %u and %u", xSize, ySize);
@@ -127,8 +133,11 @@ MaterialMatrix::test(void) {
     test1.setMaterialMatrix(7,10);
     n = test1.count();
     assert(n == 4);
-    for (unsigned int x = boundingboxstart.x; x <= boundingboxend.x; x++) {
-      for (unsigned int y = boundingboxstart.y; y <= boundingboxend.y; y++) {
+    for (unsigned int x = DirectionOperations::outputx(thisdir,boundingboxstart);
+         x <= DirectionOperations::outputx(thisdir,boundingboxend);
+         x++) {
+      for (unsigned int y = DirectionOperations::outputy(thisdir,boundingboxstart);
+           y <= DirectionOperations::outputy(thisdir,boundingboxend); y++) {
         bool ans =  test1.getMaterialMatrix(x,y);
         if (ans) {
           debugf("found bit in %u,%u", x, y);
@@ -147,7 +156,7 @@ MaterialMatrix::test(void) {
     aiVector3D boundingboxend(1000,1000,1000);
     float stepx = 0.1;
     float stepy = 0.1;
-    MaterialMatrix test2(boundingboxstart,boundingboxend,stepx,stepy);
+    MaterialMatrix test2(boundingboxstart,boundingboxend,dir_z,stepx,stepy);
     unsigned int xSize = test2.xIndexSize;
     unsigned int ySize = test2.yIndexSize;
     debugf("test2 sizes %u and %u", xSize, ySize);

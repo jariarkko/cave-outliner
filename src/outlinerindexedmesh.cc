@@ -141,22 +141,22 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
   aiVector3D* vertexA = &mesh->mVertices[face->mIndices[0]];
   aiVector3D* vertexB = &mesh->mVertices[face->mIndices[1]];
   aiVector3D* vertexC = &mesh->mVertices[face->mIndices[2]];
-  aiVector2D a(vertexA->x,vertexA->y);
-  aiVector2D b(vertexB->x,vertexB->y);
-  aiVector2D c(vertexC->x,vertexC->y);
-  aiVector2D boundingBoxStart;
-  aiVector2D boundingBoxEnd;
+  aiVector2D a(DirectionOperations::outputx(direction,*vertexA),DirectionOperations::outputy(direction,*vertexA));
+  aiVector2D b(DirectionOperations::outputx(direction,*vertexB),DirectionOperations::outputy(direction,*vertexB));
+  aiVector2D c(DirectionOperations::outputx(direction,*vertexC),DirectionOperations::outputy(direction,*vertexC));
+  aiVector2D elementFlatBoundingBoxStart;
+  aiVector2D elementFlatBoundingBoxEnd;
   triangleBoundingBox2D(&a,&b,&c,
-                        &boundingBoxStart,
-                        &boundingBoxEnd);
+                        &elementFlatBoundingBoxStart,
+                        &elementFlatBoundingBoxEnd);
 
   // Calculate which tiles this belongs to (for big faces, may be more
   // than one)
-  for (float x = outlinermax(viewBoundingBoxStart.x,boundingBoxStart.x);
-       x <= boundingBoxEnd.x && x <= viewBoundingBoxEnd.x;
+  for (float x = outlinermax(viewBoundingBoxStart.x,elementFlatBoundingBoxStart.x);
+       x <= elementFlatBoundingBoxEnd.x && x <= viewBoundingBoxEnd.x;
        x += tileSizeX) {
-    for (float y = outlinermax(viewBoundingBoxStart.y,boundingBoxStart.y);
-         y <= boundingBoxEnd.y && y <= viewBoundingBoxEnd.y;
+    for (float y = outlinermax(viewBoundingBoxStart.y,elementFlatBoundingBoxStart.y);
+         y <= elementFlatBoundingBoxEnd.y && y <= viewBoundingBoxEnd.y;
          y += tileSizeY) {
       unsigned int tileX;
       unsigned int tileY;
