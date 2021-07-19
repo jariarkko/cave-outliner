@@ -2,6 +2,8 @@
 #ifndef OUTLINERMATERIALMATRIX_HH
 #define OUTLINERMATERIALMATRIX_HH
 
+#include "outlinerdirection.hh"
+
 class MaterialMatrix {
 
 public:

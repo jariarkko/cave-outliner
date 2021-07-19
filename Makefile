@@ -5,11 +5,13 @@ OBJS=	src/main.o \
 	src/outlinermaterialmatrix.o \
 	src/outlinerdescribe.o \
 	src/outlinerdebug.o \
+	src/outlinerdirection.o \
 	src/outlinermath.o \
 	src/outlinersvg.o
 HDRS=	src/outlinertypes.hh \
 	src/outlinerconstants.hh \
 	src/outlinerdebug.hh \
+	src/outlinerdirection.hh \
 	src/outlinerprocessor.hh \
 	src/outlinerindexedmesh.hh \
 	src/outlinermaterialmatrix.hh \
@@ -18,6 +20,7 @@ HDRS=	src/outlinertypes.hh \
 	src/outlinersvg.hh
 SRCS=	src/main.cc \
 	src/outlinerdebug.cc \
+	src/outlinerdirection.cc \
 	src/outlinerprocessor.cc \
 	src/outlinerindexedmesh.cc \
 	src/outlinermaterialmatrix.cc \
@@ -25,9 +28,9 @@ SRCS=	src/main.cc \
 	src/outlinermath.cc \
 	src/outlinersvg.cc
 SUPP=Makefile
-CPPFLAGS=-g -Wall
+CPPFLAGS=-g -Wall -std=c++11 `pkg-config --cflags assimp`
 LDFLAGS=-O4
-LDLIBS=-lassimp
+LDLIBS=`pkg-config --libs-only-L assimp` -lassimp
 
 all:	cave-outliner
 

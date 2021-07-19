@@ -11,6 +11,7 @@
 #include <assimp/postprocess.h> 
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
+#include "outlinerdirection.hh"
 #include "outlinersvg.hh"
 #include "outlinerindexedmesh.hh"
 #include "outlinermaterialmatrix.hh"

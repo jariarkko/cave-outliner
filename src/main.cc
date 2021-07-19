@@ -12,6 +12,7 @@
 #include <assimp/postprocess.h> 
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
+#include "outlinerdirection.hh"
 #include "outlinerdebug.hh"
 #include "outlinerindexedmesh.hh"
 #include "outlinermaterialmatrix.hh"
@@ -42,7 +43,7 @@ static float stepx = 1.0;
 static float stepy = 1.0;
 static aiVector3D boundingBoxStart = {-2,-2,-2};
 static aiVector3D boundingBoxEnd = {2,2,2};
-static enum outlinerdirection direction = dir_horizontal;
+static enum outlinerdirection direction = dir_z;
 static enum outlineralgorithm algorithm = alg_pixel;
 static unsigned int tiles = outlinertiledivision;
 static unsigned int holethreshold = 1;
@@ -67,10 +68,12 @@ main(int argc, char** argv) {
         deepdebug = 1;
         deepdeepdebug = 1;
         debuginit(debug,deepdebug,deepdeepdebug);
-    } else if (strcmp(argv[1],"--horizontal") == 0) {
-        direction = dir_horizontal;
-    } else if (strcmp(argv[1],"--vertical") == 0) {
-        direction = dir_vertical;
+    } else if (strcmp(argv[1],"--z") == 0) {
+        direction = dir_z;
+    } else if (strcmp(argv[1],"--x") == 0) {
+        direction = dir_x;
+    } else if (strcmp(argv[1],"--y") == 0) {
+        direction = dir_y;
     } else if (strcmp(argv[1],"--pixel") == 0) {
         algorithm = alg_pixel;
         debugf("algorithm now %u", algorithm);
@@ -99,6 +102,12 @@ main(int argc, char** argv) {
       }
       argc--;argv++;
     } else if (strcmp(argv[1],"--bounding") == 0 && argc > 1 + 2*3) {
+      if (!outlinerisnumber(argv[2])) { errf("bounding element #1 is not a number: %s", argv[2]); return(1); }
+      if (!outlinerisnumber(argv[3])) { errf("bounding element #2 is not a number: %s", argv[3]); return(1); }
+      if (!outlinerisnumber(argv[4])) { errf("bounding element #3 is not a number: %s", argv[4]); return(1); }
+      if (!outlinerisnumber(argv[5])) { errf("bounding element #4 is not a number: %s", argv[5]); return(1); }
+      if (!outlinerisnumber(argv[6])) { errf("bounding element #5 is not a number: %s", argv[6]); return(1); }
+      if (!outlinerisnumber(argv[7])) { errf("bounding element #6 is not a number: %s", argv[7]); return(1); }
       argc--;argv++; float startx = atof(argv[1]);
       argc--;argv++; float endx = atof(argv[1]);
       argc--;argv++; float starty = atof(argv[1]);
@@ -143,7 +152,10 @@ main(int argc, char** argv) {
 
   // Check input and output file names
   if (argc != 3) {
-    errf("Expected two arguments, an input and output file name");
+    errf("Expected two arguments, an input and output file name, got %u", argc-1);
+    if (argc > 1) {
+      errf("First argument was %s", argv[1]);
+    }
     return(1);
   }
   const char* input = argv[1];
@@ -169,14 +181,21 @@ main(int argc, char** argv) {
   }
 
   // Open the output
-  float xSize = (boundingBoxEnd.x - boundingBoxStart.x) / stepx;
-  float ySize = (boundingBoxEnd.y - boundingBoxStart.y) / stepy;
+  float xOutputStart = DirectionOperations::outputx(direction,boundingBoxStart);
+  float xOutputEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
+  float yOutputStart = DirectionOperations::outputy(direction,boundingBoxStart);
+  float yOutputEnd = DirectionOperations::outputy(direction,boundingBoxEnd);
+  float xSize = (xOutputEnd - xOutputStart) / stepx;
+  float ySize = (yOutputEnd - yOutputStart) / stepy;
   unsigned int xSizeInt = xSize;
   unsigned int ySizeInt = ySize;
   float xFactor = 1 / stepx;
   float yFactor = 1 / stepy;
   debugf("SVG size will be %u x %u", xSize, ySize);
-  SvgCreator svg(output,xSizeInt,ySizeInt,boundingBoxStart.x,boundingBoxStart.y,xFactor,yFactor);
+  SvgCreator svg(output,
+                 xSizeInt,ySizeInt,
+                 xOutputStart,yOutputStart,
+                 xFactor,yFactor);
   
   // Check that we were able to open the file
   if (!svg.ok()) {
@@ -185,8 +204,8 @@ main(int argc, char** argv) {
   }
   
   // Build our own data structure
-  aiVector2D bounding2DBoxStart(boundingBoxStart.x,boundingBoxStart.y);
-  aiVector2D bounding2DBoxEnd(boundingBoxEnd.x,boundingBoxEnd.y);
+  aiVector2D bounding2DBoxStart(xOutputStart,yOutputStart);
+  aiVector2D bounding2DBoxEnd(xOutputEnd,yOutputEnd);
   IndexedMesh indexed(outlinermaxmeshes,tiles,bounding2DBoxStart,bounding2DBoxEnd,direction);
   indexed.addScene(scene);
   
@@ -226,6 +245,9 @@ processHelp(void) {
   std::cout << "\n";
   std::cout << "  --bounding x x y y z z   Set the bounding box area. Default is -2 2 -2 2 -2 2.\n";
   std::cout << "  --step i                 Set the granularity increment. Default is 1.\n";
+  std::cout << "  --z                      Generate output as viewed from the z direction, i.e., showing x/y picture.\n";
+  std::cout << "  --x                      Generate output as viewed from the x direction, i.e., showing z/y picture.\n";
+  std::cout << "  --y                      Generate output as viewed from the y direction, i.e., showing x/z picture.\n";
   std::cout << "  --pixel                  Use the pixel output drawing algorithm (default, fills cave with pixels).\n";
   std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave walls, with pixels.\n";
   std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave walls, with lines.\n";
