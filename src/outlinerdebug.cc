@@ -120,3 +120,20 @@ errf(const char* format, ...) {
   std::cerr << " -- exit\n";
   
 }
+
+__attribute__((__format__ (__printf__, 1, 0)))
+void
+infof(const char* format, ...) {
+
+  assert(format != 0);
+
+  va_list args;
+  char buf[500];
+  memset(buf,0,sizeof(buf));
+  va_start (args, format);
+  vsnprintf(buf,sizeof(buf)-1,format,args);
+  va_end (args);
+  std::cout << OUTLINER_INFOPREFIX;
+  std::cout << buf;
+  std::cout << "\n";
+}

@@ -7,8 +7,8 @@
 class MaterialMatrix {
 
 public:
-  MaterialMatrix(aiVector3D boundingboxstart,
-                 aiVector3D boundingboxend,
+  MaterialMatrix(HighPrecisionVector3D boundingboxstart,
+                 HighPrecisionVector3D boundingboxend,
                  enum outlinerdirection directionIn,
                  float stepx,
                  float stepy);

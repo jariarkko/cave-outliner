@@ -18,8 +18,8 @@
 // Material matrix maintenance ////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-MaterialMatrix::MaterialMatrix(aiVector3D boundingboxstart,
-                               aiVector3D boundingboxend,
+MaterialMatrix::MaterialMatrix(HighPrecisionVector3D boundingboxstart,
+                               HighPrecisionVector3D boundingboxend,
                                enum outlinerdirection directionIn,
                                float stepx,
                                float stepy) {
@@ -54,8 +54,8 @@ MaterialMatrix::setMaterialMatrix(unsigned int xIndex,
   unsigned int charpart = index / 8;
   unsigned int bitpart = index % 8;
   unsigned char bitMask = (1 << bitpart);
-  debugf("setting material matrix %u/%u (%u/%u,%u/%u) elem %u/%u with mask %x",
-         index, nBits, xIndex, xIndexSize, yIndex, yIndexSize, charpart, nChars, bitMask);
+  deepdebugf("setting material matrix %u/%u (%u/%u,%u/%u) elem %u/%u with mask %x",
+             index, nBits, xIndex, xIndexSize, yIndex, yIndexSize, charpart, nChars, bitMask);
   assert(index < nBits);
   assert(charpart < nChars);
   assert(bitpart < 8);
@@ -107,10 +107,12 @@ MaterialMatrix::count(void) {
 void
 MaterialMatrix::test(void) {
 
+  infof("material matrix test running");
+  
   // Simple test
   {
-    aiVector3D boundingboxstart(0,0,0);
-    aiVector3D boundingboxend(10,10,10);
+    HighPrecisionVector3D boundingboxstart(0,0,0);
+    HighPrecisionVector3D boundingboxend(10,10,10);
     enum outlinerdirection thisdir = dir_z;
     float stepx = 1.0;
     float stepy = 1.0;
@@ -152,8 +154,8 @@ MaterialMatrix::test(void) {
   
   // Large test
   {
-    aiVector3D boundingboxstart(0,0,0);
-    aiVector3D boundingboxend(1000,1000,1000);
+    HighPrecisionVector3D boundingboxstart(0,0,0);
+    HighPrecisionVector3D boundingboxend(1000,1000,1000);
     float stepx = 0.1;
     float stepy = 0.1;
     MaterialMatrix test2(boundingboxstart,boundingboxend,dir_z,stepx,stepy);
@@ -170,6 +172,8 @@ MaterialMatrix::test(void) {
     n = test2.count();
     assert(n == 2);
   }
+
+  infof("material matrix test ok");
 }
 
 

@@ -21,10 +21,10 @@ class IndexedMesh;
 class Processor {
 
 public:
-  Processor(aiVector3D boundingboxstartIn,
-            aiVector3D boundingboxendIn,
-            float stepxIn,
-            float stepyIn,
+  Processor(HighPrecisionVector3D boundingboxstartIn,
+            HighPrecisionVector3D boundingboxendIn,
+            outlinerhighprecisionreal stepxIn,
+            outlinerhighprecisionreal stepyIn,
             enum outlinerdirection directionIn,
             enum outlineralgorithm algorithmIn,
             unsigned int holethresholdIn,
@@ -36,10 +36,10 @@ public:
 
 private:
   
-  aiVector3D boundingboxstart;
-  aiVector3D boundingboxend;
-  float stepx;
-  float stepy;
+  HighPrecisionVector3D boundingboxstart;
+  HighPrecisionVector3D boundingboxend;
+  outlinerhighprecisionreal stepx;
+  outlinerhighprecisionreal stepy;
   enum outlinerdirection direction;
   enum outlineralgorithm algorithm;
   unsigned int holethreshold;
@@ -48,23 +48,23 @@ private:
   
   bool sceneHasMaterial(const aiScene* scene,
                         IndexedMesh& indexed,
-                        float x,
-                        float y);
+                        outlinerhighprecisionreal x,
+                        outlinerhighprecisionreal y);
   bool nodeHasMaterial(const aiScene* scene,
                        const aiNode* node,
                        IndexedMesh& indexed,
-                       float x,
-                       float y);
+                       outlinerhighprecisionreal x,
+                       outlinerhighprecisionreal y);
   bool meshHasMaterial(const aiScene* scene,
                        const aiMesh* mesh,
                        IndexedMesh& indexed,
-                       float x,
-                       float y);
+                       outlinerhighprecisionreal x,
+                       outlinerhighprecisionreal y);
   bool faceHasMaterial(const aiScene* scene,
                        const aiMesh* mesh,
                        const aiFace* face,
-                       float x,
-                       float y);
+                       outlinerhighprecisionreal x,
+                       outlinerhighprecisionreal y);
   bool isBorder(unsigned int xIndex,
                 unsigned int yIndex);
   void getNeighbours(unsigned int xIndex,

@@ -8,6 +8,7 @@
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include "outlinerhighprecision.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Types //////////////////////////////////////////////////////////////////////////////////////
@@ -28,8 +29,12 @@ class DirectionOperations {
 public:
   static float outputx(enum outlinerdirection direction,
                        const aiVector3D& point);
+  static float outputx(enum outlinerdirection direction,
+                       const HighPrecisionVector3D& point);
   static float outputy(enum outlinerdirection direction,
                        const aiVector3D& point);
+  static float outputy(enum outlinerdirection direction,
+                       const HighPrecisionVector3D& point);
 
 };
 

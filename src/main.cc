@@ -13,6 +13,7 @@
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
 #include "outlinerdirection.hh"
+#include "outlinerhighprecision.hh"
 #include "outlinerdebug.hh"
 #include "outlinerindexedmesh.hh"
 #include "outlinermaterialmatrix.hh"
@@ -41,8 +42,8 @@ static bool deepdebug = 0;
 static bool deepdeepdebug = 0;
 static float stepx = 1.0;
 static float stepy = 1.0;
-static aiVector3D boundingBoxStart = {-2,-2,-2};
-static aiVector3D boundingBoxEnd = {2,2,2};
+static HighPrecisionVector3D boundingBoxStart = {-2,-2,-2};
+static HighPrecisionVector3D boundingBoxEnd = {2,2,2};
 static enum outlinerdirection direction = dir_z;
 static enum outlineralgorithm algorithm = alg_pixel;
 static unsigned int tiles = outlinertiledivision;
@@ -126,8 +127,8 @@ main(int argc, char** argv) {
         errf("Invalid bounding box z range");
         return(1);
       }
-      boundingBoxStart = aiVector3D(startx,starty,startz);
-      boundingBoxEnd = aiVector3D(endx,endy,endz);
+      boundingBoxStart = HighPrecisionVector3D(startx,starty,startz);
+      boundingBoxEnd = HighPrecisionVector3D(endx,endy,endz);
     } else if (strcmp(argv[1],"--tiling") == 0 && argc > 2) {
       if (atoi(argv[2]) < 1 || atoi(argv[2]) > 10000) {
         errf("Invalid tile count, must be at least one and a not too big for memory, %s given", argv[2]);
@@ -181,16 +182,16 @@ main(int argc, char** argv) {
   }
 
   // Open the output
-  float xOutputStart = DirectionOperations::outputx(direction,boundingBoxStart);
-  float xOutputEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
-  float yOutputStart = DirectionOperations::outputy(direction,boundingBoxStart);
-  float yOutputEnd = DirectionOperations::outputy(direction,boundingBoxEnd);
-  float xSize = (xOutputEnd - xOutputStart) / stepx;
-  float ySize = (yOutputEnd - yOutputStart) / stepy;
+  outlinerhighprecisionreal xOutputStart = DirectionOperations::outputx(direction,boundingBoxStart);
+  outlinerhighprecisionreal xOutputEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
+  outlinerhighprecisionreal yOutputStart = DirectionOperations::outputy(direction,boundingBoxStart);
+  outlinerhighprecisionreal yOutputEnd = DirectionOperations::outputy(direction,boundingBoxEnd);
+  outlinerhighprecisionreal xSize = (xOutputEnd - xOutputStart) / stepx;
+  outlinerhighprecisionreal ySize = (yOutputEnd - yOutputStart) / stepy;
   unsigned int xSizeInt = xSize;
   unsigned int ySizeInt = ySize;
-  float xFactor = 1 / stepx;
-  float yFactor = 1 / stepy;
+  outlinerhighprecisionreal xFactor = 1 / stepx;
+  outlinerhighprecisionreal yFactor = 1 / stepy;
   debugf("SVG size will be %u x %u", xSize, ySize);
   SvgCreator svg(output,
                  xSizeInt,ySizeInt,
@@ -204,13 +205,13 @@ main(int argc, char** argv) {
   }
   
   // Build our own data structure
-  aiVector2D bounding2DBoxStart(xOutputStart,yOutputStart);
-  aiVector2D bounding2DBoxEnd(xOutputEnd,yOutputEnd);
+  HighPrecisionVector2D bounding2DBoxStart(xOutputStart,yOutputStart);
+  HighPrecisionVector2D bounding2DBoxEnd(xOutputEnd,yOutputEnd);
   IndexedMesh indexed(outlinermaxmeshes,tiles,bounding2DBoxStart,bounding2DBoxEnd,direction);
   indexed.addScene(scene);
   
   // Process the model
-  Processor processor(boundingBoxStart,
+  Processor  processor(boundingBoxStart,
                       boundingBoxEnd,
                       stepx,
                       stepy,
@@ -316,10 +317,10 @@ checkFileExtension(const char* filename,
 
 static void
 runTests(void) {
-  debugf("running tests");
+  infof("running tests");
   mathTests();
   MaterialMatrix::test();
-  debugf("tests OK");
+  infof("tests OK");
 }
 
 

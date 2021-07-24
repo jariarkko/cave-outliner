@@ -10,6 +10,7 @@
 #include <assimp/postprocess.h> 
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
+#include "outlinerhighprecision.hh"
 #include "outlinermath.hh"
 #include "outlinerdebug.hh"
 #include "outlinerprocessor.hh"
@@ -18,10 +19,10 @@
 // Model processing ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-Processor::Processor(aiVector3D boundingboxstartIn,
-                     aiVector3D boundingboxendIn,
-                     float stepxIn,
-                     float stepyIn,
+Processor::Processor(HighPrecisionVector3D boundingboxstartIn,
+                     HighPrecisionVector3D boundingboxendIn,
+                     outlinerhighprecisionreal stepxIn,
+                     outlinerhighprecisionreal stepyIn,
                      enum outlinerdirection directionIn,
                      enum outlineralgorithm algorithmIn,
                      unsigned int holethresholdIn,
@@ -39,6 +40,9 @@ Processor::Processor(aiVector3D boundingboxstartIn,
                                                       stepyIn),
                                                indexed(indexedIn) {
   debugf("algorithm %u=%u", algorithm, algorithmIn);
+  if (holethreshold > outlinermaxholethreshold) {
+    errf("Cannot compute hole thresholds larger than %u", outlinermaxholethreshold);
+  }
 }
 
 Processor::~Processor() {
@@ -54,33 +58,50 @@ Processor::processScene(const aiScene* scene,
   // First, go through each part of the picture, and determine if
   // there's material in it. Construct a matrix representing the
   // results.
+  
   unsigned int xIndex = 0;
-  for (float x = DirectionOperations::outputx(direction,boundingboxstart); x <= DirectionOperations::outputx(direction,boundingboxend); x += stepx) {
-    assert(x >= DirectionOperations::outputx(direction,boundingboxstart) && x <= DirectionOperations::outputx(direction,boundingboxend));
+  
+  for (outlinerhighprecisionreal x = DirectionOperations::outputx(direction,boundingboxstart);
+       x <= DirectionOperations::outputx(direction,boundingboxend);
+       x += stepx) {
+
+    debugf("main loop x = %.2f (%u)", x, xIndex);
+    assert(x >= DirectionOperations::outputx(direction,boundingboxstart));
+    assert(x <= DirectionOperations::outputx(direction,boundingboxend));
     unsigned int yIndex = 0;
     if (xIndex >= matrix.xIndexSize) {
       debugf("processScene %u/%u", xIndex, matrix.xIndexSize);
     }
     assert(xIndex < matrix.xIndexSize);
-    for (float y = DirectionOperations::outputy(direction,boundingboxstart);
+    
+    for (outlinerhighprecisionreal y = DirectionOperations::outputy(direction,boundingboxstart);
          y <= DirectionOperations::outputy(direction,boundingboxend);
          y += stepy) {
-      assert(x >= DirectionOperations::outputx(direction,boundingboxstart) &&
-             x <= DirectionOperations::outputx(direction,boundingboxend));
-      assert(y >= DirectionOperations::outputy(direction,boundingboxstart) &&
-             y <= DirectionOperations::outputy(direction,boundingboxend));
+      
+      assert(x >= DirectionOperations::outputx(direction,boundingboxstart));
+      assert(x <= DirectionOperations::outputx(direction,boundingboxend));
+      assert(y >= DirectionOperations::outputy(direction,boundingboxstart));
+      assert(y <= DirectionOperations::outputy(direction,boundingboxend));
       if (yIndex >= matrix.yIndexSize) {
         debugf("processScene %u,%u/%u,%u", xIndex, yIndex, matrix.xIndexSize, matrix.yIndexSize);
       }
       assert(yIndex < matrix.yIndexSize);
-      deepdebugf("checking (%.2f,%.2f)",x,y);
+      if (x > -0.605 && x < -0.595) {
+        debugf("checking (%.2f,%.2f) or (%u,%u)",x,y,xIndex,yIndex);
+      } else {
+        deepdebugf("checking (%.2f,%.2f)",x,y);
+      }
       if (sceneHasMaterial(scene,indexed,x,y)) {
         debugf("material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
         matrix.setMaterialMatrix(xIndex,yIndex);
       }
+      
       yIndex++;
+      
     }
+    
     xIndex++;
+    
   }
   
   // Now there's a matrix filled with a flag for each coordinate,
@@ -89,8 +110,8 @@ Processor::processScene(const aiScene* scene,
   for (xIndex = 0; xIndex < matrix.xIndexSize; xIndex++) {
     for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
       if (matrix.getMaterialMatrix(xIndex,yIndex)) {
-        float x = DirectionOperations::outputx(direction,boundingboxstart) + xIndex * stepx;
-        float y = DirectionOperations::outputy(direction,boundingboxstart) + yIndex * stepy;
+        outlinerhighprecisionreal x = DirectionOperations::outputx(direction,boundingboxstart) + xIndex * stepx;
+        outlinerhighprecisionreal y = DirectionOperations::outputy(direction,boundingboxstart) + yIndex * stepy;
         debugf("algorithm %u", algorithm);
         switch (algorithm) {
         case alg_pixel:
@@ -124,8 +145,8 @@ Processor::processScene(const aiScene* scene,
 bool
 Processor::sceneHasMaterial(const aiScene* scene,
                             IndexedMesh& indexed,
-                            float x,
-                            float y) {
+                            outlinerhighprecisionreal x,
+                            outlinerhighprecisionreal y) {
   assert(scene != 0);
   deepdeepdebugf("checking for material at (%.2f,%.2f)", x, y);
   return(nodeHasMaterial(scene,scene->mRootNode,indexed,x,y));
@@ -135,8 +156,8 @@ bool
 Processor::nodeHasMaterial(const aiScene* scene,
                            const aiNode* node,
                            IndexedMesh& indexed,
-                           float x,
-                           float y) {
+                           outlinerhighprecisionreal x,
+                           outlinerhighprecisionreal y) {
   assert(scene != 0);
   assert(node != 0);
   if (!node->mTransformation.IsIdentity()) {
@@ -160,15 +181,15 @@ bool
 Processor::meshHasMaterial(const aiScene* scene,
                            const aiMesh* mesh,
                            IndexedMesh& indexed,
-                           float x,
-                           float y) {
+                           outlinerhighprecisionreal x,
+                           outlinerhighprecisionreal y) {
   assert(scene != 0);
   assert(mesh != 0);
   if (1) {
     unsigned int nFaces = 0;
     const aiFace** faces = 0;
     indexed.getFaces(mesh,x,y,&nFaces,&faces);
-    debugf("meshHasMaterial normally %u faces but on this tile %u faces", mesh->mNumFaces,nFaces);
+    deepdebugf("meshHasMaterial normally %u faces but on this tile %u faces", mesh->mNumFaces,nFaces);
     for (unsigned int f = 0; f < nFaces; f++) {
       if (faceHasMaterial(scene,mesh,faces[f],x,y)) {
         return(1);
@@ -188,8 +209,8 @@ bool
 Processor::faceHasMaterial(const aiScene* scene,
                            const aiMesh* mesh,
                            const aiFace* face,
-                           float x,
-                           float y) {
+                           outlinerhighprecisionreal x,
+                           outlinerhighprecisionreal y) {
   assert(scene != 0);
   assert(mesh != 0);
   assert(face != 0);
@@ -215,9 +236,10 @@ Processor::faceHasMaterial(const aiScene* scene,
   aiVector2D a(DirectionOperations::outputx(direction,*vertexA),DirectionOperations::outputy(direction,*vertexA));
   aiVector2D b(DirectionOperations::outputx(direction,*vertexB),DirectionOperations::outputy(direction,*vertexB));
   aiVector2D c(DirectionOperations::outputx(direction,*vertexC),DirectionOperations::outputy(direction,*vertexC));
-  aiVector2D point(x,y);
-  if (pointInsideTriangle2D(&a,&b,&c,&point)) {
-    debugf("found out that (%.2f,%.2f) is hitting a face",x,y);
+  HighPrecisionVector2D point(x,y);
+  HighPrecisionVector2D stepboundingbox(x+stepx,y+stepy);
+  if (boundingBoxIntersectsTriangle2D(&a,&b,&c,&point,&stepboundingbox)) {
+    deepdebugf("found out that (%.2f,%.2f) is hitting a face",x,y);
     return(1);
   }
   return(0);

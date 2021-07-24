@@ -7,6 +7,7 @@ OBJS=	src/main.o \
 	src/outlinerdebug.o \
 	src/outlinerdirection.o \
 	src/outlinermath.o \
+	src/outlinerhighprecision.o \
 	src/outlinersvg.o
 HDRS=	src/outlinertypes.hh \
 	src/outlinerconstants.hh \
@@ -17,6 +18,7 @@ HDRS=	src/outlinertypes.hh \
 	src/outlinermaterialmatrix.hh \
 	src/outlinerdescribe.hh \
 	src/outlinermath.hh \
+	src/outlinerhighprecision.hh \
 	src/outlinersvg.hh
 SRCS=	src/main.cc \
 	src/outlinerdebug.cc \
@@ -26,10 +28,11 @@ SRCS=	src/main.cc \
 	src/outlinermaterialmatrix.cc \
 	src/outlinerdescribe.cc \
 	src/outlinermath.cc \
+	src/outlinerhighprecision.cc \
 	src/outlinersvg.cc
 SUPP=Makefile
-CPPFLAGS=-g -Wall -std=c++11 `pkg-config --cflags assimp`
-LDFLAGS=-O4
+CPPFLAGS=-O3 -Wall -std=c++11 `pkg-config --cflags assimp`
+LDFLAGS=-O3
 LDLIBS=`pkg-config --libs-only-L assimp` -lassimp
 
 all:	cave-outliner
@@ -37,10 +40,16 @@ all:	cave-outliner
 .o.c:
 	g++ $(CPPFLAGS) $< -o $>
 
-$(OBJS): $(HDRS) $(SRCS)
+$(OBJS): $(HDRS)
 
 cave-outliner:	$(OBJS)
 	g++ $(LDFLAGS) -o cave-outliner $(OBJS) $(LDLIBS)
+
+test:	cave-outliner
+	./cave-outliner --test
+
+clean:
+	rm -f cave-outliner */*.o
 
 wc:
 	wc $(HDRS) $(SRCS) $(SUPP)

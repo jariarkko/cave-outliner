@@ -38,8 +38,8 @@ public:
 
   IndexedMesh(unsigned int maxMeshesIn,
               unsigned int subdivisionsIn,
-              const aiVector2D& viewBoundingBoxStartIn,
-              const aiVector2D& viewBoundingBoxEndIn,
+              const HighPrecisionVector2D& viewBoundingBoxStartIn,
+              const HighPrecisionVector2D& viewBoundingBoxEndIn,
               enum outlinerdirection directionIn);
   void addScene(const aiScene* scene);
   void addNode(const aiScene* scene,
@@ -47,8 +47,8 @@ public:
   void addMesh(const aiScene* scene,
                const aiMesh* mesh);
   void getFaces(const aiMesh* mesh,
-                float x,
-                float y,
+                outlinerhighprecisionreal x,
+                outlinerhighprecisionreal y,
                 unsigned int* p_nFaces,
                 const aiFace*** p_faces);
    ~IndexedMesh();
@@ -58,11 +58,11 @@ private:
   unsigned int nMeshes;
   unsigned int maxMeshes;
   unsigned int subdivisions;
-  aiVector2D viewBoundingBoxStart;
-  aiVector2D viewBoundingBoxEnd;
+  HighPrecisionVector2D viewBoundingBoxStart;
+  HighPrecisionVector2D viewBoundingBoxEnd;
   enum outlinerdirection direction;
-  float tileSizeX;
-  float tileSizeY;
+  outlinerhighprecisionreal tileSizeX;
+  outlinerhighprecisionreal tileSizeY;
   
   struct IndexedMeshOneMesh* meshes;
   
@@ -85,12 +85,21 @@ private:
                     unsigned int tileY,
                     unsigned int* p_nFaces,
                     const aiFace*** p_faces);
-  void coordsToTile(float x,
-                    float y,
+  void coordsToTile(outlinerhighprecisionreal x,
+                    outlinerhighprecisionreal y,
                     unsigned int& tileX,
                     unsigned int& tileY);
   void getShadow(const aiMesh* mesh,
                  struct IndexedMeshOneMesh** shadow);
+  unsigned int minFacesPerTile(struct IndexedMeshOneMesh& shadow,
+                               unsigned int& n);
+  unsigned int maxFacesPerTile(struct IndexedMeshOneMesh& shadow,
+                               unsigned int& n);
+  float avgFacesPerTile(struct IndexedMeshOneMesh& shadow);
+  unsigned int countTilesWithFaces(struct IndexedMeshOneMesh& shadow);
+  void countFaces(struct IndexedMeshOneMesh& shadow,
+                  unsigned int& nUniqueFaces,
+                  unsigned int& nFacesInTiles);
 };
 
 #endif // INDEXEDMESH_HH

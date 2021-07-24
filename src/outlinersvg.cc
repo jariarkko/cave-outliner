@@ -36,10 +36,11 @@ SvgCreator::~SvgCreator() {
   file.close();
 }
 
-void SvgCreator::line(float fromX,
-                      float fromY,
-                      float toX,
-                      float toY) {
+void
+SvgCreator::line(float fromX,
+                 float fromY,
+                 float toX,
+                 float toY) {
   unsigned int fromXInt;
   unsigned int fromYInt;
   coordinateNormalization(fromX,fromY,fromXInt,fromYInt);
@@ -53,8 +54,9 @@ void SvgCreator::line(float fromX,
   file << " style=\"stroke:black;stroke-width=1\" />\n";
 }
   
-void SvgCreator::pixel(float x,
-                       float y) {
+void
+SvgCreator::pixel(float x,
+                  float y) {
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
@@ -75,11 +77,13 @@ SvgCreator::coordinateNormalization(float x,
              xInt, yInt);
 }
 
-bool SvgCreator::ok() {
+bool
+SvgCreator::ok() {
   return(xSize > 0 && ySize > 0 && file.good());
 }
   
-void SvgCreator::preamble() {
+void
+SvgCreator::preamble() {
   // Basics for all SVGs
   file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
   file << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n";
@@ -91,7 +95,8 @@ void SvgCreator::preamble() {
   file << "<rect x=\"0\" y=\"0\" width=\"" << xSize << "\" height=\"" << ySize << "\" fill=\"white\" stroke=\"white\" stroke-width=\"0\"/>\n";
 }
 
-void SvgCreator::postamble() {
+void
+SvgCreator::postamble() {
   // Just close the full SVG XML
   file << "</svg>\n";
 }
