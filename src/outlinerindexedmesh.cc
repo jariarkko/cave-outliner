@@ -181,33 +181,34 @@ IndexedMesh::countFaces(struct IndexedMeshOneMesh& shadow,
 
 void
 IndexedMesh::addScene(const aiScene* scene) {
+  infof("computing tiling...");
   addNode(scene,scene->mRootNode);
-  infof("Tiling statistics");
+  infof("  tiling statistics");
   for (unsigned int i = 0; i < nMeshes; i++) {
     struct IndexedMeshOneMesh& shadow = meshes[i];
-    infof("  mesh %u", i);
+    infof("    mesh %u", i);
     unsigned int nf;
     unsigned int mf;
     countFaces(shadow,nf,mf);
-    infof("    unique faces %u (total %u, %u more)",
+    infof("      unique faces %u (total %u, %u more)",
           nf, mf, mf - nf);
     unsigned int total = subdivisions * subdivisions;
-    infof("    %u x %u = %u tiles", subdivisions, subdivisions, total);
-    infof("    tile sizes %.2f x and %.2f y", tileSizeX, tileSizeY);
+    infof("      %u x %u = %u tiles", subdivisions, subdivisions, total);
+    infof("      tile sizes %.2f x and %.2f y", tileSizeX, tileSizeY);
     unsigned int all = countTilesWithFaces(shadow);
-    infof("    tiles with faces %u (%.2f%%)", all, (100.0*(float)all)/(float)total);
+    infof("      tiles with faces %u (%.2f%%)", all, (100.0*(float)all)/(float)total);
     unsigned int nmin;
     unsigned int min = minFacesPerTile(shadow,nmin);
-    infof("    min number of faces per tile %u (%u instances, %.2f%%)", min, nmin, (100.0*(float)nmin)/(float)total);
+    infof("      min number of faces per tile %u (%u instances, %.2f%%)", min, nmin, (100.0*(float)nmin)/(float)total);
     unsigned int nmax;
     unsigned int max = maxFacesPerTile(shadow,nmax);
-    infof("    max number of faces per tile %u (that's %.2f%% of total faces, there were %u instances, %.2f%%)",
+    infof("      max number of faces per tile %u (that's %.2f%% of total faces, there were %u instances, %.2f%%)",
           max,
           (100.0*(float)max)/(float)nf,
           nmax,
           (100.0*(float)nmax)/(float)total);
     float avg = countTilesWithFaces(shadow);
-    infof("    avg number of faces per tile %.1f", avg);
+    infof("      avg number of faces per tile %.1f", avg);
   }
 }
 

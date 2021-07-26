@@ -19,6 +19,7 @@
 #include "outlinermaterialmatrix.hh"
 #include "outlinerprocessor.hh"
 #include "outlinerdescribe.hh"
+#include "outlinerboundingboxer.hh"
 #include "outlinermath.hh"
 #include "outlinersvg.hh"
 
@@ -42,8 +43,9 @@ static bool deepdebug = 0;
 static bool deepdeepdebug = 0;
 static float stepx = 1.0;
 static float stepy = 1.0;
-static HighPrecisionVector3D boundingBoxStart = {-2,-2,-2};
-static HighPrecisionVector3D boundingBoxEnd = {2,2,2};
+static bool boundingBoxSet = 0;
+static HighPrecisionVector3D boundingBoxStart = {0,0,0};
+static HighPrecisionVector3D boundingBoxEnd = {0,0,0};
 static enum outlinerdirection direction = dir_z;
 static enum outlineralgorithm algorithm = alg_pixel;
 static unsigned int tiles = outlinertiledivision;
@@ -127,6 +129,7 @@ main(int argc, char** argv) {
         errf("Invalid bounding box z range");
         return(1);
       }
+      boundingBoxSet = 1;
       boundingBoxStart = HighPrecisionVector3D(startx,starty,startz);
       boundingBoxEnd = HighPrecisionVector3D(endx,endy,endz);
     } else if (strcmp(argv[1],"--tiling") == 0 && argc > 2) {
@@ -172,6 +175,7 @@ main(int argc, char** argv) {
   debuginit(debug,deepdebug,deepdeepdebug);
   
   // Import the model
+  infof("importing the model...");
   Assimp::Importer importer;
   const aiScene* scene = processImport(importer,input);
   if (scene == 0) return(1);
@@ -181,6 +185,12 @@ main(int argc, char** argv) {
     describeScene(scene,deepdebug,deepdeepdebug,deepdeepdebug,deepdeepdebug);
   }
 
+  // Determine bounding box, if not specified
+  if (!boundingBoxSet) {
+    BoundingBoxer boxer(scene);
+    boxer.getBoundingBox(boundingBoxStart,boundingBoxEnd);
+  }
+  
   // Open the output
   outlinerhighprecisionreal xOutputStart = DirectionOperations::outputx(direction,boundingBoxStart);
   outlinerhighprecisionreal xOutputEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
@@ -244,7 +254,7 @@ processHelp(void) {
   std::cout << "\n";
   std::cout << "Options:\n";
   std::cout << "\n";
-  std::cout << "  --bounding x x y y z z   Set the bounding box area. Default is -2 2 -2 2 -2 2.\n";
+  std::cout << "  --bounding x x y y z z   Set the bounding box area. Default is the model's bounding box.\n";
   std::cout << "  --step i                 Set the granularity increment. Default is 1.\n";
   std::cout << "  --z                      Generate output as viewed from the z direction, i.e., showing x/y picture.\n";
   std::cout << "  --x                      Generate output as viewed from the x direction, i.e., showing z/y picture.\n";

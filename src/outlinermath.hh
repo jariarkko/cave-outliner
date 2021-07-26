@@ -22,6 +22,11 @@ void triangleBoundingBox2D(const aiVector2D& a,
                            const aiVector2D& c,
                            HighPrecisionVector2D& boundingBoxStart,
                            HighPrecisionVector2D& boundingBoxEnd);
+void triangleBoundingBox3D(const aiVector3D& a,
+                           const aiVector3D& b,
+                           const aiVector3D& c,
+                           HighPrecisionVector3D& boundingBoxStart,
+                           HighPrecisionVector3D& boundingBoxEnd);
 bool pointInsideTriangle2D(const aiVector2D& a,
                            const aiVector2D& b,
                            const aiVector2D& c,

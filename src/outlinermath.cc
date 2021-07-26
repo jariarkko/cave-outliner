@@ -24,18 +24,36 @@ static void triangleBoundingBoxTests(void);
 static void pointTests(void);
 static void lineTests(void);
 static void triangleTests(void);
-static void sortVectorsX(const aiVector2D* a,
-                         const aiVector2D* b,
-                         const aiVector2D* c,
-                         const aiVector2D** nth0,
-                         const aiVector2D** nth1,
-                         const aiVector2D** nth2);
-static void sortVectorsY(const aiVector2D* a,
-                         const aiVector2D* b,
-                         const aiVector2D* c,
-                         const aiVector2D** nth0,
-                         const aiVector2D** nth1,
-                         const aiVector2D** nth2);
+static void sortVectorsX2D(const aiVector2D* a,
+                           const aiVector2D* b,
+                           const aiVector2D* c,
+                           const aiVector2D** nth0,
+                           const aiVector2D** nth1,
+                           const aiVector2D** nth2);
+static void sortVectorsY2D(const aiVector2D* a,
+                           const aiVector2D* b,
+                           const aiVector2D* c,
+                           const aiVector2D** nth0,
+                           const aiVector2D** nth1,
+                           const aiVector2D** nth2);
+static void sortVectorsX3D(const aiVector3D* a,
+                           const aiVector3D* b,
+                           const aiVector3D* c,
+                           const aiVector3D** nth0,
+                           const aiVector3D** nth1,
+                           const aiVector3D** nth2);
+static void sortVectorsY3D(const aiVector3D* a,
+                           const aiVector3D* b,
+                           const aiVector3D* c,
+                           const aiVector3D** nth0,
+                           const aiVector3D** nth1,
+                           const aiVector3D** nth2);
+static void sortVectorsZ3D(const aiVector3D* a,
+                           const aiVector3D* b,
+                           const aiVector3D* c,
+                           const aiVector3D** nth0,
+                           const aiVector3D** nth1,
+                           const aiVector3D** nth2);
 
  ///////////////////////////////////////////////////////////////////////////////////////////////
 // Math functions /////////////////////////////////////////////////////////////////////////////
@@ -56,14 +74,14 @@ void triangleBoundingBox2D(const aiVector2D& a,
   outlinerhighprecisionreal yEnd;
   
   // Order the points a,b,c so that the one with smallest x comes first
-  sortVectorsX(&a,&b,&c,&nth1,&nth2,&nth3);
+  sortVectorsX2D(&a,&b,&c,&nth1,&nth2,&nth3);
   
   // Fill in xStart and xEnd
   xStart = nth1->x;
   xEnd = nth3->x;
   
   // Order the points a,b,c so that the one with smallest y comes first
-  sortVectorsY(&a,&b,&c,&nth1,&nth2,&nth3);
+  sortVectorsY2D(&a,&b,&c,&nth1,&nth2,&nth3);
   
   // Fill in yStart and yEnd
   yStart = nth1->y;
@@ -76,13 +94,59 @@ void triangleBoundingBox2D(const aiVector2D& a,
   boundingBoxEnd.y = yEnd;
 }
 
+void triangleBoundingBox3D(const aiVector3D& a,
+                           const aiVector3D& b,
+                           const aiVector3D& c,
+                           HighPrecisionVector3D& boundingBoxStart,
+                           HighPrecisionVector3D& boundingBoxEnd) {
+
+  const aiVector3D* nth1;
+  const aiVector3D* nth2;
+  const aiVector3D* nth3;
+  outlinerhighprecisionreal xStart;
+  outlinerhighprecisionreal xEnd;
+  outlinerhighprecisionreal yStart;
+  outlinerhighprecisionreal yEnd;
+  outlinerhighprecisionreal zStart;
+  outlinerhighprecisionreal zEnd;
+  
+  // Order the points a,b,c so that the one with smallest x comes first
+  sortVectorsX3D(&a,&b,&c,&nth1,&nth2,&nth3);
+  
+  // Fill in xStart and xEnd
+  xStart = nth1->x;
+  xEnd = nth3->x;
+  
+  // Order the points a,b,c so that the one with smallest y comes first
+  sortVectorsY3D(&a,&b,&c,&nth1,&nth2,&nth3);
+  
+  // Fill in yStart and yEnd
+  yStart = nth1->y;
+  yEnd = nth3->y;
+
+  // Order the points a,b,c so that the one with smallest z comes first
+  sortVectorsZ3D(&a,&b,&c,&nth1,&nth2,&nth3);
+  
+  // Fill in zStart and zEnd
+  zStart = nth1->z;
+  zEnd = nth3->z;
+
+  // Construct the result
+  boundingBoxStart.x = xStart;
+  boundingBoxStart.y = yStart;
+  boundingBoxStart.z = zStart;
+  boundingBoxEnd.x = xEnd;
+  boundingBoxEnd.y = yEnd;
+  boundingBoxEnd.z = zEnd;
+}
+
 static void
-sortVectorsX(const aiVector2D* a,
-             const aiVector2D* b,
-             const aiVector2D* c,
-             const aiVector2D** nth0,
-             const aiVector2D** nth1,
-             const aiVector2D** nth2) {
+sortVectorsX2D(const aiVector2D* a,
+               const aiVector2D* b,
+               const aiVector2D* c,
+               const aiVector2D** nth0,
+               const aiVector2D** nth1,
+               const aiVector2D** nth2) {
 
   // There are 6 permutations of three numbers. Simply test for each condition.
   if (a->x < b->x) {
@@ -117,12 +181,12 @@ sortVectorsX(const aiVector2D* a,
 }
 
 static void
-sortVectorsY(const aiVector2D* a,
-             const aiVector2D* b,
-             const aiVector2D* c,
-             const aiVector2D** nth0,
-             const aiVector2D** nth1,
-             const aiVector2D** nth2) {
+sortVectorsY2D(const aiVector2D* a,
+               const aiVector2D* b,
+               const aiVector2D* c,
+               const aiVector2D** nth0,
+               const aiVector2D** nth1,
+               const aiVector2D** nth2) {
   // There are 6 permutations of three numbers. Simply test for each condition.
   if (a->y < b->y) {
     if (c->y < a->y) {
@@ -144,6 +208,124 @@ sortVectorsY(const aiVector2D* a,
       *nth1 = b;
       *nth2 = a;
     } else if (c->y < a->y) {
+      *nth0 = b;
+      *nth1 = c;
+      *nth2 = a;
+    } else {
+      *nth0 = b;
+      *nth1 = a;
+      *nth2 = c;
+    }
+  }
+}
+
+static void
+sortVectorsX3D(const aiVector3D* a,
+               const aiVector3D* b,
+               const aiVector3D* c,
+               const aiVector3D** nth0,
+               const aiVector3D** nth1,
+               const aiVector3D** nth2) {
+
+  // There are 6 permutations of three numbers. Simply test for each condition.
+  if (a->x < b->x) {
+    if (c->x < a->x) {
+      *nth0 = c;
+      *nth1 = a;
+      *nth2 = b;
+    } else if (c->x < b->x) {
+      *nth0 = a;
+      *nth1 = c;
+      *nth2 = b;
+    } else {
+      *nth0 = a;
+      *nth1 = b;
+      *nth2 = c;
+    }
+  } else {
+    if (c->x < b->x) {
+      *nth0 = c;
+      *nth1 = b;
+      *nth2 = a;
+    } else if (c->x < a->x) {
+      *nth0 = b;
+      *nth1 = c;
+      *nth2 = a;
+    } else {
+      *nth0 = b;
+      *nth1 = a;
+      *nth2 = c;
+    }
+  }
+}
+
+static void
+sortVectorsY3D(const aiVector3D* a,
+               const aiVector3D* b,
+               const aiVector3D* c,
+               const aiVector3D** nth0,
+               const aiVector3D** nth1,
+               const aiVector3D** nth2) {
+  // There are 6 permutations of three numbers. Simply test for each condition.
+  if (a->y < b->y) {
+    if (c->y < a->y) {
+      *nth0 = c;
+      *nth1 = a;
+      *nth2 = b;
+    } else if (c->y < b->y) {
+      *nth0 = a;
+      *nth1 = c;
+      *nth2 = b;
+    } else {
+      *nth0 = a;
+      *nth1 = b;
+      *nth2 = c;
+    }
+  } else {
+    if (c->y < b->y) {
+      *nth0 = c;
+      *nth1 = b;
+      *nth2 = a;
+    } else if (c->y < a->y) {
+      *nth0 = b;
+      *nth1 = c;
+      *nth2 = a;
+    } else {
+      *nth0 = b;
+      *nth1 = a;
+      *nth2 = c;
+    }
+  }
+}
+
+static void
+sortVectorsZ3D(const aiVector3D* a,
+               const aiVector3D* b,
+               const aiVector3D* c,
+               const aiVector3D** nth0,
+               const aiVector3D** nth1,
+               const aiVector3D** nth2) {
+  // There are 6 permutations of three numbers. Simply test for each condition.
+  if (a->z < b->z) {
+    if (c->z < a->z) {
+      *nth0 = c;
+      *nth1 = a;
+      *nth2 = b;
+    } else if (c->z < b->z) {
+      *nth0 = a;
+      *nth1 = c;
+      *nth2 = b;
+    } else {
+      *nth0 = a;
+      *nth1 = b;
+      *nth2 = c;
+    }
+  } else {
+    if (c->z < b->z) {
+      *nth0 = c;
+      *nth1 = b;
+      *nth2 = a;
+    } else if (c->z < a->z) {
       *nth0 = b;
       *nth1 = c;
       *nth2 = a;

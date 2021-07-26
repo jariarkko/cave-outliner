@@ -4,6 +4,7 @@ OBJS=	src/main.o \
 	src/outlinerindexedmesh.o \
 	src/outlinermaterialmatrix.o \
 	src/outlinerdescribe.o \
+	src/outlinerboundingboxer.o \
 	src/outlinerdebug.o \
 	src/outlinerdirection.o \
 	src/outlinermath.o \
@@ -17,6 +18,7 @@ HDRS=	src/outlinertypes.hh \
 	src/outlinerindexedmesh.hh \
 	src/outlinermaterialmatrix.hh \
 	src/outlinerdescribe.hh \
+	src/outlinerboundingboxer.hh \
 	src/outlinermath.hh \
 	src/outlinerhighprecision.hh \
 	src/outlinersvg.hh
@@ -27,6 +29,7 @@ SRCS=	src/main.cc \
 	src/outlinerindexedmesh.cc \
 	src/outlinermaterialmatrix.cc \
 	src/outlinerdescribe.cc \
+	src/outlinerboundingboxer.cc \
 	src/outlinermath.cc \
 	src/outlinerhighprecision.cc \
 	src/outlinersvg.cc

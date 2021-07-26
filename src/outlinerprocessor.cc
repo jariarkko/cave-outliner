@@ -61,7 +61,7 @@ Processor::processScene(const aiScene* scene,
   
   unsigned int xIndex = 0;
 
-  infof("computing material matrix");
+  infof("computing material matrix...");
   for (outlinerhighprecisionreal x = DirectionOperations::outputx(direction,boundingboxstart);
        x <= DirectionOperations::outputx(direction,boundingboxend);
        x += stepx) {
@@ -109,7 +109,7 @@ Processor::processScene(const aiScene* scene,
   // whether there was material or not. Determine if we want to fill
   // small imperfections, removing small holes.
   if (holethreshold > 0) {
-    infof("filtering holes");
+    infof("filtering holes...");
     for (xIndex = 1; xIndex < matrix.xIndexSize; xIndex++) {
       for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
         if (!matrix.getMaterialMatrix(xIndex-1,yIndex)) continue;
@@ -118,7 +118,7 @@ Processor::processScene(const aiScene* scene,
           unsigned int holeXtable[outlinermaxholethreshold];
           unsigned int holeYtable[outlinermaxholethreshold];
           if (holeIsEqualOrSmallerThan(xIndex,yIndex,holethreshold,n,outlinermaxholethreshold,holeXtable,holeYtable)) {
-            infof("correcting a hole of %u pixels at (%u,%u)", n, xIndex, yIndex);
+            infof("  correcting a hole of %u pixels at (%u,%u)", n, xIndex, yIndex);
             for (unsigned int i = 0; i < n; i++) {
               matrix.setMaterialMatrix(holeXtable[i],holeYtable[i]);
             }
@@ -131,7 +131,7 @@ Processor::processScene(const aiScene* scene,
   // Now there's a matrix filled with a flag for each coordinate,
   // whether there was material or not. And small holes have been filled per above.
   // Draw the output based on all this.
-  infof("constructing output");
+  infof("constructing output...");
   for (xIndex = 0; xIndex < matrix.xIndexSize; xIndex++) {
     for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
       if (matrix.getMaterialMatrix(xIndex,yIndex)) {
