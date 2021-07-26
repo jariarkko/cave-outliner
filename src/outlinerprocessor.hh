@@ -67,6 +67,18 @@ private:
                        outlinerhighprecisionreal y);
   bool isBorder(unsigned int xIndex,
                 unsigned int yIndex);
+  bool holeIsEqualOrSmallerThan(unsigned int xIndex,
+                                unsigned int yIndex,
+                                unsigned int holethreshold,
+                                unsigned int& n,
+                                unsigned int tableSize,
+                                unsigned int* holeXtable,
+                                unsigned int* holeYtable);
+  bool coordinatesInTable(const unsigned int xIndex,
+                          const unsigned int yIndex,
+                          const unsigned int n,
+                          const unsigned int* tableX,
+                          const unsigned int* tableY);
   void getNeighbours(unsigned int xIndex,
                      unsigned int yIndex,
                      unsigned int& n,

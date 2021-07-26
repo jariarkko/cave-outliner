@@ -22,15 +22,21 @@ void triangleBoundingBox2D(const aiVector2D& a,
                            const aiVector2D& c,
                            HighPrecisionVector2D& boundingBoxStart,
                            HighPrecisionVector2D& boundingBoxEnd);
-bool pointInsideTriangle2D(const aiVector2D* a,
-                           const aiVector2D* b,
-                           const aiVector2D* c,
-                           const HighPrecisionVector2D* point);
-bool boundingBoxIntersectsTriangle2D(const aiVector2D* a,
-                                     const aiVector2D* b,
-                                     const aiVector2D* c,
-                                     const HighPrecisionVector2D* boxStart,
-                                     const HighPrecisionVector2D* boxEnd);
+bool pointInsideTriangle2D(const aiVector2D& a,
+                           const aiVector2D& b,
+                           const aiVector2D& c,
+                           const HighPrecisionVector2D& point);
+bool pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
+                              const HighPrecisionVector2D& boxEnd,
+                              const aiVector2D& point);
+bool pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
+                              const HighPrecisionVector2D& boxEnd,
+                              const HighPrecisionVector2D& point);
+bool boundingBoxIntersectsTriangle2D(const aiVector2D& a,
+                                     const aiVector2D& b,
+                                     const aiVector2D& c,
+                                     const HighPrecisionVector2D& boxStart,
+                                     const HighPrecisionVector2D& boxEnd);
 bool pointOnLine2D(const aiVector2D* a,
                    const aiVector2D* b,
                    const HighPrecisionVector2D* point);

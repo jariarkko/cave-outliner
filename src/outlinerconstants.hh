@@ -8,7 +8,7 @@
 
 #define outlinermaxmeshes          1
 #define outlinertiledivision      30
-#define outlinermaxholethreshold   1
+#define outlinermaxholethreshold  50
 
 #define OUTLINER_PROG "cave-outliner"
 #define OUTLINER_ERRPREFIX OUTLINER_PROG ": Error: "

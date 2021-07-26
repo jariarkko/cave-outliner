@@ -47,7 +47,7 @@ static HighPrecisionVector3D boundingBoxEnd = {2,2,2};
 static enum outlinerdirection direction = dir_z;
 static enum outlineralgorithm algorithm = alg_pixel;
 static unsigned int tiles = outlinertiledivision;
-static unsigned int holethreshold = 1;
+static unsigned int holethreshold = 0;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program and option handling ///////////////////////////////////////////////////////////
@@ -320,7 +320,7 @@ runTests(void) {
   infof("running tests");
   mathTests();
   MaterialMatrix::test();
-  infof("tests OK");
+  infof("tests ok");
 }
 
 

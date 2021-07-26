@@ -1,15 +1,11 @@
 # cave-outliner
 A small tool to draw horizontal plane outlines of caves, given an input of a 3D model.
 
-The input is in the form a Standard Triangle Language (STL) file. The output is a Standard Vector Graphics (SVG) image.
+The input is in the form a Standard Triangle Language (STL) file. The output is a Standard Vector Graphics (SVG) image. This is very much work in progress for now.
 
 Usage:
 
-cave-outliner [options] inputfile outputfile
-
-Processes an input 3D model in STL format to a SVG picture that
-represents the cave horizontal plane. This can be used to produce
-maps.
+    cave-outliner [options] inputfile outputfile
 
 Options:
 
