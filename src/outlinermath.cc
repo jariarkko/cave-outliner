@@ -21,6 +21,7 @@ static void vectorTests(void);
 static void detTests(void);
 static void boundingBoxTests(void);
 static void triangleBoundingBoxTests(void);
+static void boundingBoxIntersectionTests(void);
 static void pointTests(void);
 static void lineTests(void);
 static void triangleTests(void);
@@ -466,6 +467,32 @@ boundingBoxIntersectsTriangle2D(const aiVector2D& a,
 }
 
 bool
+boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
+                         HighPrecisionVector3D& boundingBox1End,
+                         HighPrecisionVector3D& boundingBox2Start,
+                         HighPrecisionVector3D& boundingBox2End) {
+  // Following the algorithm from https://math.stackexchange.com/questions/2651710/simplest-way-to-determine-if-two-3d-boxes-intersect
+
+# define between(a,b,c)  ((a) <= (b) && (b) <= (c))
+  bool xOverlap = (between(boundingBox1Start.x,boundingBox2Start.x,boundingBox1End.x) ||
+                   between(boundingBox1Start.x,boundingBox2End.x,boundingBox1End.x) ||
+                   between(boundingBox2Start.x,boundingBox1Start.x,boundingBox2End.x) ||
+                   between(boundingBox2Start.x,boundingBox1End.x,boundingBox2End.x));
+  if (!xOverlap) return(0);
+  bool yOverlap = (between(boundingBox1Start.y,boundingBox2Start.y,boundingBox1End.y) ||
+                   between(boundingBox1Start.y,boundingBox2End.y,boundingBox1End.y) ||
+                   between(boundingBox2Start.y,boundingBox1Start.y,boundingBox2End.y) ||
+                   between(boundingBox2Start.y,boundingBox1End.y,boundingBox2End.y));
+  if (!yOverlap) return(0);
+  bool zOverlap = (between(boundingBox1Start.z,boundingBox2Start.z,boundingBox1End.z) ||
+                   between(boundingBox1Start.z,boundingBox2End.z,boundingBox1End.z) ||
+                   between(boundingBox2Start.z,boundingBox1Start.z,boundingBox2End.z) ||
+                   between(boundingBox2Start.z,boundingBox1End.z,boundingBox2End.z));
+  if (!zOverlap) return(0);
+  return(1);
+}
+
+bool
 vectorEqual(const aiVector2D* a,
             const aiVector2D* b) {
   return(a->x == b->x && a->y == b->y);
@@ -506,6 +533,7 @@ mathTests(void) {
   triangleTests();
   boundingBoxTests();
   triangleBoundingBoxTests();
+  boundingBoxIntersectionTests();
   infof("math tests ok");
 }
 
@@ -583,6 +611,43 @@ boundingBoxTests(void) {
   assert(ans == 0);
   ans = pointInsideBoundingBox2D(bbtest1start,bbtest1end,bbtest1point5);
   assert(ans == 1);
+}
+
+static
+void boundingBoxIntersectionTests(void) {
+  infof("bounding box intersection tests...");
+  
+  HighPrecisionVector3D test1boundingBox1Start(0,0,0);
+  HighPrecisionVector3D test1boundingBox1End(100,100,100);
+  HighPrecisionVector3D test1boundingBox2Start(10,10,10);
+  HighPrecisionVector3D test1boundingBox2End(11,11,11);
+  bool ans = boundingBoxesIntersect3D(test1boundingBox1Start,
+                                      test1boundingBox1End,
+                                      test1boundingBox2Start,
+                                      test1boundingBox2End);
+  assert(ans);
+  
+  HighPrecisionVector3D test2boundingBox1Start(0,0,0);
+  HighPrecisionVector3D test2boundingBox1End(10,10,10);
+  HighPrecisionVector3D test2boundingBox2Start(11,11,11);
+  HighPrecisionVector3D test2boundingBox2End(12,12,12);
+  ans = boundingBoxesIntersect3D(test2boundingBox1Start,
+                                 test2boundingBox1End,
+                                 test2boundingBox2Start,
+                                 test2boundingBox2End);
+  assert(!ans);
+  
+  HighPrecisionVector3D test3boundingBox1Start(0,0,0);
+  HighPrecisionVector3D test3boundingBox1End(10,10,10);
+  HighPrecisionVector3D test3boundingBox2Start(0,0,11);
+  HighPrecisionVector3D test3boundingBox2End(2,2,12);
+  ans = boundingBoxesIntersect3D(test3boundingBox1Start,
+                                 test3boundingBox1End,
+                                 test3boundingBox2Start,
+                                 test3boundingBox2End);
+  assert(!ans);
+  
+  infof("bounding box intersection tests ok");
 }
 
 static void

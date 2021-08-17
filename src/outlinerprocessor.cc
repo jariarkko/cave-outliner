@@ -108,6 +108,9 @@ Processor::processScene(const aiScene* scene,
   // Now there's a matrix filled with a flag for each coordinate,
   // whether there was material or not. Determine if we want to fill
   // small imperfections, removing small holes.
+  unsigned int holes = 0;
+  unsigned int holeMinSize = 9999;
+  unsigned int holeMaxSize = 0;
   if (holethreshold > 0) {
     infof("filtering holes...");
     for (xIndex = 1; xIndex < matrix.xIndexSize; xIndex++) {
@@ -118,7 +121,10 @@ Processor::processScene(const aiScene* scene,
           unsigned int holeXtable[outlinermaxholethreshold];
           unsigned int holeYtable[outlinermaxholethreshold];
           if (holeIsEqualOrSmallerThan(xIndex,yIndex,holethreshold,n,outlinermaxholethreshold,holeXtable,holeYtable)) {
-            infof("  correcting a hole of %u pixels at (%u,%u)", n, xIndex, yIndex);
+            debugf("  correcting a hole of %u pixels at (%u,%u)", n, xIndex, yIndex);
+            holes++;
+            if (holeMinSize > n) holeMinSize = n;
+            if (holeMaxSize < n) holeMaxSize = n;
             for (unsigned int i = 0; i < n; i++) {
               matrix.setMaterialMatrix(holeXtable[i],holeYtable[i]);
             }
@@ -126,6 +132,10 @@ Processor::processScene(const aiScene* scene,
         }
       }
     }
+  }
+
+  if (holes > 0) {
+    infof("  removed %u holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
   }
   
   // Now there's a matrix filled with a flag for each coordinate,

@@ -25,6 +25,7 @@ struct IndexedMeshOneMeshOneTileFaces {
 
 struct IndexedMeshOneMesh {
   const aiMesh* mesh;
+  unsigned int nOutsideModelBoundingBox;
   struct IndexedMeshOneMeshOneTileFaces** tileMatrix;
 };
 
@@ -38,6 +39,8 @@ public:
 
   IndexedMesh(unsigned int maxMeshesIn,
               unsigned int subdivisionsIn,
+              const HighPrecisionVector3D& modelBoundingBoxStartIn,
+              const HighPrecisionVector3D& modelBoundingBoxEndIn,
               const HighPrecisionVector2D& viewBoundingBoxStartIn,
               const HighPrecisionVector2D& viewBoundingBoxEndIn,
               enum outlinerdirection directionIn);
@@ -58,6 +61,8 @@ private:
   unsigned int nMeshes;
   unsigned int maxMeshes;
   unsigned int subdivisions;
+  HighPrecisionVector3D modelBoundingBoxStart;
+  HighPrecisionVector3D modelBoundingBoxEnd;
   HighPrecisionVector2D viewBoundingBoxStart;
   HighPrecisionVector2D viewBoundingBoxEnd;
   enum outlinerdirection direction;

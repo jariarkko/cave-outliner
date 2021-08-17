@@ -18,18 +18,22 @@
 
 IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
                          unsigned int subdivisionsIn,
+                         const HighPrecisionVector3D& modelBoundingBoxStartIn,
+                         const HighPrecisionVector3D& modelBoundingBoxEndIn,
                          const HighPrecisionVector2D& viewBoundingBoxStartIn,
                          const HighPrecisionVector2D& viewBoundingBoxEndIn,
-                         enum outlinerdirection directionIn) {
+                         enum outlinerdirection directionIn)
+  : nMeshes(0),
+    maxMeshes(maxMeshesIn),
+    subdivisions(subdivisionsIn),
+    modelBoundingBoxStart(modelBoundingBoxStartIn),
+    modelBoundingBoxEnd(modelBoundingBoxEndIn),
+    viewBoundingBoxStart(viewBoundingBoxStartIn),
+    viewBoundingBoxEnd(viewBoundingBoxEndIn),
+    direction (directionIn) {
   assert(maxMeshesIn >= 1);
   assert(subdivisionsIn >= 1);
-  maxMeshes = maxMeshesIn;
-  nMeshes = 0;
-  subdivisions = subdivisionsIn;
   debugf("%u x %u tiles, or %u tiles", subdivisions, subdivisions, subdivisions * subdivisions);
-  viewBoundingBoxStart = viewBoundingBoxStartIn;
-  viewBoundingBoxEnd = viewBoundingBoxEndIn;
-  direction = directionIn;
   outlinerhighprecisionreal viewX = viewBoundingBoxEnd.x - viewBoundingBoxStart.x;
   outlinerhighprecisionreal viewY = viewBoundingBoxEnd.y - viewBoundingBoxStart.y;
   tileSizeX = viewX / subdivisions;
@@ -43,6 +47,7 @@ IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
   }
   for (unsigned int i = 0; i < maxMeshes; i++) {
     meshes[i].mesh = 0;
+    meshes[i].nOutsideModelBoundingBox = 0;
     meshes[i].tileMatrix = new struct IndexedMeshOneMeshOneTileFaces* [subdivisions];
     if (meshes[i].tileMatrix == 0) {
       errf("Cannot allocate %u tile matrix", subdivisions);
@@ -190,8 +195,12 @@ IndexedMesh::addScene(const aiScene* scene) {
     unsigned int nf;
     unsigned int mf;
     countFaces(shadow,nf,mf);
-    infof("      unique faces %u (total %u, %u more)",
-          nf, mf, mf - nf);
+    infof("      unique faces %u (total %u, %u more, original face count %u)",
+          nf, mf, mf - nf,
+          shadow.mesh->mNumFaces);
+    infof("      ignored %u (%.2f%%) faces as being outside 3D bounding box",
+          shadow.nOutsideModelBoundingBox,
+          (100.0 * (double)shadow.nOutsideModelBoundingBox) / (double)shadow.mesh->mNumFaces);
     unsigned int total = subdivisions * subdivisions;
     infof("      %u x %u = %u tiles", subdivisions, subdivisions, total);
     infof("      tile sizes %.2f x and %.2f y", tileSizeX, tileSizeY);
@@ -234,6 +243,7 @@ IndexedMesh::addMesh(const aiScene* scene,
   }
   struct IndexedMeshOneMesh& newMesh = meshes[nMeshes];
   newMesh.mesh = mesh;
+  newMesh.nOutsideModelBoundingBox = 0;
   assert(newMesh.mesh == mesh);
   nMeshes++;
   addFaces(newMesh,scene,mesh);
@@ -280,10 +290,23 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
     exit(1);
   }
 
-  // Calculate bounding box
+  // Calculate 3D bounding box
   aiVector3D* vertexA = &mesh->mVertices[face->mIndices[0]];
   aiVector3D* vertexB = &mesh->mVertices[face->mIndices[1]];
   aiVector3D* vertexC = &mesh->mVertices[face->mIndices[2]];
+  HighPrecisionVector3D elementBoundingBoxStart;
+  HighPrecisionVector3D elementBoundingBoxEnd;
+  triangleBoundingBox3D(*vertexA,*vertexB,*vertexC,
+                        elementBoundingBoxStart,elementBoundingBoxEnd);
+  if (!boundingBoxesIntersect3D(modelBoundingBoxStart,
+                                modelBoundingBoxEnd,
+                                elementBoundingBoxStart,elementBoundingBoxEnd)) {
+    deepdebugf("not including face due to not being inside model bounding box");
+    shadow.nOutsideModelBoundingBox++;
+    return;
+  }
+  
+  // Calculate 2D bounding box
   aiVector2D a(DirectionOperations::outputx(direction,*vertexA),DirectionOperations::outputy(direction,*vertexA));
   aiVector2D b(DirectionOperations::outputx(direction,*vertexB),DirectionOperations::outputy(direction,*vertexB));
   aiVector2D c(DirectionOperations::outputx(direction,*vertexC),DirectionOperations::outputy(direction,*vertexC));

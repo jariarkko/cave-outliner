@@ -217,7 +217,10 @@ main(int argc, char** argv) {
   // Build our own data structure
   HighPrecisionVector2D bounding2DBoxStart(xOutputStart,yOutputStart);
   HighPrecisionVector2D bounding2DBoxEnd(xOutputEnd,yOutputEnd);
-  IndexedMesh indexed(outlinermaxmeshes,tiles,bounding2DBoxStart,bounding2DBoxEnd,direction);
+  IndexedMesh indexed(outlinermaxmeshes,tiles,
+                      boundingBoxStart,boundingBoxEnd,
+                      bounding2DBoxStart,bounding2DBoxEnd,
+                      direction);
   indexed.addScene(scene);
   
   // Process the model
