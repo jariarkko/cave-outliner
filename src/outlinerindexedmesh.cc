@@ -191,7 +191,16 @@ IndexedMesh::addScene(const aiScene* scene) {
   infof("  tiling statistics");
   for (unsigned int i = 0; i < nMeshes; i++) {
     struct IndexedMeshOneMesh& shadow = meshes[i];
-    infof("    mesh %u", i);
+    unsigned int nth = i+1;
+    const char* nthstring = "th";
+    switch (nth) {
+    case 1: nthstring = "st"; break;
+    case 2: nthstring = "nd"; break;
+    case 3: nthstring = "rd"; break;
+    }
+    infof("    %u%s mesh",
+          nth,
+          nthstring);
     unsigned int nf;
     unsigned int mf;
     countFaces(shadow,nf,mf);
@@ -216,7 +225,7 @@ IndexedMesh::addScene(const aiScene* scene) {
           (100.0*(float)max)/(float)nf,
           nmax,
           (100.0*(float)nmax)/(float)total);
-    float avg = countTilesWithFaces(shadow);
+    float avg = avgFacesPerTile(shadow);
     infof("      avg number of faces per tile %.1f", avg);
   }
 }
