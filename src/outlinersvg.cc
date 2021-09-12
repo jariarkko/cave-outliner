@@ -19,10 +19,10 @@ SvgCreator::SvgCreator(const char* fileName,
                        float yStart,
                        float xFactor,
                        float yFactor,
-                       unsigned int linewidth) {
+                       float linewidth) {
   assert(xSize > 0);
   assert(ySize > 0);
-  assert(linewidth > 0);
+  assert(linewidth > 0.0);
   this->file.open(fileName);
   this->xSize = xSize;
   this->ySize = ySize;
@@ -31,7 +31,7 @@ SvgCreator::SvgCreator(const char* fileName,
   this->xFactor = xFactor;
   this->yFactor = yFactor;
   this->linewidth = linewidth;
-  debugf("coordinate normalization starts (%.2f,%.2f) factors (%f,%f) linewidth %u",
+  debugf("coordinate normalization starts (%.2f,%.2f) factors (%f,%f) linewidth %f",
          xStart, yStart, xFactor, yFactor, linewidth);
   preamble();
 }
@@ -55,7 +55,7 @@ SvgCreator::line(float fromX,
   coordinateNormalization(toX,toY,toXInt,toYInt);
 
   file << "<line x1=\"" << fromXInt << "\" y1=\"" << fromYInt << "\"";
-  file << "<line x2=\"" << toXInt << "\" y2=\"" << toYInt << "\"";
+  file << " x2=\"" << toXInt << "\" y2=\"" << toYInt << "\"";
   file << " style=\"stroke:black;stroke-width=" << linewidth << "\" />\n";
 }
   
@@ -67,7 +67,7 @@ SvgCreator::pixel(float x,
   coordinateNormalization(x,y,xInt,yInt);
   file << "<rect x=\"" << xInt << "\" y=\"" << yInt << "\"";
   file << " width=\"" << linewidth << "\" height=\"" << linewidth << "\"";
-  if (linewidth == 1) {
+  if (linewidth <= 1.0) {
     file << " fill=\"none\"";
   } else {
     file << " fill=\"black\"";
@@ -82,11 +82,12 @@ SvgCreator::coordinateNormalization(float x,
                                     unsigned int& yInt) {
   float xNormalized = (x - xStart) * xFactor;
   float yNormalized = (y - yStart) * yFactor;
-  xInt = xNormalized;
-  yInt = ySize - yNormalized;
-  deepdebugf("coordinate normalization (%.2f,%.2f) to (%u,%u)",
+  if (xNormalized > (float)xSize) xInt = xSize; else xInt = xNormalized;
+  if (yNormalized > ySize) yInt = ySize; else yInt = ySize - yNormalized;
+  deepdebugf("coordinate normalization (%.2f,%.2f) to (%u,%u) with yNormalized %.2f ySize %u yStart %.2f and yFactor %.2f",
              x, y,
-             xInt, yInt);
+             xInt, yInt,
+             yNormalized, ySize, yStart, yFactor);
 }
 
 bool

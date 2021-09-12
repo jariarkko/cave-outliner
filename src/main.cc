@@ -48,7 +48,7 @@ static HighPrecisionVector3D boundingBoxStart = {0,0,0};
 static HighPrecisionVector3D boundingBoxEnd = {0,0,0};
 static enum outlinerdirection direction = dir_z;
 static enum outlineralgorithm algorithm = alg_pixel;
-static unsigned int linewidth =  outlinerdefaultlinewidth;
+static float linewidth =  outlinerdefaultlinewidth;
 static unsigned int tiles = outlinertiledivision;
 static unsigned int holethreshold = 0;
 
@@ -91,8 +91,8 @@ main(int argc, char** argv) {
         algorithm = alg_borderactual;
         debugf("algorithm now %u", algorithm);
     } else if (strcmp(argv[1],"--linewidth") == 0 && argc > 2) {
-      int num = atoi(argv[2]);
-      if (num <= 0) {
+      float num = atof(argv[2]);
+      if (num <= 0.0) {
         errf("Line width value needs to be a positive number, %s given", argv[2]);
         return(1);
       }
@@ -211,7 +211,9 @@ main(int argc, char** argv) {
   unsigned int ySizeInt = ySize;
   outlinerhighprecisionreal xFactor = 1 / stepx;
   outlinerhighprecisionreal yFactor = 1 / stepy;
-  debugf("SVG size will be %u x %u", xSize, ySize);
+  deepdebugf("SVG size y %.2f..%.2f step %.2f ysize %.2f ysizeint %u",
+             yOutputStart, yOutputEnd, stepy, ySize, ySizeInt);
+  debugf("SVG size will be %u x %u", xSizeInt, ySizeInt);
   SvgCreator svg(output,
                  xSizeInt,ySizeInt,
                  xOutputStart,yOutputStart,
@@ -234,7 +236,7 @@ main(int argc, char** argv) {
   indexed.addScene(scene);
   
   // Process the model
-  Processor  processor(boundingBoxStart,
+  Processor processor(boundingBoxStart,
                       boundingBoxEnd,
                       stepx,
                       stepy,
@@ -276,7 +278,7 @@ processHelp(void) {
   std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave walls, with pixels.\n";
   std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave walls, with lines.\n";
   std::cout << "  --borderactual           Use the border-only drawing algorithm, draws the cave walls using model triangle sides.\n";
-  std::cout << "    --linewidth n            Set the width of the lines in output picture.\n";
+  std::cout << "  --linewidth n            Set the width of the lines in output picture. The value can be a decimal number.\n";
   std::cout << "  --holethreshold n        Ignore holes in the model if they are n or less pixels.\n";
   std::cout << "  --tiling n               Optimize search process with n x n tiles. ";
   std::cout <<                            "Default is " << outlinertiledivision << ",\n";

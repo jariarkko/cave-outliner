@@ -142,6 +142,10 @@ Processor::processScene(const aiScene* scene,
   // whether there was material or not. And small holes have been filled per above.
   // Draw the output based on all this.
   infof("constructing output...");
+  unsigned int nBorderTo;
+  bool borderTablePrev[maxNeighbors];
+  unsigned int borderTableX[maxNeighbors];
+  unsigned int borderTableY[maxNeighbors];
   for (xIndex = 0; xIndex < matrix.xIndexSize; xIndex++) {
     for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
       if (matrix.getMaterialMatrix(xIndex,yIndex)) {
@@ -155,13 +159,28 @@ Processor::processScene(const aiScene* scene,
           break;
         case alg_borderpixel:
           debugf("borderpixel alg %u,%u", xIndex, yIndex);
-          if (isBorder(xIndex,yIndex)) {
+          if (isBorder(xIndex,yIndex,nBorderTo,0,0,0,0)) {
             svg.pixel(x,y);
           }
           break;
         case alg_borderline:
-          errf("Borderline algorithm is not yet implemented");
-          exit(1);
+          debugf("borderline alg %u,%u", xIndex, yIndex);
+          if (isBorder(xIndex,yIndex,nBorderTo,maxNeighbors,borderTablePrev,borderTableX,borderTableY)) {
+            if (nBorderTo == 0) {
+              svg.pixel(x,y);
+            } else {
+              for (unsigned int b = 0; b < nBorderTo; b++) {
+                assert(outlinersaneindex(borderTableX[b]));
+                assert(outlinersaneindex(borderTableY[b]));
+                if (borderTablePrev[b]) {
+                  outlinerhighprecisionreal otherX = indexToCoordinateX(borderTableX[b]);
+                  outlinerhighprecisionreal otherY = indexToCoordinateY(borderTableY[b]);
+                  svg.line(otherX,otherY,x,y);
+                }
+              }
+            }
+          }
+          break;
         case alg_borderactual:
           errf("Borderactual algorithm is not yet implemented");
           exit(1);
@@ -374,40 +393,105 @@ Processor::getNeighbours(unsigned int xIndex,
                          unsigned int* tableY) {
   assert(tableSize <= 8);
   n = 0;
-  
-  // Left side three neighbours
-  if (xIndex > 0 && yIndex > 0)                                       { tableX[n] = xIndex-1; tableY[n] = yIndex-1; n++; }
-  if (xIndex > 0)                                                     { tableX[n] = xIndex-1; tableY[n] = yIndex;   n++; }
-  if (xIndex > 0 && yIndex < matrix.yIndexSize-1)                     { tableX[n] = xIndex-1; tableY[n] = yIndex+1; n++; }
 
+  // Order is important, callers want the neighbors so that the
+  // immediate connecting (non-diagonal) neighbors are first.
+  
+  // Left and right neighbors at the same level
+  if (xIndex > 0)                                                     { tableX[n] = xIndex-1; tableY[n] = yIndex;   n++; }
+  if (xIndex < matrix.xIndexSize-1)                                   { tableX[n] = xIndex+1; tableY[n] = yIndex;   n++; }
+  
   // Top and bottom neighbours
   if (yIndex > 0)                                                     { tableX[n] = xIndex;   tableY[n] = yIndex-1; n++; }
   if (yIndex < matrix.yIndexSize-1)                                   { tableX[n] = xIndex;   tableY[n] = yIndex+1; n++; }
   
-  // Right side three neighbours
+  // Left side corner neighbours
+  if (xIndex > 0 && yIndex > 0)                                       { tableX[n] = xIndex-1; tableY[n] = yIndex-1; n++; }
+  if (xIndex > 0 && yIndex < matrix.yIndexSize-1)                     { tableX[n] = xIndex-1; tableY[n] = yIndex+1; n++; }
+
+  // Right side corner neighbours
   if (xIndex < matrix.xIndexSize-1 && yIndex > 0)                     { tableX[n] = xIndex+1; tableY[n] = yIndex-1; n++; }
-  if (xIndex < matrix.xIndexSize-1)                                   { tableX[n] = xIndex+1; tableY[n] = yIndex;   n++; }
-  if (xIndex < matrix.xIndexSize-1 && yIndex < matrix.yIndexSize-1) { tableX[n] = xIndex+1; tableY[n] = yIndex+1; n++; }
+  if (xIndex < matrix.xIndexSize-1 && yIndex < matrix.yIndexSize-1)   { tableX[n] = xIndex+1; tableY[n] = yIndex+1; n++; }
   
   // Done
   assert(n <= tableSize);
 }
 
 bool
+Processor::closerNeighborExists(const unsigned int thisX,
+                                const unsigned int thisY,
+                                const unsigned int xIndex,
+                                const unsigned int yIndex,
+                                const unsigned int nNeighbors,
+                                const unsigned int* neighborTableX,
+                                const unsigned int* neighborTableY) {
+  if (thisX == xIndex || thisY == yIndex) return(0);
+  for (unsigned int n = 0; n < nNeighbors; n++) {
+    unsigned int neighX = neighborTableX[n];
+    unsigned int neighY = neighborTableY[n];
+    if ((xIndex == neighX - 1 || xIndex == neighX + 1) && yIndex == neighY) return(1);
+    if ((yIndex == neighY - 1 || yIndex == neighY + 1) && xIndex == neighX) return(1);
+  }
+  return(0);
+}
+
+bool
 Processor::isBorder(unsigned int xIndex,
-                    unsigned int yIndex) {
+                    unsigned int yIndex,
+                    unsigned int& nBorderTo,
+                    unsigned int borderTableSize,
+                    bool* borderTablePrev,
+                    unsigned int* borderTableX,
+                    unsigned int* borderTableY) {
+  assert(borderTableSize <= maxNeighbors);
+  assert(borderTableSize == 0 || borderTableX != 0);
+  assert(borderTableSize == 0 || borderTableY != 0);
   unsigned int n;
-  const unsigned int tableSize = 8;
-  unsigned int tableX[tableSize];
-  unsigned int tableY[tableSize];
-  getNeighbours(xIndex,yIndex,n,tableSize,tableX,tableY);
+  unsigned int tableX[maxNeighbors];
+  unsigned int tableY[maxNeighbors];
+  getNeighbours(xIndex,yIndex,n,maxNeighbors,tableX,tableY);
   debugf("point %u,%u has %u neighbors", xIndex, yIndex, n);
+  nBorderTo = 0;
+  bool ans = 0;
   for (unsigned int i = 0; i < n; i++) {
-    if (!matrix.getMaterialMatrix(tableX[i],tableY[i])) {
-      debugf("point %u,%u is a border due to %u,%u", xIndex, yIndex, tableX[i], tableY[i]);
-      return(1);
+    unsigned int neighX = tableX[i];
+    unsigned int neighY = tableY[i];
+    if (!matrix.getMaterialMatrix(neighX,neighY)) {
+      debugf("point %u,%u is a border due to %u,%u", xIndex, yIndex, neighX, neighY);
+      ans = 1;
+    } else {
+      if (nBorderTo < borderTableSize) {
+        unsigned int dummy;
+        if (!isBorder(neighX, neighY, dummy, 0, 0, 0, 0)) continue;
+        if (closerNeighborExists(xIndex, yIndex, neighX, neighY, nBorderTo, borderTableX, borderTableY)) continue;
+        bool prev =  ((neighX < xIndex ||
+                       (neighX == xIndex && neighY < yIndex)));
+        deepdebugf("adding %uth border (prev=%u) to from (%u,%u) to (%u,%u)",
+                   nBorderTo+1,
+                   prev,
+                   neighX,neighY,
+                   xIndex,yIndex);
+        borderTablePrev[nBorderTo] = prev;
+        borderTableX[nBorderTo] = neighX;
+        borderTableY[nBorderTo] = neighY;
+        nBorderTo++;
+      }
     }
   }
-  debugf("point %u,%u is inside cave", xIndex, yIndex);
-  return(0);
+  if (!ans) {
+    debugf("point %u,%u is inside cave", xIndex, yIndex);
+  }
+  return(ans);
+}
+
+outlinerhighprecisionreal
+Processor::indexToCoordinateX(unsigned int xIndex) {
+  outlinerhighprecisionreal xStart = DirectionOperations::outputx(direction,boundingboxstart);
+  return(xStart + stepx * xIndex);
+}
+
+outlinerhighprecisionreal
+Processor::indexToCoordinateY(unsigned int yIndex) {
+  outlinerhighprecisionreal yStart = DirectionOperations::outputy(direction,boundingboxstart);
+  return(yStart + stepy * yIndex);
 }

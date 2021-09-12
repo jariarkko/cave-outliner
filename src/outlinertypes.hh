@@ -34,8 +34,9 @@ enum outlineralgorithm {
 // Common macros //////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-#define outlinerisnumber(s) ((isdigit(*(s)) || (*(s) == '-' && isdigit(*((s)+1))) || (*(s) == '+' && isdigit(*((s)+1))) ))
-#define outlinermin(a,b)    (((a) < (b)) ? (a) : (b))
-#define outlinermax(a,b)   (((a) > (b)) ? (a) : (b))
+#define outlinerisnumber(s)  ((isdigit(*(s)) || (*(s) == '-' && isdigit(*((s)+1))) || (*(s) == '+' && isdigit(*((s)+1))) ))
+#define outlinermin(a,b)     (((a) < (b)) ? (a) : (b))
+#define outlinermax(a,b)     (((a) > (b)) ? (a) : (b))
+#define outlinersaneindex(x) ((x) < (4*1000*1000*1000))
 
 #endif // OUTLINERTYPES_HH

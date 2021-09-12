@@ -73,8 +73,8 @@ MaterialMatrix::getMaterialMatrix(unsigned int xIndex,
   unsigned int bitpart = index % 8;
   unsigned char thechar = bitMatrix[charpart];
   unsigned char bitMask = (1 << bitpart);
-  deepdebugf("getting material matrix %u (%u,%u) elem %u value %x with mask %x",
-             index, xIndex, yIndex, charpart, thechar, bitMask);
+  deepdeepdebugf("getting material matrix %u (%u,%u) elem %u value %x with mask %x",
+                 index, xIndex, yIndex, charpart, thechar, bitMask);
   assert(index < nBits);
   assert(charpart < nChars);
   assert(bitpart < 8);

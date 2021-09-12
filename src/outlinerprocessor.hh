@@ -35,7 +35,8 @@ public:
                     SvgCreator& svg);
 
 private:
-  
+
+  const unsigned int maxNeighbors = 8;
   HighPrecisionVector3D boundingboxstart;
   HighPrecisionVector3D boundingboxend;
   outlinerhighprecisionreal stepx;
@@ -65,8 +66,13 @@ private:
                        const aiFace* face,
                        outlinerhighprecisionreal x,
                        outlinerhighprecisionreal y);
-  bool isBorder(unsigned int xIndex,
-                unsigned int yIndex);
+   bool isBorder(unsigned int xIndex,
+                 unsigned int yIndex,
+                 unsigned int& nBorderTo,
+                 unsigned int borderTableSize,
+                 bool* borderTablePrev,
+                 unsigned int* boderTableX,
+                 unsigned int* borderTableY);
   bool holeIsEqualOrSmallerThan(unsigned int xIndex,
                                 unsigned int yIndex,
                                 unsigned int holethreshold,
@@ -85,6 +91,15 @@ private:
                      unsigned int tableSize,
                      unsigned int* tableX,
                      unsigned int* tableY);
+  bool closerNeighborExists(const unsigned int thisX,
+                            const unsigned int thisY,
+                            const unsigned int xIndex,
+                            const unsigned int yIndex,
+                            const unsigned int nNeighbors,
+                            const unsigned int* neighborTableX,
+                            const unsigned int* neighborTableY);
+  outlinerhighprecisionreal indexToCoordinateX(unsigned int xIndex);
+  outlinerhighprecisionreal indexToCoordinateY(unsigned int yIndex);
 };
 
 #endif // PROCESSOR_HH
