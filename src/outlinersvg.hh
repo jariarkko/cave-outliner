@@ -23,7 +23,8 @@ class SvgCreator {
              float xStart,
              float yStart,
              float xFactor,
-             float yFactor);
+             float yFactor,
+             unsigned int linewidth);
   ~SvgCreator();
   void line(float fromX,
             float fromY,
@@ -42,6 +43,7 @@ class SvgCreator {
   float yStart;
   float xFactor;
   float yFactor;
+  unsigned int linewidth;
 
   void preamble();
   void postamble();

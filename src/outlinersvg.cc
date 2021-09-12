@@ -18,7 +18,11 @@ SvgCreator::SvgCreator(const char* fileName,
                        float xStart,
                        float yStart,
                        float xFactor,
-                       float yFactor) {
+                       float yFactor,
+                       unsigned int linewidth) {
+  assert(xSize > 0);
+  assert(ySize > 0);
+  assert(linewidth > 0);
   this->file.open(fileName);
   this->xSize = xSize;
   this->ySize = ySize;
@@ -26,8 +30,9 @@ SvgCreator::SvgCreator(const char* fileName,
   this->yStart = yStart;
   this->xFactor = xFactor;
   this->yFactor = yFactor;
-  debugf("coordinate normalization starts (%.2f,%.2f) factors (%f,%f)",
-         xStart, yStart, xFactor, yFactor);
+  this->linewidth = linewidth;
+  debugf("coordinate normalization starts (%.2f,%.2f) factors (%f,%f) linewidth %u",
+         xStart, yStart, xFactor, yFactor, linewidth);
   preamble();
 }
 
@@ -51,7 +56,7 @@ SvgCreator::line(float fromX,
 
   file << "<line x1=\"" << fromXInt << "\" y1=\"" << fromYInt << "\"";
   file << "<line x2=\"" << toXInt << "\" y2=\"" << toYInt << "\"";
-  file << " style=\"stroke:black;stroke-width=1\" />\n";
+  file << " style=\"stroke:black;stroke-width=" << linewidth << "\" />\n";
 }
   
 void
@@ -60,7 +65,14 @@ SvgCreator::pixel(float x,
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
-  file << "<rect x=\"" << xInt << "\" y=\"" << yInt << "\" width=\"1\" height=\"1\" fill=\"none\" stroke=\"black\" />\n";
+  file << "<rect x=\"" << xInt << "\" y=\"" << yInt << "\"";
+  file << " width=\"" << linewidth << "\" height=\"" << linewidth << "\"";
+  if (linewidth == 1) {
+    file << " fill=\"none\"";
+  } else {
+    file << " fill=\"black\"";
+  }
+  file << " stroke=\"black\" />\n";
 }
 
 void

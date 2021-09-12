@@ -48,6 +48,7 @@ static HighPrecisionVector3D boundingBoxStart = {0,0,0};
 static HighPrecisionVector3D boundingBoxEnd = {0,0,0};
 static enum outlinerdirection direction = dir_z;
 static enum outlineralgorithm algorithm = alg_pixel;
+static unsigned int linewidth =  outlinerdefaultlinewidth;
 static unsigned int tiles = outlinertiledivision;
 static unsigned int holethreshold = 0;
 
@@ -89,6 +90,14 @@ main(int argc, char** argv) {
      } else if (strcmp(argv[1],"--borderactual") == 0) {
         algorithm = alg_borderactual;
         debugf("algorithm now %u", algorithm);
+    } else if (strcmp(argv[1],"--linewidth") == 0 && argc > 2) {
+      int num = atoi(argv[2]);
+      if (num <= 0) {
+        errf("Line width value needs to be a positive number, %s given", argv[2]);
+        return(1);
+      }
+      linewidth = num;
+      argc--;argv++;
     } else if (strcmp(argv[1],"--holethreshold") == 0 && argc > 2) {
       int num = atoi(argv[2]);
       if (num < 0 || num > 100) {
@@ -206,7 +215,8 @@ main(int argc, char** argv) {
   SvgCreator svg(output,
                  xSizeInt,ySizeInt,
                  xOutputStart,yOutputStart,
-                 xFactor,yFactor);
+                 xFactor,yFactor,
+                 linewidth);
   
   // Check that we were able to open the file
   if (!svg.ok()) {
@@ -266,6 +276,7 @@ processHelp(void) {
   std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave walls, with pixels.\n";
   std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave walls, with lines.\n";
   std::cout << "  --borderactual           Use the border-only drawing algorithm, draws the cave walls using model triangle sides.\n";
+  std::cout << "    --linewidth n            Set the width of the lines in output picture.\n";
   std::cout << "  --holethreshold n        Ignore holes in the model if they are n or less pixels.\n";
   std::cout << "  --tiling n               Optimize search process with n x n tiles. ";
   std::cout <<                            "Default is " << outlinertiledivision << ",\n";
