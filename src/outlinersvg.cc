@@ -38,6 +38,7 @@ SvgCreator::SvgCreator(const char* fileName,
   pixels = 0;
   originalLines = 0;
   finalLines = 0;
+  joins = 0;
   
   debugf("coordinate normalization starts (%.2f,%.2f) factors (%f,%f) linewidth %f",
          xStart, yStart, xFactor, yFactor, linewidth);
@@ -135,12 +136,28 @@ SvgCreator::addLine(unsigned int x1,
         match->points[0].y = y1;
         unsigned int newIndex = lineTableIndex(x1,y1);
         lineTableEntryLink(match,newIndex);
+        // Check if the newly extended line can be joined with an existing one
+        struct OutlinerSvgLine* tojoin = 0;
+        if ((tojoin = matchingLineJoin(match,x1,y1,1)) != 0) {
+          deepdebugf("going to merge start of two lines of %u and %u points",
+                     match->nPoints, tojoin->nPoints);
+          assert(match->nPoints + tojoin->nPoints <= OutlinerSvgMaxLinePoints);
+          lineTableJoin(match,tojoin,1,newIndex);
+        }
       } else {
         match->points[match->nPoints].x = x2;
         match->points[match->nPoints].y = y2;
         match->nPoints++;
         unsigned int newIndex = lineTableIndex(x2,y2);
         lineTableEntryLink(match,newIndex);
+        // Check if the newly extended line can be joined with an existing one
+        struct OutlinerSvgLine* tojoin = 0;
+        if ((tojoin = matchingLineJoin(match,x2,y2,0)) != 0) {
+          deepdebugf("going to merge two lines of %u and %u points",
+                     match->nPoints, tojoin->nPoints);
+          assert(match->nPoints + tojoin->nPoints <= OutlinerSvgMaxLinePoints);
+          lineTableJoin(match,tojoin,0,newIndex);
+        }
       }
       assert(match->refCount == 2);
     }
@@ -295,6 +312,16 @@ SvgCreator::matchingLineAux(unsigned int x,
                             unsigned int y,
                             bool lookForTailMatch,
                             unsigned int index) {
+  return(matchingLineAuxAvoid(0,x,y,lookForTailMatch,
+                              index));
+}
+
+struct OutlinerSvgLine*
+SvgCreator::matchingLineAuxAvoid(struct OutlinerSvgLine* avoid,
+                                 unsigned int x,
+                                 unsigned int y,
+                                 bool lookForTailMatch,
+                                 unsigned int index) {
   struct OutlinerSvgLineList* list = lineTable[index];
   deepdeepdebugf("matchingLineAux loop");
   while (list != 0) {
@@ -312,8 +339,13 @@ SvgCreator::matchingLineAux(unsigned int x,
     unsigned int first = 0;
     unsigned int last = line->nPoints - 1;
 
-    // Bail out if the line is already at max capacity
-    if (line->nPoints < OutlinerSvgMaxLinePoints) {
+    // Bail out if
+    //
+    //    1/ the line is already at max capacity or
+    //    2/ we are trying to avoid the line object in this entry
+    //
+    
+    if (line != avoid && line->nPoints < OutlinerSvgMaxLinePoints) {
     
       // Is there a match here?
       if (!lookForTailMatch && line->points[first].x == x && line->points[first].y == y) return(line);
@@ -333,6 +365,97 @@ SvgCreator::matchingLineAux(unsigned int x,
 
   // Not found
   return(0);
+}
+
+struct OutlinerSvgLine*
+SvgCreator::matchingLineJoin(struct OutlinerSvgLine* target,
+                             unsigned int x,
+                             unsigned int y,
+                             bool fromStart) {
+  assert(target != 0);
+  assert(fromStart == 0 || fromStart == 1);
+  unsigned int searchIndex = lineTableIndex(x,y);
+  assert(searchIndex < lineTableSize);
+  struct OutlinerSvgLine* result = 0;
+  if (fromStart) {
+    // See if we can find a line that ends with (x,y)
+    if ((result = matchingLineAuxAvoid(target,x,y,1,searchIndex)) != 0) {
+      return(result);
+    }
+  } else {
+    // See if we can find a line that starts with (x,y)
+    if ((result = matchingLineAuxAvoid(target,x,y,0,searchIndex)) != 0) {
+      return(result);
+    }
+  }
+
+  // Not found
+  return(0);
+}
+
+void
+SvgCreator::lineTableJoin(struct OutlinerSvgLine* entry,
+                          struct OutlinerSvgLine* join,
+                          bool fromStart,
+                          unsigned int entryIndex) {
+
+  // Sanity checks
+  assert(entry != 0);
+  assert(join != 0);
+  assert(entry != join);
+  assert(fromStart == 0 || fromStart == 1);
+  assert(entryIndex < lineTableSize);
+  assert(entry->nPoints + join->nPoints <= OutlinerSvgMaxLinePoints);
+  assert(entry->refCount == 2);
+  deepdebugf("join point 1 entry ref count %u", entry->refCount);
+  assert(join->refCount == 2);
+  
+  // Add the entries
+  if (fromStart) {
+    deepdebugf("join entry adds from start");
+    for (unsigned int j = entry->nPoints; j > 0; j--) {
+      entry->points[j-1+join->nPoints] = entry->points[j-1];
+    }
+    for (unsigned int k = 0; k < join->nPoints; k++) {
+      entry->points[k] = join->points[k];
+    }
+  } else {
+    deepdebugf("join entry adds to end");
+    for (unsigned int i = 0; i < join->nPoints; i++) {
+      entry->points[entry->nPoints + i] = join->points[i];
+    }
+  }
+  entry->nPoints += join->nPoints;
+  deepdebugf("join point 2 entry ref count %u", entry->refCount);
+  
+  // Unlink the join that has now been copied to the entry
+  deepdebugf("join unlink join twice");
+  deepdebugf("join point 3 entry ref count %u", entry->refCount);
+  lineTableEntryUnlink(join,lineTableIndex(join->points[0].x,join->points[0].y));
+  deepdebugf("join point 4 entry ref count %u", entry->refCount);
+  lineTableEntryUnlink(join,lineTableIndex(join->points[join->nPoints-1].x,join->points[join->nPoints-1].y));
+  deepdebugf("join point 5 entry ref count %u", entry->refCount);
+  assert(join->refCount == 0);
+  delete join;
+  deepdebugf("join point 6 entry ref count %u", entry->refCount);
+  
+  // Unlink the old index in the entry and link to the new one
+  deepdebugf("join point 7 entry ref count %u", entry->refCount);
+  deepdebugf("join unlink entry");
+  assert(entry->refCount == 2);
+  lineTableEntryUnlink(entry,entryIndex);
+  assert(entry->refCount == 1);
+  unsigned int newIndex = (fromStart ?
+                           lineTableIndex(entry->points[0].x,entry->points[0].y) :
+                           lineTableIndex(entry->points[entry->nPoints-1].x,entry->points[entry->nPoints-1].y));
+  deepdebugf("join link entry");
+  lineTableEntryLink(entry,newIndex);
+  deepdebugf("join point 8 entry ref count %u", entry->refCount);
+  assert(entry->refCount == 2);
+  deepdebugf("join point 9 entry ref count %u", entry->refCount);
+
+  // Statistics
+  joins++;
 }
 
 void
@@ -383,6 +506,7 @@ SvgCreator::lineTableEntryUnlink(struct OutlinerSvgLine* entry,
   assert(item->line == entry);
   *list = item->next;
   entry->refCount--;
+  delete item;
 }
 
 void
@@ -493,6 +617,7 @@ SvgCreator::lineTableInfos(void) {
         lineTableMaxListLength,
         (lineTableMaxListLength * 100.0) / (lineTableEntries * 1.0),
         lineTableMaxListLengthIndex);
+  infof("    long line joins: %u", joins);
 }
 
 void

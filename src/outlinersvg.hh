@@ -75,6 +75,7 @@ class SvgCreator {
   unsigned int pixels;
   unsigned int originalLines;
   unsigned int finalLines;
+  unsigned int joins;
 
   unsigned int lineTableSize;
   struct OutlinerSvgLineList** lineTable;
@@ -100,10 +101,23 @@ class SvgCreator {
                                        unsigned int& matchIndex,
                                        bool& matchesStart,
                                        bool& reverseOriginal);
+  struct OutlinerSvgLine* matchingLineJoin(struct OutlinerSvgLine* target,
+                                           unsigned int x,
+                                           unsigned int y,
+                                           bool fromStart);
   struct OutlinerSvgLine* matchingLineAux(unsigned int x,
                                           unsigned int y,
                                           bool lookForTailMatch,
                                           unsigned int index);
+  struct OutlinerSvgLine* matchingLineAuxAvoid(struct OutlinerSvgLine* avoid,
+                                               unsigned int x,
+                                               unsigned int y,
+                                               bool lookForTailMatch,
+                                               unsigned int index);
+  void lineTableJoin(struct OutlinerSvgLine* entry,
+                     struct OutlinerSvgLine* join,
+                     bool fromStart,
+                     unsigned int entryIndex);
   void lineTableEntryAdd(struct OutlinerSvgLine* entry);
   void lineTableEntryLink(struct OutlinerSvgLine* entry,
                           unsigned int index);
@@ -116,7 +130,7 @@ class SvgCreator {
   unsigned int lineTableIndex(unsigned int x,
                               unsigned int y);
   void lineTableOutput(void);
-   void lineTableInfos(void);
+  void lineTableInfos(void);
  };
 
 #endif // SVG_HH
