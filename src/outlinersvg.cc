@@ -180,13 +180,31 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
     file << "<line x1=\"" << line.points[0].x << "\" y1=\"" << line.points[0].y << "\"";
     file << " x2=\"" << line.points[1].x << "\" y2=\"" << line.points[1].y << "\"";
   } else {
-    file << "<polyline points=\"";
+    if (smooth) {
+      file << "<path d=\"";
+    } else {
+      file << "<polyline points=\"";
+    }
     for (unsigned int i = 0; i < line.nPoints; i++) {
-      file << line.points[i].x << "," << line.points[i].y <<  " ";
+      unsigned int x = line.points[i].x;
+      unsigned int y = line.points[i].y;
+      if (smooth) {
+        if (i == 0) {
+          file << "M" << x << " " << y <<  " ";
+        } else {
+          file << "S" << x << " " << y <<  " ";
+        }
+      } else {
+        file << x << "," << y <<  " ";
+      }
     }
     file << "\"";
   }
-  file << " style=\"fill:none;stroke:black;stroke-width=" << linewidth << "\" />\n";
+  if (smooth) {
+    file << " fill=\"none\" stroke=\"black\" stroke-width=\"" << linewidth << "\" />\n";
+  } else {
+    file << " style=\"fill:none;stroke:black;stroke-width=" << linewidth << "\" />\n";
+  }
   finalLines++;
 }
 

@@ -49,6 +49,8 @@ static HighPrecisionVector3D boundingBoxEnd = {0,0,0};
 static enum outlinerdirection direction = dir_z;
 static enum outlineralgorithm algorithm = alg_pixel;
 static float linewidth =  outlinerdefaultlinewidth;
+static bool smooth = 0;
+static bool mergedLines = 1;
 static unsigned int tiles = outlinertiledivision;
 static unsigned int holethreshold = 0;
 
@@ -98,6 +100,10 @@ main(int argc, char** argv) {
       }
       linewidth = num;
       argc--;argv++;
+    } else if (strcmp(argv[1],"--smooth") == 0) {
+      smooth = 1;
+    } else if (strcmp(argv[1],"--jagged") == 0) {
+      smooth = 0;
     } else if (strcmp(argv[1],"--holethreshold") == 0 && argc > 2) {
       int num = atoi(argv[2]);
       if (num < 0 || num > 100) {
@@ -218,7 +224,7 @@ main(int argc, char** argv) {
                  xSizeInt,ySizeInt,
                  xOutputStart,yOutputStart,
                  xFactor,yFactor,
-                 1,1,
+                 smooth,mergedLines,
                  linewidth);
   
   // Check that we were able to open the file
@@ -280,6 +286,8 @@ processHelp(void) {
   std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave walls, with lines.\n";
   std::cout << "  --borderactual           Use the border-only drawing algorithm, draws the cave walls using model triangle sides.\n";
   std::cout << "  --linewidth n            Set the width of the lines in output picture. The value can be a decimal number.\n";
+  std::cout << "  --smooth                 Set the line drawings use smooth curves.\n";
+  std::cout << "  --jagged                 Set the line drawings use hard lines (default).\n";
   std::cout << "  --holethreshold n        Ignore holes in the model if they are n or less pixels.\n";
   std::cout << "  --tiling n               Optimize search process with n x n tiles. ";
   std::cout <<                            "Default is " << outlinertiledivision << ",\n";
