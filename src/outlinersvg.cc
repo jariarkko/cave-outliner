@@ -19,6 +19,8 @@ SvgCreator::SvgCreator(const char* fileName,
                        float yStart,
                        float xFactor,
                        float yFactor,
+                       bool smooth,
+                       bool mergedLines,
                        float linewidth) {
   assert(xSize > 0);
   assert(ySize > 0);
@@ -30,15 +32,32 @@ SvgCreator::SvgCreator(const char* fileName,
   this->yStart = yStart;
   this->xFactor = xFactor;
   this->yFactor = yFactor;
+  this->smooth = smooth;
+  this->mergedLines = mergedLines;
   this->linewidth = linewidth;
+  pixels = 0;
+  originalLines = 0;
+  finalLines = 0;
+  
   debugf("coordinate normalization starts (%.2f,%.2f) factors (%f,%f) linewidth %f",
          xStart, yStart, xFactor, yFactor, linewidth);
+
+  lineTableInit();
   preamble();
 }
 
 SvgCreator::~SvgCreator() {
+  lineTableOutput();
   postamble();
+  unsigned long bytes = file.tellp();
   file.close();
+  infof("  image statistics");
+  infof("    file size %.1f KB", (bytes / 1000.0));
+  infof("    image has %u pixels", pixels);
+  infof("    image has %u lines (from originally %u line components)", finalLines, originalLines);
+  lineTableInfos();
+  lineTableDeinit();
+  lineTable = 0;
 }
 
 void
@@ -46,6 +65,12 @@ SvgCreator::line(float fromX,
                  float fromY,
                  float toX,
                  float toY) {
+
+  if (originalLines == 0 && pixels == 0) {
+    infof("  image size %u x %u", xSize, ySize);
+  }
+  originalLines++;
+  
   unsigned int fromXInt;
   unsigned int fromYInt;
   coordinateNormalization(fromX,fromY,fromXInt,fromYInt);
@@ -54,11 +79,100 @@ SvgCreator::line(float fromX,
   unsigned int toYInt;
   coordinateNormalization(toX,toY,toXInt,toYInt);
 
-  file << "<line x1=\"" << fromXInt << "\" y1=\"" << fromYInt << "\"";
-  file << " x2=\"" << toXInt << "\" y2=\"" << toYInt << "\"";
-  file << " style=\"stroke:black;stroke-width=" << linewidth << "\" />\n";
+  addLine(fromXInt,fromYInt,toXInt,toYInt);
 }
-  
+
+void
+SvgCreator::addLine(unsigned int x1,
+                    unsigned int y1,
+                    unsigned int x2,
+                    unsigned int y2) {
+  if (mergedLines) {
+    unsigned int matchIndex;
+    bool isStart;
+    bool reverseOriginal;
+    struct OutlinerSvgLine* match =
+      matchingLine(x1,y1,
+                   x2,y2,
+                   matchIndex,
+                   isStart,
+                   reverseOriginal);
+    if (match == 0) {
+      deepdebugf("no line match for (%u,%u)-(%u,%u)", x1, y1, x2, y2);
+      struct OutlinerSvgLine* entry = new struct OutlinerSvgLine;
+      if (entry == 0) {
+        errf("Cannot allocate a line entry");
+        exit(1);
+      }
+      entry->refCount = 0;
+      entry->printed = 0;
+      entry->nPoints = 2;
+      entry->points[0].x = x1;
+      entry->points[0].y = y1;
+      entry->points[1].x = x2;
+      entry->points[1].y = y2;
+      lineTableEntryAdd(entry);
+      assert(entry->refCount == 2);
+    } else {
+      assert(match->nPoints > 0);
+      assert(match->nPoints < OutlinerSvgMaxLinePoints);
+      assert(match->refCount == 2);
+      deepdebugf("line match for (%u,%u)-(%u,%u) in index %u start %u reverse %u",
+                 x1, y1, x2, y2, matchIndex, isStart, reverseOriginal);
+      lineTableEntryUnlink(match,matchIndex);
+      assert(match->refCount == 1);
+      if (reverseOriginal) {
+        unsigned int tmp;
+        tmp = x1; x1 = x2; x2 = tmp;
+        tmp = y1; y1 = y2; y2 = tmp;
+      }
+      if (isStart) {
+        for (unsigned int j = match->nPoints; j > 0; j--) {
+          match->points[j] = match->points[j-1];
+        }
+        match->nPoints++;
+        match->points[0].x = x1;
+        match->points[0].y = y1;
+        unsigned int newIndex = lineTableIndex(x1,y1);
+        lineTableEntryLink(match,newIndex);
+      } else {
+        match->points[match->nPoints].x = x2;
+        match->points[match->nPoints].y = y2;
+        match->nPoints++;
+        unsigned int newIndex = lineTableIndex(x2,y2);
+        lineTableEntryLink(match,newIndex);
+      }
+      assert(match->refCount == 2);
+    }
+  } else {
+    deepdebugf("emitting line directly");
+    struct OutlinerSvgLine line;
+    line.nPoints = 2;
+    line.points[0].x = x1;
+    line.points[0].y = y1;
+    line.points[1].x = x2;
+    line.points[1].y = y2;
+    emitLine(line);
+  }
+}
+
+void
+SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
+  assert(line.nPoints >= 2);
+  if (line.nPoints == 2) {
+    file << "<line x1=\"" << line.points[0].x << "\" y1=\"" << line.points[0].y << "\"";
+    file << " x2=\"" << line.points[1].x << "\" y2=\"" << line.points[1].y << "\"";
+  } else {
+    file << "<polyline points=\"";
+    for (unsigned int i = 0; i < line.nPoints; i++) {
+      file << line.points[i].x << "," << line.points[i].y <<  " ";
+    }
+    file << "\"";
+  }
+  file << " style=\"fill:none;stroke:black;stroke-width=" << linewidth << "\" />\n";
+  finalLines++;
+}
+
 void
 SvgCreator::pixel(float x,
                   float y) {
@@ -73,6 +187,7 @@ SvgCreator::pixel(float x,
     file << " fill=\"black\"";
   }
   file << " stroke=\"black\" />\n";
+  pixels++;
 }
 
 void
@@ -95,6 +210,10 @@ SvgCreator::ok() {
   return(xSize > 0 && ySize > 0 && file.good());
 }
   
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Post and preambles /////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 void
 SvgCreator::preamble() {
   // Basics for all SVGs
@@ -105,7 +224,8 @@ SvgCreator::preamble() {
   file << "     width=\"" << xSize << "\" height=\"" << ySize << "\">\n";
 
   // Make the background white
-  file << "<rect x=\"0\" y=\"0\" width=\"" << xSize << "\" height=\"" << ySize << "\" fill=\"white\" stroke=\"white\" stroke-width=\"0\"/>\n";
+  file << "<rect x=\"0\" y=\"0\" width=\"" << xSize << "\" height=\"" << ySize << "\"";
+  file << " fill=\"white\" stroke=\"white\" stroke-width=\"0\"/>\n";
 }
 
 void
@@ -113,3 +233,284 @@ SvgCreator::postamble() {
   // Just close the full SVG XML
   file << "</svg>\n";
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Line table management //////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+struct OutlinerSvgLine*
+SvgCreator::matchingLine(unsigned int x1,
+                         unsigned int y1,
+                         unsigned int x2,
+                         unsigned int y2,
+                         unsigned int& matchIndex,
+                         bool& matchesStart,
+                         bool& reverseOriginal) {
+
+  unsigned int head = lineTableIndex(x1,y1);
+  unsigned int tail = lineTableIndex(x2,y2);
+  struct OutlinerSvgLine* result = 0;
+
+  // See if we can find a line that ends in (x1,y1)
+  if ((result = matchingLineAux(x1,y1,1,head)) != 0) {
+    matchIndex = head;
+    matchesStart = 0;
+    reverseOriginal = 0;
+    return(result);
+  }
+
+  // See if we can find a line that starts with (x2,y2)
+  if ((result = matchingLineAux(x2,y2,0,tail)) != 0) {
+    matchIndex = tail;
+    matchesStart = 1;
+    reverseOriginal = 0;
+    return(result);
+  }
+  
+  // See if we can find a line that ends in (x2,y2)
+  if ((result = matchingLineAux(x2,y2,1,tail)) != 0) {
+    matchIndex = tail;
+    matchesStart = 0;
+    reverseOriginal = 1;
+    return(result);
+  }
+
+  // See if we can find a line that starts with (x1,y1)
+  if ((result = matchingLineAux(x1,y1,0,head)) != 0) {
+    matchIndex = head;
+    matchesStart = 1;
+    reverseOriginal = 1;
+    return(result);
+  }
+  
+  // Nothing found.
+  matchesStart = 0;
+  matchIndex = 0;
+  reverseOriginal = 0;
+  return(0);
+}
+
+struct OutlinerSvgLine*
+SvgCreator::matchingLineAux(unsigned int x,
+                            unsigned int y,
+                            bool lookForTailMatch,
+                            unsigned int index) {
+  struct OutlinerSvgLineList* list = lineTable[index];
+  deepdeepdebugf("matchingLineAux loop");
+  while (list != 0) {
+
+    // Sanity checks
+    assert(list != 0);
+    assert(list->line != 0);
+    
+    // Pick up the entry
+    struct OutlinerSvgLine* line = list->line;
+    assert(line->nPoints >= 2);
+    assert(line->nPoints <= OutlinerSvgMaxLinePoints);
+    assert(line->refCount > 0);
+    assert(line->refCount <= 2);
+    unsigned int first = 0;
+    unsigned int last = line->nPoints - 1;
+
+    // Bail out if the line is already at max capacity
+    if (line->nPoints < OutlinerSvgMaxLinePoints) {
+    
+      // Is there a match here?
+      if (!lookForTailMatch && line->points[first].x == x && line->points[first].y == y) return(line);
+      if (lookForTailMatch && line->points[last].x == x && line->points[last].y == y) return(line);
+
+    }
+    
+    // Move to the next
+    assert(list != 0);
+    assert(list != list->next);
+    assert(list->next == 0 || list != list->next->next);
+    assert(list->next == 0 || list->next->next == 0 || list != list->next->next->next);
+    list = list->next;
+    //deepdeepdebugf("moved to next %lx", list);
+    
+  }
+
+  // Not found
+  return(0);
+}
+
+void
+SvgCreator::lineTableEntryAdd(struct OutlinerSvgLine* entry) {
+  assert(entry != 0);
+  assert(entry->nPoints >= 2);
+  assert(entry->nPoints <= OutlinerSvgMaxLinePoints);
+  assert(entry->refCount == 0);
+  assert(entry->refCount <= 2);
+  unsigned int head;
+  unsigned int tail;
+  lineTableIndexes(*entry,head,tail);
+  lineTableEntryLink(entry,head);
+  lineTableEntryLink(entry,tail);
+  assert(entry->refCount == 2);
+}
+
+void
+SvgCreator::lineTableEntryLink(struct OutlinerSvgLine* entry,
+                               unsigned int index) {
+  assert(index < lineTableSize);
+  struct OutlinerSvgLineList* listItem = new struct OutlinerSvgLineList;
+  if (listItem == 0) {
+    errf("Cannot allocate a list item");
+    exit(1);
+  }
+  listItem->line = entry;
+  listItem->next = lineTable[index];
+  lineTable[index] = listItem;
+  entry->refCount++;
+  assert(entry->refCount <= 2);
+}
+
+void
+SvgCreator::lineTableEntryUnlink(struct OutlinerSvgLine* entry,
+                                 unsigned int index) {
+  assert(entry != 0);
+  assert(entry->refCount > 0);
+  assert(entry->refCount <= 2);
+  assert(index < lineTableSize);
+  struct OutlinerSvgLineList** list = &lineTable[index];
+  deepdeepdebugf("unlink loop");
+  while ((*list)->line != entry) {
+    list = &(*list)->next;
+    assert(*list != 0);
+  }
+  struct OutlinerSvgLineList* item = *list;
+  assert(item->line == entry);
+  *list = item->next;
+  entry->refCount--;
+}
+
+void
+SvgCreator::lineTableIndexes(const struct OutlinerSvgLine& line,
+                             unsigned int& head,
+                             unsigned int& tail) {
+  assert(line.nPoints >= 2);
+  assert(line.nPoints <= OutlinerSvgMaxLinePoints);
+  assert(line.refCount <= 2);
+  unsigned int x1 = line.points[0].x;
+  unsigned int y1 = line.points[0].y;
+  unsigned int xe = line.points[line.nPoints-1].x;
+  unsigned int ye = line.points[line.nPoints-1].y;
+  assert(x1 <= xSize);
+  assert(y1 <= ySize);
+  assert(xe <= xSize);
+  assert(ye <= ySize);
+  head = lineTableIndex(x1,y1);
+  tail = lineTableIndex(xe,ye);
+}
+
+unsigned int
+SvgCreator::lineTableIndex(unsigned int x,
+                           unsigned int y) {
+  assert(x <= xSize);
+  assert(y <= ySize);
+  unsigned int result = x + y;
+  assert(result < lineTableSize);
+  return(result);
+}
+
+void
+SvgCreator::lineTableEntryDelete(struct OutlinerSvgLineList*& entry) {
+  assert(entry != 0);
+  assert(entry->line != 0);
+  assert(entry->line->nPoints >= 2);
+  assert(entry->line->nPoints <= OutlinerSvgMaxLinePoints);
+  assert(entry->line->refCount > 0);
+  struct OutlinerSvgLineList* oldPointer = entry;
+  entry = entry->next;
+  oldPointer->line->refCount--;
+  if (oldPointer->line->refCount == 0) {
+    delete oldPointer->line;
+  }
+  oldPointer->line = 0;
+  delete oldPointer;
+}
+
+void
+SvgCreator::lineTableInit(void) {
+  deepdebugf("line table init");
+  lineTableSize = (xSize+1) + (ySize+1);
+  lineTable = new struct OutlinerSvgLineList* [lineTableSize];
+  if  (lineTable == 0) {
+    errf("Cannot allocate line table of size %u", lineTableSize);
+    exit(1);
+  }
+  for (unsigned int i = 0; i < lineTableSize; i++) {
+    lineTable[i] = 0;
+  }
+  deepdebugf("line table init done");
+}
+
+void
+SvgCreator::lineTableDeinit(void) {
+  deepdebugf("line table deinit");
+  for (unsigned int i = 0; i < lineTableSize; i++) {
+    assert(lineTable != 0);
+    deepdeepdebugf("deinit loop");
+    while (lineTable[i] != 0) {
+      lineTableEntryDelete(lineTable[i]);
+    }
+  }
+  deepdebugf("line table deinit done");
+}
+
+void
+SvgCreator::lineTableInfos(void) {
+  unsigned int lineLines = 0;
+  unsigned int lineSumPoints = 0;
+  unsigned int lineLongest = 0;
+  unsigned int lineTableEntries = 0;
+  unsigned int lineTableMaxListLength = 0;
+  unsigned int lineTableMaxListLengthIndex = 0;
+  assert(lineTable != 0);
+  for (unsigned int i = 0; i < lineTableSize; i++) {
+    unsigned int length = 0;
+    struct OutlinerSvgLineList* ptr = lineTable[i];
+    deepdeepdebugf("infos loop");
+    while (ptr != 0) {
+      lineTableEntries++;
+      lineLines++;
+      lineSumPoints += ptr->line->nPoints;
+      if (ptr->line->nPoints > lineLongest) lineLongest = ptr->line->nPoints;
+      length++;
+      ptr = ptr->next;
+    }
+    if (length > lineTableMaxListLength) {
+      lineTableMaxListLength = length;
+      lineTableMaxListLengthIndex = i;
+    }
+  }
+  infof("    longest line has %u points (on average %.1f points)",
+        lineLongest,
+        (lineSumPoints / 2.0)  / (lineLines / 2.0));
+  infof("    line table has %u entries", lineTableEntries);
+  infof("    line table entries longest list has %u entries (%.2f%% of all, at index %u)",
+        lineTableMaxListLength,
+        (lineTableMaxListLength * 100.0) / (lineTableEntries * 1.0),
+        lineTableMaxListLengthIndex);
+}
+
+void
+SvgCreator::lineTableOutput(void) {
+  deepdebugf("line table output");
+  assert(lineTable != 0);
+  for (unsigned int i = 0; i < lineTableSize; i++) {
+    struct OutlinerSvgLineList* ptr = lineTable[i];
+    deepdeepdebugf("output loop");
+    while (ptr != 0) {
+      assert(ptr->line != 0);
+      if (!ptr->line->printed) {
+        emitLine(*(ptr->line));
+        ptr->line->printed = 1;
+      }
+      ptr = ptr->next;
+    }
+  }
+  deepdebugf("line table output done");
+}
+

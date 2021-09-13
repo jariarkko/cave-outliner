@@ -218,6 +218,7 @@ main(int argc, char** argv) {
                  xSizeInt,ySizeInt,
                  xOutputStart,yOutputStart,
                  xFactor,yFactor,
+                 1,1,
                  linewidth);
   
   // Check that we were able to open the file
