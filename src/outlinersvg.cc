@@ -190,7 +190,7 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
       unsigned int y = line.points[i].y;
       if (smooth) {
         if (i == 0) {
-          file << "M" << x << " " << y <<  " ";
+          file << x << " " << y <<  " ";
         } else {
           file << "S" << x << " " << y <<  " ";
         }

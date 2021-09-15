@@ -17,6 +17,7 @@
 // Function prototypes ////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+static void utilityTests(void);
 static void vectorTests(void);
 static void detTests(void);
 static void boundingBoxTests(void);
@@ -24,6 +25,7 @@ static void triangleBoundingBoxTests(void);
 static void boundingBoxIntersectionTests(void);
 static void pointTests(void);
 static void lineTests(void);
+static void lineIntersectionTests(void);
 static void triangleTests(void);
 static void sortVectorsX2D(const aiVector2D* a,
                            const aiVector2D* b,
@@ -56,7 +58,20 @@ static void sortVectorsZ3D(const aiVector3D* a,
                            const aiVector3D** nth1,
                            const aiVector3D** nth2);
 
- ///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Local macro utilities //////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+# define betweenanyorder(a,b,c)    ((a) < (c) ? between(a,b,c) : between(c,b,a))
+# define between(a,b,c)            ((a) <= (b) && (b) <= (c))
+# define overlapanyorder(a,b,c,d)  (((a) <= (b) && (c) <= (d)) ? overlap(a,b,c,d) :         \
+                                    (((b) <= (a) && (c) <= (d)) ? overlap(b,a,c,d) :        \
+                                     (((b) <= (a) && (d) <= (c)) ? overlap(b,a,d,c) :       \
+                                      overlap(a,b,d,c))))
+# define overlap(a,b,c,d)          ((((a) <= (c)) && ((c) <= (b))) ||                       \
+                                    (((c) <= (a)) && ((a) <= (d))))
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 // Math functions /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -473,7 +488,6 @@ boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
                          HighPrecisionVector3D& boundingBox2End) {
   // Following the algorithm from https://math.stackexchange.com/questions/2651710/simplest-way-to-determine-if-two-3d-boxes-intersect
 
-# define between(a,b,c)  ((a) <= (b) && (b) <= (c))
   bool xOverlap = (between(boundingBox1Start.x,boundingBox2Start.x,boundingBox1End.x) ||
                    between(boundingBox1Start.x,boundingBox2End.x,boundingBox1End.x) ||
                    between(boundingBox2Start.x,boundingBox1Start.x,boundingBox2End.x) ||
@@ -489,6 +503,116 @@ boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
                    between(boundingBox2Start.z,boundingBox1Start.z,boundingBox2End.z) ||
                    between(boundingBox2Start.z,boundingBox1End.z,boundingBox2End.z));
   if (!zOverlap) return(0);
+  return(1);
+}
+
+bool
+lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
+                             const aiVector2D& lineEnd,
+                             const aiVector2D& verticalLineStart,
+                             const aiVector2D& verticalLineEnd,
+                             aiVector2D& intersectionPoint) {
+  assert(verticalLineStart.x == verticalLineEnd.x);
+
+  // Fetch basic values
+  outlinerhighprecisionreal verticalStartY = outlinermin(verticalLineStart.y,verticalLineEnd.y);
+  outlinerhighprecisionreal verticalEndY = outlinermax(verticalLineStart.y,verticalLineEnd.y);
+  outlinerhighprecisionreal verticalX = verticalLineStart.x;
+  
+  // Order line points such that X grows from start to end
+  outlinerhighprecisionreal lineStartX;
+  outlinerhighprecisionreal lineStartY;
+  outlinerhighprecisionreal lineEndX;
+  outlinerhighprecisionreal lineEndY;
+  if (lineStart.x <= lineEnd.x) {
+    lineStartX = lineStart.x;
+    lineStartY = lineStart.y;
+    lineEndX = lineEnd.x;
+    lineEndY = lineEnd.y;
+  } else {
+    lineStartX = lineEnd.x;
+    lineStartY = lineEnd.y;
+    lineEndX = lineStart.x;
+    lineEndY = lineStart.y;
+  }
+  
+  // Calculate line equation
+  //
+  //    y(x) = lineStartY + (x - lineStartX) * (equationTotalDifferenceY / equationTotalDifferenceX)
+  //
+  outlinerhighprecisionreal equationBaseY = lineStartY;
+  outlinerhighprecisionreal equationTotalDifferenceY = lineEndY - lineStartY; // positive or negative
+  outlinerhighprecisionreal equationTotalDifferenceX = lineEndX - lineStartX; // positive
+  outlinerhighprecisionreal equationFactor = equationTotalDifferenceY / equationTotalDifferenceX; // positive or negative
+  outlinerhighprecisionreal verticalLineDifferenceX = verticalX - lineStartX; // positive or negative
+
+  // Check if vertical line is in the range on X
+  if (!between(lineStartX,verticalX,lineEndX)) return(0);
+
+  // Calculate resulting Y at vertical line position
+  outlinerhighprecisionreal lineY = equationBaseY + verticalLineDifferenceX * equationFactor;
+
+  // Check if the resulting position is within the vertical line Y range
+  if (!between(verticalStartY,lineY,verticalEndY)) return(0);
+
+  // Lines intersect! Set the intersection point
+  intersectionPoint.x = verticalX;
+  intersectionPoint.y = lineY;
+  return(1);
+}
+
+bool
+lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
+                               const aiVector2D& lineEnd,
+                               const aiVector2D& horizontalLineStart,
+                               const aiVector2D& horizontalLineEnd,
+                               aiVector2D& intersectionPoint) {
+  assert(horizontalLineStart.y == horizontalLineEnd.y);
+  
+  // Fetch basic values
+  outlinerhighprecisionreal horizontalStartX = outlinermin(horizontalLineStart.x,horizontalLineEnd.x);
+  outlinerhighprecisionreal horizontalEndX = outlinermax(horizontalLineStart.x,horizontalLineEnd.x);
+  outlinerhighprecisionreal horizontalY = horizontalLineStart.y;
+  
+  // Order line points such that Y grows from start to end
+  outlinerhighprecisionreal lineStartX;
+  outlinerhighprecisionreal lineStartY;
+  outlinerhighprecisionreal lineEndX;
+  outlinerhighprecisionreal lineEndY;
+  if (lineStart.y <= lineEnd.y) {
+    lineStartX = lineStart.x;
+    lineStartY = lineStart.y;
+    lineEndX = lineEnd.x;
+    lineEndY = lineEnd.y;
+  } else {
+    lineStartX = lineEnd.x;
+    lineStartY = lineEnd.y;
+    lineEndX = lineStart.x;
+    lineEndY = lineStart.y;
+  }
+  
+  // Calculate line equation
+  //
+  //    x(y) = lineStartX + (y - lineStartY) * (equationTotalDifferenceX / equationTotalDifferenceY)
+  //
+  outlinerhighprecisionreal equationBaseX = lineStartX;
+  outlinerhighprecisionreal equationTotalDifferenceX = lineEndX - lineStartX; // positive or negative
+  outlinerhighprecisionreal equationTotalDifferenceY = lineEndY - lineStartY; // positive
+  outlinerhighprecisionreal equationFactor = equationTotalDifferenceX / equationTotalDifferenceY; // positive or negative
+  outlinerhighprecisionreal horizontalLineDifferenceY = horizontalY - lineStartY; // positive or negative
+
+  // Check if horizontal line is in the range on Y
+  if (!between(lineStartY,horizontalY,lineEndY)) return(0);
+
+  // Calculate resulting X at horizontal line position
+  outlinerhighprecisionreal lineX = equationBaseX + horizontalLineDifferenceY * equationFactor;
+
+  // Check if the resulting position is within the horizontal line X range
+  if (!between(horizontalStartX,lineX,horizontalEndX)) return(0);
+
+  // Lines intersect! Set the intersection point
+  intersectionPoint.x = lineX;
+  intersectionPoint.y = horizontalY;
   return(1);
 }
 
@@ -526,10 +650,12 @@ determinant2x2(const HighPrecisionVector2D* u,
 void
 mathTests(void) {
   infof("running math tests");
+  utilityTests();
   vectorTests();
   detTests();
   pointTests();
   lineTests();
+  lineIntersectionTests();
   triangleTests();
   boundingBoxTests();
   triangleBoundingBoxTests();
@@ -538,7 +664,44 @@ mathTests(void) {
 }
 
 static void
+utilityTests(void) {
+
+  debugf("utility tests...");
+  // Between tests
+  assert(between(1,2,3));
+  assert(between(1,2,2));
+  assert(!between(1,3,2));
+  assert(!between(3,2,1));
+
+  // Betweenanyorder tests
+  assert(betweenanyorder(1,2,3));
+  assert(betweenanyorder(1,2,2));
+  assert(betweenanyorder(2,2,1));
+  assert(!betweenanyorder(1,3,2));
+  assert(!betweenanyorder(2,3,1));
+  assert(betweenanyorder(3,2,1));
+
+  // Overlap tests
+  assert(overlap(1,2,2,4));
+  assert(overlap(1,10,2,4));
+  assert(overlap(2,3,0,10));
+  assert(!overlap(1,2,3,4));
+  assert(!overlap(3,4,1,2));
+
+  // Overlapanyorder tests
+  assert(overlapanyorder(1,2,2,4));
+  assert(overlapanyorder(2,1,2,4));
+  assert(overlapanyorder(2,1,4,2));
+  assert(overlapanyorder(1,2,4,2));
+  assert(overlapanyorder(1,10,4,2));
+  assert(overlapanyorder(2,3,100,1));
+  assert(!overlapanyorder(1,2,3,4));
+  assert(!overlapanyorder(4,3,2,1));
+}
+
+static void
 vectorTests(void) {
+  debugf("vector tests...");
   aiVector2D a(2,2);
   aiVector2D b(3,3);
   HighPrecisionVector2D result;
@@ -550,6 +713,7 @@ vectorTests(void) {
 
 static void
 detTests(void) {
+  debugf("det tests...");
   HighPrecisionVector2D C1(4,2);
   HighPrecisionVector2D C2(1,3);
   outlinerhighprecisionreal result = determinant2x2(&C1,&C2);
@@ -559,6 +723,7 @@ detTests(void) {
 
 static void
 boundingBoxTests(void) {
+  debugf("bounding box tests...");
   aiVector2D a(0,0);
   aiVector2D b(0,3);
   aiVector2D c(2,0);
@@ -652,6 +817,7 @@ void boundingBoxIntersectionTests(void) {
 
 static void
 pointTests(void) {
+  debugf("point tests...");
   aiVector2D a(1,1);
   aiVector2D b(1,2);
   aiVector2D c(1,1);
@@ -663,6 +829,8 @@ pointTests(void) {
 static void
 lineTests(void) {
 
+  debugf("line tests...");
+  
   // Horizontal
   {
     aiVector2D a(0,0);
@@ -704,10 +872,100 @@ lineTests(void) {
     ans = pointOnLine2D(&a,&c,&b);
     assert(ans == 1);
   }
+
+}
+
+static void
+lineIntersectionTests(void) {
+
+  debugf("line intersection tests...");
+  
+  // Vertical line intersection 1
+  {
+    aiVector2D a(10,10);
+    aiVector2D b1(20,20);
+    aiVector2D b2(20,15);
+    aiVector2D vl1start(1,0);
+    aiVector2D vl1end(1,40);
+    aiVector2D vl2start(11,0);
+    aiVector2D vl2end(11,40);
+    aiVector2D inter;
+    bool ans;
+    ans = lineIntersectsVerticalLine2D(a,b1,vl1start,vl1end,inter);
+    assert(!ans);
+    ans = lineIntersectsVerticalLine2D(a,b1,vl2start,vl2end,inter);
+    assert(ans);
+    deepdebugf("vertical line intersection %.2f, %.2f", inter.x, inter.y);
+    assert(inter.x == 11);
+    assert(inter.y == 11);
+    ans = lineIntersectsVerticalLine2D(a,b2,vl2start,vl2end,inter);
+    assert(ans);
+    deepdebugf("vertical line intersection %.2f, %.2f", inter.x, inter.y);
+    assert(inter.x == 11);
+    assert(inter.y == 10.5);
+  }
+  
+  // Vertical line intersection 2
+  {
+    aiVector2D a(10,10);
+    aiVector2D b(12,20);
+    aiVector2D vl1start(11,0);
+    aiVector2D vl1end(11,9);
+    aiVector2D vl2start(11,0);
+    aiVector2D vl2end(11,14);
+    aiVector2D vl3start(11,10);
+    aiVector2D vl3end(11,15);
+    aiVector2D vl4start(11,10);
+    aiVector2D vl4end(11,16);
+    aiVector2D inter;
+    bool ans;
+    ans = lineIntersectsVerticalLine2D(a,b,vl1start,vl1end,inter);
+    assert(!ans);
+    ans = lineIntersectsVerticalLine2D(a,b,vl2start,vl2end,inter);
+    assert(!ans);
+    ans = lineIntersectsVerticalLine2D(a,b,vl3start,vl3end,inter);
+    assert(ans);
+    deepdebugf("vertical line intersection %.2f, %.2f", inter.x, inter.y);
+    assert(inter.x == 11);
+    assert(inter.y == 15);
+    ans = lineIntersectsVerticalLine2D(a,b,vl4start,vl4end,inter);
+    assert(ans);
+    deepdebugf("vertical line intersection %.2f, %.2f", inter.x, inter.y);
+    assert(inter.x == 11);
+    assert(inter.y == 15);
+  }
+  
+  // Horizontal line intersection 1
+  {
+    aiVector2D a(10,10);
+    aiVector2D b(20,20);
+    aiVector2D hl1start(0,10);
+    aiVector2D hl1end(10,10);
+    aiVector2D hl2start(0,15);
+    aiVector2D hl2end(20,15);
+    aiVector2D hl3start(0,21);
+    aiVector2D hl3end(20,21);
+    aiVector2D inter;
+    bool ans;
+    ans = lineIntersectsHorizontalLine2D(a,b,hl1start,hl1end,inter);
+    assert(ans);
+    deepdebugf("horizontal line intersection %.2f, %.2f", inter.x, inter.y);
+    assert(inter.x == 10);
+    assert(inter.y == 10);
+    ans = lineIntersectsHorizontalLine2D(a,b,hl2start,hl2end,inter);
+    assert(ans);
+    deepdebugf("horizontal line intersection %.2f, %.2f", inter.x, inter.y);
+    assert(inter.x == 15);
+    assert(inter.y == 15);
+    ans = lineIntersectsHorizontalLine2D(a,b,hl3start,hl3end,inter);
+    assert(!ans);
+  }
+  
 }
 
 static void
 triangleTests(void) {
+  debugf("triangle tests...");
   aiVector2D a(0,0);
   aiVector2D b(0,2);
   aiVector2D c(2,0);
@@ -757,7 +1015,8 @@ triangleTests(void) {
 
 static void
 triangleBoundingBoxTests(void) {
-  infof("triangle bounding box tests");
+  infof("triangle bounding box tests..");
+  
   aiVector2D a(0,0);
   aiVector2D b(0,10);
   aiVector2D c(20,0);

@@ -49,6 +49,16 @@ bool boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
 bool pointOnLine2D(const aiVector2D* a,
                    const aiVector2D* b,
                    const HighPrecisionVector2D* point);
+bool lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
+                                  const aiVector2D& lineEnd,
+                                  const aiVector2D& verticalLineStart,
+                                  const aiVector2D& verticalLineEnd,
+                                  aiVector2D& intersectionPoint);
+bool lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
+                                    const aiVector2D& lineEnd,
+                                    const aiVector2D& horizontalLineStart,
+                                    const aiVector2D& horizontalLineEnd,
+                                    aiVector2D& intersectionPoint);
 bool vectorEqual(const aiVector2D* a,
                  const aiVector2D* b);
 bool vectorEqual(const aiVector2D* a,
