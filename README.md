@@ -9,7 +9,7 @@ Usage:
 
 Options:
 
-    --bounding x x y y z z   Set the bounding box area. Default is -2 2 -2 2 -2 2.
+    --bounding x x y y z z   Set the bounding box area. Default is the the model's bounding box.
     --step i                 Set the granularity increment. Default is 1.
     --z                      Generate output as viewed from the z direction, i.e., showing x/y picture.
     --x                      Generate output as viewed from the x direction, i.e., showing z/y picture.
