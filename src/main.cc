@@ -49,6 +49,7 @@ static HighPrecisionVector3D boundingBoxEnd = {0,0,0};
 static enum outlinerdirection direction = dir_z;
 static enum outlineralgorithm algorithm = alg_pixel;
 static float linewidth =  outlinerdefaultlinewidth;
+static unsigned int multiplier = 1;
 static bool smooth = 0;
 static bool mergedLines = 1;
 static unsigned int tiles = outlinertiledivision;
@@ -99,6 +100,14 @@ main(int argc, char** argv) {
         return(1);
       }
       linewidth = num;
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--multiplier") == 0 && argc > 2) {
+      int num = atoi(argv[2]);
+      if (num <= 0) {
+        errf("Multiplier must be positive, %s given", argv[2]);
+        return(1);
+      }
+      multiplier = num;
       argc--;argv++;
     } else if (strcmp(argv[1],"--smooth") == 0) {
       smooth = 1;
@@ -222,6 +231,7 @@ main(int argc, char** argv) {
   debugf("SVG size will be %u x %u", xSizeInt, ySizeInt);
   SvgCreator svg(output,
                  xSizeInt,ySizeInt,
+                 multiplier,
                  xOutputStart,yOutputStart,
                  xFactor,yFactor,
                  smooth,mergedLines,
@@ -285,6 +295,7 @@ processHelp(void) {
   std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave walls, with pixels.\n";
   std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave walls, with lines.\n";
   std::cout << "  --borderactual           Use the border-only drawing algorithm, draws the cave walls using model triangle sides.\n";
+  std::cout << "  --multiplier n           Multiply image size by n (default 1).\n";
   std::cout << "  --linewidth n            Set the width of the lines in output picture. The value can be a decimal number.\n";
   std::cout << "  --smooth                 Set the line drawings use smooth curves.\n";
   std::cout << "  --jagged                 Set the line drawings use hard lines (default).\n";

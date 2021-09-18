@@ -44,6 +44,7 @@ class SvgCreator {
   SvgCreator(const char* fileName,
              unsigned int xSize, 
              unsigned int ySize,
+             unsigned int multiplier,
              float xStart,
              float yStart,
              float xFactor,
@@ -65,6 +66,7 @@ class SvgCreator {
   std::ofstream file;
   unsigned int xSize;
   unsigned int ySize;
+  unsigned int multiplier;
   float xStart;
   float yStart;
   float xFactor;

@@ -15,6 +15,7 @@
 SvgCreator::SvgCreator(const char* fileName,
                        unsigned int xSize,
                        unsigned int ySize,
+                       unsigned int multiplier,
                        float xStart,
                        float yStart,
                        float xFactor,
@@ -28,6 +29,7 @@ SvgCreator::SvgCreator(const char* fileName,
   this->file.open(fileName);
   this->xSize = xSize;
   this->ySize = ySize;
+  this->multiplier = multiplier;
   this->xStart = xStart;
   this->yStart = yStart;
   this->xFactor = xFactor;
@@ -177,8 +179,8 @@ void
 SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
   assert(line.nPoints >= 2);
   if (line.nPoints == 2) {
-    file << "<line x1=\"" << line.points[0].x << "\" y1=\"" << line.points[0].y << "\"";
-    file << " x2=\"" << line.points[1].x << "\" y2=\"" << line.points[1].y << "\"";
+    file << "<line x1=\"" << (line.points[0].x * multiplier) << "\" y1=\"" << (line.points[0].y * multiplier) << "\"";
+    file << " x2=\"" << (line.points[1].x * multiplier) << "\" y2=\"" << (line.points[1].y * multiplier) << "\"";
   } else {
     if (smooth) {
       file << "<path d=\"";
@@ -190,12 +192,12 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
       unsigned int y = line.points[i].y;
       if (smooth) {
         if (i == 0) {
-          file << x << " " << y <<  " ";
+          file << x*multiplier << " " << y*multiplier <<  " ";
         } else {
-          file << "S" << x << " " << y <<  " ";
+          file << "S" << x*multiplier << " " << y*multiplier <<  " ";
         }
       } else {
-        file << x << "," << y <<  " ";
+        file << x*multiplier << "," << y*multiplier <<  " ";
       }
     }
     file << "\"";
@@ -203,7 +205,8 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
   if (smooth) {
     file << " fill=\"none\" stroke=\"black\" stroke-width=\"" << linewidth << "\" />\n";
   } else {
-    file << " style=\"fill:none;stroke:black;stroke-width=" << linewidth << "\" />\n";
+    file << " fill=\"none\" stroke=\"black\" stroke-width=\"" << linewidth << "\" />\n";
+    //file << " style=\"fill:none;stroke:black;stroke-width=" << linewidth << "\" />\n";
   }
   finalLines++;
 }
@@ -214,7 +217,7 @@ SvgCreator::pixel(float x,
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
-  file << "<rect x=\"" << xInt << "\" y=\"" << yInt << "\"";
+  file << "<rect x=\"" << xInt*multiplier << "\" y=\"" << yInt*multiplier << "\"";
   file << " width=\"" << linewidth << "\" height=\"" << linewidth << "\"";
   if (linewidth <= 1.0) {
     file << " fill=\"none\"";
@@ -256,10 +259,10 @@ SvgCreator::preamble() {
   file << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n";
   file << "          \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
   file << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n";
-  file << "     width=\"" << xSize << "\" height=\"" << ySize << "\">\n";
+  file << "     width=\"" << (xSize+1)*multiplier << "\" height=\"" << (ySize+1)*multiplier << "\">\n";
 
   // Make the background white
-  file << "<rect x=\"0\" y=\"0\" width=\"" << xSize << "\" height=\"" << ySize << "\"";
+  file << "<rect x=\"0\" y=\"0\" width=\"" << (xSize+1)*multiplier << "\" height=\"" << (ySize+1)*multiplier << "\"";
   file << " fill=\"white\" stroke=\"white\" stroke-width=\"0\"/>\n";
 }
 
