@@ -3,7 +3,7 @@
 
 ## Structure
 
-![structure](https://github.com/jariarkko/cave-outliner/blob/master/doc/Design-Structure.jpg)
+![structure](https://github.com/jariarkko/cave-outliner/blob/master/doc/Design-Structure-Small.jpg)
 
 ## Coding Guidelines
 
