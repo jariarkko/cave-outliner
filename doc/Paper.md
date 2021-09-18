@@ -1,11 +1,14 @@
 
 # Cave-Outliner: Algorithmic cave map generation from 3D models
 
-Jari Arkko
-Finnish Cave Association
-Kauniainen, Finland
+*Jari Arkko*
 
-September 2021
+*Finnish Cave Association*
+
+*Kauniainen, Finland*
+
+*September 2021*
+
 
 ## Introduction
 

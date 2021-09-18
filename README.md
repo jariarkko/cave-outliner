@@ -19,7 +19,7 @@ Options:
     --borderline             Use the border-only drawing algorithm, draws only the cave walls, with lines.
     --borderactual           Use the border-only drawing algorithm, draws the cave walls using model triangle sides.
     --linewidth n            Set the width of the lines in output picture. The value can be a decimal number.
-<    --multiplier n           Multiply image size by n (default 1).
+    --multiplier n           Multiply image size by n (default 1).
     --smooth                 Set the line drawings use smooth curves.\n";
     --jagged                 Set the line drawings use hard lines (default).\n";
     --holethreshold n        Ignore holes in the model if they are n or less pixels.
