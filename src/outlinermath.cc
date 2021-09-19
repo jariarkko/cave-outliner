@@ -543,6 +543,21 @@ lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
   outlinerhighprecisionreal equationBaseY = lineStartY;
   outlinerhighprecisionreal equationTotalDifferenceY = lineEndY - lineStartY; // positive or negative
   outlinerhighprecisionreal equationTotalDifferenceX = lineEndX - lineStartX; // positive
+
+  // Check for the case of parallel lines
+  if (equationTotalDifferenceX == 0) {
+    if (lineStartX != verticalX) return(0);
+    if (overlap(lineStartY,lineEndY,verticalStartY,verticalEndY)) {
+      intersectionPoint.x = verticalX;
+      if (lineStartY <= verticalStartY && verticalStartY <= lineEndY) intersectionPoint.y = verticalStartY;
+      else if (verticalStartY <= lineStartY && lineStartY <= verticalEndY) intersectionPoint.y = lineStartY;
+      else assert(0);
+      return(1);
+    }
+    return(0);
+  }
+
+  // Continue calculating the line equation
   outlinerhighprecisionreal equationFactor = equationTotalDifferenceY / equationTotalDifferenceX; // positive or negative
   outlinerhighprecisionreal verticalLineDifferenceX = verticalX - lineStartX; // positive or negative
 
@@ -598,6 +613,21 @@ lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
   outlinerhighprecisionreal equationBaseX = lineStartX;
   outlinerhighprecisionreal equationTotalDifferenceX = lineEndX - lineStartX; // positive or negative
   outlinerhighprecisionreal equationTotalDifferenceY = lineEndY - lineStartY; // positive
+
+  // Check for the case of parallel lines
+  if (equationTotalDifferenceY == 0) {
+    if (lineStartY != horizontalY) return(0);
+    if (overlap(lineStartX,lineEndX,horizontalStartX,horizontalEndX)) {
+      intersectionPoint.y = horizontalY;
+      if (lineStartX <= horizontalStartX && horizontalStartX <= lineEndX) intersectionPoint.x = horizontalStartX;
+      else if (horizontalStartX <= lineStartX && lineStartX <= horizontalEndX) intersectionPoint.x = lineStartX;
+      else assert(0);
+      return(1);
+    }
+    return(0);
+  }
+
+  // Continue calculating the line equation
   outlinerhighprecisionreal equationFactor = equationTotalDifferenceX / equationTotalDifferenceY; // positive or negative
   outlinerhighprecisionreal horizontalLineDifferenceY = horizontalY - lineStartY; // positive or negative
 
@@ -935,6 +965,29 @@ lineIntersectionTests(void) {
     assert(inter.y == 15);
   }
   
+  // Vertical line intersection 3 (parallel lines)
+  {
+    aiVector2D a(10,10);
+    aiVector2D b(10,20);
+    aiVector2D vl1start(9,15);
+    aiVector2D vl1end(9,16);
+    aiVector2D vl2start(10,5);
+    aiVector2D vl2end(10,9);
+    aiVector2D vl3start(10,15);
+    aiVector2D vl3end(10,16);
+    aiVector2D inter;
+    bool ans;
+    ans = lineIntersectsVerticalLine2D(a,b,vl1start,vl1end,inter);
+    assert(!ans);
+    ans = lineIntersectsVerticalLine2D(a,b,vl2start,vl2end,inter);
+    assert(!ans);
+    ans = lineIntersectsVerticalLine2D(a,b,vl3start,vl3end,inter);
+    assert(ans);
+    deepdebugf("vertical parallel line intersection %.2f, %.2f", inter.x, inter.y);
+    assert(inter.x == 10);
+    assert(inter.y == 15);
+  }
+  
   // Horizontal line intersection 1
   {
     aiVector2D a(10,10);
@@ -959,6 +1012,29 @@ lineIntersectionTests(void) {
     assert(inter.y == 15);
     ans = lineIntersectsHorizontalLine2D(a,b,hl3start,hl3end,inter);
     assert(!ans);
+  }
+  
+  // Vertical line intersection 2 (parallel lines)
+  {
+    aiVector2D a(10,10);
+    aiVector2D b(20,10);
+    aiVector2D hl1start(15,9);
+    aiVector2D hl1end(16,9);
+    aiVector2D hl2start(5,10);
+    aiVector2D hl2end(9,10);
+    aiVector2D hl3start(15,10);
+    aiVector2D hl3end(16,10);
+    aiVector2D inter;
+    bool ans;
+    ans = lineIntersectsHorizontalLine2D(a,b,hl1start,hl1end,inter);
+    assert(!ans);
+    ans = lineIntersectsHorizontalLine2D(a,b,hl2start,hl2end,inter);
+    assert(!ans);
+    ans = lineIntersectsHorizontalLine2D(a,b,hl3start,hl3end,inter);
+    assert(ans);
+    deepdebugf("horizontal parallel line intersection %.2f, %.2f", inter.x, inter.y);
+    assert(inter.y == 10);
+    assert(inter.x == 15);
   }
   
 }
