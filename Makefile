@@ -61,7 +61,8 @@ test:	cave-outliner \
 	basic-tests
 
 unit-tests:	cave-outliner
-	./cave-outliner --test
+	@echo 'Running test case unit-tests...'
+	@./cave-outliner --quiet --test
 
 basic-tests:	cave-outliner \
 		cube-pixel-test \
