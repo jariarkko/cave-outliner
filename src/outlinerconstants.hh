@@ -6,10 +6,11 @@
 // Defines ////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-#define outlinermaxmeshes          1
-#define outlinertiledivision      30
-#define outlinermaxholethreshold  50
-#define outlinerdefaultlinewidth   1.0
+#define outlinermaxmeshes             1
+#define outlinertiledivision         30
+#define outlinermaxholethreshold     50
+#define outlinermaxcrosssections    100
+#define outlinerdefaultlinewidth    1.0
 
 #define OUTLINER_PROG "cave-outliner"
 #define OUTLINER_ERRPREFIX OUTLINER_PROG ": Error: "

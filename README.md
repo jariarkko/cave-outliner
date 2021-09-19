@@ -15,10 +15,17 @@ Options:
     --x                      Generate output as viewed from the x direction, i.e., showing z/y picture.
     --y                      Generate output as viewed from the y direction, i.e., showing x/z picture.
     --pixel                  Use the pixel output drawing algorithm (default, fills cave with pixels).
-    --borderpixel            Use the border-only drawing algorithm, draws only the cave walls, with pixels.
-    --borderline             Use the border-only drawing algorithm, draws only the cave walls, with lines.
-    --borderactual           Use the border-only drawing algorithm, draws the cave walls using model triangle sides.
-    --linewidth n            Set the width of the lines in output picture. The value can be a decimal number.
+    --borderpixel            Use the border-only drawing algorithm, draws only the cave walls,
+                             with pixels.
+    --borderline             Use the border-only drawing algorithm, draws only the cave walls,
+                             with lines.
+    --borderactual           Use the border-only drawing algorithm, draws the cave walls using
+                             model triangle sides.
+    --crosssection x file    Produce also a cross section at a given x position, output to file.\n";
+    --crosssections n pat    Produce n cross sections at different x positions, output to files (percent
+                             sign denotes the cross section number in the file name pattern).
+    --linewidth n            Set the width of the lines in output picture. The value can be a
+                             decimal number.
     --multiplier n           Multiply image size by n (default 1).
     --smooth                 Set the line drawings use smooth curves.\n";
     --jagged                 Set the line drawings use hard lines (default).\n";

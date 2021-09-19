@@ -18,6 +18,11 @@
 
 class IndexedMesh;
 
+struct ProcessorCrossSection {
+  outlinerhighprecisionreal x;
+  const char* filename;
+};
+
 class Processor {
 
 public:
@@ -32,8 +37,10 @@ public:
   ~Processor();
   
   bool processScene(const aiScene* scene,
-                    SvgCreator& svg);
-
+                    SvgCreator& svg,
+                    unsigned int nCrossSections,
+                    struct ProcessorCrossSection* crossSections);
+  
 private:
 
   const unsigned int maxNeighbors = 8;
@@ -100,6 +107,10 @@ private:
                             const unsigned int* neighborTableY);
   outlinerhighprecisionreal indexToCoordinateX(unsigned int xIndex);
   outlinerhighprecisionreal indexToCoordinateY(unsigned int yIndex);
+  bool processSceneCrossSections(unsigned int nCrossSections,
+                                 struct ProcessorCrossSection* crossSections);
+  bool processSceneCrossSection(unsigned int c,
+                                const struct ProcessorCrossSection* crossSection);
 };
 
 #endif // PROCESSOR_HH

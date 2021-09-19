@@ -50,7 +50,9 @@ Processor::~Processor() {
 
 bool
 Processor::processScene(const aiScene* scene,
-                        SvgCreator& svg) {
+                        SvgCreator& svg,
+                        unsigned int nCrossSections,
+                        struct ProcessorCrossSection* crossSections) {
   
   debugf("processScene");
   assert(scene != 0);
@@ -190,6 +192,11 @@ Processor::processScene(const aiScene* scene,
         }
       }
     }
+  }
+
+  // Process cross sections
+  if (!processSceneCrossSections(nCrossSections,crossSections)) {
+    return(0);
   }
   
   // Done, all good
@@ -495,3 +502,27 @@ Processor::indexToCoordinateY(unsigned int yIndex) {
   outlinerhighprecisionreal yStart = DirectionOperations::outputy(direction,boundingboxstart);
   return(yStart + stepy * yIndex);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Cross-Sections /////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+bool
+Processor::processSceneCrossSections(unsigned int nCrossSections,
+                                     struct ProcessorCrossSection* crossSections) {
+  for (unsigned int c = 0; c < nCrossSections; c++) {
+    const struct ProcessorCrossSection* crossSection = &crossSections[c];
+    if (!processSceneCrossSection(c,crossSection)) {
+      return(0);
+    }
+  }
+  return(1);
+}
+
+bool
+Processor::processSceneCrossSection(unsigned int c,
+                                    const struct ProcessorCrossSection* crossSection) {
+  infof("Cross section %u at %.2f to file %s", c, crossSection->x, crossSection->filename);
+  return(1);
+}
+

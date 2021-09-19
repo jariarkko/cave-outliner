@@ -35,6 +35,8 @@ static bool checkFileExtension(const char* filename,
 static void processVersion(void);
 static void processHelp(void);
 static void runTests(void);
+static char* makeFilenameFromPattern(const char* pattern,
+                                     unsigned int index);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Local variables ////////////////////////////////////////////////////////////////////////////
@@ -57,6 +59,11 @@ static bool smooth = 0;
 static bool mergedLines = 1;
 static unsigned int tiles = outlinertiledivision;
 static unsigned int holethreshold = 0;
+static bool automaticCrossSections = 0;
+static unsigned int nAutomaticCrossSections = 0;
+static const char* automaticCrossSectionFilenamePattern = 0;
+static unsigned int nCrossSections = 0;
+static struct ProcessorCrossSection crossSections[outlinermaxcrosssections];
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program and option handling ///////////////////////////////////////////////////////////
@@ -99,6 +106,46 @@ main(int argc, char** argv) {
      } else if (strcmp(argv[1],"--borderactual") == 0) {
         algorithm = alg_borderactual;
         debugf("algorithm now %u", algorithm);
+    } else if (strcmp(argv[1],"--crosssections") == 0 && argc > 3) {
+      if (nCrossSections == outlinermaxcrosssections) {
+        errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
+        return(1);
+      }
+      int num = atoi(argv[2]);
+      if (num < 1) {
+        errf("A number of cross sections must be 1 or greater, %s given", argv[2]);
+        return(1);
+      }
+      const char* filenamePattern = argv[3];
+      if (strchr(filenamePattern,'%') == 0) {
+        errf("File name pattern should include the %% sign, %s given", filenamePattern);
+        return(1);
+      }
+      automaticCrossSections = 1;
+      nAutomaticCrossSections = num;
+      automaticCrossSectionFilenamePattern = filenamePattern;
+      argc--;argv++;
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--crosssection") == 0 && argc > 3) {
+      if (nCrossSections == outlinermaxcrosssections) {
+        errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
+        return(1);
+      }
+      float num = atof(argv[2]);
+      if (num <= 0.0) {
+        errf("Cross section coordinate value needs to be a positive number, %s given", argv[2]);
+        return(1);
+      }
+      const char* file = argv[3];
+      if (strlen(file) < 1) {
+        errf("Cross section file name cannot be empty, %s given", file);
+        return(1);
+      }
+      crossSections[nCrossSections].x = num;
+      crossSections[nCrossSections].filename = file;
+      nCrossSections++;
+      argc--;argv++;
+      argc--;argv++;
     } else if (strcmp(argv[1],"--linewidth") == 0 && argc > 2) {
       float num = atof(argv[2]);
       if (num <= 0.0) {
@@ -251,7 +298,23 @@ main(int argc, char** argv) {
     errf("File open for writing  to %s failed", output);
     return(1);
   }
-  
+
+  // Check if we need to make cross sections
+  if (automaticCrossSections) {
+    if (nCrossSections + nAutomaticCrossSections >= outlinermaxcrosssections) {
+      errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
+      return(1);
+    }
+    outlinerhighprecisionreal crossSectionStep = (xOutputEnd - xOutputStart) / (1.0*nAutomaticCrossSections);
+    for (unsigned int c = 0; c < nAutomaticCrossSections; c++) {
+      assert(nCrossSections < outlinermaxcrosssections);
+      char* newFilename = makeFilenameFromPattern(automaticCrossSectionFilenamePattern,c);
+      crossSections[nCrossSections].x = xOutputStart + crossSectionStep * (c+0.5);
+      crossSections[nCrossSections].filename = newFilename;
+      nCrossSections++;
+    }
+  }
+
   // Build our own data structure
   HighPrecisionVector2D bounding2DBoxStart(xOutputStart,yOutputStart);
   HighPrecisionVector2D bounding2DBoxEnd(xOutputEnd,yOutputEnd);
@@ -270,7 +333,9 @@ main(int argc, char** argv) {
                       algorithm,
                       holethreshold,
                       indexed);
-  if (!processor.processScene(scene,svg)) {
+  if (!processor.processScene(scene,svg,
+                              nCrossSections,
+                              crossSections)) {
     return(1);
   }
 
@@ -310,11 +375,18 @@ processHelp(void) {
   std::cout << "  --x                      Generate output as viewed from the x direction, i.e., showing z/y picture.\n";
   std::cout << "  --y                      Generate output as viewed from the y direction, i.e., showing x/z picture.\n";
   std::cout << "  --pixel                  Use the pixel output drawing algorithm (default, fills cave with pixels).\n";
-  std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave walls, with pixels.\n";
-  std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave walls, with lines.\n";
-  std::cout << "  --borderactual           Use the border-only drawing algorithm, draws the cave walls using model triangle sides.\n";
+  std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave walls,\n";
+  std::cout << "                           with pixels.\n";
+  std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave walls,\n";
+  std::cout << "                           with lines.\n";
+  std::cout << "  --borderactual           Use the border-only drawing algorithm, draws the cave walls using\n";
+  std::cout << "                           model triangle sides.\n";
+  std::cout << "  --crosssection x file    Produce also a cross section at a given x position, output to file.\n";
+  std::cout << "  --crosssections n pat    Produce n cross sections at different x positions, output to files (percent\n";
+  std::cout << "                           sign denotes the cross section number in the file name pattern).\n";
   std::cout << "  --multiplier n           Multiply image size by n (default 1).\n";
-  std::cout << "  --linewidth n            Set the width of the lines in output picture. The value can be a decimal number.\n";
+  std::cout << "  --linewidth n            Set the width of the lines in output picture. The value can be a\n";
+  std::cout << "                           decimal number.\n";
   std::cout << "  --smooth                 Set the line drawings use smooth curves.\n";
   std::cout << "  --jagged                 Set the line drawings use hard lines (default).\n";
   std::cout << "  --holethreshold n        Ignore holes in the model if they are n or less pixels.\n";
@@ -375,6 +447,32 @@ checkFileExtension(const char* filename,
   foundExtension++;
   if (strcasecmp(foundExtension,extension) != 0) return(0);
   else return(1);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// File name processing ///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+static char*
+makeFilenameFromPattern(const char* pattern,
+                        unsigned int index) {
+  assert(pattern != 0);
+  const unsigned int maxNumLength = 10;
+  const char* rest = strchr(pattern,'%');
+  assert(rest != 0);
+  unsigned int nFirst = rest - pattern;
+  rest++;
+  unsigned int newFilenameLength = nFirst + maxNumLength + strlen(rest) + 1;
+  char* result = (char*)malloc(newFilenameLength);
+  if (result == 0) {
+    errf("Cannot allocate string of %u bytes", newFilenameLength);
+    exit(1);
+  }
+  memset(result,0,newFilenameLength);
+  strncpy(result,pattern,nFirst);
+  snprintf(&result[nFirst],maxNumLength,"%u",index);
+  strncat(result,rest,newFilenameLength);
+  return(result);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
