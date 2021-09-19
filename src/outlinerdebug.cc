@@ -16,6 +16,7 @@
 // Local variables ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+static bool info = 0;
 static bool debug = 0;
 static bool deepdebug = 0;
 static bool deepdeepdebug = 0;
@@ -25,9 +26,11 @@ static bool deepdeepdebug = 0;
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void
-debuginit(bool debugSet,
+debuginit(bool infoSet,
+          bool debugSet,
           bool deepdebugSet,
           bool deepdeepdebugSet) {
+  info = infoSet;
   debug = debugSet;
   deepdebug = deepdebugSet;
   deepdeepdebug = deepdeepdebugSet;
@@ -127,13 +130,17 @@ infof(const char* format, ...) {
 
   assert(format != 0);
 
-  va_list args;
-  char buf[500];
-  memset(buf,0,sizeof(buf));
-  va_start (args, format);
-  vsnprintf(buf,sizeof(buf)-1,format,args);
-  va_end (args);
-  std::cout << OUTLINER_INFOPREFIX;
-  std::cout << buf;
-  std::cout << "\n";
+  if (info) {
+    
+    va_list args;
+    char buf[500];
+    memset(buf,0,sizeof(buf));
+    va_start (args, format);
+    vsnprintf(buf,sizeof(buf)-1,format,args);
+    va_end (args);
+    std::cout << OUTLINER_INFOPREFIX;
+    std::cout << buf;
+    std::cout << "\n";
+
+  }
 }

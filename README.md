@@ -25,6 +25,7 @@ Options:
     --holethreshold n        Ignore holes in the model if they are n or less pixels.
     --tiling n               Optimize search process with n x n tiles. Default is 30,
                              and --tiling 1 implies no optimization.
+    --quiet                  Turn on informative messages (default is they are on).
     --debug                  Turn on debugging messages (level 0, least).
     --deepdebug              Turn on debugging messages (level 1).
     --deepdeepdebug          Turn on debugging messages (level 2, most).

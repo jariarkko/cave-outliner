@@ -40,6 +40,7 @@ static void runTests(void);
 // Local variables ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+static bool info = 1;
 static bool debug = 0;
 static bool deepdebug = 0;
 static bool deepdeepdebug = 0;
@@ -65,18 +66,21 @@ int
 main(int argc, char** argv) {
 
   while (argc > 1 && argv[1][0] == '-') {
-    if (strcmp(argv[1],"--debug") == 0) {
+    if (strcmp(argv[1],"--quiet") == 0) {
+        info = 0;
+        debuginit(info,debug,deepdebug,deepdeepdebug);
+    } else if (strcmp(argv[1],"--debug") == 0) {
         debug = 1;
-        debuginit(debug,deepdebug,deepdeepdebug);
+        debuginit(info,debug,deepdebug,deepdeepdebug);
     } else if (strcmp(argv[1],"--deepdebug") == 0) {
         debug = 1;
         deepdebug = 1;
-        debuginit(debug,deepdebug,deepdeepdebug);
+        debuginit(info,debug,deepdebug,deepdeepdebug);
     } else if (strcmp(argv[1],"--deepdeepdebug") == 0) {
         debug = 1;
         deepdebug = 1;
         deepdeepdebug = 1;
-        debuginit(debug,deepdebug,deepdeepdebug);
+        debuginit(info,debug,deepdebug,deepdeepdebug);
     } else if (strcmp(argv[1],"--z") == 0) {
         direction = dir_z;
     } else if (strcmp(argv[1],"--x") == 0) {
@@ -166,7 +170,7 @@ main(int argc, char** argv) {
       tiles = atoi(argv[2]);
       argc--;argv++;
     } else if (strcmp(argv[1],"--test") == 0) {
-      debuginit(debug,deepdebug,deepdeepdebug);
+      debuginit(info,debug,deepdebug,deepdeepdebug);
       runTests();
       return(0);
     } else if (strcmp(argv[1],"--version") == 0) {
@@ -201,7 +205,7 @@ main(int argc, char** argv) {
   }
   
   // Initialize debug
-  debuginit(debug,deepdebug,deepdeepdebug);
+  debuginit(info,debug,deepdebug,deepdeepdebug);
   
   // Import the model
   infof("importing the model...");
@@ -317,6 +321,7 @@ processHelp(void) {
   std::cout << "  --tiling n               Optimize search process with n x n tiles. ";
   std::cout <<                            "Default is " << outlinertiledivision << ",\n";
   std::cout << "                           and --tiling 1 implies no optimization.\n";
+  std::cout << "  --quiet                  Turn on informative messages (default is they are on).\n";
   std::cout << "  --debug                  Turn on debugging messages (level 0, least)\n";
   std::cout << "  --deepdebug              Turn on debugging messages (level 1)\n";
   std::cout << "  --deepdeepdebug          Turn on debugging messages (level 2, most)\n";

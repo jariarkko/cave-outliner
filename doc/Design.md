@@ -3,7 +3,16 @@
 
 ## Structure
 
+The structure of the software is shown in the below figure:
+
 ![structure](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/Design-Structure-Small.jpg)
+
+Overall, the system consists of five major parts:
+
+* Main program ("main").
+* 3D model import library ("assimp"), an external library.
+* Core functionality ("core"), used for calculating.
+* 
 
 ## Coding Guidelines
 
@@ -25,10 +34,9 @@ All weekly and major releases should be tagged with a tag "v(i).(j).(k)". E.g., 
 
 And making a new version:
 
-    cd  lib
     git tag -a v2.0.0
     make updateversion
-    git add psgeolib.js
+    git add src/outlinerversion.cc
     git commit -m"new version"
     git push
     git push --tags

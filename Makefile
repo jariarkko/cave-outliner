@@ -74,38 +74,46 @@ basic-tests:	cave-outliner \
 		cube-angled-line-multiplier-test
 
 cube-pixel-test:
-	./cave-outliner --pixel --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-pixel.svg
-	diff test/cube-pixel.svg test/cube-pixel.svg.expected
+	@echo 'Running test case cube-pixel-test...'
+	@./cave-outliner --quiet --pixel --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-pixel.svg
+	@diff test/cube-pixel.svg test/cube-pixel.svg.expected
 
 cube-line-test:
-	./cave-outliner --borderline --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-line.svg
-	diff test/cube-line.svg test/cube-line.svg.expected
+	@echo 'Running test case cube-line-test...'
+	@./cave-outliner --quiet --borderline --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-line.svg
+	@diff test/cube-line.svg test/cube-line.svg.expected
 
 cube-line-defaultbounding-test:
-	./cave-outliner --borderline --step 0.5 test/cube.stl test/cube-line-defaultbounding.svg
-	diff test/cube-line-defaultbounding.svg test/cube-line-defaltbounding.svg.expected
+	@echo 'Running test case cube-line-defaultbounding-test...'
+	@./cave-outliner --quiet --borderline --step 0.5 test/cube.stl test/cube-line-defaultbounding.svg
+	@diff test/cube-line-defaultbounding.svg test/cube-line-defaltbounding.svg.expected
 
 cube-line-bounding-test:
-	./cave-outliner --borderline --step 0.5 --bounding -10 10 -20 20 -3 3 test/cube.stl test/cube-line-bounding.svg
-	diff test/cube-line-bounding.svg test/cube-line-bounding.svg.expected
+	@echo 'Running test case cube-line-bounding-test...'
+	@./cave-outliner --quiet --borderline --step 0.5 --bounding -10 10 -20 20 -3 3 test/cube.stl test/cube-line-bounding.svg
+	@diff test/cube-line-bounding.svg test/cube-line-bounding.svg.expected
 
 cube-angled-pixel-test:
-	./cave-outliner --pixel --step 0.1 --bounding -2 2 -2 2 -2 2 test/cube-angled.stl test/cube-angled-pixel.svg
-	diff test/cube-angled-pixel.svg test/cube-angled-pixel.svg.expected
+	@echo 'Running test case cube-angled-pixel-test...'
+	@./cave-outliner --quiet --pixel --step 0.1 --bounding -2 2 -2 2 -2 2 test/cube-angled.stl test/cube-angled-pixel.svg
+	@diff test/cube-angled-pixel.svg test/cube-angled-pixel.svg.expected
 
 cube-angled-line-test:
-	./cave-outliner --borderline --step 0.1 --bounding -2 2 -2 2 -2 2 test/cube-angled.stl test/cube-angled-line.svg
-	diff test/cube-angled-line.svg test/cube-angled-line.svg.expected
+	@echo 'Running test case cube-angled-line-test...'
+	@./cave-outliner --quiet --borderline --step 0.1 --bounding -2 2 -2 2 -2 2 test/cube-angled.stl test/cube-angled-line.svg
+	@diff test/cube-angled-line.svg test/cube-angled-line.svg.expected
 
 cube-angled-line-linewidth-test:
-	./cave-outliner --borderline --step 0.1 --linewidth 4 --bounding -2 2 -2 2 -2 2 \
+	@echo 'Running test case cube-angled-line-linewidth-test...'
+	@./cave-outliner --quiet --borderline --step 0.1 --linewidth 4 --bounding -2 2 -2 2 -2 2 \
 		test/cube-angled.stl test/cube-angled-line-linewidth.svg
-	diff test/cube-angled-line-linewidth.svg test/cube-angled-line-linewidth.svg.expected
+	@diff test/cube-angled-line-linewidth.svg test/cube-angled-line-linewidth.svg.expected
 
 cube-angled-line-multiplier-test:
-	./cave-outliner --borderline --step 0.1 --multiplier 10 --bounding -2 2 -2 2 -2 2 \
+	@echo 'Running test case cube-angled-line-multiplier-test...'
+	@./cave-outliner --quiet --borderline --step 0.1 --multiplier 10 --bounding -2 2 -2 2 -2 2 \
 		test/cube-angled.stl test/cube-angled-line-multiplier.svg
-	diff test/cube-angled-line-multiplier.svg test/cube-angled-line-multiplier.svg.expected
+	@diff test/cube-angled-line-multiplier.svg test/cube-angled-line-multiplier.svg.expected
 
 updateversion:
 	@echo This makefile target updates one software source file based on tags in GitHub,
