@@ -22,6 +22,7 @@
 #include "outlinerboundingboxer.hh"
 #include "outlinermath.hh"
 #include "outlinersvg.hh"
+#include "outlinerversion.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Function prototypes ////////////////////////////////////////////////////////////////////////
@@ -31,6 +32,7 @@ static const aiScene* processImport(Assimp::Importer& importer,
                                     const char* file);
 static bool checkFileExtension(const char* filename,
                                const char* extension);
+static void processVersion(void);
 static void processHelp(void);
 static void runTests(void);
 
@@ -167,6 +169,9 @@ main(int argc, char** argv) {
       debuginit(debug,deepdebug,deepdeepdebug);
       runTests();
       return(0);
+    } else if (strcmp(argv[1],"--version") == 0) {
+      processVersion();
+      return(0);
     } else if (strcmp(argv[1],"--help") == 0) {
       processHelp();
       return(0);
@@ -276,6 +281,15 @@ main(int argc, char** argv) {
 }
 
 static void
+processVersion(void) {
+  std::cout << "\n";
+  std::cout << OUTLINER_PROG " version ";
+  std::cout << outlinerVersion;
+  std::cout << "\n";
+  std::cout << "\n";
+}
+
+static void
 processHelp(void) {
   std::cout << "\n";
   std::cout << OUTLINER_PROG " [options] inputfile outputfile\n";
@@ -306,6 +320,7 @@ processHelp(void) {
   std::cout << "  --debug                  Turn on debugging messages (level 0, least)\n";
   std::cout << "  --deepdebug              Turn on debugging messages (level 1)\n";
   std::cout << "  --deepdeepdebug          Turn on debugging messages (level 2, most)\n";
+  std::cout << "  --version                Output version information.\n";
   std::cout << "  --help                   Print this message\n";
   std::cout << "\n";
 }

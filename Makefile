@@ -9,7 +9,8 @@ OBJS=	src/main.o \
 	src/outlinerdirection.o \
 	src/outlinermath.o \
 	src/outlinerhighprecision.o \
-	src/outlinersvg.o
+	src/outlinersvg.o \
+	src/outlinerversion.o
 HDRS=	src/outlinertypes.hh \
 	src/outlinerconstants.hh \
 	src/outlinerdebug.hh \
@@ -21,7 +22,8 @@ HDRS=	src/outlinertypes.hh \
 	src/outlinerboundingboxer.hh \
 	src/outlinermath.hh \
 	src/outlinerhighprecision.hh \
-	src/outlinersvg.hh
+	src/outlinersvg.hh \
+	src/outlinerversion.hh
 SRCS=	src/main.cc \
 	src/outlinerdebug.cc \
 	src/outlinerdirection.cc \
@@ -32,13 +34,14 @@ SRCS=	src/main.cc \
 	src/outlinerboundingboxer.cc \
 	src/outlinermath.cc \
 	src/outlinerhighprecision.cc \
-	src/outlinersvg.cc
+	src/outlinersvg.cc \
+	src/outlinerversion.cc
 SUPP=Makefile
 CPPFLAGS=-O3 -Wall -std=c++11 `pkg-config --cflags assimp`
 LDFLAGS=-O3
 LDLIBS=`pkg-config --libs-only-L assimp` -lassimp
 
-all:	cave-outliner test
+all:	cave-outliner docs test
 
 .o.c:
 	g++ $(CPPFLAGS) $< -o $>
@@ -47,6 +50,11 @@ $(OBJS): $(HDRS)
 
 cave-outliner:	$(OBJS)
 	g++ $(LDFLAGS) -o cave-outliner $(OBJS) $(LDLIBS)
+
+docs:	doc/Design-Structure-Small.jpg
+
+doc/Design-Structure-Small.jpg:	doc/Design-Structure.jpg
+	convert -quality 0.97 -resize 1400x doc/Design-Structure.jpg doc/Design-Structure-Small.jpg
 
 test:	cave-outliner \
 	unit-tests \
@@ -99,8 +107,18 @@ cube-angled-line-multiplier-test:
 		test/cube-angled.stl test/cube-angled-line-multiplier.svg
 	diff test/cube-angled-line-multiplier.svg test/cube-angled-line-multiplier.svg.expected
 
+updateversion:
+	@echo This makefile target updates one software source file based on tags in GitHub,
+	@echo to set the version number of the software.
+	@echo ''
+	@echo Only run this if you know what you are doing. Press Control-C now otherwise.
+	@sleep 5
+	@git describe > /tmp/ver.res
+	@sed 's/ outlinerVersion = .*;/ outlinerVersion = "'`cat /tmp/ver.res`'";/' < src/outlinerversion.cc > /tmp/ver.cc
+	cp -i /tmp/ver.cc src/outlinerversion.cc
+
 clean:
-	rm -f cave-outliner */*.o
+	rm -f cave-outliner */*.o test/*.svg
 
 wc:
 	wc $(HDRS) $(SRCS) $(SUPP)
