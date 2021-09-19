@@ -7,12 +7,88 @@ The structure of the software is shown in the below figure:
 
 ![structure](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/Design-Structure-Small.jpg)
 
-Overall, the system consists of five major parts:
+Overall, the system consists of six major parts:
 
 * Main program ("main").
 * 3D model import library ("assimp"), an external library.
-* Core functionality ("core"), used for calculating.
-* 
+* Core functionality ("core"), used for calculating the actual results, such as plan views from the 3D model.
+* The SVG image export module, "outlinersvg".
+* The 3D model description utility, "outlinerdescribe", used for debugging.
+* The utilities, including math, debugging, and other capabilities.
+
+## Modules
+
+### Main
+### Assimp
+
+This is an external library, The Open-Asset-Importer-Lib. See https://www.assimp.org/
+
+As a result of a successful 3D model import operation, a number of data structures are created for:
+
+* Meshes (typically, a single model has just one, but could have more). Meshes contain faces.
+* Faces. These are the key ingredient of a 3D model, triangle-shaped small parts that together make up a mesh. Each face is represented by a triangle that has three corners defined as points in 3D space.
+
+### Core
+
+This is the main functionality for actually calculating plan views, etc. from a 3D model. The indexed mesh and processor objects are instantiated by the main program, and then the processor object creates an additional material matrix object. It then proceeds to actually calculate what kind of resulting image should be output.
+
+#### Outlinerindexedmesh
+
+This object represents an optimized index to the mesh faces contained in an imported 3D model. The imported model has a large datastructure of 'faces' -- typically millions or even tens of millions of faces. There is no efficient way to search for faces at a given location in the 3D or 2D space, however. The indexed mesh object sorts the faces into a 2D matrix of 'tiles'. For instance, a large model could be split into 20x20 or 400 tiles, so that when we are looking for a face within given (x,y) coordinates, we only need to look at the tile where (x,y) falls into. The indexing is performed only once, and all searches after the indexing operation can use the more efficient search.
+
+The number of tiles is configurable with the --tiling option of the cave-outliner program.
+
+#### Outlinermaterialmatrix
+
+This object represents a 2D view into a 3D cave model. Given a desired resolution (N x M pixels), it provides a boolean matrix. Each element (x,y) in the matrix is set to 1 if there's a a face within the model in that pixel location. The resolution is configurable, so for instance for a 1 x 1 resolution all faces within the 3D model would be at the resulting single pixel.
+
+Note that the material matrix resolution is not the same as tile resolution in the indexed mesh object. Typically, the indexed mesh has low resolution, just sufficient for fast searches, while the material matrix needs to support the desired high resolution of the output.
+
+#### Outlinerprocessor
+
+This is the main program of the Core module, it performs the actual mapping from a given model and indexed mesh to an SVG image. It creates a material matrix as part of the process.
+
+### Outlinersvg
+
+This module can be used to output SVG images to a file. For a description of what an SVG image format is, see https://www.w3schools.com/graphics/svg_intro.asp. 
+
+### Outlinerdesribe
+
+This module outputs information about a 3D model read into the memory. It is only used for debugging.
+
+### Utilities
+
+This module is a collection of small submodules that provide utility functions for math, debugging, etc. to the rest of the software.
+
+#### Outlinermath
+
+This module provides a number of math routines that the Core parts of the software need, such as a function for calculating when a point is inside a triangle.
+
+#### Outlinerhighprecision
+
+This module defines high-precision 2D and 3D vector types.
+
+#### Outlinerdirection
+
+This module defines a direction enumerated type, which is used to represent the direction of view for the desired plan view.
+
+#### Outlinertypes
+
+This module defines some key data types used in the Cave-Outliner, such as algorithm enumerated types.
+
+It also defines a data type that is used to represent the internal floating point calculations within Cave-Outliner. Currently we use 'double' for better accuracy, while the 3D models read by the Assimp library use 'float'.
+
+#### Outlinerconstants
+
+This module only provides a set of constants for maximum sizes of tables, option defaults, and so on.
+
+#### Outlinerdebug
+
+This module provides a reporting and debugging facility, with printf-like functions to report on various events. The level of reporting can be controlled by the debuginit function, and the actual reporting functions are infof, debugf, deepdebugf, and deepdeepdebugf.
+
+#### Outlinerversion
+
+This module only includes a version number string. It is manipulated by the 'make updateversion' command (see further down in the document).
 
 ## Coding Guidelines
 
