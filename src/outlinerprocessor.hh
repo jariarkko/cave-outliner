@@ -26,7 +26,12 @@ struct ProcessorCrossSection {
 class Processor {
 
 public:
-  Processor(HighPrecisionVector3D boundingboxstartIn,
+  Processor(const char* fileNameIn,
+            unsigned int multiplierIn,
+            bool smoothIn,
+            bool mergedLinesIn,
+            float linewidthIn,
+            HighPrecisionVector3D boundingboxstartIn,
             HighPrecisionVector3D boundingboxendIn,
             outlinerhighprecisionreal stepxIn,
             outlinerhighprecisionreal stepyIn,
@@ -37,12 +42,17 @@ public:
   ~Processor();
   
   bool processScene(const aiScene* scene,
-                    SvgCreator& svg,
                     unsigned int nCrossSections,
                     struct ProcessorCrossSection* crossSections);
   
 private:
 
+  const char* fileName;
+  unsigned int multiplier;
+  bool smooth;
+  bool mergedLines;
+  float linewidth;
+   SvgCreator* svg;
   const unsigned int maxNeighbors = 8;
   HighPrecisionVector3D boundingboxstart;
   HighPrecisionVector3D boundingboxend;
@@ -111,6 +121,10 @@ private:
                                  struct ProcessorCrossSection* crossSections);
   bool processSceneCrossSection(unsigned int c,
                                 const struct ProcessorCrossSection* crossSection);
+  SvgCreator* createSvg(const char* svgFileName,
+                        const HighPrecisionVector3D& svgBoundingBoxStart,
+                        const HighPrecisionVector3D& svgBoundingBoxEnd,
+                        enum outlinerdirection svgDirection);
 };
 
 #endif // PROCESSOR_HH

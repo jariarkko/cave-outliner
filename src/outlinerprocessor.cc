@@ -19,38 +19,62 @@
 // Model processing ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-Processor::Processor(HighPrecisionVector3D boundingboxstartIn,
+Processor::Processor(const char* fileNameIn,
+                     unsigned int multiplierIn,
+                     bool smoothIn,
+                     bool mergedLinesIn,
+                     float linewidthIn,
+                     HighPrecisionVector3D boundingboxstartIn,
                      HighPrecisionVector3D boundingboxendIn,
                      outlinerhighprecisionreal stepxIn,
                      outlinerhighprecisionreal stepyIn,
                      enum outlinerdirection directionIn,
                      enum outlineralgorithm algorithmIn,
                      unsigned int holethresholdIn,
-                     IndexedMesh& indexedIn) : boundingboxstart(boundingboxstartIn),
-                                               boundingboxend(boundingboxendIn),
-                                               stepx(stepxIn),
-                                               stepy(stepyIn),
-                                               direction(directionIn),
-                                               algorithm(algorithmIn),
-                                               holethreshold(holethresholdIn),
-                                               matrix(boundingboxstartIn,
-                                                      boundingboxendIn,
-                                                      directionIn,
-                                                      stepxIn,
-                                                      stepyIn),
-                                               indexed(indexedIn) {
+                     IndexedMesh& indexedIn) :
+  fileName(fileNameIn),
+  multiplier(multiplierIn),
+  smooth(smoothIn),
+  mergedLines(mergedLinesIn),
+  linewidth(linewidthIn),
+  svg(0),
+  boundingboxstart(boundingboxstartIn),
+  boundingboxend(boundingboxendIn),
+  stepx(stepxIn),
+  stepy(stepyIn),
+  direction(directionIn),
+  algorithm(algorithmIn),
+  holethreshold(holethresholdIn),
+  matrix(boundingboxstartIn,
+         boundingboxendIn,
+         directionIn,
+         stepxIn,
+         stepyIn),
+  indexed(indexedIn) {
   debugf("algorithm %u=%u", algorithm, algorithmIn);
   if (holethreshold > outlinermaxholethreshold) {
     errf("Cannot compute hole thresholds larger than %u (%u given)", outlinermaxholethreshold, holethreshold);
   }
+  svg = createSvg(fileName,boundingboxstart,boundingboxend,direction);
 }
 
 Processor::~Processor() {
+  if (svg != 0) {
+    
+    // Check that file I/O was ok
+    if (!svg->ok()) {
+      errf("File output to %s failed", fileName);
+      exit(1);
+    }
+
+    // Delete the object
+    delete svg;
+    svg = 0;
+  }
 }
 
 bool
 Processor::processScene(const aiScene* scene,
-                        SvgCreator& svg,
                         unsigned int nCrossSections,
                         struct ProcessorCrossSection* crossSections) {
   
@@ -157,19 +181,19 @@ Processor::processScene(const aiScene* scene,
         switch (algorithm) {
         case alg_pixel:
           debugf("pixel alg %u,%u", xIndex, yIndex);
-          svg.pixel(x,y);
+          svg->pixel(x,y);
           break;
         case alg_borderpixel:
           debugf("borderpixel alg %u,%u", xIndex, yIndex);
           if (isBorder(xIndex,yIndex,nBorderTo,0,0,0,0)) {
-            svg.pixel(x,y);
+            svg->pixel(x,y);
           }
           break;
         case alg_borderline:
           debugf("borderline alg %u,%u", xIndex, yIndex);
           if (isBorder(xIndex,yIndex,nBorderTo,maxNeighbors,borderTablePrev,borderTableX,borderTableY)) {
             if (nBorderTo == 0) {
-              svg.pixel(x,y);
+              svg->pixel(x,y);
             } else {
               for (unsigned int b = 0; b < nBorderTo; b++) {
                 assert(outlinersaneindex(borderTableX[b]));
@@ -177,7 +201,7 @@ Processor::processScene(const aiScene* scene,
                 if (borderTablePrev[b]) {
                   outlinerhighprecisionreal otherX = indexToCoordinateX(borderTableX[b]);
                   outlinerhighprecisionreal otherY = indexToCoordinateY(borderTableY[b]);
-                  svg.line(otherX,otherY,x,y);
+                  svg->line(otherX,otherY,x,y);
                 }
               }
             }
@@ -501,6 +525,60 @@ outlinerhighprecisionreal
 Processor::indexToCoordinateY(unsigned int yIndex) {
   outlinerhighprecisionreal yStart = DirectionOperations::outputy(direction,boundingboxstart);
   return(yStart + stepy * yIndex);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// SVG Object Creation ////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+SvgCreator*
+Processor::createSvg(const char* svgFileName,
+                     const HighPrecisionVector3D& svgBoundingBoxStart,
+                     const HighPrecisionVector3D& svgBoundingBoxEnd,
+                     enum outlinerdirection svgDirection) {
+  
+  // Calculate sizes
+  outlinerhighprecisionreal xOutputStart = DirectionOperations::outputx(svgDirection,svgBoundingBoxStart);
+  outlinerhighprecisionreal xOutputEnd = DirectionOperations::outputx(svgDirection,svgBoundingBoxEnd);
+  outlinerhighprecisionreal yOutputStart = DirectionOperations::outputy(svgDirection,svgBoundingBoxStart);
+  outlinerhighprecisionreal yOutputEnd = DirectionOperations::outputy(svgDirection,svgBoundingBoxEnd);
+  outlinerhighprecisionreal xSize = (xOutputEnd - xOutputStart) / stepx;
+  outlinerhighprecisionreal ySize = (yOutputEnd - yOutputStart) / stepy;
+  unsigned int xSizeInt = xSize;
+  unsigned int ySizeInt = ySize;
+  outlinerhighprecisionreal xFactor = 1 / stepx;
+  outlinerhighprecisionreal yFactor = 1 / stepy;
+  deepdebugf("SVG %s size y %.2f..%.2f step %.2f ysize %.2f ysizeint %u",
+             svgFileName,
+             yOutputStart, yOutputEnd, stepy, ySize, ySizeInt);
+  debugf("SVG size will be %u x %u", xSizeInt, ySizeInt);
+
+  // Create the object
+  SvgCreator* result = new SvgCreator(svgFileName,
+                                      xSizeInt,ySizeInt,
+                                      multiplier,
+                                      xOutputStart,yOutputStart,
+                                      xFactor,yFactor,
+                                      smooth,mergedLines,
+                                      linewidth);
+  
+  // Check for allocation success
+  deepdebugf("svg allocated");
+  if (result == 0) {
+    errf("Cannot allocate SvgCreator object");
+    exit(1);
+  }
+  
+  // Check that we were able to open the file
+  deepdebugf("svg initial check");
+  if (!result->ok()) {
+    errf("File open for writing  to %s failed", fileName);
+    exit(1);
+  }
+
+  // All good. Return.
+  deepdebugf("svg creation in processor done");
+  return(result);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

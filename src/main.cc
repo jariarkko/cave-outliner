@@ -270,35 +270,13 @@ main(int argc, char** argv) {
     BoundingBoxer boxer(scene);
     boxer.getBoundingBox(boundingBoxStart,boundingBoxEnd);
   }
-  
-  // Open the output
+
+  // Derive some size information
   outlinerhighprecisionreal xOutputStart = DirectionOperations::outputx(direction,boundingBoxStart);
   outlinerhighprecisionreal xOutputEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
   outlinerhighprecisionreal yOutputStart = DirectionOperations::outputy(direction,boundingBoxStart);
   outlinerhighprecisionreal yOutputEnd = DirectionOperations::outputy(direction,boundingBoxEnd);
-  outlinerhighprecisionreal xSize = (xOutputEnd - xOutputStart) / stepx;
-  outlinerhighprecisionreal ySize = (yOutputEnd - yOutputStart) / stepy;
-  unsigned int xSizeInt = xSize;
-  unsigned int ySizeInt = ySize;
-  outlinerhighprecisionreal xFactor = 1 / stepx;
-  outlinerhighprecisionreal yFactor = 1 / stepy;
-  deepdebugf("SVG size y %.2f..%.2f step %.2f ysize %.2f ysizeint %u",
-             yOutputStart, yOutputEnd, stepy, ySize, ySizeInt);
-  debugf("SVG size will be %u x %u", xSizeInt, ySizeInt);
-  SvgCreator svg(output,
-                 xSizeInt,ySizeInt,
-                 multiplier,
-                 xOutputStart,yOutputStart,
-                 xFactor,yFactor,
-                 smooth,mergedLines,
-                 linewidth);
   
-  // Check that we were able to open the file
-  if (!svg.ok()) {
-    errf("File open for writing  to %s failed", output);
-    return(1);
-  }
-
   // Check if we need to make cross sections
   if (automaticCrossSections) {
     if (nCrossSections + nAutomaticCrossSections >= outlinermaxcrosssections) {
@@ -325,7 +303,12 @@ main(int argc, char** argv) {
   indexed.addScene(scene);
   
   // Process the model
-  Processor processor(boundingBoxStart,
+  Processor processor(output,
+                      multiplier,
+                      smooth,
+                      mergedLines,
+                      linewidth,
+                      boundingBoxStart,
                       boundingBoxEnd,
                       stepx,
                       stepy,
@@ -333,18 +316,12 @@ main(int argc, char** argv) {
                       algorithm,
                       holethreshold,
                       indexed);
-  if (!processor.processScene(scene,svg,
+  if (!processor.processScene(scene,
                               nCrossSections,
                               crossSections)) {
     return(1);
   }
 
-  // Check that file I/O was ok
-  if (!svg.ok()) {
-    errf("File output to %s failed", output);
-    return(1);
-  }
-  
   // Done
   return(0);
 }

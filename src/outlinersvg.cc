@@ -245,6 +245,8 @@ SvgCreator::coordinateNormalization(float x,
 
 bool
 SvgCreator::ok() {
+  deepdeepdebugf("SvgCreator::ok %lx", this);
+  deepdeepdebugf("SvgCreator::ok %u %u", xSize, ySize);
   return(xSize > 0 && ySize > 0 && file.good());
 }
   
@@ -254,6 +256,10 @@ SvgCreator::ok() {
 
 void
 SvgCreator::preamble() {
+
+  // Debugs
+  debugf("preamble");
+  
   // Basics for all SVGs
   file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
   file << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n";
@@ -264,6 +270,9 @@ SvgCreator::preamble() {
   // Make the background white
   file << "<rect x=\"0\" y=\"0\" width=\"" << (xSize+1)*multiplier << "\" height=\"" << (ySize+1)*multiplier << "\"";
   file << " fill=\"white\" stroke=\"white\" stroke-width=\"0\"/>\n";
+
+  // Done
+  debugf("preamble done");
 }
 
 void
