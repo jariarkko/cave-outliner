@@ -538,21 +538,29 @@ Processor::createSvg(const char* svgFileName,
                      enum outlinerdirection svgDirection) {
   
   // Calculate sizes
-  outlinerhighprecisionreal xOutputStart = DirectionOperations::outputx(svgDirection,svgBoundingBoxStart);
-  outlinerhighprecisionreal xOutputEnd = DirectionOperations::outputx(svgDirection,svgBoundingBoxEnd);
-  outlinerhighprecisionreal yOutputStart = DirectionOperations::outputy(svgDirection,svgBoundingBoxStart);
-  outlinerhighprecisionreal yOutputEnd = DirectionOperations::outputy(svgDirection,svgBoundingBoxEnd);
-  outlinerhighprecisionreal xSize = (xOutputEnd - xOutputStart) / stepx;
-  outlinerhighprecisionreal ySize = (yOutputEnd - yOutputStart) / stepy;
-  unsigned int xSizeInt = xSize;
-  unsigned int ySizeInt = ySize;
-  outlinerhighprecisionreal xFactor = 1 / stepx;
-  outlinerhighprecisionreal yFactor = 1 / stepy;
+  outlinerhighprecisionreal xOutputStart;
+  outlinerhighprecisionreal xOutputEnd;
+  outlinerhighprecisionreal yOutputStart;
+  outlinerhighprecisionreal yOutputEnd;
+  outlinerhighprecisionreal xSize;
+  outlinerhighprecisionreal ySize;
+  unsigned int xSizeInt;
+  unsigned int ySizeInt;
+  outlinerhighprecisionreal xFactor;
+  outlinerhighprecisionreal yFactor;
+  createSvgCalculateSizes(svgBoundingBoxStart,svgBoundingBoxEnd,
+                          stepx,stepy,
+                          svgDirection,
+                          xOutputStart,xOutputEnd,
+                          yOutputStart,yOutputEnd,
+                          xSize,ySize,
+                          xSizeInt,ySizeInt,
+                          xFactor,yFactor);
   deepdebugf("SVG %s size y %.2f..%.2f step %.2f ysize %.2f ysizeint %u",
              svgFileName,
              yOutputStart, yOutputEnd, stepy, ySize, ySizeInt);
   debugf("SVG size will be %u x %u", xSizeInt, ySizeInt);
-
+  
   // Create the object
   SvgCreator* result = new SvgCreator(svgFileName,
                                       xSizeInt,ySizeInt,
@@ -579,6 +587,35 @@ Processor::createSvg(const char* svgFileName,
   // All good. Return.
   deepdebugf("svg creation in processor done");
   return(result);
+}
+
+void
+Processor::createSvgCalculateSizes(const HighPrecisionVector3D& svgBoundingBoxStart,
+                                   const HighPrecisionVector3D& svgBoundingBoxEnd,
+                                   const outlinerhighprecisionreal stepx,
+                                   const outlinerhighprecisionreal stepy,
+                                   const enum outlinerdirection svgDirection,
+                                   outlinerhighprecisionreal& xOutputStart,
+                                   outlinerhighprecisionreal& xOutputEnd,
+                                   outlinerhighprecisionreal& yOutputStart,
+                                   outlinerhighprecisionreal& yOutputEnd,
+                                   outlinerhighprecisionreal& xSize,
+                                   outlinerhighprecisionreal& ySize,
+                                   unsigned int& xSizeInt,
+                                   unsigned int& ySizeInt,
+                                   outlinerhighprecisionreal& xFactor,
+                                   outlinerhighprecisionreal& yFactor) {
+  
+  xOutputStart = DirectionOperations::outputx(svgDirection,svgBoundingBoxStart);
+  xOutputEnd = DirectionOperations::outputx(svgDirection,svgBoundingBoxEnd);
+  yOutputStart = DirectionOperations::outputy(svgDirection,svgBoundingBoxStart);
+  yOutputEnd = DirectionOperations::outputy(svgDirection,svgBoundingBoxEnd);
+  xSize = (xOutputEnd - xOutputStart) / stepx;
+  ySize = (yOutputEnd - yOutputStart) / stepy;
+  xSizeInt = xSize;
+  ySizeInt = ySize;
+  xFactor = 1 / stepx;
+  yFactor = 1 / stepy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

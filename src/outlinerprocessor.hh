@@ -125,6 +125,21 @@ private:
                         const HighPrecisionVector3D& svgBoundingBoxStart,
                         const HighPrecisionVector3D& svgBoundingBoxEnd,
                         enum outlinerdirection svgDirection);
+  void createSvgCalculateSizes(const HighPrecisionVector3D& svgBoundingBoxStart,
+                               const HighPrecisionVector3D& svgBoundingBoxEnd,
+                               const outlinerhighprecisionreal stepx,
+                               const outlinerhighprecisionreal stepy,
+                               const enum outlinerdirection svgDirection,
+                               outlinerhighprecisionreal& xOutputStart,
+                               outlinerhighprecisionreal& xOutputEnd,
+                               outlinerhighprecisionreal& yOutputStart,
+                               outlinerhighprecisionreal& yOutputEnd,
+                               outlinerhighprecisionreal& xSize,
+                               outlinerhighprecisionreal& ySize,
+                               unsigned int& xSizeInt,
+                               unsigned int& ySizeInt,
+                               outlinerhighprecisionreal& xFactor,
+                               outlinerhighprecisionreal& yFactor);
 };
 
 #endif // PROCESSOR_HH
