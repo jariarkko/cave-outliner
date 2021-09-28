@@ -1,5 +1,5 @@
 
-#include <assert.h>
+#include <cassert>
 #include <stdlib.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

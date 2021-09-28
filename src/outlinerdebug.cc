@@ -4,7 +4,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <stdarg.h>
-#include <assert.h>
+#include <cassert>
 #include <string.h>
 #include <stdlib.h>
 #include <iostream>
