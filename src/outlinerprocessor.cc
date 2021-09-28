@@ -14,6 +14,7 @@
 #include "outlinermath.hh"
 #include "outlinerdebug.hh"
 #include "outlinerprocessor.hh"
+#include "outlinerprocessorcrosssection.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Model processing ///////////////////////////////////////////////////////////////////////////
@@ -24,8 +25,8 @@ Processor::Processor(const char* fileNameIn,
                      bool smoothIn,
                      bool mergedLinesIn,
                      float linewidthIn,
-                     HighPrecisionVector3D boundingboxstartIn,
-                     HighPrecisionVector3D boundingboxendIn,
+                     HighPrecisionVector3D boundingBoxStartIn,
+                     HighPrecisionVector3D boundingBoxEndIn,
                      outlinerhighprecisionreal stepxIn,
                      outlinerhighprecisionreal stepyIn,
                      enum outlinerdirection directionIn,
@@ -38,15 +39,15 @@ Processor::Processor(const char* fileNameIn,
   mergedLines(mergedLinesIn),
   linewidth(linewidthIn),
   svg(0),
-  boundingboxstart(boundingboxstartIn),
-  boundingboxend(boundingboxendIn),
+  boundingBoxStart(boundingBoxStartIn),
+  boundingBoxEnd(boundingBoxEndIn),
   stepx(stepxIn),
   stepy(stepyIn),
   direction(directionIn),
   algorithm(algorithmIn),
   holethreshold(holethresholdIn),
-  matrix(boundingboxstartIn,
-         boundingboxendIn,
+  matrix(boundingBoxStartIn,
+         boundingBoxEndIn,
          directionIn,
          stepxIn,
          stepyIn),
@@ -55,7 +56,11 @@ Processor::Processor(const char* fileNameIn,
   if (holethreshold > outlinermaxholethreshold) {
     errf("Cannot compute hole thresholds larger than %u (%u given)", outlinermaxholethreshold, holethreshold);
   }
-  svg = createSvg(fileName,boundingboxstart,boundingboxend,direction);
+  boundingBoxStart2D.x = DirectionOperations::outputx(direction,boundingBoxStart);
+  boundingBoxStart2D.y = DirectionOperations::outputy(direction,boundingBoxStart);
+  boundingBoxEnd2D.x = DirectionOperations::outputx(direction,boundingBoxEnd);
+  boundingBoxEnd2D.y = DirectionOperations::outputy(direction,boundingBoxEnd);
+  svg = createSvg(fileName,boundingBoxStart2D,boundingBoxEnd2D,direction);
 }
 
 Processor::~Processor() {
@@ -76,7 +81,7 @@ Processor::~Processor() {
 bool
 Processor::processScene(const aiScene* scene,
                         unsigned int nCrossSections,
-                        struct ProcessorCrossSection* crossSections) {
+                        struct ProcessorCrossSectionInfo* crossSections) {
   
   debugf("processScene");
   assert(scene != 0);
@@ -88,27 +93,27 @@ Processor::processScene(const aiScene* scene,
   unsigned int xIndex = 0;
 
   infof("computing material matrix...");
-  for (outlinerhighprecisionreal x = DirectionOperations::outputx(direction,boundingboxstart);
-       x <= DirectionOperations::outputx(direction,boundingboxend);
+  for (outlinerhighprecisionreal x = DirectionOperations::outputx(direction,boundingBoxStart);
+       x <= DirectionOperations::outputx(direction,boundingBoxEnd);
        x += stepx) {
 
     debugf("main loop x = %.2f (%u)", x, xIndex);
-    assert(x >= DirectionOperations::outputx(direction,boundingboxstart));
-    assert(x <= DirectionOperations::outputx(direction,boundingboxend));
+    assert(x >= DirectionOperations::outputx(direction,boundingBoxStart));
+    assert(x <= DirectionOperations::outputx(direction,boundingBoxEnd));
     unsigned int yIndex = 0;
     if (xIndex >= matrix.xIndexSize) {
       debugf("processScene %u/%u", xIndex, matrix.xIndexSize);
     }
     assert(xIndex < matrix.xIndexSize);
     
-    for (outlinerhighprecisionreal y = DirectionOperations::outputy(direction,boundingboxstart);
-         y <= DirectionOperations::outputy(direction,boundingboxend);
+    for (outlinerhighprecisionreal y = DirectionOperations::outputy(direction,boundingBoxStart);
+         y <= DirectionOperations::outputy(direction,boundingBoxEnd);
          y += stepy) {
       
-      assert(x >= DirectionOperations::outputx(direction,boundingboxstart));
-      assert(x <= DirectionOperations::outputx(direction,boundingboxend));
-      assert(y >= DirectionOperations::outputy(direction,boundingboxstart));
-      assert(y <= DirectionOperations::outputy(direction,boundingboxend));
+      assert(x >= DirectionOperations::outputx(direction,boundingBoxStart));
+      assert(x <= DirectionOperations::outputx(direction,boundingBoxEnd));
+      assert(y >= DirectionOperations::outputy(direction,boundingBoxStart));
+      assert(y <= DirectionOperations::outputy(direction,boundingBoxEnd));
       if (yIndex >= matrix.yIndexSize) {
         debugf("processScene %u,%u/%u,%u", xIndex, yIndex, matrix.xIndexSize, matrix.yIndexSize);
       }
@@ -175,8 +180,8 @@ Processor::processScene(const aiScene* scene,
   for (xIndex = 0; xIndex < matrix.xIndexSize; xIndex++) {
     for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
       if (matrix.getMaterialMatrix(xIndex,yIndex)) {
-        outlinerhighprecisionreal x = DirectionOperations::outputx(direction,boundingboxstart) + xIndex * stepx;
-        outlinerhighprecisionreal y = DirectionOperations::outputy(direction,boundingboxstart) + yIndex * stepy;
+        outlinerhighprecisionreal x = DirectionOperations::outputx(direction,boundingBoxStart) + xIndex * stepx;
+        outlinerhighprecisionreal y = DirectionOperations::outputy(direction,boundingBoxStart) + yIndex * stepy;
         debugf("algorithm %u", algorithm);
         switch (algorithm) {
         case alg_pixel:
@@ -219,7 +224,7 @@ Processor::processScene(const aiScene* scene,
   }
 
   // Process cross sections
-  if (!processSceneCrossSections(nCrossSections,crossSections)) {
+  if (!processSceneCrossSections(scene,nCrossSections,crossSections)) {
     return(0);
   }
   
@@ -270,21 +275,13 @@ Processor::meshHasMaterial(const aiScene* scene,
                            outlinerhighprecisionreal y) {
   assert(scene != 0);
   assert(mesh != 0);
-  if (1) {
-    unsigned int nFaces = 0;
-    const aiFace** faces = 0;
-    indexed.getFaces(mesh,x,y,&nFaces,&faces);
-    deepdebugf("meshHasMaterial normally %u faces but on this tile %u faces", mesh->mNumFaces,nFaces);
-    for (unsigned int f = 0; f < nFaces; f++) {
-      if (faceHasMaterial(scene,mesh,faces[f],x,y)) {
-        return(1);
-      }
-    }
-  } else {
-    for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
-      if (faceHasMaterial(scene,mesh,&mesh->mFaces[f],x,y)) {
-        return(1);
-      }
+  unsigned int nFaces = 0;
+  const aiFace** faces = 0;
+  indexed.getFaces(mesh,x,y,&nFaces,&faces);
+  deepdebugf("meshHasMaterial normally %u faces but on this tile %u faces", mesh->mNumFaces,nFaces);
+  for (unsigned int f = 0; f < nFaces; f++) {
+    if (faceHasMaterial(scene,mesh,faces[f],x,y)) {
+      return(1);
     }
   }
   return(0);
@@ -517,13 +514,13 @@ Processor::isBorder(unsigned int xIndex,
 
 outlinerhighprecisionreal
 Processor::indexToCoordinateX(unsigned int xIndex) {
-  outlinerhighprecisionreal xStart = DirectionOperations::outputx(direction,boundingboxstart);
+  outlinerhighprecisionreal xStart = DirectionOperations::outputx(direction,boundingBoxStart);
   return(xStart + stepx * xIndex);
 }
 
 outlinerhighprecisionreal
 Processor::indexToCoordinateY(unsigned int yIndex) {
-  outlinerhighprecisionreal yStart = DirectionOperations::outputy(direction,boundingboxstart);
+  outlinerhighprecisionreal yStart = DirectionOperations::outputy(direction,boundingBoxStart);
   return(yStart + stepy * yIndex);
 }
 
@@ -533,8 +530,8 @@ Processor::indexToCoordinateY(unsigned int yIndex) {
 
 SvgCreator*
 Processor::createSvg(const char* svgFileName,
-                     const HighPrecisionVector3D& svgBoundingBoxStart,
-                     const HighPrecisionVector3D& svgBoundingBoxEnd,
+                     const HighPrecisionVector2D& svgBoundingBoxStart,
+                     const HighPrecisionVector2D& svgBoundingBoxEnd,
                      enum outlinerdirection svgDirection) {
   
   // Calculate sizes
@@ -590,8 +587,8 @@ Processor::createSvg(const char* svgFileName,
 }
 
 void
-Processor::createSvgCalculateSizes(const HighPrecisionVector3D& svgBoundingBoxStart,
-                                   const HighPrecisionVector3D& svgBoundingBoxEnd,
+Processor::createSvgCalculateSizes(const HighPrecisionVector2D& svgBoundingBoxStart,
+                                   const HighPrecisionVector2D& svgBoundingBoxEnd,
                                    const outlinerhighprecisionreal stepx,
                                    const outlinerhighprecisionreal stepy,
                                    const enum outlinerdirection svgDirection,
@@ -606,10 +603,10 @@ Processor::createSvgCalculateSizes(const HighPrecisionVector3D& svgBoundingBoxSt
                                    outlinerhighprecisionreal& xFactor,
                                    outlinerhighprecisionreal& yFactor) {
   
-  xOutputStart = DirectionOperations::outputx(svgDirection,svgBoundingBoxStart);
-  xOutputEnd = DirectionOperations::outputx(svgDirection,svgBoundingBoxEnd);
-  yOutputStart = DirectionOperations::outputy(svgDirection,svgBoundingBoxStart);
-  yOutputEnd = DirectionOperations::outputy(svgDirection,svgBoundingBoxEnd);
+  xOutputStart = svgBoundingBoxStart.x;
+  xOutputEnd = svgBoundingBoxEnd.y;
+  yOutputStart = svgBoundingBoxStart.y;
+  yOutputEnd = svgBoundingBoxEnd.y;
   xSize = (xOutputEnd - xOutputStart) / stepx;
   ySize = (yOutputEnd - yOutputStart) / stepy;
   xSizeInt = xSize;
@@ -623,11 +620,12 @@ Processor::createSvgCalculateSizes(const HighPrecisionVector3D& svgBoundingBoxSt
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 bool
-Processor::processSceneCrossSections(unsigned int nCrossSections,
-                                     struct ProcessorCrossSection* crossSections) {
+Processor::processSceneCrossSections(const aiScene* scene,
+                                     unsigned int nCrossSections,
+                                     struct ProcessorCrossSectionInfo* crossSections) {
   for (unsigned int c = 0; c < nCrossSections; c++) {
-    const struct ProcessorCrossSection* crossSection = &crossSections[c];
-    if (!processSceneCrossSection(c,crossSection)) {
+    const struct ProcessorCrossSectionInfo* crossSection = &crossSections[c];
+    if (!processSceneCrossSection(scene,c,crossSection)) {
       return(0);
     }
   }
@@ -635,9 +633,22 @@ Processor::processSceneCrossSections(unsigned int nCrossSections,
 }
 
 bool
-Processor::processSceneCrossSection(unsigned int c,
-                                    const struct ProcessorCrossSection* crossSection) {
-  infof("Cross section %u at %.2f to file %s", c, crossSection->x, crossSection->filename);
+Processor::processSceneCrossSection(const aiScene* scene,
+                                    unsigned int c,
+                                    const struct ProcessorCrossSectionInfo* crossSection) {
+  infof("Cross section %u at (%.2f,%.2f)-(%.2f,%.2f) to file %s",
+        c,
+        crossSection->start.x,
+        crossSection->start.y,
+        crossSection->end.x,
+        crossSection->end.y,
+        crossSection->filename);
+  ProcessorCrossSection proc(crossSection->filename,
+                             DirectionOperations::screenx(direction),
+                             crossSection->start,
+                             crossSection->end,
+                             *this);
+  proc.processSceneCrossSection(scene);
   return(1);
 }
 

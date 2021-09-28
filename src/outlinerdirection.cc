@@ -4,6 +4,21 @@
 #include "outlinerdirection.hh"
 #include "outlinerdebug.hh"
 
+enum outlinerdirection
+DirectionOperations::screenx(enum outlinerdirection direction) {
+  switch (direction) {
+  case dir_z:
+    return(dir_x);
+  case dir_x:
+    return(dir_y);
+  case dir_y:
+    return(dir_z);
+  default:
+    errf("Invalid internal variable: direction %u", direction);
+    exit(1);
+  }
+}
+
 float
 DirectionOperations::outputx(enum outlinerdirection direction,
                              const aiVector3D& point) {

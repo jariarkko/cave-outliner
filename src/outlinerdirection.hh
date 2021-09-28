@@ -27,6 +27,7 @@ enum outlinerdirection {
 class DirectionOperations {
 
 public:
+  static enum outlinerdirection screenx(enum outlinerdirection direction);
   static float outputx(enum outlinerdirection direction,
                        const aiVector3D& point);
   static float outputx(enum outlinerdirection direction,

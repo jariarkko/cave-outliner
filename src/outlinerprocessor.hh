@@ -16,12 +16,21 @@
 #include "outlinerindexedmesh.hh"
 #include "outlinermaterialmatrix.hh"
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Data types /////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 class IndexedMesh;
 
-struct ProcessorCrossSection {
-  outlinerhighprecisionreal x;
+struct ProcessorCrossSectionInfo {
   const char* filename;
+  HighPrecisionVector2D start;
+  HighPrecisionVector2D end;
 };
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Class interface ////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 class Processor {
 
@@ -31,8 +40,8 @@ public:
             bool smoothIn,
             bool mergedLinesIn,
             float linewidthIn,
-            HighPrecisionVector3D boundingboxstartIn,
-            HighPrecisionVector3D boundingboxendIn,
+            HighPrecisionVector3D boundingBoxStartIn,
+            HighPrecisionVector3D boundingBoxEndIn,
             outlinerhighprecisionreal stepxIn,
             outlinerhighprecisionreal stepyIn,
             enum outlinerdirection directionIn,
@@ -43,19 +52,22 @@ public:
   
   bool processScene(const aiScene* scene,
                     unsigned int nCrossSections,
-                    struct ProcessorCrossSection* crossSections);
+                    struct ProcessorCrossSectionInfo* crossSections);
   
 private:
 
+  friend class ProcessorCrossSection;
   const char* fileName;
   unsigned int multiplier;
   bool smooth;
   bool mergedLines;
   float linewidth;
-   SvgCreator* svg;
+  SvgCreator* svg;
   const unsigned int maxNeighbors = 8;
-  HighPrecisionVector3D boundingboxstart;
-  HighPrecisionVector3D boundingboxend;
+  HighPrecisionVector3D boundingBoxStart;
+  HighPrecisionVector3D boundingBoxEnd;
+  HighPrecisionVector2D boundingBoxStart2D;
+  HighPrecisionVector2D boundingBoxEnd2D;
   outlinerhighprecisionreal stepx;
   outlinerhighprecisionreal stepy;
   enum outlinerdirection direction;
@@ -117,16 +129,18 @@ private:
                             const unsigned int* neighborTableY);
   outlinerhighprecisionreal indexToCoordinateX(unsigned int xIndex);
   outlinerhighprecisionreal indexToCoordinateY(unsigned int yIndex);
-  bool processSceneCrossSections(unsigned int nCrossSections,
-                                 struct ProcessorCrossSection* crossSections);
-  bool processSceneCrossSection(unsigned int c,
-                                const struct ProcessorCrossSection* crossSection);
+  bool processSceneCrossSections(const aiScene* scene,
+                                 unsigned int nCrossSections,
+                                 struct ProcessorCrossSectionInfo* crossSections);
+  bool processSceneCrossSection(const aiScene* scene,
+                                unsigned int c,
+                                const struct ProcessorCrossSectionInfo* crossSection);
   SvgCreator* createSvg(const char* svgFileName,
-                        const HighPrecisionVector3D& svgBoundingBoxStart,
-                        const HighPrecisionVector3D& svgBoundingBoxEnd,
+                        const HighPrecisionVector2D& svgBoundingBoxStart,
+                        const HighPrecisionVector2D& svgBoundingBoxEnd,
                         enum outlinerdirection svgDirection);
-  void createSvgCalculateSizes(const HighPrecisionVector3D& svgBoundingBoxStart,
-                               const HighPrecisionVector3D& svgBoundingBoxEnd,
+  void createSvgCalculateSizes(const HighPrecisionVector2D& svgBoundingBoxStart,
+                               const HighPrecisionVector2D& svgBoundingBoxEnd,
                                const outlinerhighprecisionreal stepx,
                                const outlinerhighprecisionreal stepy,
                                const enum outlinerdirection svgDirection,

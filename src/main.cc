@@ -63,7 +63,7 @@ static bool automaticCrossSections = 0;
 static unsigned int nAutomaticCrossSections = 0;
 static const char* automaticCrossSectionFilenamePattern = 0;
 static unsigned int nCrossSections = 0;
-static struct ProcessorCrossSection crossSections[outlinermaxcrosssections];
+static struct ProcessorCrossSectionInfo crossSections[outlinermaxcrosssections];
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program and option handling ///////////////////////////////////////////////////////////
@@ -141,7 +141,10 @@ main(int argc, char** argv) {
         errf("Cross section file name cannot be empty, %s given", file);
         return(1);
       }
-      crossSections[nCrossSections].x = num;
+      crossSections[nCrossSections].start.x = num;
+      crossSections[nCrossSections].start.y = 0;
+      crossSections[nCrossSections].end.x = num;
+      crossSections[nCrossSections].end.y = 0;
       crossSections[nCrossSections].filename = file;
       nCrossSections++;
       argc--;argv++;
@@ -287,9 +290,20 @@ main(int argc, char** argv) {
     for (unsigned int c = 0; c < nAutomaticCrossSections; c++) {
       assert(nCrossSections < outlinermaxcrosssections);
       char* newFilename = makeFilenameFromPattern(automaticCrossSectionFilenamePattern,c);
-      crossSections[nCrossSections].x = xOutputStart + crossSectionStep * (c+0.5);
+      crossSections[nCrossSections].start.x =
+        crossSections[nCrossSections].end.x =
+          xOutputStart + crossSectionStep * (c+0.5);
+      crossSections[nCrossSections].start.y = 0;
+      crossSections[nCrossSections].end.y = 0;
       crossSections[nCrossSections].filename = newFilename;
       nCrossSections++;
+    }
+  } else {
+    // Fix the cross section endpoint on y dimension, as we now know the size of the image
+    for (unsigned int c = 0; c < nCrossSections; c++) {
+      if (crossSections[nCrossSections].end.y == 0) {
+        crossSections[nCrossSections].end.y = yOutputEnd;
+      }
     }
   }
 

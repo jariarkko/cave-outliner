@@ -1,6 +1,7 @@
 
 OBJS=	src/main.o \
 	src/outlinerprocessor.o \
+	src/outlinerprocessorcrosssection.o \
 	src/outlinerindexedmesh.o \
 	src/outlinermaterialmatrix.o \
 	src/outlinerdescribe.o \
@@ -16,6 +17,7 @@ HDRS=	src/outlinertypes.hh \
 	src/outlinerdebug.hh \
 	src/outlinerdirection.hh \
 	src/outlinerprocessor.hh \
+	src/outlinerprocessorcrosssection.hh \
 	src/outlinerindexedmesh.hh \
 	src/outlinermaterialmatrix.hh \
 	src/outlinerdescribe.hh \
@@ -28,6 +30,7 @@ SRCS=	src/main.cc \
 	src/outlinerdebug.cc \
 	src/outlinerdirection.cc \
 	src/outlinerprocessor.cc \
+	src/outlinerprocessorcrosssection.cc \
 	src/outlinerindexedmesh.cc \
 	src/outlinermaterialmatrix.cc \
 	src/outlinerdescribe.cc \
@@ -72,7 +75,10 @@ basic-tests:	cave-outliner \
 		cube-angled-pixel-test \
 		cube-angled-line-test  \
 		cube-angled-line-linewidth-test  \
-		cube-angled-line-multiplier-test
+		cube-angled-line-multiplier-test \
+		house-pixel-test \
+		house-line-test \
+		house-cross-section-test
 
 cube-pixel-test:
 	@echo 'Running test case cube-pixel-test...'
@@ -115,6 +121,23 @@ cube-angled-line-multiplier-test:
 	@./cave-outliner --quiet --borderline --step 0.1 --multiplier 10 --bounding -2 2 -2 2 -2 2 \
 		test/cube-angled.stl test/cube-angled-line-multiplier.svg
 	@diff test/cube-angled-line-multiplier.svg test/cube-angled-line-multiplier.svg.expected
+
+house-pixel-test:
+	@echo 'Running test case house-pixel-test...'
+	@./cave-outliner --quiet --pixel --step 0.2 --y --bounding -5 5 -5 5 -5 5 test/house.stl test/house-pixel.svg
+	@diff test/house-pixel.svg test/house-pixel.svg.expected
+
+house-line-test:
+	@echo 'Running test case house-line-test...'
+	@./cave-outliner --quiet --borderline --step 0.5 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-line.svg
+	@diff test/house-line.svg test/house-line.svg.expected
+
+house-cross-section-test:
+
+#	@echo 'Running test case house-cross-section-test...'
+#	@./cave-outliner --quiet --borderline --crosssections 1 house-cross-section-%.svg --step 0.2 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section.svg
+#	@diff test/house-cross-section.svg test/house-cross-section.svg.expected
+#	@diff test/house-cross-section-0.svg test/house-cross-section-0.svg.expected
 
 updateversion:
 	@echo This makefile target updates one software source file based on tags in GitHub,
