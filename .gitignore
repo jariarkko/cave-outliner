@@ -26,6 +26,9 @@
 *.a
 *.lib
 
+# Document temporary files
+._*
+
 # Executables
 *.exe
 *.out
