@@ -17,6 +17,18 @@
 // Function prototypes ////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+void boundingBoxIntersection(const HighPrecisionVector2D& box1Start,
+                             const HighPrecisionVector2D& box1End,
+                             const HighPrecisionVector2D& box2Start,
+                             const HighPrecisionVector2D& box2End,
+                             HighPrecisionVector2D& resultBoxStart,
+                             HighPrecisionVector2D& resultBoxEnd);
+void boundingBoxUnion(const HighPrecisionVector2D& box1Start,
+                      const HighPrecisionVector2D& box1End,
+                      const HighPrecisionVector2D& box2Start,
+                      const HighPrecisionVector2D& box2End,
+                      HighPrecisionVector2D& resultBoxStart,
+                      HighPrecisionVector2D& resultBoxEnd);
 void triangleBoundingBox2D(const aiVector2D& a,
                            const aiVector2D& b,
                            const aiVector2D& c,

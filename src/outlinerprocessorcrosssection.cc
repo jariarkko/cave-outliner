@@ -151,6 +151,7 @@ ProcessorCrossSection::sliceVerticalBoundingBoxMesh(const aiScene* scene,
     proc.indexed.getFaces(mesh,iter.x,iter.y,&nFaces,&faces);
     for (unsigned int f = 0; f < nFaces; f++) {
       sliceVerticalBoundingBoxFace(scene,mesh,faces[f],
+                                   iter.x, iter.y,
                                    set,
                                    sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd);
     }
@@ -161,7 +162,46 @@ void
 ProcessorCrossSection::sliceVerticalBoundingBoxFace(const aiScene* scene,
                                                     const aiMesh* mesh,
                                                     const aiFace* face,
+                                                    outlinerhighprecisionreal x,
+                                                    outlinerhighprecisionreal y,
                                                     bool& set,
                                                     HighPrecisionVector2D& sliceVerticalBoundingBoxStart,
                                                     HighPrecisionVector2D& sliceVerticalBoundingBoxEnd) {
+  aiVector2D a;
+  aiVector2D b;
+  aiVector2D c;
+  proc.faceGetVertices(mesh,face,sliceDirection,a,b,c);
+  HighPrecisionVector2D point(x,y);
+  HighPrecisionVector2D stepboundingbox(x+lineStepX,y+lineStepY);
+  if (boundingBoxIntersectsTriangle2D(a,b,c,point,stepboundingbox)) {
+    HighPrecisionVector2D faceBoundingBoxStart;
+    HighPrecisionVector2D faceBoundingBoxEnd;
+    triangleBoundingBox2D(a,b,c,
+                          faceBoundingBoxStart,
+                          faceBoundingBoxEnd);
+    HighPrecisionVector2D resultBoundingBoxStart;
+    HighPrecisionVector2D resultBoundingBoxEnd;
+    boundingBoxIntersection(point,
+                            stepboundingbox,
+                            faceBoundingBoxStart,
+                            faceBoundingBoxEnd,
+                            resultBoundingBoxStart,
+                            resultBoundingBoxEnd);
+    if (!set) {
+      sliceVerticalBoundingBoxStart = resultBoundingBoxStart;
+      sliceVerticalBoundingBoxEnd = resultBoundingBoxEnd;
+      set = 1;
+    } else {
+      HighPrecisionVector2D newBoundingBoxStart;
+      HighPrecisionVector2D newBoundingBoxEnd;
+      boundingBoxUnion(resultBoundingBoxStart,
+                       resultBoundingBoxEnd,
+                       sliceVerticalBoundingBoxStart,
+                       sliceVerticalBoundingBoxEnd,
+                       newBoundingBoxStart,
+                       newBoundingBoxEnd);
+      sliceVerticalBoundingBoxStart = newBoundingBoxStart;
+      sliceVerticalBoundingBoxEnd = newBoundingBoxEnd;
+    }
+  }
 }

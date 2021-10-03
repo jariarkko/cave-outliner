@@ -58,7 +58,7 @@ private:
   HighPrecisionVector2D sliceVerticalBoundingBoxEnd;
   Processor& proc;
   SvgCreator* svg;
-
+  
   void deleteSvg(void);
   void calculateLineEquation(void);
   void sliceVerticalBoundingBox(const aiScene* scene,
@@ -77,6 +77,8 @@ private:
   void sliceVerticalBoundingBoxFace(const aiScene* scene,
                                     const aiMesh* mesh,
                                     const aiFace* face,
+                                    outlinerhighprecisionreal x,
+                                    outlinerhighprecisionreal y,
                                     bool& set,
                                     HighPrecisionVector2D& sliceVerticalBoundingBoxStart,
                                     HighPrecisionVector2D& sliceVerticalBoundingBoxEnd);

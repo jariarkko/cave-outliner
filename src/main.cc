@@ -42,6 +42,7 @@ static char* makeFilenameFromPattern(const char* pattern,
 // Local variables ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+static bool test = 0;
 static bool info = 1;
 static bool debug = 0;
 static bool deepdebug = 0;
@@ -220,9 +221,7 @@ main(int argc, char** argv) {
       tiles = atoi(argv[2]);
       argc--;argv++;
     } else if (strcmp(argv[1],"--test") == 0) {
-      debuginit(info,debug,deepdebug,deepdeepdebug);
-      runTests();
-      return(0);
+      test = 1;
     } else if (strcmp(argv[1],"--version") == 0) {
       processVersion();
       return(0);
@@ -236,7 +235,14 @@ main(int argc, char** argv) {
     argc--;
     argv++;
   }
-
+  
+  // Run tests if needed
+  if (test) {
+    debuginit(info,debug,deepdebug,deepdeepdebug);
+    runTests();
+    return(0);
+  }
+  
   // Check input and output file names
   if (argc != 3) {
     errf("Expected two arguments, an input and output file name, got %u", argc-1);

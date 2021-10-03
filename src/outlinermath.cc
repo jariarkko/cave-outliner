@@ -23,6 +23,7 @@ static void detTests(void);
 static void boundingBoxTests(void);
 static void triangleBoundingBoxTests(void);
 static void boundingBoxIntersectionTests(void);
+static void boundingBoxUnionTests(void);
 static void pointTests(void);
 static void lineTests(void);
 static void lineIntersectionTests(void);
@@ -75,11 +76,42 @@ static void sortVectorsZ3D(const aiVector3D* a,
 // Math functions /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-void triangleBoundingBox2D(const aiVector2D& a,
-                           const aiVector2D& b,
-                           const aiVector2D& c,
-                           HighPrecisionVector2D& boundingBoxStart,
-                           HighPrecisionVector2D& boundingBoxEnd) {
+void
+boundingBoxIntersection(const HighPrecisionVector2D& box1Start,
+                        const HighPrecisionVector2D& box1End,
+                        const HighPrecisionVector2D& box2Start,
+                        const HighPrecisionVector2D& box2End,
+                        HighPrecisionVector2D& resultBoxStart,
+                        HighPrecisionVector2D& resultBoxEnd) {
+  resultBoxStart = box1Start;
+  resultBoxEnd = box1End;
+  if (box2Start.x > resultBoxStart.x) resultBoxStart.x = box2Start.x;
+  if (box2Start.y > resultBoxStart.y) resultBoxStart.y = box2Start.y;
+  if (box2End.x < resultBoxEnd.x) resultBoxEnd.x = box2End.x;
+  if (box2End.y < resultBoxEnd.y) resultBoxEnd.y = box2End.y;
+}
+
+void
+boundingBoxUnion(const HighPrecisionVector2D& box1Start,
+                 const HighPrecisionVector2D& box1End,
+                 const HighPrecisionVector2D& box2Start,
+                 const HighPrecisionVector2D& box2End,
+                 HighPrecisionVector2D& resultBoxStart,
+                 HighPrecisionVector2D& resultBoxEnd) {
+  resultBoxStart = box1Start;
+  resultBoxEnd = box1End;
+  if (box2Start.x < resultBoxStart.x) resultBoxStart.x = box2Start.x;
+  if (box2Start.y < resultBoxStart.y) resultBoxStart.y = box2Start.y;
+  if (box2End.x > resultBoxEnd.x) resultBoxEnd.x = box2End.x;
+  if (box2End.y > resultBoxEnd.y) resultBoxEnd.y = box2End.y;
+}
+
+void
+triangleBoundingBox2D(const aiVector2D& a,
+                      const aiVector2D& b,
+                      const aiVector2D& c,
+                      HighPrecisionVector2D& boundingBoxStart,
+                      HighPrecisionVector2D& boundingBoxEnd) {
 
   const aiVector2D* nth1;
   const aiVector2D* nth2;
@@ -690,6 +722,7 @@ mathTests(void) {
   boundingBoxTests();
   triangleBoundingBoxTests();
   boundingBoxIntersectionTests();
+  boundingBoxUnionTests();
   infof("math tests ok");
 }
 
@@ -841,8 +874,71 @@ void boundingBoxIntersectionTests(void) {
                                  test3boundingBox2Start,
                                  test3boundingBox2End);
   assert(!ans);
+
+  const HighPrecisionVector2D box1aStart(0,0);
+  const HighPrecisionVector2D box1aEnd(10,10);
+  const HighPrecisionVector2D box1bStart(3,0);
+  const HighPrecisionVector2D box1bEnd(7,6);
+  const HighPrecisionVector2D box2Start(2,2);
+  const HighPrecisionVector2D box2End(8,8);
+  HighPrecisionVector2D resultBoxStart;
+  HighPrecisionVector2D resultBoxEnd;
+  boundingBoxIntersection(box1aStart,
+                          box1aEnd,
+                          box2Start,
+                          box2End,
+                          resultBoxStart,
+                          resultBoxEnd);
+  assert(resultBoxStart.x == 2 && resultBoxStart.y == 2);
+  assert(resultBoxEnd.x == 8 && resultBoxEnd.y == 8);
+  boundingBoxIntersection(box1bStart,
+                          box1bEnd,
+                          box2Start,
+                          box2End,
+                          resultBoxStart,
+                          resultBoxEnd);
+  assert(resultBoxStart.x == 3 && resultBoxStart.y == 2);
+  assert(resultBoxEnd.x == 7 && resultBoxEnd.y == 6);
   
   infof("bounding box intersection tests ok");
+}
+
+static
+void boundingBoxUnionTests(void) {
+  infof("bounding box union tests...");
+  
+  const HighPrecisionVector2D box1aStart(0,0);
+  const HighPrecisionVector2D box1aEnd(10,10);
+  const HighPrecisionVector2D box1bStart(-3,0);
+  const HighPrecisionVector2D box1bEnd(7,16);
+  const HighPrecisionVector2D box2Start(2,2);
+  const HighPrecisionVector2D box2End(8,8);
+  HighPrecisionVector2D resultBoxStart;
+  HighPrecisionVector2D resultBoxEnd;
+  boundingBoxUnion(box1aStart,
+                   box1aEnd,
+                   box2Start,
+                   box2End,
+                   resultBoxStart,
+                   resultBoxEnd);
+  deepdebugf("union result (%.2f,%.2f)-(%.2f,%.2f)",
+             resultBoxStart.x, resultBoxStart.y,
+             resultBoxEnd.x, resultBoxEnd.y);
+  assert(resultBoxStart.x == 0 && resultBoxStart.y == 0);
+  assert(resultBoxEnd.x == 10 && resultBoxEnd.y == 10);
+  boundingBoxUnion(box1bStart,
+                   box1bEnd,
+                   box2Start,
+                   box2End,
+                   resultBoxStart,
+                   resultBoxEnd);
+  deepdebugf("union result (%.2f,%.2f)-(%.2f,%.2f)",
+             resultBoxStart.x, resultBoxStart.y,
+             resultBoxEnd.x, resultBoxEnd.y);
+  assert(resultBoxStart.x == -3 && resultBoxStart.y == 0);
+  assert(resultBoxEnd.x == 8 && resultBoxEnd.y == 16);
+  
+  infof("bounding box union tests ok");
 }
 
 static void

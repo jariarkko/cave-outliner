@@ -287,14 +287,13 @@ Processor::meshHasMaterial(const aiScene* scene,
   return(0);
 }
 
-bool
-Processor::faceHasMaterial(const aiScene* scene,
-                           const aiMesh* mesh,
-                           const aiFace* face,
-                           outlinerhighprecisionreal x,
-                           outlinerhighprecisionreal y) {
-  assert(scene != 0);
-  assert(mesh != 0);
+void
+Processor::faceGetVertices(const aiMesh* mesh,
+                            const aiFace* face,
+                           enum outlinerdirection thisDirection,
+                           aiVector2D& a,
+                           aiVector2D& b,
+                           aiVector2D& c) {
   assert(face != 0);
   if (face->mNumIndices != 3) {
     errf("Cannot handle a face with %u indices", face->mNumIndices);
@@ -315,9 +314,26 @@ Processor::faceHasMaterial(const aiScene* scene,
   aiVector3D* vertexA = &mesh->mVertices[face->mIndices[0]];
   aiVector3D* vertexB = &mesh->mVertices[face->mIndices[1]];
   aiVector3D* vertexC = &mesh->mVertices[face->mIndices[2]];
-  aiVector2D a(DirectionOperations::outputx(direction,*vertexA),DirectionOperations::outputy(direction,*vertexA));
-  aiVector2D b(DirectionOperations::outputx(direction,*vertexB),DirectionOperations::outputy(direction,*vertexB));
-  aiVector2D c(DirectionOperations::outputx(direction,*vertexC),DirectionOperations::outputy(direction,*vertexC));
+  aiVector2D aOne(DirectionOperations::outputx(thisDirection,*vertexA),DirectionOperations::outputy(thisDirection,*vertexA));
+  aiVector2D bOne(DirectionOperations::outputx(thisDirection,*vertexB),DirectionOperations::outputy(thisDirection,*vertexB));
+  aiVector2D cOne(DirectionOperations::outputx(thisDirection,*vertexC),DirectionOperations::outputy(thisDirection,*vertexC));
+  a = aOne;
+  b = bOne;
+  c = cOne;
+}
+
+bool
+Processor::faceHasMaterial(const aiScene* scene,
+                           const aiMesh* mesh,
+                           const aiFace* face,
+                           outlinerhighprecisionreal x,
+                           outlinerhighprecisionreal y) {
+  assert(scene != 0);
+  assert(mesh != 0);
+  aiVector2D a;
+  aiVector2D b;
+  aiVector2D c;
+  faceGetVertices(mesh,face,direction,a,b,c);
   HighPrecisionVector2D point(x,y);
   HighPrecisionVector2D stepboundingbox(x+stepx,y+stepy);
   if (boundingBoxIntersectsTriangle2D(a,b,c,point,stepboundingbox)) {
