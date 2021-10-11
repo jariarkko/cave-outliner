@@ -82,6 +82,17 @@ private:
                                     bool& set,
                                     HighPrecisionVector2D& sliceVerticalBoundingBoxStart,
                                     HighPrecisionVector2D& sliceVerticalBoundingBoxEnd);
+  void drawCrossSection(const aiScene* scene);
+  void drawCrossSectionNode(const aiScene* scene,
+                            const aiNode* node);
+  void drawCrossSectionMesh(const aiScene* scene,
+                            const aiMesh* mesh);
+  void drawCrossSectionFace(const aiScene* scene,
+                            const aiMesh* mesh,
+                            const aiFace* face,
+                            outlinerhighprecisionreal x,
+                            outlinerhighprecisionreal y);
+  
   void lineIteratorInit(struct ProcessorCrossSectionLineIterator& iter);
   bool lineIteratorDone(struct ProcessorCrossSectionLineIterator& iter);
   void lineIteratorNext(struct ProcessorCrossSectionLineIterator& iter);

@@ -136,13 +136,13 @@ house-line-test:
 
 house-cross-section-test:
 	@echo 'Running test case house-cross-section-test...'
-	@./cave-outliner --quiet --borderline --crosssections 1 house-cross-section-%.svg --step 0.2 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section.svg
+	@./cave-outliner --quiet --borderline --crosssections 1 test/house-cross-section-%.svg --step 0.2 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section.svg
 	@diff test/house-cross-section.svg test/house-cross-section.svg.expected
 	@diff test/house-cross-section-0.svg test/house-cross-section-0.svg.expected
 
 cube-cross-section-test:
 	@echo 'Running test case cube-cross-section-test...'
-	@./cave-outliner --quiet --pixel --crosssections 1 cube-cross-section-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section.svg
+	@./cave-outliner --quiet --pixel --crosssections 1 test/cube-cross-section-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section.svg
 	@diff test/cube-cross-section.svg test/cube-cross-section.svg.expected
 	@diff test/cube-cross-section-0.svg test/cube-cross-section-0.svg.expected
 

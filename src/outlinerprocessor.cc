@@ -288,12 +288,30 @@ Processor::meshHasMaterial(const aiScene* scene,
 }
 
 void
-Processor::faceGetVertices(const aiMesh* mesh,
-                            const aiFace* face,
-                           enum outlinerdirection thisDirection,
-                           aiVector2D& a,
-                           aiVector2D& b,
-                           aiVector2D& c) {
+Processor::faceGetVertices2D(const aiMesh* mesh,
+                             const aiFace* face,
+                             enum outlinerdirection thisDirection,
+                             aiVector2D& a,
+                             aiVector2D& b,
+                             aiVector2D& c) {
+  aiVector3D a3;
+  aiVector3D b3;
+  aiVector3D c3;
+  faceGetVertices3D(mesh,face,a3,b3,c3);
+  aiVector2D aOne(DirectionOperations::outputx(thisDirection,a3),DirectionOperations::outputy(thisDirection,a3));
+  aiVector2D bOne(DirectionOperations::outputx(thisDirection,b3),DirectionOperations::outputy(thisDirection,b3));
+  aiVector2D cOne(DirectionOperations::outputx(thisDirection,c3),DirectionOperations::outputy(thisDirection,c3));
+  a = aOne;
+  b = bOne;
+  c = cOne;
+}
+
+void
+Processor::faceGetVertices3D(const aiMesh* mesh,
+                             const aiFace* face,
+                             aiVector3D& a,
+                             aiVector3D& b,
+                             aiVector3D& c)  {
   assert(face != 0);
   if (face->mNumIndices != 3) {
     errf("Cannot handle a face with %u indices", face->mNumIndices);
@@ -314,12 +332,9 @@ Processor::faceGetVertices(const aiMesh* mesh,
   aiVector3D* vertexA = &mesh->mVertices[face->mIndices[0]];
   aiVector3D* vertexB = &mesh->mVertices[face->mIndices[1]];
   aiVector3D* vertexC = &mesh->mVertices[face->mIndices[2]];
-  aiVector2D aOne(DirectionOperations::outputx(thisDirection,*vertexA),DirectionOperations::outputy(thisDirection,*vertexA));
-  aiVector2D bOne(DirectionOperations::outputx(thisDirection,*vertexB),DirectionOperations::outputy(thisDirection,*vertexB));
-  aiVector2D cOne(DirectionOperations::outputx(thisDirection,*vertexC),DirectionOperations::outputy(thisDirection,*vertexC));
-  a = aOne;
-  b = bOne;
-  c = cOne;
+  a = *vertexA;
+  b = *vertexB;
+  c = *vertexC;
 }
 
 bool
@@ -333,7 +348,7 @@ Processor::faceHasMaterial(const aiScene* scene,
   aiVector2D a;
   aiVector2D b;
   aiVector2D c;
-  faceGetVertices(mesh,face,direction,a,b,c);
+  faceGetVertices2D(mesh,face,direction,a,b,c);
   HighPrecisionVector2D point(x,y);
   HighPrecisionVector2D stepboundingbox(x+stepx,y+stepy);
   if (OutlinerMath::boundingBoxIntersectsTriangle2D(a,b,c,point,stepboundingbox)) {

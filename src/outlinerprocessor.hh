@@ -156,12 +156,17 @@ private:
                                unsigned int& ySizeInt,
                                outlinerhighprecisionreal& xFactor,
                                outlinerhighprecisionreal& yFactor);
-  void faceGetVertices(const aiMesh* mesh,
-                       const aiFace* face,
-                       enum outlinerdirection thisDirection,
-                       aiVector2D& a,
-                       aiVector2D& b,
-                       aiVector2D& c);
+  void faceGetVertices2D(const aiMesh* mesh,
+                         const aiFace* face,
+                         enum outlinerdirection thisDirection,
+                         aiVector2D& a,
+                         aiVector2D& b,
+                         aiVector2D& c);
+  void faceGetVertices3D(const aiMesh* mesh,
+                         const aiFace* face,
+                         aiVector3D& a,
+                         aiVector3D& b,
+                         aiVector3D& c);
 };
 
 #endif // PROCESSOR_HH
