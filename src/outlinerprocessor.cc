@@ -64,6 +64,11 @@ Processor::Processor(const char* fileNameIn,
 }
 
 Processor::~Processor() {
+  svgDone();
+}
+
+void
+Processor::svgDone() {
   if (svg != 0) {
     
     // Check that file I/O was ok
@@ -75,6 +80,7 @@ Processor::~Processor() {
     // Delete the object
     delete svg;
     svg = 0;
+    
   }
 }
 
@@ -223,6 +229,9 @@ Processor::processScene(const aiScene* scene,
     }
   }
 
+  // Main result (plan view) is done, flush the image output
+  svgDone();
+  
   // Process cross sections
   if (!processSceneCrossSections(scene,nCrossSections,crossSections)) {
     return(0);

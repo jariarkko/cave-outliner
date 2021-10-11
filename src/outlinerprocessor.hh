@@ -141,6 +141,7 @@ private:
                         const HighPrecisionVector2D& svgBoundingBoxStart,
                         const HighPrecisionVector2D& svgBoundingBoxEnd,
                         enum outlinerdirection svgDirection);
+  void svgDone();
   void createSvgCalculateSizes(const HighPrecisionVector2D& svgBoundingBoxStart,
                                const HighPrecisionVector2D& svgBoundingBoxEnd,
                                const outlinerhighprecisionreal stepx,
