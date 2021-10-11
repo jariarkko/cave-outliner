@@ -298,10 +298,16 @@ main(int argc, char** argv) {
       char* newFilename = makeFilenameFromPattern(automaticCrossSectionFilenamePattern,c);
       crossSections[nCrossSections].start.x =
         crossSections[nCrossSections].end.x =
-          xOutputStart + crossSectionStep * (c+0.5);
-      crossSections[nCrossSections].start.y = 0;
-      crossSections[nCrossSections].end.y = 0;
+          xOutputStart + crossSectionStep * (((outlinerhighprecisionreal)c)+0.5);
+      crossSections[nCrossSections].start.y = yOutputStart;
+      crossSections[nCrossSections].end.y = yOutputEnd;
       crossSections[nCrossSections].filename = newFilename;
+      debugf("cross section file %s at x %.2f from y %.2f to %.2f, step was %.2f",
+             newFilename,
+             crossSections[nCrossSections].start.x,
+             crossSections[nCrossSections].start.y,
+             crossSections[nCrossSections].end.y,
+             crossSectionStep);
       nCrossSections++;
     }
   } else {
@@ -479,7 +485,7 @@ makeFilenameFromPattern(const char* pattern,
 static void
 runTests(void) {
   infof("running tests");
-  mathTests();
+  OutlinerMath::mathTests();
   MaterialMatrix::test();
   infof("tests ok");
 }

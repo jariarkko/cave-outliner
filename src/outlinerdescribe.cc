@@ -128,7 +128,14 @@ describeFace(const aiScene* scene,
              const aiFace* face) {
   deepdebugf("      face mNumIndices = %u", face->mNumIndices);
   for (unsigned int i = 0; i < face->mNumIndices; i++) {
-    deepdeepdebugf("        indice %u", face->mIndices[i]);
+    unsigned int ind = face->mIndices[i];
+    char buf[100];
+    describeVector3D(mesh->mVertices[ind],
+                     buf,
+                     sizeof(buf));
+    deepdeepdebugf("        indice %u %s",
+                   ind,
+                   buf);
   }
 }
 

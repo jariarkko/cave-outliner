@@ -129,6 +129,8 @@ private:
                             const unsigned int* neighborTableY);
   outlinerhighprecisionreal indexToCoordinateX(unsigned int xIndex);
   outlinerhighprecisionreal indexToCoordinateY(unsigned int yIndex);
+  unsigned int coordinateXToIndex(outlinerhighprecisionreal x);
+  unsigned int coordinateYToIndex(outlinerhighprecisionreal y);
   bool processSceneCrossSections(const aiScene* scene,
                                  unsigned int nCrossSections,
                                  struct ProcessorCrossSectionInfo* crossSections);

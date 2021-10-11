@@ -77,8 +77,10 @@ basic-tests:	cave-outliner \
 		cube-angled-line-linewidth-test  \
 		cube-angled-line-multiplier-test \
 		house-pixel-test \
-		house-line-test \
-		house-cross-section-test
+		house-line-test
+
+#		cube-cross-section-test \
+#		house-cross-section-test
 
 cube-pixel-test:
 	@echo 'Running test case cube-pixel-test...'
@@ -133,11 +135,16 @@ house-line-test:
 	@diff test/house-line.svg test/house-line.svg.expected
 
 house-cross-section-test:
+	@echo 'Running test case house-cross-section-test...'
+	@./cave-outliner --quiet --borderline --crosssections 1 house-cross-section-%.svg --step 0.2 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section.svg
+	@diff test/house-cross-section.svg test/house-cross-section.svg.expected
+	@diff test/house-cross-section-0.svg test/house-cross-section-0.svg.expected
 
-#	@echo 'Running test case house-cross-section-test...'
-#	@./cave-outliner --quiet --borderline --crosssections 1 house-cross-section-%.svg --step 0.2 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section.svg
-#	@diff test/house-cross-section.svg test/house-cross-section.svg.expected
-#	@diff test/house-cross-section-0.svg test/house-cross-section-0.svg.expected
+cube-cross-section-test:
+	@echo 'Running test case cube-cross-section-test...'
+	@./cave-outliner --quiet --pixel --crosssections 1 cube-cross-section-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section.svg
+	@diff test/cube-cross-section.svg test/cube-cross-section.svg.expected
+	@diff test/cube-cross-section-0.svg test/cube-cross-section-0.svg.expected
 
 updateversion:
 	@echo This makefile target updates one software source file based on tags in GitHub,

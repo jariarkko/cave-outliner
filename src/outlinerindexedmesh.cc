@@ -305,11 +305,11 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
   aiVector3D* vertexC = &mesh->mVertices[face->mIndices[2]];
   HighPrecisionVector3D elementBoundingBoxStart;
   HighPrecisionVector3D elementBoundingBoxEnd;
-  triangleBoundingBox3D(*vertexA,*vertexB,*vertexC,
-                        elementBoundingBoxStart,elementBoundingBoxEnd);
-  if (!boundingBoxesIntersect3D(modelBoundingBoxStart,
-                                modelBoundingBoxEnd,
-                                elementBoundingBoxStart,elementBoundingBoxEnd)) {
+  OutlinerMath::triangleBoundingBox3D(*vertexA,*vertexB,*vertexC,
+                                      elementBoundingBoxStart,elementBoundingBoxEnd);
+  if (!OutlinerMath::boundingBoxesIntersect3D(modelBoundingBoxStart,
+                                              modelBoundingBoxEnd,
+                                              elementBoundingBoxStart,elementBoundingBoxEnd)) {
     deepdebugf("not including face due to not being inside model bounding box");
     shadow.nOutsideModelBoundingBox++;
     return;
@@ -321,9 +321,9 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
   aiVector2D c(DirectionOperations::outputx(direction,*vertexC),DirectionOperations::outputy(direction,*vertexC));
   HighPrecisionVector2D elementFlatBoundingBoxStart;
   HighPrecisionVector2D elementFlatBoundingBoxEnd;
-  triangleBoundingBox2D(a,b,c,
-                        elementFlatBoundingBoxStart,
-                        elementFlatBoundingBoxEnd);
+  OutlinerMath::triangleBoundingBox2D(a,b,c,
+                                      elementFlatBoundingBoxStart,
+                                      elementFlatBoundingBoxEnd);
 
   // Calculate which tiles this belongs to (for big faces, may be more
   // than one)
@@ -470,7 +470,7 @@ IndexedMesh::getFacesTile(struct IndexedMeshOneMesh& shadow,
   assert(shadow.tileMatrix != 0);
   assert(p_nFaces != 0);
   assert(p_faces != 0);
-  deepdebugf("faces faces in tile (%u/%u,%u/%u)",
+  deepdebugf("faces in tile (%u/%u,%u/%u)",
              tileX, subdivisions, tileY, subdivisions);
   
   // Find the right row (x) in a matrix of tiles

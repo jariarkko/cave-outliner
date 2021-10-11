@@ -56,7 +56,7 @@ ProcessorCrossSection::deleteSvg(void) {
 
 void
 ProcessorCrossSection::calculateLineEquation(void) {
-  debugf("calculate line equation for (%.2f,%.2f)-(%.2f,%.2f)",
+  debugf("calculate cross section line equation for (%.2f,%.2f)-(%.2f,%.2f)",
          lineStart.x, lineStart.y, lineEnd.x, lineEnd.y);
   xDifference = lineEnd.x - lineStart.x;
   yDifference = lineEnd.y - lineStart.y;
@@ -69,6 +69,11 @@ ProcessorCrossSection::calculateLineEquation(void) {
   lineSteps = lineLength/lineStep;
   lineStepX = xDifference / lineSteps;
   lineStepY = yDifference / lineSteps;
+  debugf("cross section line equation length %.2f steps %.2f stepX %.2f stepY %.2f",
+         lineLength,
+         lineSteps,
+         lineStepX,
+         lineStepY);
 }
 
 void
@@ -95,6 +100,7 @@ ProcessorCrossSection::lineIteratorNext(struct ProcessorCrossSectionLineIterator
 bool
 ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   deleteSvg();
+  debugf("process scene cross section");
   sliceVerticalBoundingBox(scene,sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd);
   svg = proc.createSvg(fileName,sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd,sliceDirection);
   return(1);
@@ -105,6 +111,7 @@ ProcessorCrossSection::sliceVerticalBoundingBox(const aiScene* scene,
                                                 HighPrecisionVector2D& sliceVerticalBoundingBoxStart,
                                                 HighPrecisionVector2D& sliceVerticalBoundingBoxEnd) {
   assert(scene != 0);
+  deepdebugf("process cross section bounding box");
   bool set = 0;
   sliceVerticalBoundingBoxNode(scene,scene->mRootNode,
                                set,
@@ -119,6 +126,7 @@ ProcessorCrossSection::sliceVerticalBoundingBoxNode(const aiScene* scene,
                                                     HighPrecisionVector2D& sliceVerticalBoundingBoxEnd) {
   assert(scene != 0);
   assert(node != 0);
+  debugf("process node cross section");
   if (!node->mTransformation.IsIdentity()) {
     errf("Cannot handle transformations yet");
     exit(1);
@@ -143,17 +151,21 @@ ProcessorCrossSection::sliceVerticalBoundingBoxMesh(const aiScene* scene,
                                                     HighPrecisionVector2D& sliceVerticalBoundingBoxEnd) {
   assert(scene != 0);
   assert(mesh != 0);
+  debugf("process mesh cross section");
   struct ProcessorCrossSectionLineIterator iter;
   lineIteratorInit(iter);
   for (; !lineIteratorDone(iter); lineIteratorNext(iter)) {
     unsigned int nFaces = 0;
     const aiFace** faces = 0;
     proc.indexed.getFaces(mesh,iter.x,iter.y,&nFaces,&faces);
-    for (unsigned int f = 0; f < nFaces; f++) {
-      sliceVerticalBoundingBoxFace(scene,mesh,faces[f],
-                                   iter.x, iter.y,
-                                   set,
-                                   sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd);
+    if (nFaces > 0) {
+      deepdebugf("got %u cross section faces from (%.2f,%.2f)", nFaces, iter.x, iter.y);
+      for (unsigned int f = 0; f < nFaces; f++) {
+        sliceVerticalBoundingBoxFace(scene,mesh,faces[f],
+                                     iter.x, iter.y,
+                                     set,
+                                     sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd);
+      }
     }
   }
 }
@@ -173,35 +185,71 @@ ProcessorCrossSection::sliceVerticalBoundingBoxFace(const aiScene* scene,
   proc.faceGetVertices(mesh,face,sliceDirection,a,b,c);
   HighPrecisionVector2D point(x,y);
   HighPrecisionVector2D stepboundingbox(x+lineStepX,y+lineStepY);
-  if (boundingBoxIntersectsTriangle2D(a,b,c,point,stepboundingbox)) {
+  if (OutlinerMath::boundingBoxIntersectsTriangle2D(a,b,c,point,stepboundingbox)) {
+    deepdeepdebugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) hits step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
+                   mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
+                   mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
+                   mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
+                   point.x, point.y,
+                   stepboundingbox.x,
+                   stepboundingbox.y);
     HighPrecisionVector2D faceBoundingBoxStart;
     HighPrecisionVector2D faceBoundingBoxEnd;
-    triangleBoundingBox2D(a,b,c,
-                          faceBoundingBoxStart,
-                          faceBoundingBoxEnd);
+    OutlinerMath::triangleBoundingBox2D(a,b,c,
+                                        faceBoundingBoxStart,
+                                        faceBoundingBoxEnd);
     HighPrecisionVector2D resultBoundingBoxStart;
     HighPrecisionVector2D resultBoundingBoxEnd;
-    boundingBoxIntersection(point,
-                            stepboundingbox,
-                            faceBoundingBoxStart,
-                            faceBoundingBoxEnd,
-                            resultBoundingBoxStart,
-                            resultBoundingBoxEnd);
+    OutlinerMath::boundingBoxIntersection(point,
+                                          stepboundingbox,
+                                          faceBoundingBoxStart,
+                                          faceBoundingBoxEnd,
+                                          resultBoundingBoxStart,
+                                          resultBoundingBoxEnd);
     if (!set) {
       sliceVerticalBoundingBoxStart = resultBoundingBoxStart;
       sliceVerticalBoundingBoxEnd = resultBoundingBoxEnd;
+      deepdebugf("setting initial cross section bounding box at (%.2f,%.2f) to (%.2f,%.2f)-(%.2f,%.2f)",
+                 x, y,
+                 sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
+                 sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y);
       set = 1;
     } else {
       HighPrecisionVector2D newBoundingBoxStart;
       HighPrecisionVector2D newBoundingBoxEnd;
-      boundingBoxUnion(resultBoundingBoxStart,
-                       resultBoundingBoxEnd,
-                       sliceVerticalBoundingBoxStart,
-                       sliceVerticalBoundingBoxEnd,
-                       newBoundingBoxStart,
-                       newBoundingBoxEnd);
-      sliceVerticalBoundingBoxStart = newBoundingBoxStart;
-      sliceVerticalBoundingBoxEnd = newBoundingBoxEnd;
-    }
+      OutlinerMath::boundingBoxUnion(resultBoundingBoxStart,
+                                     resultBoundingBoxEnd,
+                                     sliceVerticalBoundingBoxStart,
+                                     sliceVerticalBoundingBoxEnd,
+                                     newBoundingBoxStart,
+                                     newBoundingBoxEnd);
+      deepdebugf("testing new cross section bounding box for face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) at (%.2f,%.2f) as (%.2f,%.2f)-(%.2f,%.2f)",
+                 mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
+                 mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
+                 mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
+                 x, y,
+                 newBoundingBoxStart.x, newBoundingBoxStart.y,
+                 newBoundingBoxEnd.x, newBoundingBoxEnd.y);
+      if (!OutlinerMath::boundingBoxEqual(sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd,
+                                          newBoundingBoxStart,newBoundingBoxEnd)) {
+        sliceVerticalBoundingBoxStart = newBoundingBoxStart;
+        sliceVerticalBoundingBoxEnd = newBoundingBoxEnd;
+        deepdebugf("setting new cross section bounding box to (%.2f,%.2f)-(%.2f,%.2f)",
+                   sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
+                   sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y);
+      }
+    } 
+  } else {
+    deepdeepdebugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) "
+                   "for direction %s (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) does NOT hit "
+                   "step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
+                   mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
+                   mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
+                   mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
+                   DirectionOperations::toString(sliceDirection),
+                   a.x, a.y, b.x, b.y, c.x, c.y,
+                   point.x, point.y,
+                   stepboundingbox.x,
+                   stepboundingbox.y);
   }
 }

@@ -14,52 +14,6 @@
 #include "outlinerdebug.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// Function prototypes ////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-static void utilityTests(void);
-static void vectorTests(void);
-static void detTests(void);
-static void boundingBoxTests(void);
-static void triangleBoundingBoxTests(void);
-static void boundingBoxIntersectionTests(void);
-static void boundingBoxUnionTests(void);
-static void pointTests(void);
-static void lineTests(void);
-static void lineIntersectionTests(void);
-static void triangleTests(void);
-static void sortVectorsX2D(const aiVector2D* a,
-                           const aiVector2D* b,
-                           const aiVector2D* c,
-                           const aiVector2D** nth0,
-                           const aiVector2D** nth1,
-                           const aiVector2D** nth2);
-static void sortVectorsY2D(const aiVector2D* a,
-                           const aiVector2D* b,
-                           const aiVector2D* c,
-                           const aiVector2D** nth0,
-                           const aiVector2D** nth1,
-                           const aiVector2D** nth2);
-static void sortVectorsX3D(const aiVector3D* a,
-                           const aiVector3D* b,
-                           const aiVector3D* c,
-                           const aiVector3D** nth0,
-                           const aiVector3D** nth1,
-                           const aiVector3D** nth2);
-static void sortVectorsY3D(const aiVector3D* a,
-                           const aiVector3D* b,
-                           const aiVector3D* c,
-                           const aiVector3D** nth0,
-                           const aiVector3D** nth1,
-                           const aiVector3D** nth2);
-static void sortVectorsZ3D(const aiVector3D* a,
-                           const aiVector3D* b,
-                           const aiVector3D* c,
-                           const aiVector3D** nth0,
-                           const aiVector3D** nth1,
-                           const aiVector3D** nth2);
-
-///////////////////////////////////////////////////////////////////////////////////////////////
 // Local macro utilities //////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -73,16 +27,37 @@ static void sortVectorsZ3D(const aiVector3D* a,
                                     (((c) <= (a)) && ((a) <= (d))))
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+// Debugs /////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+  
+# define  debugreturn(f,why,x) {                                             \
+    bool drv = (x);                                                          \
+    deepdeepdebugf("%s returns %u due to %s", (f), drv, (why));              \
+    return(drv); \
+ }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 // Math functions /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+bool
+OutlinerMath::boundingBoxEqual(const HighPrecisionVector2D& box1Start,
+                               const HighPrecisionVector2D& box1End,
+                               const HighPrecisionVector2D& box2Start,
+                               const HighPrecisionVector2D& box2End) {
+  return(box1Start.x == box2Start.x &&
+         box1Start.y == box2Start.y &&
+         box1End.x == box2End.x &&
+         box1End.y == box2End.y);
+}
+
 void
-boundingBoxIntersection(const HighPrecisionVector2D& box1Start,
-                        const HighPrecisionVector2D& box1End,
-                        const HighPrecisionVector2D& box2Start,
-                        const HighPrecisionVector2D& box2End,
-                        HighPrecisionVector2D& resultBoxStart,
-                        HighPrecisionVector2D& resultBoxEnd) {
+OutlinerMath::boundingBoxIntersection(const HighPrecisionVector2D& box1Start,
+                                      const HighPrecisionVector2D& box1End,
+                                      const HighPrecisionVector2D& box2Start,
+                                      const HighPrecisionVector2D& box2End,
+                                      HighPrecisionVector2D& resultBoxStart,
+                                      HighPrecisionVector2D& resultBoxEnd) {
   resultBoxStart = box1Start;
   resultBoxEnd = box1End;
   if (box2Start.x > resultBoxStart.x) resultBoxStart.x = box2Start.x;
@@ -92,12 +67,12 @@ boundingBoxIntersection(const HighPrecisionVector2D& box1Start,
 }
 
 void
-boundingBoxUnion(const HighPrecisionVector2D& box1Start,
-                 const HighPrecisionVector2D& box1End,
-                 const HighPrecisionVector2D& box2Start,
-                 const HighPrecisionVector2D& box2End,
-                 HighPrecisionVector2D& resultBoxStart,
-                 HighPrecisionVector2D& resultBoxEnd) {
+OutlinerMath::boundingBoxUnion(const HighPrecisionVector2D& box1Start,
+                               const HighPrecisionVector2D& box1End,
+                               const HighPrecisionVector2D& box2Start,
+                               const HighPrecisionVector2D& box2End,
+                               HighPrecisionVector2D& resultBoxStart,
+                               HighPrecisionVector2D& resultBoxEnd) {
   resultBoxStart = box1Start;
   resultBoxEnd = box1End;
   if (box2Start.x < resultBoxStart.x) resultBoxStart.x = box2Start.x;
@@ -107,12 +82,12 @@ boundingBoxUnion(const HighPrecisionVector2D& box1Start,
 }
 
 void
-triangleBoundingBox2D(const aiVector2D& a,
-                      const aiVector2D& b,
-                      const aiVector2D& c,
-                      HighPrecisionVector2D& boundingBoxStart,
-                      HighPrecisionVector2D& boundingBoxEnd) {
-
+OutlinerMath::triangleBoundingBox2D(const aiVector2D& a,
+                                    const aiVector2D& b,
+                                    const aiVector2D& c,
+                                    HighPrecisionVector2D& boundingBoxStart,
+                                    HighPrecisionVector2D& boundingBoxEnd) {
+  
   const aiVector2D* nth1;
   const aiVector2D* nth2;
   const aiVector2D* nth3;
@@ -142,11 +117,12 @@ triangleBoundingBox2D(const aiVector2D& a,
   boundingBoxEnd.y = yEnd;
 }
 
-void triangleBoundingBox3D(const aiVector3D& a,
-                           const aiVector3D& b,
-                           const aiVector3D& c,
-                           HighPrecisionVector3D& boundingBoxStart,
-                           HighPrecisionVector3D& boundingBoxEnd) {
+void
+OutlinerMath::triangleBoundingBox3D(const aiVector3D& a,
+                                    const aiVector3D& b,
+                                    const aiVector3D& c,
+                                    HighPrecisionVector3D& boundingBoxStart,
+                                    HighPrecisionVector3D& boundingBoxEnd) {
 
   const aiVector3D* nth1;
   const aiVector3D* nth2;
@@ -188,336 +164,156 @@ void triangleBoundingBox3D(const aiVector3D& a,
   boundingBoxEnd.z = zEnd;
 }
 
-static void
-sortVectorsX2D(const aiVector2D* a,
-               const aiVector2D* b,
-               const aiVector2D* c,
-               const aiVector2D** nth0,
-               const aiVector2D** nth1,
-               const aiVector2D** nth2) {
-
-  // There are 6 permutations of three numbers. Simply test for each condition.
-  if (a->x < b->x) {
-    if (c->x < a->x) {
-      *nth0 = c;
-      *nth1 = a;
-      *nth2 = b;
-    } else if (c->x < b->x) {
-      *nth0 = a;
-      *nth1 = c;
-      *nth2 = b;
-    } else {
-      *nth0 = a;
-      *nth1 = b;
-      *nth2 = c;
-    }
-  } else {
-    if (c->x < b->x) {
-      *nth0 = c;
-      *nth1 = b;
-      *nth2 = a;
-    } else if (c->x < a->x) {
-      *nth0 = b;
-      *nth1 = c;
-      *nth2 = a;
-    } else {
-      *nth0 = b;
-      *nth1 = a;
-      *nth2 = c;
-    }
-  }
-}
-
-static void
-sortVectorsY2D(const aiVector2D* a,
-               const aiVector2D* b,
-               const aiVector2D* c,
-               const aiVector2D** nth0,
-               const aiVector2D** nth1,
-               const aiVector2D** nth2) {
-  // There are 6 permutations of three numbers. Simply test for each condition.
-  if (a->y < b->y) {
-    if (c->y < a->y) {
-      *nth0 = c;
-      *nth1 = a;
-      *nth2 = b;
-    } else if (c->y < b->y) {
-      *nth0 = a;
-      *nth1 = c;
-      *nth2 = b;
-    } else {
-      *nth0 = a;
-      *nth1 = b;
-      *nth2 = c;
-    }
-  } else {
-    if (c->y < b->y) {
-      *nth0 = c;
-      *nth1 = b;
-      *nth2 = a;
-    } else if (c->y < a->y) {
-      *nth0 = b;
-      *nth1 = c;
-      *nth2 = a;
-    } else {
-      *nth0 = b;
-      *nth1 = a;
-      *nth2 = c;
-    }
-  }
-}
-
-static void
-sortVectorsX3D(const aiVector3D* a,
-               const aiVector3D* b,
-               const aiVector3D* c,
-               const aiVector3D** nth0,
-               const aiVector3D** nth1,
-               const aiVector3D** nth2) {
-
-  // There are 6 permutations of three numbers. Simply test for each condition.
-  if (a->x < b->x) {
-    if (c->x < a->x) {
-      *nth0 = c;
-      *nth1 = a;
-      *nth2 = b;
-    } else if (c->x < b->x) {
-      *nth0 = a;
-      *nth1 = c;
-      *nth2 = b;
-    } else {
-      *nth0 = a;
-      *nth1 = b;
-      *nth2 = c;
-    }
-  } else {
-    if (c->x < b->x) {
-      *nth0 = c;
-      *nth1 = b;
-      *nth2 = a;
-    } else if (c->x < a->x) {
-      *nth0 = b;
-      *nth1 = c;
-      *nth2 = a;
-    } else {
-      *nth0 = b;
-      *nth1 = a;
-      *nth2 = c;
-    }
-  }
-}
-
-static void
-sortVectorsY3D(const aiVector3D* a,
-               const aiVector3D* b,
-               const aiVector3D* c,
-               const aiVector3D** nth0,
-               const aiVector3D** nth1,
-               const aiVector3D** nth2) {
-  // There are 6 permutations of three numbers. Simply test for each condition.
-  if (a->y < b->y) {
-    if (c->y < a->y) {
-      *nth0 = c;
-      *nth1 = a;
-      *nth2 = b;
-    } else if (c->y < b->y) {
-      *nth0 = a;
-      *nth1 = c;
-      *nth2 = b;
-    } else {
-      *nth0 = a;
-      *nth1 = b;
-      *nth2 = c;
-    }
-  } else {
-    if (c->y < b->y) {
-      *nth0 = c;
-      *nth1 = b;
-      *nth2 = a;
-    } else if (c->y < a->y) {
-      *nth0 = b;
-      *nth1 = c;
-      *nth2 = a;
-    } else {
-      *nth0 = b;
-      *nth1 = a;
-      *nth2 = c;
-    }
-  }
-}
-
-static void
-sortVectorsZ3D(const aiVector3D* a,
-               const aiVector3D* b,
-               const aiVector3D* c,
-               const aiVector3D** nth0,
-               const aiVector3D** nth1,
-               const aiVector3D** nth2) {
-  // There are 6 permutations of three numbers. Simply test for each condition.
-  if (a->z < b->z) {
-    if (c->z < a->z) {
-      *nth0 = c;
-      *nth1 = a;
-      *nth2 = b;
-    } else if (c->z < b->z) {
-      *nth0 = a;
-      *nth1 = c;
-      *nth2 = b;
-    } else {
-      *nth0 = a;
-      *nth1 = b;
-      *nth2 = c;
-    }
-  } else {
-    if (c->z < b->z) {
-      *nth0 = c;
-      *nth1 = b;
-      *nth2 = a;
-    } else if (c->z < a->z) {
-      *nth0 = b;
-      *nth1 = c;
-      *nth2 = a;
-    } else {
-      *nth0 = b;
-      *nth1 = a;
-      *nth2 = c;
-    }
-  }
+bool
+OutlinerMath::pointOnLine2D(const aiVector2D& a,
+                            const aiVector2D& b,
+                            const aiVector2D& point) {
+  deepdeepdebugf("pointOnLine2D aiVector");
+  HighPrecisionVector2D tmp(point);
+  return(pointOnLine2D(a,b,tmp));
 }
 
 bool
-pointOnLine2D(const aiVector2D* a,
-              const aiVector2D* b,
-              const aiVector2D* point) {
-  HighPrecisionVector2D tmp(*point);
-  return(pointOnLine2D(a,b,&tmp));
-}
+OutlinerMath::pointOnLine2D(const aiVector2D& a,
+                            const aiVector2D& b,
+                            const HighPrecisionVector2D& point) {
 
-bool
-pointOnLine2D(const aiVector2D* a,
-              const aiVector2D* b,
-              const HighPrecisionVector2D* point) {
+  // Debugs
+  deepdeepdebugf("pointOnLine2D high precision (%.2f,%.2f)-(%.2f,%.2f) vs. (%.2f,%.2f)",
+                 a.x, a.y, b.x, b.y,
+                 point.x, point.y);
   
   // Check for a special case: line points are equal, resulting in
   // comparing to a point, not a line.
   
   if (vectorEqual(a,b))  {
-    return(vectorEqual(a,point));
+    debugreturn("pol2","line points equal",vectorEqual(a,point));
   }
 
   // Check for a special case: line is horizontal
-  if (a->y == b->y) {
-    if (point->y != a->y) return(0);
-    return(a->x <= point->x && point->x <= b->x);
+  if (a.y == b.y) {
+    if (point.y != a.y) debugreturn("pol","horizontal y diff",0);
+    debugreturn("pol2","line is horizontal",a.x <= point.x && point.x <= b.x);
   }
   
   // Check for a special case: line is vertical
-  if (a->x == b->x) {
-    if (point->x != a->x) return(0);
-    return(a->y <= point->y && point->y <= b->y);
+  if (a.x == b.x) {
+    if (point.x != a.x) debugreturn("pol2","vertical x diff",0);
+    debugreturn("pol2","line is vertical",a.y <= point.y && point.y <= b.y);
   }
   
   // Not a special case. Run the general check, taking algorithm from
   // https://stackoverflow.com/questions/17692922/check-is-a-point-x-y-is-between-two-points-drawn-on-a-straight-line
 
-  float alpha1 = (point->x - a->x) / (b->x - a->x);
-  float alpha2 = (point->y - a->y) / (b->y - a->y);
-  if (alpha1 != alpha2) return(0);
-  if (alpha1 < 0) return(0);
-  if (alpha1 > 1) return(0);
-  return(1);
+  float alpha1 = (point.x - a.x) / (b.x - a.x);
+  float alpha2 = (point.y - a.y) / (b.y - a.y);
+  if (alpha1 != alpha2) debugreturn("pol2","alpha diff",0);
+  if (alpha1 < 0) debugreturn("pol2","alpha neg",0);
+  if (alpha1 > 1) debugreturn("pol2","alpha above one",0);
+  debugreturn("pol2","fallthrough",1);
 }
 
 bool
-pointInsideTriangle2D(const aiVector2D& triangleA,
-                      const aiVector2D& triangleB,
-                      const aiVector2D& triangleC,
-                      const HighPrecisionVector2D& point) {
+OutlinerMath::pointInsideTriangle2D(const aiVector2D& triangleA,
+                                    const aiVector2D& triangleB,
+                                    const aiVector2D& triangleC,
+                                    const HighPrecisionVector2D& point) {
 
   // Check for a special case: all points are equal (resulting in
   // comparing to a point, not a triangle).
-  if (vectorEqual(&triangleA,&triangleB) && vectorEqual(&triangleA,&triangleC)) {
-    return(vectorEqual(&triangleA,&point));
+  if (vectorEqual(triangleA,triangleB) && vectorEqual(triangleA,triangleC)) {
+    deepdeepdebugf("pit2 special case all equal");
+    debugreturn("pit2","vectorEqual",vectorEqual(triangleA,point));
   }
   
   // Check for a special case: triangle collapses to a line (at least
   // in 2D).
-  if (vectorEqual(&triangleA,&triangleB)) {
-    return(pointOnLine2D(&triangleA,&triangleC,&point));
-  } else if (vectorEqual(&triangleA,&triangleC)) {
-    return(pointOnLine2D(&triangleA,&triangleB,&point));
-  } else if (vectorEqual(&triangleB,&triangleC)) {
-    return(pointOnLine2D(&triangleA,&triangleB,&point));
+  if (vectorEqual(triangleA,triangleB)) {
+    deepdeepdebugf("pit2 special case AB equal");
+    debugreturn("pit2","point on AB line",pointOnLine2D(triangleA,triangleC,point));
+  } else if (vectorEqual(triangleA,triangleC)) {
+    deepdeepdebugf("pit2 special case AC equal");
+    debugreturn("pit2","point on AC line",pointOnLine2D(triangleA,triangleB,point));
+  } else if (vectorEqual(triangleB,triangleC)) {
+    deepdeepdebugf("pit2 special case BC equal");
+    debugreturn("pit2","point on BC line ",pointOnLine2D(triangleA,triangleB,point));
   }
   
   // Not a special case. For the general case, we take the algorithm
   // from https://mathworld.wolfram.com/TriangleInterior.html
-  
+
+  deepdeepdebugf("pit2 regular case");
   HighPrecisionVector2D v = point; 
   HighPrecisionVector2D v0(triangleA);
-  HighPrecisionVector2D v1; vectorTo(&triangleA,&triangleB,&v1);
-  HighPrecisionVector2D v2; vectorTo(&triangleA,&triangleC,&v2);
-  deepdebugf("triangle v = (%.2f,%.2f)", v.x, v.y);
-  deepdebugf("triangle v0 = (%.2f,%.2f)", v0.x, v0.y);
-  deepdebugf("triangle v1 = (%.2f,%.2f)", v1.x, v1.y);
-  deepdebugf("triangle v2 = (%.2f,%.2f)", v2.x, v2.y);
-  outlinerhighprecisionreal a = (determinant2x2(&v,&v2) - determinant2x2(&v0,&v2)) / determinant2x2(&v1,&v2);
-  outlinerhighprecisionreal b = -((determinant2x2(&v,&v1) - determinant2x2(&v0,&v1)) / determinant2x2(&v1,&v2));
-  deepdebugf("triangle (%.1f,%.1f)-(%.1f,%.1f)-(%.1f,%.1f) check a %.2f b %.2f a+b %.2f",
-             triangleA.x, triangleA.y,
-             triangleB.x, triangleB.y,
-             triangleC.x, triangleC.y,
-             a, b, a+b);
-  return(a >= 0 && b >= 0 && a+b <= 1);
+  HighPrecisionVector2D v1; vectorTo(triangleA,triangleB,v1);
+  HighPrecisionVector2D v2; vectorTo(triangleA,triangleC,v2);
+  deepdeepdebugf("pit2 triangle v = (%.2f,%.2f)", v.x, v.y);
+  deepdeepdebugf("pit2 triangle v0 = (%.2f,%.2f)", v0.x, v0.y);
+  deepdeepdebugf("pit2  triangle v1 = (%.2f,%.2f)", v1.x, v1.y);
+  deepdeepdebugf("pit2 triangle v2 = (%.2f,%.2f)", v2.x, v2.y);
+  outlinerhighprecisionreal a = (determinant2x2(v,v2) - determinant2x2(v0,v2)) / determinant2x2(v1,v2);
+  outlinerhighprecisionreal b = -((determinant2x2(v,v1) - determinant2x2(v0,v1)) / determinant2x2(v1,v2));
+  deepdeepdebugf("pit2 triangle (%.1f,%.1f)-(%.1f,%.1f)-(%.1f,%.1f) check a %.2f b %.2f a+b %.2f",
+                 triangleA.x, triangleA.y,
+                 triangleB.x, triangleB.y,
+                 triangleC.x, triangleC.y,
+                 a, b, a+b);
+  debugreturn("pit2","regular",a >= 0 && b >= 0 && a+b <= 1);
 }
 
 bool
-pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
-                         const HighPrecisionVector2D& boxEnd,
-                         const aiVector2D& point) {
+OutlinerMath::pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
+                                       const HighPrecisionVector2D& boxEnd,
+                                       const aiVector2D& point) {
   return(point.x >= boxStart.x && point.x <= boxEnd.x &&
          point.y >= boxStart.y && point.y <= boxEnd.y);
 }
 
 bool
-pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
-                         const HighPrecisionVector2D& boxEnd,
-                         const HighPrecisionVector2D& point) {
+OutlinerMath::pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
+                                       const HighPrecisionVector2D& boxEnd,
+                                       const HighPrecisionVector2D& point) {
   return(point.x >= boxStart.x && point.x <= boxEnd.x &&
          point.y >= boxStart.y && point.y <= boxEnd.y);
 }
 
 bool
-boundingBoxIntersectsTriangle2D(const aiVector2D& a,
-                                const aiVector2D& b,
-                                const aiVector2D& c,
-                                const HighPrecisionVector2D& boxStart,
-                                const HighPrecisionVector2D& boxEnd) {
+OutlinerMath::boundingBoxIntersectsTriangle2D(const aiVector2D& a,
+                                              const aiVector2D& b,
+                                              const aiVector2D& c,
+                                              const HighPrecisionVector2D& boxStart,
+                                              const HighPrecisionVector2D& boxEnd) {
+  
+  // Debugs
+  deepdeepdebugf("boundingBoxIntersectsTriangle2D (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) and (%.2f,%.2f)-(%.2f,%.2f)",
+                 a.x, a.y, b.x, b.y, c.x, c.y,
+                 boxStart.x, boxStart.y,
+                 boxEnd.x, boxEnd.y);
   
   // First, if triangle corners are in the box, they intersect
-  if (pointInsideBoundingBox2D(boxStart,boxEnd,a)) return(1);
-  if (pointInsideBoundingBox2D(boxStart,boxEnd,b)) return(1);
-  if (pointInsideBoundingBox2D(boxStart,boxEnd,c)) return(1);
+  if (pointInsideBoundingBox2D(boxStart,boxEnd,a)) debugreturn("bbit2","corner a",1);
+  if (pointInsideBoundingBox2D(boxStart,boxEnd,b)) debugreturn("bbit2","corner b",1);
+  if (pointInsideBoundingBox2D(boxStart,boxEnd,c)) debugreturn("bbit2","corner c",1);
 
   // Otherwise, (for now just an approximation) check if the box corners or middle are in the triangle
   HighPrecisionVector2D boxUpperRight(boxEnd.x,boxStart.y);
   HighPrecisionVector2D boxLowerLeft(boxStart.x,boxEnd.y);
   HighPrecisionVector2D boxMiddle((boxStart.x + boxEnd.x) / 2,(boxStart.y + boxEnd.y) / 2);
-  if (pointInsideTriangle2D(a,b,c,boxStart)) return(1);
-  if (pointInsideTriangle2D(a,b,c,boxEnd)) return(1);
-  if (pointInsideTriangle2D(a,b,c,boxUpperRight)) return(1);
-  if (pointInsideTriangle2D(a,b,c,boxLowerLeft)) return(1);
-  if (pointInsideTriangle2D(a,b,c,boxMiddle)) return(1);
+  if (pointInsideTriangle2D(a,b,c,boxStart)) debugreturn("bbit2","start",1);
+  if (pointInsideTriangle2D(a,b,c,boxEnd)) debugreturn("bbit2","end",1);
+  if (pointInsideTriangle2D(a,b,c,boxUpperRight)) debugreturn("bbit2","upper",1);
+  if (pointInsideTriangle2D(a,b,c,boxLowerLeft)) debugreturn("bbit2","lower",1);
+  if (pointInsideTriangle2D(a,b,c,boxMiddle)) debugreturn("bbit2","middle",1);
   
   // Otherwise no
-  return(0);
+  debugreturn("bbit2","fallback",0);
 }
 
 bool
-boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
-                         HighPrecisionVector3D& boundingBox1End,
-                         HighPrecisionVector3D& boundingBox2Start,
-                         HighPrecisionVector3D& boundingBox2End) {
+OutlinerMath::boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
+                                       HighPrecisionVector3D& boundingBox1End,
+                                       HighPrecisionVector3D& boundingBox2Start,
+                                       HighPrecisionVector3D& boundingBox2End) {
   // Following the algorithm from https://math.stackexchange.com/questions/2651710/simplest-way-to-determine-if-two-3d-boxes-intersect
 
   bool xOverlap = (between(boundingBox1Start.x,boundingBox2Start.x,boundingBox1End.x) ||
@@ -539,11 +335,11 @@ boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
 }
 
 bool
-lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
-                             const aiVector2D& lineEnd,
-                             const aiVector2D& verticalLineStart,
-                             const aiVector2D& verticalLineEnd,
-                             aiVector2D& intersectionPoint) {
+OutlinerMath::lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
+                                           const aiVector2D& lineEnd,
+                                           const aiVector2D& verticalLineStart,
+                                           const aiVector2D& verticalLineEnd,
+                                           aiVector2D& intersectionPoint) {
   assert(verticalLineStart.x == verticalLineEnd.x);
 
   // Fetch basic values
@@ -609,11 +405,11 @@ lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
 }
 
 bool
-lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
-                               const aiVector2D& lineEnd,
-                               const aiVector2D& horizontalLineStart,
-                               const aiVector2D& horizontalLineEnd,
-                               aiVector2D& intersectionPoint) {
+OutlinerMath::lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
+                                             const aiVector2D& lineEnd,
+                                             const aiVector2D& horizontalLineStart,
+                                             const aiVector2D& horizontalLineEnd,
+                                             aiVector2D& intersectionPoint) {
   assert(horizontalLineStart.y == horizontalLineEnd.y);
   
   // Fetch basic values
@@ -679,30 +475,231 @@ lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
 }
 
 bool
-vectorEqual(const aiVector2D* a,
-            const aiVector2D* b) {
-  return(a->x == b->x && a->y == b->y);
+OutlinerMath::vectorEqual(const aiVector2D& a,
+                          const aiVector2D& b) {
+  return(a.x == b.x && a.y == b.y);
 }
 
 bool
-vectorEqual(const aiVector2D* a,
-            const HighPrecisionVector2D* b) {
-  return(a->x == b->x && a->y == b->y);
+OutlinerMath::vectorEqual(const aiVector2D& a,
+                          const HighPrecisionVector2D& b) {
+  return(a.x == b.x && a.y == b.y);
 }
 
 void
-vectorTo(const aiVector2D* from,
-         const aiVector2D* to,
-         HighPrecisionVector2D* result) {
-  *result = *to;
-  result->x -= from->x;
-  result->y -= from->y;
+OutlinerMath::vectorTo(const aiVector2D& from,
+                       const aiVector2D& to,
+                       HighPrecisionVector2D& result) {
+  result = to;
+  result.x -= from.x;
+  result.y -= from.y;
 }
 
 outlinerhighprecisionreal
-determinant2x2(const HighPrecisionVector2D* u,
-               const HighPrecisionVector2D* v) {
-  return(u->x * v->y - u->y * v->x);
+OutlinerMath::determinant2x2(const HighPrecisionVector2D& u,
+                             const HighPrecisionVector2D& v) {
+  return(u.x * v.y - u.y * v.x);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Auxiliary private functions ////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+OutlinerMath::sortVectorsX2D(const aiVector2D* a,
+                             const aiVector2D* b,
+                             const aiVector2D* c,
+                             const aiVector2D** nth0,
+                             const aiVector2D** nth1,
+                             const aiVector2D** nth2) {
+
+  // There are 6 permutations of three numbers. Simply test for each condition.
+  if (a->x < b->x) {
+    if (c->x < a->x) {
+      *nth0 = c;
+      *nth1 = a;
+      *nth2 = b;
+    } else if (c->x < b->x) {
+      *nth0 = a;
+      *nth1 = c;
+      *nth2 = b;
+    } else {
+      *nth0 = a;
+      *nth1 = b;
+      *nth2 = c;
+    }
+  } else {
+    if (c->x < b->x) {
+      *nth0 = c;
+      *nth1 = b;
+      *nth2 = a;
+    } else if (c->x < a->x) {
+      *nth0 = b;
+      *nth1 = c;
+      *nth2 = a;
+    } else {
+      *nth0 = b;
+      *nth1 = a;
+      *nth2 = c;
+    }
+  }
+}
+
+void
+OutlinerMath::sortVectorsY2D(const aiVector2D* a,
+                             const aiVector2D* b,
+                             const aiVector2D* c,
+                             const aiVector2D** nth0,
+                             const aiVector2D** nth1,
+                             const aiVector2D** nth2) {
+  // There are 6 permutations of three numbers. Simply test for each condition.
+  if (a->y < b->y) {
+    if (c->y < a->y) {
+      *nth0 = c;
+      *nth1 = a;
+      *nth2 = b;
+    } else if (c->y < b->y) {
+      *nth0 = a;
+      *nth1 = c;
+      *nth2 = b;
+    } else {
+      *nth0 = a;
+      *nth1 = b;
+      *nth2 = c;
+    }
+  } else {
+    if (c->y < b->y) {
+      *nth0 = c;
+      *nth1 = b;
+      *nth2 = a;
+    } else if (c->y < a->y) {
+      *nth0 = b;
+      *nth1 = c;
+      *nth2 = a;
+    } else {
+      *nth0 = b;
+      *nth1 = a;
+      *nth2 = c;
+    }
+  }
+}
+
+void
+OutlinerMath::sortVectorsX3D(const aiVector3D* a,
+                             const aiVector3D* b,
+                             const aiVector3D* c,
+                             const aiVector3D** nth0,
+                             const aiVector3D** nth1,
+                             const aiVector3D** nth2) {
+
+  // There are 6 permutations of three numbers. Simply test for each condition.
+  if (a->x < b->x) {
+    if (c->x < a->x) {
+      *nth0 = c;
+      *nth1 = a;
+      *nth2 = b;
+    } else if (c->x < b->x) {
+      *nth0 = a;
+      *nth1 = c;
+      *nth2 = b;
+    } else {
+      *nth0 = a;
+      *nth1 = b;
+      *nth2 = c;
+    }
+  } else {
+    if (c->x < b->x) {
+      *nth0 = c;
+      *nth1 = b;
+      *nth2 = a;
+    } else if (c->x < a->x) {
+      *nth0 = b;
+      *nth1 = c;
+      *nth2 = a;
+    } else {
+      *nth0 = b;
+      *nth1 = a;
+      *nth2 = c;
+    }
+  }
+}
+
+void
+OutlinerMath::sortVectorsY3D(const aiVector3D* a,
+                             const aiVector3D* b,
+                             const aiVector3D* c,
+                             const aiVector3D** nth0,
+                             const aiVector3D** nth1,
+                             const aiVector3D** nth2) {
+  // There are 6 permutations of three numbers. Simply test for each condition.
+  if (a->y < b->y) {
+    if (c->y < a->y) {
+      *nth0 = c;
+      *nth1 = a;
+      *nth2 = b;
+    } else if (c->y < b->y) {
+      *nth0 = a;
+      *nth1 = c;
+      *nth2 = b;
+    } else {
+      *nth0 = a;
+      *nth1 = b;
+      *nth2 = c;
+    }
+  } else {
+    if (c->y < b->y) {
+      *nth0 = c;
+      *nth1 = b;
+      *nth2 = a;
+    } else if (c->y < a->y) {
+      *nth0 = b;
+      *nth1 = c;
+      *nth2 = a;
+    } else {
+      *nth0 = b;
+      *nth1 = a;
+      *nth2 = c;
+    }
+  }
+}
+
+void
+OutlinerMath::sortVectorsZ3D(const aiVector3D* a,
+                             const aiVector3D* b,
+                             const aiVector3D* c,
+                             const aiVector3D** nth0,
+                             const aiVector3D** nth1,
+                             const aiVector3D** nth2) {
+  // There are 6 permutations of three numbers. Simply test for each condition.
+  if (a->z < b->z) {
+    if (c->z < a->z) {
+      *nth0 = c;
+      *nth1 = a;
+      *nth2 = b;
+    } else if (c->z < b->z) {
+      *nth0 = a;
+      *nth1 = c;
+      *nth2 = b;
+    } else {
+      *nth0 = a;
+      *nth1 = b;
+      *nth2 = c;
+    }
+  } else {
+    if (c->z < b->z) {
+      *nth0 = c;
+      *nth1 = b;
+      *nth2 = a;
+    } else if (c->z < a->z) {
+      *nth0 = b;
+      *nth1 = c;
+      *nth2 = a;
+    } else {
+      *nth0 = b;
+      *nth1 = a;
+      *nth2 = c;
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -710,7 +707,7 @@ determinant2x2(const HighPrecisionVector2D* u,
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void
-mathTests(void) {
+OutlinerMath::mathTests(void) {
   infof("running math tests");
   utilityTests();
   vectorTests();
@@ -720,14 +717,15 @@ mathTests(void) {
   lineIntersectionTests();
   triangleTests();
   boundingBoxTests();
+  boundingBoxEqualTests();
   triangleBoundingBoxTests();
   boundingBoxIntersectionTests();
   boundingBoxUnionTests();
   infof("math tests ok");
 }
 
-static void
-utilityTests(void) {
+void
+OutlinerMath::utilityTests(void) {
 
   debugf("utility tests...");
   // Between tests
@@ -762,30 +760,30 @@ utilityTests(void) {
   assert(!overlapanyorder(4,3,2,1));
 }
 
-static void
-vectorTests(void) {
+void
+OutlinerMath::vectorTests(void) {
   debugf("vector tests...");
   aiVector2D a(2,2);
   aiVector2D b(3,3);
   HighPrecisionVector2D result;
-  vectorTo(&a,&b,&result);
+  vectorTo(a,b,result);
   deepdebugf("vector test: result: (%f,%f)", result.x, result.y);
   assert(result.x == 1);
   assert(result.y == 1);
 }
 
-static void
-detTests(void) {
+void
+OutlinerMath::detTests(void) {
   debugf("det tests...");
   HighPrecisionVector2D C1(4,2);
   HighPrecisionVector2D C2(1,3);
-  outlinerhighprecisionreal result = determinant2x2(&C1,&C2);
+  outlinerhighprecisionreal result = determinant2x2(C1,C2);
   deepdebugf("determinant result = %.2f", result);
   assert(result == 10);
 }
 
-static void
-boundingBoxTests(void) {
+void
+OutlinerMath::boundingBoxTests(void) {
   debugf("bounding box tests...");
   aiVector2D a(0,0);
   aiVector2D b(0,3);
@@ -841,8 +839,8 @@ boundingBoxTests(void) {
   assert(ans == 1);
 }
 
-static
-void boundingBoxIntersectionTests(void) {
+void
+OutlinerMath::boundingBoxIntersectionTests(void) {
   infof("bounding box intersection tests...");
   
   HighPrecisionVector3D test1boundingBox1Start(0,0,0);
@@ -903,8 +901,29 @@ void boundingBoxIntersectionTests(void) {
   infof("bounding box intersection tests ok");
 }
 
-static
-void boundingBoxUnionTests(void) {
+void
+OutlinerMath::boundingBoxEqualTests(void) {
+  debugf("bounding box equal  tests...");
+  const HighPrecisionVector2D box1Start(0,0);
+  const HighPrecisionVector2D box1End(10,10);
+  const HighPrecisionVector2D box2Start(3,0);
+  const HighPrecisionVector2D box2End(7,6);
+  const HighPrecisionVector2D box3Start(0,0);
+  const HighPrecisionVector2D box3End(10,10);
+  const HighPrecisionVector2D box4Start(0,-1);
+  const HighPrecisionVector2D box4End(10,10);
+  bool ans;
+  ans = boundingBoxEqual(box1Start,box1End,box2Start,box2End);
+  assert(!ans);
+  ans = boundingBoxEqual(box1Start,box1End,box3Start,box3End);
+  assert(ans);
+  ans = boundingBoxEqual(box1Start,box1End,box4Start,box4End);
+  assert(!ans);
+  debugf("bounding box equal tests ok");
+}
+
+void
+OutlinerMath::boundingBoxUnionTests(void) {
   infof("bounding box union tests...");
   
   const HighPrecisionVector2D box1aStart(0,0);
@@ -941,19 +960,19 @@ void boundingBoxUnionTests(void) {
   infof("bounding box union tests ok");
 }
 
-static void
-pointTests(void) {
+void
+OutlinerMath::pointTests(void) {
   debugf("point tests...");
   aiVector2D a(1,1);
   aiVector2D b(1,2);
   aiVector2D c(1,1);
-  assert(vectorEqual(&a,&b) == 0);
-  assert(vectorEqual(&b,&c) == 0);
-  assert(vectorEqual(&a,&c) == 1);
+  assert(vectorEqual(a,b) == 0);
+  assert(vectorEqual(b,c) == 0);
+  assert(vectorEqual(a,c) == 1);
 }
 
-static void
-lineTests(void) {
+void
+OutlinerMath::lineTests(void) {
 
   debugf("line tests...");
   
@@ -963,11 +982,11 @@ lineTests(void) {
     aiVector2D b(1,0);
     aiVector2D c(2,0);
     HighPrecisionVector2D d(0.5,2);
-    bool ans = pointOnLine2D(&a,&c,&d);
+    bool ans = pointOnLine2D(a,c,d);
     assert(ans == 0);
-    ans = pointOnLine2D(&a,&b,&c);
+    ans = pointOnLine2D(a,b,c);
     assert(ans == 0);
-    ans = pointOnLine2D(&a,&c,&b);
+    ans = pointOnLine2D(a,c,b);
     assert(ans == 1);
   }
   
@@ -977,11 +996,11 @@ lineTests(void) {
     aiVector2D b(0,1);
     aiVector2D c(0,2);
     HighPrecisionVector2D d(0.5,1);
-    bool ans = pointOnLine2D(&a,&c,&d);
+    bool ans = pointOnLine2D(a,c,d);
     assert(ans == 0);
-    ans = pointOnLine2D(&a,&b,&c);
+    ans = pointOnLine2D(a,b,c);
     assert(ans == 0);
-    ans = pointOnLine2D(&a,&c,&b);
+    ans = pointOnLine2D(a,c,b);
     assert(ans == 1);
   }
   
@@ -991,18 +1010,18 @@ lineTests(void) {
     aiVector2D b(1,1);
     aiVector2D c(2,2);
     aiVector2D d(1,2);
-    bool ans = pointOnLine2D(&a,&c,&d);
+    bool ans = pointOnLine2D(a,c,d);
     assert(ans == 0);
-    ans = pointOnLine2D(&a,&b,&c);
+    ans = pointOnLine2D(a,b,c);
     assert(ans == 0);
-    ans = pointOnLine2D(&a,&c,&b);
+    ans = pointOnLine2D(a,c,b);
     assert(ans == 1);
   }
 
 }
 
-static void
-lineIntersectionTests(void) {
+void
+OutlinerMath::lineIntersectionTests(void) {
 
   debugf("line intersection tests...");
   
@@ -1135,8 +1154,8 @@ lineIntersectionTests(void) {
   
 }
 
-static void
-triangleTests(void) {
+void
+OutlinerMath::triangleTests(void) {
   debugf("triangle tests...");
   aiVector2D a(0,0);
   aiVector2D b(0,2);
@@ -1185,24 +1204,40 @@ triangleTests(void) {
   assert(ansbefore3 == 0);
 }
 
-static void
-triangleBoundingBoxTests(void) {
+void
+OutlinerMath::triangleBoundingBoxTests(void) {
   infof("triangle bounding box tests..");
   
   aiVector2D a(0,0);
   aiVector2D b(0,10);
   aiVector2D c(20,0);
+  aiVector2D degenerate1a(1,1);
+  aiVector2D degenerate1b(1,1);
+  aiVector2D degenerate1c(-1,1);
+  aiVector2D degenerate2a(1,1);
+  aiVector2D degenerate2b(1,1);
+  aiVector2D degenerate2c(-1,-1);
   HighPrecisionVector2D box1Start(-10,-10);
   HighPrecisionVector2D box1End(-1,-1);
   HighPrecisionVector2D box2Start(-10,-10);
   HighPrecisionVector2D box2End(5,5);
   HighPrecisionVector2D box3Start(-1000,-1000);
   HighPrecisionVector2D box3End(1000,1000);
+  HighPrecisionVector2D box4Start(-10,-10);
+  HighPrecisionVector2D box4End(0,0);
+  HighPrecisionVector2D box5Start(0.0,0.0);
+  HighPrecisionVector2D box5End(0.0,0.50);
   bool ans = boundingBoxIntersectsTriangle2D(a,b,c,box1Start,box1End);
   assert(!ans);
   ans = boundingBoxIntersectsTriangle2D(a,b,c,box2Start,box2End);
   assert(ans);
   ans = boundingBoxIntersectsTriangle2D(a,b,c,box3Start,box3End);
+  assert(ans);
+  ans = boundingBoxIntersectsTriangle2D(a,b,c,box4Start,box4End);
+  assert(ans);
+  ans = boundingBoxIntersectsTriangle2D(degenerate1a,degenerate1b,degenerate1c,box5Start,box5End);
+  assert(!ans);
+  ans = boundingBoxIntersectsTriangle2D(degenerate2a,degenerate2b,degenerate2c,box5Start,box5End);
   assert(ans);
   infof("triangle bounding box tests ok");
 }

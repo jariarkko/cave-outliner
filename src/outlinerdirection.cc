@@ -19,6 +19,21 @@ DirectionOperations::screenx(enum outlinerdirection direction) {
   }
 }
 
+const char*
+DirectionOperations::toString(enum outlinerdirection direction) {
+  switch (direction) {
+  case dir_z:
+    return("z");
+  case dir_x:
+    return("x");
+  case dir_y:
+    return("y");
+  default:
+    errf("Invalid internal variable: direction %u", direction);
+    exit(1);
+  }
+}
+
 float
 DirectionOperations::outputx(enum outlinerdirection direction,
                              const aiVector3D& point) {

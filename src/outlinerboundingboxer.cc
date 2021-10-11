@@ -103,9 +103,9 @@ BoundingBoxer::boundingFace(const aiMesh* mesh,
   const aiVector3D& vertexC = mesh->mVertices[face->mIndices[2]];
   HighPrecisionVector3D elementBoundingBoxStart;
   HighPrecisionVector3D elementBoundingBoxEnd;
-  triangleBoundingBox3D(vertexA,vertexB,vertexC,
-                        elementBoundingBoxStart,
-                        elementBoundingBoxEnd);
+  OutlinerMath::triangleBoundingBox3D(vertexA,vertexB,vertexC,
+                                      elementBoundingBoxStart,
+                                      elementBoundingBoxEnd);
 
   // See if this is the first bounding box we see
   if (!boundingBoxSet) {

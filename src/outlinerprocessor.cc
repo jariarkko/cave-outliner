@@ -336,7 +336,7 @@ Processor::faceHasMaterial(const aiScene* scene,
   faceGetVertices(mesh,face,direction,a,b,c);
   HighPrecisionVector2D point(x,y);
   HighPrecisionVector2D stepboundingbox(x+stepx,y+stepy);
-  if (boundingBoxIntersectsTriangle2D(a,b,c,point,stepboundingbox)) {
+  if (OutlinerMath::boundingBoxIntersectsTriangle2D(a,b,c,point,stepboundingbox)) {
     deepdebugf("found out that (%.2f,%.2f) is hitting a face",x,y);
     return(1);
   }
@@ -526,6 +526,24 @@ Processor::isBorder(unsigned int xIndex,
     debugf("point %u,%u is inside cave", xIndex, yIndex);
   }
   return(ans);
+}
+
+unsigned int
+Processor::coordinateXToIndex(outlinerhighprecisionreal x) {
+  outlinerhighprecisionreal xStart = DirectionOperations::outputx(direction,boundingBoxStart);
+  outlinerhighprecisionreal xEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
+  assert(x >= xStart);
+  assert(x <= xEnd);
+  return((x - xStart)/stepx);
+}
+
+unsigned int
+Processor::coordinateYToIndex(outlinerhighprecisionreal y) {
+  outlinerhighprecisionreal yStart = DirectionOperations::outputy(direction,boundingBoxStart);
+  outlinerhighprecisionreal yEnd = DirectionOperations::outputy(direction,boundingBoxEnd);
+  assert(y >= yStart);
+  assert(y <= yEnd);
+  return((y - yStart)/stepy);
 }
 
 outlinerhighprecisionreal
