@@ -18,16 +18,21 @@
 // Material matrix maintenance ////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-MaterialMatrix::MaterialMatrix(HighPrecisionVector3D boundingboxstart,
-                               HighPrecisionVector3D boundingboxend,
-                               enum outlinerdirection directionIn,
-                               float stepx,
-                               float stepy) {
-  direction = directionIn;
-  xIndexSize = ((DirectionOperations::outputx(direction,boundingboxend) -
-                 DirectionOperations::outputx(direction,boundingboxstart)) / stepx) + 2;
-  yIndexSize = ((DirectionOperations::outputy(direction,boundingboxend) -
-                 DirectionOperations::outputy(direction,boundingboxstart)) / stepy) + 2;
+MaterialMatrix::MaterialMatrix(HighPrecisionVector2D boundingboxstart,
+                               HighPrecisionVector2D boundingboxend,
+                               outlinerhighprecisionreal stepx,
+                               outlinerhighprecisionreal stepy) {
+  xIndexSize = ((unsigned int)ceil(((boundingboxend.x - boundingboxstart.x) / stepx))) + 2;
+  yIndexSize = ((unsigned int)ceil(((boundingboxend.y - boundingboxstart.y) / stepy))) + 2;
+  infof("yIndexSize %u from %.8f - %.8f / %.8f + 2",
+        yIndexSize, boundingboxstart.y, boundingboxend.y, stepy);
+  infof("sub %.8f div %.8f",
+        (boundingboxend.y - boundingboxstart.y),
+        ((boundingboxend.y - boundingboxstart.y) / stepy));
+  infof("material matrix %ux%u from %.2f..%.2f and %.2f..%.2f",
+        xIndexSize, yIndexSize,
+        boundingboxstart.x, boundingboxend.x,
+        boundingboxstart.y, boundingboxend.y);
   nBits = xIndexSize * yIndexSize;
   nChars = (nBits / 8) + 1;
   bitMatrix = new unsigned char [nChars];
@@ -111,12 +116,11 @@ MaterialMatrix::test(void) {
   
   // Simple test
   {
-    HighPrecisionVector3D boundingboxstart(0,0,0);
-    HighPrecisionVector3D boundingboxend(10,10,10);
-    enum outlinerdirection thisdir = dir_z;
+    HighPrecisionVector2D boundingboxstart(0,0);
+    HighPrecisionVector2D boundingboxend(10,10);
     float stepx = 1.0;
     float stepy = 1.0;
-    MaterialMatrix test1(boundingboxstart,boundingboxend,thisdir,stepx,stepy);
+    MaterialMatrix test1(boundingboxstart,boundingboxend,stepx,stepy);
     unsigned int xSize = test1.xIndexSize;
     unsigned int ySize = test1.yIndexSize;
     debugf("test1 sizes %u and %u", xSize, ySize);
@@ -135,11 +139,8 @@ MaterialMatrix::test(void) {
     test1.setMaterialMatrix(7,10);
     n = test1.count();
     assert(n == 4);
-    for (unsigned int x = DirectionOperations::outputx(thisdir,boundingboxstart);
-         x <= DirectionOperations::outputx(thisdir,boundingboxend);
-         x++) {
-      for (unsigned int y = DirectionOperations::outputy(thisdir,boundingboxstart);
-           y <= DirectionOperations::outputy(thisdir,boundingboxend); y++) {
+    for (unsigned int x = boundingboxstart.x; x <= boundingboxend.x; x++) {
+      for (unsigned int y = boundingboxstart.y; y <= boundingboxend.y; y++) {
         bool ans =  test1.getMaterialMatrix(x,y);
         if (ans) {
           debugf("found bit in %u,%u", x, y);
@@ -154,11 +155,11 @@ MaterialMatrix::test(void) {
   
   // Large test
   {
-    HighPrecisionVector3D boundingboxstart(0,0,0);
-    HighPrecisionVector3D boundingboxend(1000,1000,1000);
+    HighPrecisionVector2D boundingboxstart(0,0);
+    HighPrecisionVector2D boundingboxend(1000,1000);
     float stepx = 0.1;
     float stepy = 0.1;
-    MaterialMatrix test2(boundingboxstart,boundingboxend,dir_z,stepx,stepy);
+    MaterialMatrix test2(boundingboxstart,boundingboxend,stepx,stepy);
     unsigned int xSize = test2.xIndexSize;
     unsigned int ySize = test2.yIndexSize;
     debugf("test2 sizes %u and %u", xSize, ySize);

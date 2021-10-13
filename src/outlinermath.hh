@@ -62,6 +62,11 @@ public:
                                               const aiVector2D& c,
                                               const HighPrecisionVector2D& boxStart,
                                               const HighPrecisionVector2D& boxEnd);
+  static bool boundingBoxIntersectsTriangle3D(const aiVector3D& a,
+                                              const aiVector3D& b,
+                                              const aiVector3D& c,
+                                              const HighPrecisionVector3D& boxStart,
+                                              const HighPrecisionVector3D& boxEnd);
   static bool boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
                                        HighPrecisionVector3D& boundingBox1End,
                                        HighPrecisionVector3D& boundingBox2Start,

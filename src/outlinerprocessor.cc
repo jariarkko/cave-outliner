@@ -29,6 +29,7 @@ Processor::Processor(const char* fileNameIn,
                      HighPrecisionVector3D boundingBoxEndIn,
                      outlinerhighprecisionreal stepxIn,
                      outlinerhighprecisionreal stepyIn,
+                     outlinerhighprecisionreal stepzIn,
                      enum outlinerdirection directionIn,
                      enum outlineralgorithm algorithmIn,
                      unsigned int holethresholdIn,
@@ -43,12 +44,16 @@ Processor::Processor(const char* fileNameIn,
   boundingBoxEnd(boundingBoxEndIn),
   stepx(stepxIn),
   stepy(stepyIn),
+  stepz(stepzIn),
   direction(directionIn),
   algorithm(algorithmIn),
   holethreshold(holethresholdIn),
-  matrix(boundingBoxStartIn,
-         boundingBoxEndIn,
-         directionIn,
+  planviewBoundingBoxStart(DirectionOperations::outputx(direction,boundingBoxStart),
+                           DirectionOperations::outputy(direction,boundingBoxStart)),
+  planviewBoundingBoxEnd(DirectionOperations::outputx(direction,boundingBoxEnd),
+                         DirectionOperations::outputy(direction,boundingBoxEnd)),
+  matrix(planviewBoundingBoxStart,
+         planviewBoundingBoxEnd,
          stepxIn,
          stepyIn),
   indexed(indexedIn) {
@@ -178,33 +183,64 @@ Processor::processScene(const aiScene* scene,
   // Now there's a matrix filled with a flag for each coordinate,
   // whether there was material or not. And small holes have been filled per above.
   // Draw the output based on all this.
-  infof("constructing output...");
+  matrixToSvg(&matrix,svg,
+              DirectionOperations::outputx(direction,boundingBoxStart),
+              DirectionOperations::outputy(direction,boundingBoxStart),
+              stepx,
+              stepy);
+
+  // Main result (plan view) is done, flush the image output
+  svgDone();
+  
+  // Process cross sections
+  if (!processSceneCrossSections(scene,nCrossSections,crossSections)) {
+    return(0);
+  }
+  
+  // Done, all good
+  return(1);
+}
+
+void
+Processor::matrixToSvg(MaterialMatrix* theMatrix,
+                       SvgCreator* theSvg,
+                       outlinerhighprecisionreal xStart,
+                       outlinerhighprecisionreal yStart,
+                       outlinerhighprecisionreal xStep,
+                       outlinerhighprecisionreal yStep) {
+  infof("constructing output of %ux%u pixels...",
+        theMatrix->xIndexSize, theMatrix->yIndexSize);
+  deepdebugf("algorithm %u", algorithm);
+  infof("  covering model from (%.2f,%.2,f) to (%.2f,%.2f)",
+        xStart, yStart,
+        xStart + theMatrix->xIndexSize * xStep,
+        yStart + theMatrix->yIndexSize * yStep);
   unsigned int nBorderTo;
   bool borderTablePrev[maxNeighbors];
   unsigned int borderTableX[maxNeighbors];
   unsigned int borderTableY[maxNeighbors];
-  for (xIndex = 0; xIndex < matrix.xIndexSize; xIndex++) {
-    for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
-      if (matrix.getMaterialMatrix(xIndex,yIndex)) {
-        outlinerhighprecisionreal x = DirectionOperations::outputx(direction,boundingBoxStart) + xIndex * stepx;
-        outlinerhighprecisionreal y = DirectionOperations::outputy(direction,boundingBoxStart) + yIndex * stepy;
+  for (unsigned int xIndex = 0; xIndex < theMatrix->xIndexSize; xIndex++) {
+    for (unsigned int yIndex = 0; yIndex < theMatrix->yIndexSize; yIndex++) {
+      if (theMatrix->getMaterialMatrix(xIndex,yIndex)) {
+        outlinerhighprecisionreal x = xStart + xIndex * xStep;
+        outlinerhighprecisionreal y = yStart + yIndex * yStep;
         debugf("algorithm %u", algorithm);
         switch (algorithm) {
         case alg_pixel:
           debugf("pixel alg %u,%u", xIndex, yIndex);
-          svg->pixel(x,y);
+          theSvg->pixel(x,y);
           break;
         case alg_borderpixel:
           debugf("borderpixel alg %u,%u", xIndex, yIndex);
-          if (isBorder(xIndex,yIndex,nBorderTo,0,0,0,0)) {
-            svg->pixel(x,y);
+          if (isBorder(xIndex,yIndex,theMatrix,nBorderTo,0,0,0,0)) {
+            theSvg->pixel(x,y);
           }
           break;
         case alg_borderline:
           debugf("borderline alg %u,%u", xIndex, yIndex);
-          if (isBorder(xIndex,yIndex,nBorderTo,maxNeighbors,borderTablePrev,borderTableX,borderTableY)) {
+          if (isBorder(xIndex,yIndex,theMatrix,nBorderTo,maxNeighbors,borderTablePrev,borderTableX,borderTableY)) {
             if (nBorderTo == 0) {
-              svg->pixel(x,y);
+              theSvg->pixel(x,y);
             } else {
               for (unsigned int b = 0; b < nBorderTo; b++) {
                 assert(outlinersaneindex(borderTableX[b]));
@@ -212,7 +248,8 @@ Processor::processScene(const aiScene* scene,
                 if (borderTablePrev[b]) {
                   outlinerhighprecisionreal otherX = indexToCoordinateX(borderTableX[b]);
                   outlinerhighprecisionreal otherY = indexToCoordinateY(borderTableY[b]);
-                  svg->line(otherX,otherY,x,y);
+                  deepdeepdebugf("calling theSvg->line");
+                  theSvg->line(otherX,otherY,x,y);
                 }
               }
             }
@@ -228,17 +265,6 @@ Processor::processScene(const aiScene* scene,
       }
     }
   }
-
-  // Main result (plan view) is done, flush the image output
-  svgDone();
-  
-  // Process cross sections
-  if (!processSceneCrossSections(scene,nCrossSections,crossSections)) {
-    return(0);
-  }
-  
-  // Done, all good
-  return(1);
 }
 
 bool
@@ -506,6 +532,7 @@ Processor::closerNeighborExists(const unsigned int thisX,
 bool
 Processor::isBorder(unsigned int xIndex,
                     unsigned int yIndex,
+                    MaterialMatrix* theMatrix,
                     unsigned int& nBorderTo,
                     unsigned int borderTableSize,
                     bool* borderTablePrev,
@@ -524,13 +551,13 @@ Processor::isBorder(unsigned int xIndex,
   for (unsigned int i = 0; i < n; i++) {
     unsigned int neighX = tableX[i];
     unsigned int neighY = tableY[i];
-    if (!matrix.getMaterialMatrix(neighX,neighY)) {
+    if (!theMatrix->getMaterialMatrix(neighX,neighY)) {
       debugf("point %u,%u is a border due to %u,%u", xIndex, yIndex, neighX, neighY);
       ans = 1;
     } else {
       if (nBorderTo < borderTableSize) {
         unsigned int dummy;
-        if (!isBorder(neighX, neighY, dummy, 0, 0, 0, 0)) continue;
+        if (!isBorder(neighX, neighY, theMatrix, dummy, 0, 0, 0, 0)) continue;
         if (closerNeighborExists(xIndex, yIndex, neighX, neighY, nBorderTo, borderTableX, borderTableY)) continue;
         bool prev =  ((neighX < xIndex ||
                        (neighX == xIndex && neighY < yIndex)));
@@ -705,6 +732,7 @@ Processor::processSceneCrossSection(const aiScene* scene,
                              DirectionOperations::screenx(direction),
                              crossSection->start,
                              crossSection->end,
+                             stepz,
                              *this);
   proc.processSceneCrossSection(scene);
   return(1);

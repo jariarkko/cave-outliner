@@ -45,20 +45,20 @@ class SvgCreator {
              unsigned int xSize, 
              unsigned int ySize,
              unsigned int multiplier,
-             float xStart,
-             float yStart,
-             float xFactor,
-             float yFactor,
+             outlinerhighprecisionreal xStart,
+             outlinerhighprecisionreal yStart,
+             outlinerhighprecisionreal xFactor,
+             outlinerhighprecisionreal yFactor,
              bool smooth,
              bool mergedLines,
-             float linewidth);
+             outlinerhighprecisionreal linewidth);
   ~SvgCreator();
-  void line(float fromX,
-            float fromY,
-            float toX,
-            float toY);
-  void pixel(float x,
-             float y);
+  void line(outlinerhighprecisionreal fromX,
+            outlinerhighprecisionreal fromY,
+            outlinerhighprecisionreal toX,
+            outlinerhighprecisionreal toY);
+  void pixel(outlinerhighprecisionreal x,
+             outlinerhighprecisionreal y);
   bool ok();
   
  private:
@@ -67,13 +67,13 @@ class SvgCreator {
   unsigned int xSize;
   unsigned int ySize;
   unsigned int multiplier;
-  float xStart;
-  float yStart;
-  float xFactor;
-  float yFactor;
+  outlinerhighprecisionreal xStart;
+  outlinerhighprecisionreal yStart;
+  outlinerhighprecisionreal xFactor;
+  outlinerhighprecisionreal yFactor;
   bool smooth;
   bool mergedLines;
-  float linewidth;
+  outlinerhighprecisionreal linewidth;
   unsigned int pixels;
   unsigned int originalLines;
   unsigned int finalLines;
@@ -84,8 +84,8 @@ class SvgCreator {
   
   void preamble();
   void postamble();
-  void coordinateNormalization(float x,
-                               float y,
+  void coordinateNormalization(outlinerhighprecisionreal x,
+                               outlinerhighprecisionreal y,
                                unsigned int& xInt,
                                unsigned int& yInt);
   void addLine(unsigned int x1,

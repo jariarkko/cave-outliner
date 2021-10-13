@@ -37,6 +37,7 @@ public:
                         enum outlinerdirection sliceDirectionIn,
                         const HighPrecisionVector2D& lineStartIn,
                         const HighPrecisionVector2D& lineEndIn,
+                        outlinerhighprecisionreal stepzIn,
                         Processor& procIn);
   ~ProcessorCrossSection();
   bool processSceneCrossSection(const aiScene* scene);
@@ -47,6 +48,7 @@ private:
   const enum outlinerdirection sliceDirection;
   const HighPrecisionVector2D lineStart;
   const HighPrecisionVector2D lineEnd;
+  outlinerhighprecisionreal stepz;
   outlinerhighprecisionreal xDifference;
   outlinerhighprecisionreal yDifference;
   outlinerhighprecisionreal lineLength;
@@ -56,11 +58,21 @@ private:
   outlinerhighprecisionreal lineStepY;
   HighPrecisionVector2D sliceVerticalBoundingBoxStart;
   HighPrecisionVector2D sliceVerticalBoundingBoxEnd;
+  MaterialMatrix* matrix;
   Processor& proc;
   SvgCreator* svg;
+
+  //
+  // Internal state management
+  //
   
   void deleteSvg(void);
-  void calculateLineEquation(void);
+  void deleteMatrix(void);
+
+  //
+  // Finding out the cross section bounding box
+  //
+  
   void sliceVerticalBoundingBox(const aiScene* scene,
                                 HighPrecisionVector2D& sliceBoundingBoxStart,
                                 HighPrecisionVector2D& sliceBoundingBoxEnd);
@@ -82,6 +94,11 @@ private:
                                     bool& set,
                                     HighPrecisionVector2D& sliceVerticalBoundingBoxStart,
                                     HighPrecisionVector2D& sliceVerticalBoundingBoxEnd);
+
+  //
+  // Drawing cross sections
+  //
+  
   void drawCrossSection(const aiScene* scene);
   void drawCrossSectionNode(const aiScene* scene,
                             const aiNode* node);
@@ -92,7 +109,20 @@ private:
                             const aiFace* face,
                             outlinerhighprecisionreal x,
                             outlinerhighprecisionreal y);
+
+  //
+  // Coordinate operations
+  //
+
+  unsigned int coordinateXYToImageXIndex(outlinerhighprecisionreal x,
+                                         outlinerhighprecisionreal y);
+  unsigned int coordinateZToImageYIndex(outlinerhighprecisionreal z);
   
+  //
+  // Line operations
+  //
+  
+  void calculateLineEquation(void);
   void lineIteratorInit(struct ProcessorCrossSectionLineIterator& iter);
   bool lineIteratorDone(struct ProcessorCrossSectionLineIterator& iter);
   void lineIteratorNext(struct ProcessorCrossSectionLineIterator& iter);

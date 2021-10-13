@@ -24,11 +24,14 @@ ProcessorCrossSection::ProcessorCrossSection(const char* fileNameIn,
                                              enum outlinerdirection sliceDirectionIn,
                                              const HighPrecisionVector2D& lineStartIn,
                                              const HighPrecisionVector2D& lineEndIn,
+                                             outlinerhighprecisionreal stepzIn,
                                              Processor& procIn) :
   fileName(fileNameIn),
   sliceDirection(sliceDirectionIn),
   lineStart(lineStartIn),
   lineEnd(lineEndIn),
+  stepz(stepzIn),
+  matrix(0),
   proc(procIn),
   svg(0) {
   calculateLineEquation();
@@ -36,6 +39,7 @@ ProcessorCrossSection::ProcessorCrossSection(const char* fileNameIn,
 
 ProcessorCrossSection::~ProcessorCrossSection() {
   deleteSvg();
+  deleteMatrix();
 }
 
 void
@@ -54,6 +58,16 @@ ProcessorCrossSection::deleteSvg(void) {
   }
 }
 
+void
+ProcessorCrossSection::deleteMatrix(void) {
+  if (matrix != 0) {
+    
+    // Delete the object
+    delete matrix;
+    matrix = 0;
+    
+  }
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program for generating a cross section ////////////////////////////////////////////////
@@ -62,27 +76,65 @@ ProcessorCrossSection::deleteSvg(void) {
 bool
 ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
 
-  // Get rid of previous image, if any
+  // Get rid of previous image and matrix, if any
   deleteSvg();
+  deleteMatrix();
   
   // Debugs
   debugf("process scene cross section");
   
   // Determine the bounding box of what we see in the cross section
   sliceVerticalBoundingBox(scene,sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd);
+  infof("  cross section bounding box (%.2f,%.2f) to (%.2f,%.2f)",
+        sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
+        sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y);
+  infof("  steps %.2f and %.2f", proc.stepy, stepz);
   
   // Increase bounding box to each side
-  sliceVerticalBoundingBoxStart.x--;
-  sliceVerticalBoundingBoxStart.y--;
-  sliceVerticalBoundingBoxEnd.x++;
-  sliceVerticalBoundingBoxEnd.y++;
+  sliceVerticalBoundingBoxStart.x -= 2*proc.stepy;
+  sliceVerticalBoundingBoxStart.y -= 2*stepz;
+  infof("  cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
+         sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
+         sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y);
+  
+  // Create a material matrix
+  matrix = new MaterialMatrix(sliceVerticalBoundingBoxStart,
+                              sliceVerticalBoundingBoxEnd,
+                              proc.stepy,
+                              stepz);
+  debugf("  slice bounding box after matrix creation (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
+         sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
+         sliceVerticalBoundingBoxStart.x + proc.stepy * matrix->xIndexSize,
+         sliceVerticalBoundingBoxStart.y + stepz * matrix->yIndexSize,
+         proc.stepy, stepz);
   
   // Create an image base of the bounding size
   svg = proc.createSvg(fileName,sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd,sliceDirection);
+
+  debugf("  slice bounding box after svg creation (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
+         sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
+         sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y,
+         proc.stepy, stepz);
   
   // Process the actual cross section
-  drawCrossSection(scene);
-  
+  drawCrossSection(scene);  
+  debugf("  slice bounding box after drawing (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
+         sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
+         sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y,
+         proc.stepy, stepz);
+
+  // Now there's a matrix filled with a flag for each coordinate,
+  // whether there was material or not. And small holes have been filled per above.
+  // Draw the output based on all this.
+  proc.matrixToSvg(matrix,svg,
+                   sliceVerticalBoundingBoxStart.x,
+                   sliceVerticalBoundingBoxStart.y,
+                   proc.stepx,
+                   stepz);
+
+  // Main result (plan view) is done, flush the image output
+  deleteSvg();
+
   // Done
   return(1);
 }
@@ -140,7 +192,11 @@ ProcessorCrossSection::lineIteratorNext(struct ProcessorCrossSectionLineIterator
 
 void
 ProcessorCrossSection::drawCrossSection(const aiScene* scene) {
+
+  // Sanity checks
   assert(scene != 0);
+
+  // Actual matrix calculations
   drawCrossSectionNode(scene,scene->mRootNode);
 }
 
@@ -188,6 +244,58 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
                                             const aiFace* face,
                                             outlinerhighprecisionreal x,
                                             outlinerhighprecisionreal y) {
+  assert(scene != 0);
+  assert(mesh != 0);
+  assert(face != 0);
+  assert(matrix != 0);
+  aiVector3D a3;
+  aiVector3D b3;
+  aiVector3D c3;
+  proc.faceGetVertices3D(mesh,face,a3,b3,c3);
+  for  (outlinerhighprecisionreal z = sliceVerticalBoundingBoxStart.y;
+        z <= sliceVerticalBoundingBoxEnd.y;
+        z += stepz) {
+    HighPrecisionVector3D point(x,y,z);
+    HighPrecisionVector3D stepboundingbox(x+lineStepX,y+lineStepY,z+stepz);
+    if (OutlinerMath::boundingBoxIntersectsTriangle3D(a3,b3,c3,point,stepboundingbox)) {
+      deepdebugf("cross section draw xyz match at (%.2f,%.2f,%.2f)",x,y,z);
+      unsigned int xIndex = coordinateXYToImageXIndex(x,y);
+      unsigned int yIndex = coordinateZToImageYIndex(z);
+      infof("      set matrix %u,%u", xIndex, yIndex);
+      matrix->setMaterialMatrix(xIndex,yIndex);
+    }
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Cross section coordinates calculation //////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+unsigned int
+ProcessorCrossSection::coordinateXYToImageXIndex(outlinerhighprecisionreal x,
+                                                 outlinerhighprecisionreal y) {
+  assert(matrix != 0);
+  outlinerhighprecisionreal thisXDifference = x - lineStart.x;
+  outlinerhighprecisionreal thisYDifference = y - lineStart.y;
+  outlinerhighprecisionreal thisLineLength = sqrt(thisXDifference*thisXDifference + thisYDifference*thisYDifference);
+  unsigned int result = (unsigned int)((thisLineLength * (matrix->xIndexSize + 1)) / lineLength);
+  assert(result < matrix->xIndexSize);
+  return(result);
+}
+ 
+unsigned int
+ProcessorCrossSection::coordinateZToImageYIndex(outlinerhighprecisionreal z) {
+  assert(matrix != 0);
+  assert(z >= sliceVerticalBoundingBoxStart.y);
+  assert(z <= sliceVerticalBoundingBoxEnd.y);
+  outlinerhighprecisionreal diff =
+    (z - sliceVerticalBoundingBoxStart.y) /
+    (sliceVerticalBoundingBoxEnd.y - sliceVerticalBoundingBoxStart.y);
+  unsigned int result = (unsigned int)(diff * (matrix->yIndexSize-1));
+  infof("    cross section coordinate z %.2f (diff %.4f) to %u (yIndexSize %u)",
+        z, diff, result, matrix->yIndexSize);
+  assert(result < matrix->yIndexSize);
+  return(result);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -284,25 +392,31 @@ ProcessorCrossSection::sliceVerticalBoundingBoxFace(const aiScene* scene,
                    point.x, point.y,
                    stepboundingbox.x,
                    stepboundingbox.y);
-    aiVector2D aSlice(DirectionOperations::outputx(sliceDirection,a3),DirectionOperations::outputy(sliceDirection,a3));
-    aiVector2D bSlice(DirectionOperations::outputx(sliceDirection,b3),DirectionOperations::outputy(sliceDirection,b3));
-    aiVector2D cSlice(DirectionOperations::outputx(sliceDirection,c3),DirectionOperations::outputy(sliceDirection,c3));
+    deepdeepdebugf("cross section direction %s and %s",
+                   DirectionOperations::toString(proc.direction),
+                   DirectionOperations::toString(sliceDirection));
+    aiVector2D aSlice(DirectionOperations::outputy(proc.direction,a3),DirectionOperations::outputz(proc.direction,a3));
+    aiVector2D bSlice(DirectionOperations::outputy(proc.direction,b3),DirectionOperations::outputz(proc.direction,b3));
+    aiVector2D cSlice(DirectionOperations::outputy(proc.direction,c3),DirectionOperations::outputz(proc.direction,c3));
     HighPrecisionVector2D faceBoundingBoxStart;
     HighPrecisionVector2D faceBoundingBoxEnd;
     OutlinerMath::triangleBoundingBox2D(aSlice,bSlice,cSlice,
                                         faceBoundingBoxStart,
                                         faceBoundingBoxEnd);
-    HighPrecisionVector2D resultBoundingBoxStart;
-    HighPrecisionVector2D resultBoundingBoxEnd;
-    OutlinerMath::boundingBoxIntersection(point,
-                                          stepboundingbox,
-                                          faceBoundingBoxStart,
-                                          faceBoundingBoxEnd,
-                                          resultBoundingBoxStart,
-                                          resultBoundingBoxEnd);
+    deepdebugf("    adding a face to cross section bounding box, triangle box (%.2f,%.2f) - (%.2f,%.2f)",
+               faceBoundingBoxStart.x, faceBoundingBoxStart.y,
+               faceBoundingBoxEnd.x, faceBoundingBoxEnd.y);
+    //HighPrecisionVector2D resultBoundingBoxStart;
+    //HighPrecisionVector2D resultBoundingBoxEnd;
+    //OutlinerMath::boundingBoxIntersection(point,
+    //                                      stepboundingbox,
+    //                                      faceBoundingBoxStart,
+    //                                      faceBoundingBoxEnd,
+    //                                      resultBoundingBoxStart,
+    //                                      resultBoundingBoxEnd);
     if (!set) {
-      sliceVerticalBoundingBoxStart = resultBoundingBoxStart;
-      sliceVerticalBoundingBoxEnd = resultBoundingBoxEnd;
+      sliceVerticalBoundingBoxStart = faceBoundingBoxStart;
+      sliceVerticalBoundingBoxEnd = faceBoundingBoxEnd;
       deepdebugf("setting initial cross section bounding box at (%.2f,%.2f) "
                  "to (%.2f,%.2f)-(%.2f,%.2f)",
                  x, y,
@@ -312,8 +426,8 @@ ProcessorCrossSection::sliceVerticalBoundingBoxFace(const aiScene* scene,
     } else {
       HighPrecisionVector2D newBoundingBoxStart;
       HighPrecisionVector2D newBoundingBoxEnd;
-      OutlinerMath::boundingBoxUnion(resultBoundingBoxStart,
-                                     resultBoundingBoxEnd,
+      OutlinerMath::boundingBoxUnion(faceBoundingBoxStart,
+                                     faceBoundingBoxEnd,
                                      sliceVerticalBoundingBoxStart,
                                      sliceVerticalBoundingBoxEnd,
                                      newBoundingBoxStart,

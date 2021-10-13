@@ -7,11 +7,10 @@
 class MaterialMatrix {
 
 public:
-  MaterialMatrix(HighPrecisionVector3D boundingboxstart,
-                 HighPrecisionVector3D boundingboxend,
-                 enum outlinerdirection directionIn,
-                 float stepx,
-                 float stepy);
+  MaterialMatrix(HighPrecisionVector2D boundingboxstart,
+                 HighPrecisionVector2D boundingboxend,
+                 outlinerhighprecisionreal stepx,
+                 outlinerhighprecisionreal stepy);
   ~MaterialMatrix();
   void setMaterialMatrix(unsigned int xIndex,
                          unsigned int yIndex);
@@ -25,7 +24,6 @@ public:
 
 private:
 
-  enum outlinerdirection direction;
   unsigned int nBits;
   unsigned int nChars;
   unsigned char* bitMatrix;

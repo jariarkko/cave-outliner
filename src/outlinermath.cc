@@ -310,6 +310,32 @@ OutlinerMath::boundingBoxIntersectsTriangle2D(const aiVector2D& a,
 }
 
 bool
+OutlinerMath::boundingBoxIntersectsTriangle3D(const aiVector3D& a,
+                                              const aiVector3D& b,
+                                              const aiVector3D& c,
+                                              const HighPrecisionVector3D& boxStart,
+                                              const HighPrecisionVector3D& boxEnd) {
+  // Sanity checks
+  assert(boxStart.x <= boxEnd.x);
+  assert(boxStart.y <= boxEnd.y);
+  assert(boxStart.z <= boxEnd.z);
+  
+  // Heuristic algorithm, first check if there's an xy-plane match
+  aiVector2D a2(a.x,a.y);
+  aiVector2D b2(b.x,b.y);
+  aiVector2D c2(c.x,c.y);
+  HighPrecisionVector2D boxStart2(boxStart.x,boxStart.y);
+  HighPrecisionVector2D boxEnd2(boxEnd.x,boxEnd.y);
+  if (!boundingBoxIntersectsTriangle2D(a2,b2,c2,boxStart2,boxEnd2)) return(0);
+
+  // If there was a match, check if the range of the triangle in
+  // z axis overlaps with the given bounding box
+  outlinerhighprecisionreal zlow = outlinermin3(a.z,b.z,c.z);
+  outlinerhighprecisionreal zhigh = outlinermax3(a.z,b.z,c.z);
+  return(overlap(zlow,zhigh,boxStart.z,boxEnd.z));
+}
+
+bool
 OutlinerMath::boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
                                        HighPrecisionVector3D& boundingBox1End,
                                        HighPrecisionVector3D& boundingBox2Start,
@@ -1156,7 +1182,7 @@ OutlinerMath::lineIntersectionTests(void) {
 
 void
 OutlinerMath::triangleTests(void) {
-  debugf("triangle tests...");
+  debugf("triangle tests (2D)...");
   aiVector2D a(0,0);
   aiVector2D b(0,2);
   aiVector2D c(2,0);
@@ -1202,6 +1228,21 @@ OutlinerMath::triangleTests(void) {
   assert(ansbefore1 == 0);
   assert(ansbefore2 == 0);
   assert(ansbefore3 == 0);
+
+  // 3D triangle tests
+  debugf("triangle tests (3D)...");
+  aiVector3D a3(0,0,10);
+  aiVector3D b3(0,2,10);
+  aiVector3D c3(2,0,10);
+  HighPrecisionVector3D boundingStart3a(0,0,0);
+  HighPrecisionVector3D boundingEnd3a(5,5,5);
+  HighPrecisionVector3D boundingStart3b(0,0,0);
+  HighPrecisionVector3D boundingEnd3b(5,5,10);
+  
+  bool ans3 = boundingBoxIntersectsTriangle3D(a3,b3,c3,boundingStart3a,boundingEnd3a);
+  assert(!ans3);
+  ans3 = boundingBoxIntersectsTriangle3D(a3,b3,c3,boundingStart3b,boundingEnd3b);
+  assert(ans3);
 }
 
 void

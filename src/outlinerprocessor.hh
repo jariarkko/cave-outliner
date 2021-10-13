@@ -44,6 +44,7 @@ public:
             HighPrecisionVector3D boundingBoxEndIn,
             outlinerhighprecisionreal stepxIn,
             outlinerhighprecisionreal stepyIn,
+            outlinerhighprecisionreal stepzIn,
             enum outlinerdirection directionIn,
             enum outlineralgorithm algorithmIn,
             unsigned int holethresholdIn,
@@ -70,11 +71,61 @@ private:
   HighPrecisionVector2D boundingBoxEnd2D;
   outlinerhighprecisionreal stepx;
   outlinerhighprecisionreal stepy;
+  outlinerhighprecisionreal stepz;
   enum outlinerdirection direction;
   enum outlineralgorithm algorithm;
   unsigned int holethreshold;
+  HighPrecisionVector2D planviewBoundingBoxStart;
+  HighPrecisionVector2D planviewBoundingBoxEnd;
   MaterialMatrix matrix;
   IndexedMesh& indexed;
+
+  //
+  // Matrix operations
+  //
+  
+  bool coordinatesInTable(const unsigned int xIndex,
+                          const unsigned int yIndex,
+                          const unsigned int n,
+                          const unsigned int* tableX,
+                          const unsigned int* tableY);
+
+  //
+  // Neighbor operations in a matrix
+  //
+  
+  void getNeighbours(unsigned int xIndex,
+                     unsigned int yIndex,
+                     unsigned int& n,
+                     unsigned int tableSize,
+                     unsigned int* tableX,
+                     unsigned int* tableY);
+  bool closerNeighborExists(const unsigned int thisX,
+                            const unsigned int thisY,
+                            const unsigned int xIndex,
+                            const unsigned int yIndex,
+                            const unsigned int nNeighbors,
+                            const unsigned int* neighborTableX,
+                            const unsigned int* neighborTableY);
+  bool isBorder(unsigned int xIndex,
+                unsigned int yIndex,
+                MaterialMatrix* theMatrix,
+                unsigned int& nBorderTo,
+                unsigned int borderTableSize,
+                bool* borderTablePrev,
+                unsigned int* boderTableX,
+                unsigned int* borderTableY);
+  bool holeIsEqualOrSmallerThan(unsigned int xIndex,
+                                unsigned int yIndex,
+                                unsigned int holethreshold,
+                                unsigned int& n,
+                                unsigned int tableSize,
+                                unsigned int* holeXtable,
+                                unsigned int* holeYtable);
+
+  //
+  // 3D model queries
+  //
   
   bool sceneHasMaterial(const aiScene* scene,
                         IndexedMesh& indexed,
@@ -95,48 +146,53 @@ private:
                        const aiFace* face,
                        outlinerhighprecisionreal x,
                        outlinerhighprecisionreal y);
-   bool isBorder(unsigned int xIndex,
-                 unsigned int yIndex,
-                 unsigned int& nBorderTo,
-                 unsigned int borderTableSize,
-                 bool* borderTablePrev,
-                 unsigned int* boderTableX,
-                 unsigned int* borderTableY);
-  bool holeIsEqualOrSmallerThan(unsigned int xIndex,
-                                unsigned int yIndex,
-                                unsigned int holethreshold,
-                                unsigned int& n,
-                                unsigned int tableSize,
-                                unsigned int* holeXtable,
-                                unsigned int* holeYtable);
-  bool coordinatesInTable(const unsigned int xIndex,
-                          const unsigned int yIndex,
-                          const unsigned int n,
-                          const unsigned int* tableX,
-                          const unsigned int* tableY);
-  void getNeighbours(unsigned int xIndex,
-                     unsigned int yIndex,
-                     unsigned int& n,
-                     unsigned int tableSize,
-                     unsigned int* tableX,
-                     unsigned int* tableY);
-  bool closerNeighborExists(const unsigned int thisX,
-                            const unsigned int thisY,
-                            const unsigned int xIndex,
-                            const unsigned int yIndex,
-                            const unsigned int nNeighbors,
-                            const unsigned int* neighborTableX,
-                            const unsigned int* neighborTableY);
-  outlinerhighprecisionreal indexToCoordinateX(unsigned int xIndex);
-  outlinerhighprecisionreal indexToCoordinateY(unsigned int yIndex);
+  void faceGetVertices2D(const aiMesh* mesh,
+                         const aiFace* face,
+                         enum outlinerdirection thisDirection,
+                         aiVector2D& a,
+                         aiVector2D& b,
+                         aiVector2D& c);
+  void faceGetVertices3D(const aiMesh* mesh,
+                         const aiFace* face,
+                         aiVector3D& a,
+                         aiVector3D& b,
+                         aiVector3D& c);
+  
+  //
+  // Coordinate management
+  //
+  
   unsigned int coordinateXToIndex(outlinerhighprecisionreal x);
   unsigned int coordinateYToIndex(outlinerhighprecisionreal y);
+  outlinerhighprecisionreal indexToCoordinateX(unsigned int xIndex);
+  outlinerhighprecisionreal indexToCoordinateY(unsigned int yIndex);
+
+  //
+  // Cross sections
+  //
+  
   bool processSceneCrossSections(const aiScene* scene,
                                  unsigned int nCrossSections,
                                  struct ProcessorCrossSectionInfo* crossSections);
   bool processSceneCrossSection(const aiScene* scene,
                                 unsigned int c,
                                 const struct ProcessorCrossSectionInfo* crossSection);
+
+  //
+  // Image drawing
+  //
+  
+  void matrixToSvg(MaterialMatrix* theMatrix,
+                   SvgCreator* theSvg,
+                   outlinerhighprecisionreal xStart,
+                   outlinerhighprecisionreal yStart,
+                   outlinerhighprecisionreal xStep,
+                   outlinerhighprecisionreal yStep);
+  
+  //
+  // SVG image management
+  //
+  
   SvgCreator* createSvg(const char* svgFileName,
                         const HighPrecisionVector2D& svgBoundingBoxStart,
                         const HighPrecisionVector2D& svgBoundingBoxEnd,
@@ -157,17 +213,6 @@ private:
                                unsigned int& ySizeInt,
                                outlinerhighprecisionreal& xFactor,
                                outlinerhighprecisionreal& yFactor);
-  void faceGetVertices2D(const aiMesh* mesh,
-                         const aiFace* face,
-                         enum outlinerdirection thisDirection,
-                         aiVector2D& a,
-                         aiVector2D& b,
-                         aiVector2D& c);
-  void faceGetVertices3D(const aiMesh* mesh,
-                         const aiFace* face,
-                         aiVector3D& a,
-                         aiVector3D& b,
-                         aiVector3D& c);
 };
 
 #endif // PROCESSOR_HH

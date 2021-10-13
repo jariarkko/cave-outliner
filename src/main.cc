@@ -49,6 +49,7 @@ static bool deepdebug = 0;
 static bool deepdeepdebug = 0;
 static float stepx = 1.0;
 static float stepy = 1.0;
+static float stepz = 1.0;
 static bool boundingBoxSet = 0;
 static HighPrecisionVector3D boundingBoxStart = {0,0,0};
 static HighPrecisionVector3D boundingBoxEnd = {0,0,0};
@@ -179,7 +180,7 @@ main(int argc, char** argv) {
       holethreshold = num;
       argc--;argv++;
     } else if (strcmp(argv[1],"--step") == 0 && argc > 2) {
-      stepx = stepy = atof(argv[2]);
+      stepz = stepx = stepy = atof(argv[2]);
       if (stepx < 0.0001) {
         errf("Invalid step value");
         return(1);
@@ -338,6 +339,7 @@ main(int argc, char** argv) {
                       boundingBoxEnd,
                       stepx,
                       stepy,
+                      stepz,
                       direction,
                       algorithm,
                       holethreshold,

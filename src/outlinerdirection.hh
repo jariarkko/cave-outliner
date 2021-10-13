@@ -37,6 +37,10 @@ public:
                        const aiVector3D& point);
   static float outputy(enum outlinerdirection direction,
                        const HighPrecisionVector3D& point);
+  static float outputz(enum outlinerdirection direction,
+                       const aiVector3D& point);
+  static float outputz(enum outlinerdirection direction,
+                       const HighPrecisionVector3D& point);
 
 };
 

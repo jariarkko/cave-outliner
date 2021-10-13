@@ -17,13 +17,13 @@ SvgCreator::SvgCreator(const char* fileName,
                        unsigned int xSize,
                        unsigned int ySize,
                        unsigned int multiplier,
-                       float xStart,
-                       float yStart,
-                       float xFactor,
-                       float yFactor,
+                       outlinerhighprecisionreal xStart,
+                       outlinerhighprecisionreal yStart,
+                       outlinerhighprecisionreal xFactor,
+                       outlinerhighprecisionreal yFactor,
                        bool smooth,
                        bool mergedLines,
-                       float linewidth) {
+                       outlinerhighprecisionreal linewidth) {
   assert(xSize > 0);
   assert(ySize > 0);
   assert(linewidth > 0.0);
@@ -65,10 +65,10 @@ SvgCreator::~SvgCreator() {
 }
 
 void
-SvgCreator::line(float fromX,
-                 float fromY,
-                 float toX,
-                 float toY) {
+SvgCreator::line(outlinerhighprecisionreal fromX,
+                 outlinerhighprecisionreal fromY,
+                 outlinerhighprecisionreal toX,
+                 outlinerhighprecisionreal toY) {
 
   if (originalLines == 0 && pixels == 0) {
     infof("  image size %u x %u", xSize, ySize);
@@ -83,6 +83,7 @@ SvgCreator::line(float fromX,
   unsigned int toYInt;
   coordinateNormalization(toX,toY,toXInt,toYInt);
 
+  deepdebugf("SvgCreator::line");
   addLine(fromXInt,fromYInt,toXInt,toYInt);
 }
 
@@ -91,6 +92,7 @@ SvgCreator::addLine(unsigned int x1,
                     unsigned int y1,
                     unsigned int x2,
                     unsigned int y2) {
+  deepdebugf("addLine");
   if (mergedLines) {
     unsigned int matchIndex;
     bool isStart;
@@ -178,6 +180,7 @@ SvgCreator::addLine(unsigned int x1,
 
 void
 SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
+  deepdebugf("SvgCreator::emitLine");
   assert(line.nPoints >= 2);
   if (line.nPoints == 2) {
     file << "<line x1=\"" << (line.points[0].x * multiplier) << "\" y1=\"" << (line.points[0].y * multiplier) << "\"";
@@ -213,30 +216,31 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
 }
 
 void
-SvgCreator::pixel(float x,
-                  float y) {
+SvgCreator::pixel(outlinerhighprecisionreal x,
+                  outlinerhighprecisionreal y) {
+  deepdebugf("SvgCreator::pixel");
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
   file << "<rect x=\"" << xInt*multiplier << "\" y=\"" << yInt*multiplier << "\"";
   file << " width=\"" << linewidth << "\" height=\"" << linewidth << "\"";
   if (linewidth <= 1.0) {
-    file << " fill=\"none\"";
+    file << " fill=\"black\"";
   } else {
     file << " fill=\"black\"";
   }
-  file << " stroke=\"black\" />\n";
+  file << " stroke-width=\"0\" stroke=\"black\" />\n";
   pixels++;
 }
 
 void
-SvgCreator::coordinateNormalization(float x,
-                                    float y,
+SvgCreator::coordinateNormalization(outlinerhighprecisionreal x,
+                                    outlinerhighprecisionreal y,
                                     unsigned int& xInt,
                                     unsigned int& yInt) {
-  float xNormalized = (x - xStart) * xFactor;
-  float yNormalized = (y - yStart) * yFactor;
-  if (xNormalized > (float)xSize) xInt = xSize; else xInt = xNormalized;
+  outlinerhighprecisionreal xNormalized = (x - xStart) * xFactor;
+  outlinerhighprecisionreal yNormalized = (y - yStart) * yFactor;
+  if (xNormalized > (outlinerhighprecisionreal)xSize) xInt = xSize; else xInt = xNormalized;
   if (yNormalized > ySize) yInt = ySize; else yInt = ySize - yNormalized;
   deepdebugf("coordinate normalization (%.2f,%.2f) to (%u,%u) with yNormalized %.2f ySize %u yStart %.2f and yFactor %.2f",
              x, y,
@@ -295,6 +299,7 @@ SvgCreator::matchingLine(unsigned int x1,
                          bool& matchesStart,
                          bool& reverseOriginal) {
 
+  deepdebugf("matchingLine");
   unsigned int head = lineTableIndex(x1,y1);
   unsigned int tail = lineTableIndex(x2,y2);
   struct OutlinerSvgLine* result = 0;
@@ -403,6 +408,7 @@ SvgCreator::matchingLineJoin(struct OutlinerSvgLine* target,
                              unsigned int x,
                              unsigned int y,
                              bool fromStart) {
+  deepdebugf("matchingLineJoin");
   assert(target != 0);
   assert(fromStart == 0 || fromStart == 1);
   unsigned int searchIndex = lineTableIndex(x,y);
@@ -431,6 +437,7 @@ SvgCreator::lineTableJoin(struct OutlinerSvgLine* entry,
                           unsigned int entryIndex) {
 
   // Sanity checks
+  deepdebugf("lineTableJoin");
   assert(entry != 0);
   assert(join != 0);
   assert(entry != join);
@@ -491,6 +498,7 @@ SvgCreator::lineTableJoin(struct OutlinerSvgLine* entry,
 
 void
 SvgCreator::lineTableEntryAdd(struct OutlinerSvgLine* entry) {
+  deepdebugf("lineTableEntryAdd");
   assert(entry != 0);
   assert(entry->nPoints >= 2);
   assert(entry->nPoints <= OutlinerSvgMaxLinePoints);
@@ -507,6 +515,7 @@ SvgCreator::lineTableEntryAdd(struct OutlinerSvgLine* entry) {
 void
 SvgCreator::lineTableEntryLink(struct OutlinerSvgLine* entry,
                                unsigned int index) {
+  deepdebugf("lineTableEntryLink");
   assert(index < lineTableSize);
   struct OutlinerSvgLineList* listItem = new struct OutlinerSvgLineList;
   if (listItem == 0) {
@@ -523,6 +532,7 @@ SvgCreator::lineTableEntryLink(struct OutlinerSvgLine* entry,
 void
 SvgCreator::lineTableEntryUnlink(struct OutlinerSvgLine* entry,
                                  unsigned int index) {
+  deepdebugf("lineTableEntryUnlink");
   assert(entry != 0);
   assert(entry->refCount > 0);
   assert(entry->refCount <= 2);
@@ -544,6 +554,7 @@ void
 SvgCreator::lineTableIndexes(const struct OutlinerSvgLine& line,
                              unsigned int& head,
                              unsigned int& tail) {
+  deepdebugf("lineTableIndexes");
   assert(line.nPoints >= 2);
   assert(line.nPoints <= OutlinerSvgMaxLinePoints);
   assert(line.refCount <= 2);
@@ -562,6 +573,7 @@ SvgCreator::lineTableIndexes(const struct OutlinerSvgLine& line,
 unsigned int
 SvgCreator::lineTableIndex(unsigned int x,
                            unsigned int y) {
+  deepdeepdebugf("lineTableIndex(%u,%u)", x, y);
   assert(x <= xSize);
   assert(y <= ySize);
   unsigned int result = x + y;
@@ -571,6 +583,7 @@ SvgCreator::lineTableIndex(unsigned int x,
 
 void
 SvgCreator::lineTableEntryDelete(struct OutlinerSvgLineList*& entry) {
+  deepdebugf("lineTableEntryDelete");
   assert(entry != 0);
   assert(entry->line != 0);
   assert(entry->line->nPoints >= 2);
@@ -616,6 +629,7 @@ SvgCreator::lineTableDeinit(void) {
 
 void
 SvgCreator::lineTableInfos(void) {
+  deepdebugf("lineTableInfos");
   unsigned int lineLines = 0;
   unsigned int lineSumPoints = 0;
   unsigned int lineLongest = 0;
