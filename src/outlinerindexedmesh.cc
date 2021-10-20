@@ -470,7 +470,7 @@ IndexedMesh::getFacesTile(struct IndexedMeshOneMesh& shadow,
   assert(shadow.tileMatrix != 0);
   assert(p_nFaces != 0);
   assert(p_faces != 0);
-  deepdebugf("faces in tile (%u/%u,%u/%u)",
+  deepdebugf("      faces in tile (%u/%u,%u/%u)",
              tileX, subdivisions, tileY, subdivisions);
   
   // Find the right row (x) in a matrix of tiles
@@ -490,7 +490,7 @@ IndexedMesh::getFacesTile(struct IndexedMeshOneMesh& shadow,
     *p_faces = tile->faces;
   }
 
-  deepdebugf("returning %u faces", *p_nFaces);
+  deepdebugf("      returning %u faces", *p_nFaces);
 }
 
 void
@@ -506,7 +506,7 @@ IndexedMesh::coordsToTile(outlinerhighprecisionreal x,
   tileY = yInView / tileSizeY;
   assert(tileY <= subdivisions);
   if (tileY == subdivisions) tileY = subdivisions - 1;
-  debugf("coordinate (%f,%f) tile is (%u,%u)",
+  debugf("      coordinate (%f,%f) tile is (%u,%u)",
          x, y,
          tileX, tileY);
 }

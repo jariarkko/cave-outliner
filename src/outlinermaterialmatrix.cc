@@ -24,12 +24,12 @@ MaterialMatrix::MaterialMatrix(HighPrecisionVector2D boundingboxstart,
                                outlinerhighprecisionreal stepy) {
   xIndexSize = ((unsigned int)ceil(((boundingboxend.x - boundingboxstart.x) / stepx))) + 2;
   yIndexSize = ((unsigned int)ceil(((boundingboxend.y - boundingboxstart.y) / stepy))) + 2;
-  infof("yIndexSize %u from %.8f - %.8f / %.8f + 2",
+  debugf("yIndexSize %u from %.8f - %.8f / %.8f + 2",
         yIndexSize, boundingboxstart.y, boundingboxend.y, stepy);
-  infof("sub %.8f div %.8f",
+  debugf("sub %.8f div %.8f",
         (boundingboxend.y - boundingboxstart.y),
         ((boundingboxend.y - boundingboxstart.y) / stepy));
-  infof("material matrix %ux%u from %.2f..%.2f and %.2f..%.2f",
+  debugf("material matrix %ux%u from %.2f..%.2f and %.2f..%.2f",
         xIndexSize, yIndexSize,
         boundingboxstart.x, boundingboxend.x,
         boundingboxstart.y, boundingboxend.y);
@@ -59,8 +59,8 @@ MaterialMatrix::setMaterialMatrix(unsigned int xIndex,
   unsigned int charpart = index / 8;
   unsigned int bitpart = index % 8;
   unsigned char bitMask = (1 << bitpart);
-  deepdebugf("setting material matrix %u/%u (%u/%u,%u/%u) elem %u/%u with mask %x",
-             index, nBits, xIndex, xIndexSize, yIndex, yIndexSize, charpart, nChars, bitMask);
+  //deepdebugf("      setting material matrix %u/%u (%u/%u,%u/%u) elem %u/%u with mask %x",
+  //           index, nBits, xIndex, xIndexSize, yIndex, yIndexSize, charpart, nChars, bitMask);
   assert(index < nBits);
   assert(charpart < nChars);
   assert(bitpart < 8);
@@ -78,7 +78,7 @@ MaterialMatrix::getMaterialMatrix(unsigned int xIndex,
   unsigned int bitpart = index % 8;
   unsigned char thechar = bitMatrix[charpart];
   unsigned char bitMask = (1 << bitpart);
-  deepdeepdebugf("getting material matrix %u (%u,%u) elem %u value %x with mask %x",
+  deepdeepdebugf("       getting material matrix %u (%u,%u) elem %u value %x with mask %x",
                  index, xIndex, yIndex, charpart, thechar, bitMask);
   assert(index < nBits);
   assert(charpart < nChars);
@@ -94,7 +94,7 @@ MaterialMatrix::count(void) {
     assert(i < nChars);
     unsigned char theChar = bitMatrix[i];
     if (theChar != 0) {
-      deepdebugf("found non-zero char %x in index %u",
+      deepdebugf("      found non-zero char %x in index %u",
                  theChar, i, nChars);
     }
     while (theChar != 0) {

@@ -14,19 +14,6 @@
 #include "outlinerdebug.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// Local macro utilities //////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-# define betweenanyorder(a,b,c)    ((a) < (c) ? between(a,b,c) : between(c,b,a))
-# define between(a,b,c)            ((a) <= (b) && (b) <= (c))
-# define overlapanyorder(a,b,c,d)  (((a) <= (b) && (c) <= (d)) ? overlap(a,b,c,d) :         \
-                                    (((b) <= (a) && (c) <= (d)) ? overlap(b,a,c,d) :        \
-                                     (((b) <= (a) && (d) <= (c)) ? overlap(b,a,d,c) :       \
-                                      overlap(a,b,d,c))))
-# define overlap(a,b,c,d)          ((((a) <= (c)) && ((c) <= (b))) ||                       \
-                                    (((c) <= (a)) && ((a) <= (d))))
-
-///////////////////////////////////////////////////////////////////////////////////////////////
 // Debugs /////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
   
@@ -79,6 +66,32 @@ OutlinerMath::boundingBoxUnion(const HighPrecisionVector2D& box1Start,
   if (box2Start.y < resultBoxStart.y) resultBoxStart.y = box2Start.y;
   if (box2End.x > resultBoxEnd.x) resultBoxEnd.x = box2End.x;
   if (box2End.y > resultBoxEnd.y) resultBoxEnd.y = box2End.y;
+}
+
+void
+OutlinerMath::triangleDescribe(const aiVector3D& a,
+                               const aiVector3D& b,
+                               const aiVector3D& c,
+                               char* buf,
+                               unsigned int bufSize) {
+  assert(buf != 0);
+  assert(bufSize > 0);
+  memset(buf,0,bufSize);
+  outlinerhighprecisionreal xlow = outlinermin3(a.x,b.x,c.x);
+  outlinerhighprecisionreal xhigh = outlinermax3(a.x,b.x,c.x);
+  outlinerhighprecisionreal ylow = outlinermin3(a.y,b.y,c.y);
+  outlinerhighprecisionreal yhigh = outlinermax3(a.y,b.y,c.y);
+  outlinerhighprecisionreal zlow = outlinermin3(a.z,b.z,c.z);
+  outlinerhighprecisionreal zhigh = outlinermax3(a.z,b.z,c.z);
+  if (a.z == b.z && a.z == c.z) {
+    snprintf(buf,bufSize-1,"horizontal z %.2f", zlow);
+  } else if (a.x == b.x && a.x == c.x) {
+    snprintf(buf,bufSize-1,"vertical along y %.2f..%.2f, z %.2f..%.2f", ylow, yhigh, zlow, zhigh);
+  } else if (a.y == b.y && a.y == c.y) {
+    snprintf(buf,bufSize-1,"vertical along x %.2f..%.2f, z %.2f..%.2f", xlow, xhigh, zlow, zhigh);
+  } else {
+    snprintf(buf,bufSize-1,"irregular, z %.2f..%.2f", zlow, zhigh);
+  }
 }
 
 void
@@ -179,7 +192,7 @@ OutlinerMath::pointOnLine2D(const aiVector2D& a,
                             const HighPrecisionVector2D& point) {
 
   // Debugs
-  deepdeepdebugf("pointOnLine2D high precision (%.2f,%.2f)-(%.2f,%.2f) vs. (%.2f,%.2f)",
+  deepdeepdebugf("          pointOnLine2D high precision (%.2f,%.2f)-(%.2f,%.2f) vs. (%.2f,%.2f)",
                  a.x, a.y, b.x, b.y,
                  point.x, point.y);
   
@@ -187,19 +200,21 @@ OutlinerMath::pointOnLine2D(const aiVector2D& a,
   // comparing to a point, not a line.
   
   if (vectorEqual(a,b))  {
-    debugreturn("pol2","line points equal",vectorEqual(a,point));
+    debugreturn("          pol2","line points equal",vectorEqual(a,point));
   }
 
   // Check for a special case: line is horizontal
   if (a.y == b.y) {
-    if (point.y != a.y) debugreturn("pol","horizontal y diff",0);
-    debugreturn("pol2","line is horizontal",a.x <= point.x && point.x <= b.x);
+    if (point.y != a.y) debugreturn("          pol","horizontal y diff",0);
+    debugreturn("          pol2","line is horizontal",outlinerbetweenanyorder(a.x,point.x,b.x));
+    //a.x <= point.x && point.x <= b.x);
   }
   
   // Check for a special case: line is vertical
   if (a.x == b.x) {
-    if (point.x != a.x) debugreturn("pol2","vertical x diff",0);
-    debugreturn("pol2","line is vertical",a.y <= point.y && point.y <= b.y);
+    if (point.x != a.x) debugreturn("          pol2","vertical x diff",0);
+    debugreturn("          pol2","line is vertical",outlinerbetweenanyorder(a.y,point.y,b.y));
+    //a.y <= point.y && point.y <= b.y);
   }
   
   // Not a special case. Run the general check, taking algorithm from
@@ -207,10 +222,10 @@ OutlinerMath::pointOnLine2D(const aiVector2D& a,
 
   float alpha1 = (point.x - a.x) / (b.x - a.x);
   float alpha2 = (point.y - a.y) / (b.y - a.y);
-  if (alpha1 != alpha2) debugreturn("pol2","alpha diff",0);
-  if (alpha1 < 0) debugreturn("pol2","alpha neg",0);
-  if (alpha1 > 1) debugreturn("pol2","alpha above one",0);
-  debugreturn("pol2","fallthrough",1);
+  if (alpha1 != alpha2) debugreturn("          pol2","alpha diff",0);
+  if (alpha1 < 0) debugreturn("          pol2","alpha neg",0);
+  if (alpha1 > 1) debugreturn("          pol2","alpha above one",0);
+  debugreturn("          pol2","fallthrough",1);
 }
 
 bool
@@ -222,43 +237,43 @@ OutlinerMath::pointInsideTriangle2D(const aiVector2D& triangleA,
   // Check for a special case: all points are equal (resulting in
   // comparing to a point, not a triangle).
   if (vectorEqual(triangleA,triangleB) && vectorEqual(triangleA,triangleC)) {
-    deepdeepdebugf("pit2 special case all equal");
-    debugreturn("pit2","vectorEqual",vectorEqual(triangleA,point));
+    //deepdeepdebugf("pit2 special case all equal");
+    debugreturn("        pit2","vectorEqual",vectorEqual(triangleA,point));
   }
   
   // Check for a special case: triangle collapses to a line (at least
   // in 2D).
   if (vectorEqual(triangleA,triangleB)) {
-    deepdeepdebugf("pit2 special case AB equal");
-    debugreturn("pit2","point on AB line",pointOnLine2D(triangleA,triangleC,point));
+    //deepdeepdebugf("pit2 special case AB equal");
+    debugreturn("        pit2","point on AB line",pointOnLine2D(triangleA,triangleC,point));
   } else if (vectorEqual(triangleA,triangleC)) {
-    deepdeepdebugf("pit2 special case AC equal");
-    debugreturn("pit2","point on AC line",pointOnLine2D(triangleA,triangleB,point));
+    //deepdeepdebugf("pit2 special case AC equal");
+    debugreturn("        pit2","point on AC line",pointOnLine2D(triangleA,triangleB,point));
   } else if (vectorEqual(triangleB,triangleC)) {
-    deepdeepdebugf("pit2 special case BC equal");
-    debugreturn("pit2","point on BC line ",pointOnLine2D(triangleA,triangleB,point));
+    //deepdeepdebugf("pit2 special case BC equal");
+    debugreturn("        pit2","point on BC line ",pointOnLine2D(triangleA,triangleB,point));
   }
   
   // Not a special case. For the general case, we take the algorithm
   // from https://mathworld.wolfram.com/TriangleInterior.html
 
-  deepdeepdebugf("pit2 regular case");
+  //deepdeepdebugf("pit2 regular case");
   HighPrecisionVector2D v = point; 
   HighPrecisionVector2D v0(triangleA);
   HighPrecisionVector2D v1; vectorTo(triangleA,triangleB,v1);
   HighPrecisionVector2D v2; vectorTo(triangleA,triangleC,v2);
-  deepdeepdebugf("pit2 triangle v = (%.2f,%.2f)", v.x, v.y);
-  deepdeepdebugf("pit2 triangle v0 = (%.2f,%.2f)", v0.x, v0.y);
-  deepdeepdebugf("pit2  triangle v1 = (%.2f,%.2f)", v1.x, v1.y);
-  deepdeepdebugf("pit2 triangle v2 = (%.2f,%.2f)", v2.x, v2.y);
+  //deepdeepdebugf("pit2 triangle v = (%.2f,%.2f)", v.x, v.y);
+  //deepdeepdebugf("pit2 triangle v0 = (%.2f,%.2f)", v0.x, v0.y);
+  //deepdeepdebugf("pit2 triangle v1 = (%.2f,%.2f)", v1.x, v1.y);
+  //deepdeepdebugf("pit2 triangle v2 = (%.2f,%.2f)", v2.x, v2.y);
   outlinerhighprecisionreal a = (determinant2x2(v,v2) - determinant2x2(v0,v2)) / determinant2x2(v1,v2);
   outlinerhighprecisionreal b = -((determinant2x2(v,v1) - determinant2x2(v0,v1)) / determinant2x2(v1,v2));
-  deepdeepdebugf("pit2 triangle (%.1f,%.1f)-(%.1f,%.1f)-(%.1f,%.1f) check a %.2f b %.2f a+b %.2f",
-                 triangleA.x, triangleA.y,
-                 triangleB.x, triangleB.y,
-                 triangleC.x, triangleC.y,
-                 a, b, a+b);
-  debugreturn("pit2","regular",a >= 0 && b >= 0 && a+b <= 1);
+  //deepdeepdebugf("pit2 triangle (%.1f,%.1f)-(%.1f,%.1f)-(%.1f,%.1f) check a %.2f b %.2f a+b %.2f",
+  //               triangleA.x, triangleA.y,
+  //               triangleB.x, triangleB.y,
+  //               triangleC.x, triangleC.y,
+  //               a, b, a+b);
+  debugreturn("        pit2","regular",a >= 0 && b >= 0 && a+b <= 1);
 }
 
 bool
@@ -285,28 +300,28 @@ OutlinerMath::boundingBoxIntersectsTriangle2D(const aiVector2D& a,
                                               const HighPrecisionVector2D& boxEnd) {
   
   // Debugs
-  deepdeepdebugf("boundingBoxIntersectsTriangle2D (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) and (%.2f,%.2f)-(%.2f,%.2f)",
+  deepdeepdebugf("        boundingBoxIntersectsTriangle2D (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) and (%.2f,%.2f)-(%.2f,%.2f)",
                  a.x, a.y, b.x, b.y, c.x, c.y,
                  boxStart.x, boxStart.y,
                  boxEnd.x, boxEnd.y);
   
   // First, if triangle corners are in the box, they intersect
-  if (pointInsideBoundingBox2D(boxStart,boxEnd,a)) debugreturn("bbit2","corner a",1);
-  if (pointInsideBoundingBox2D(boxStart,boxEnd,b)) debugreturn("bbit2","corner b",1);
-  if (pointInsideBoundingBox2D(boxStart,boxEnd,c)) debugreturn("bbit2","corner c",1);
+  if (pointInsideBoundingBox2D(boxStart,boxEnd,a)) debugreturn("        bbit2","corner a",1);
+  if (pointInsideBoundingBox2D(boxStart,boxEnd,b)) debugreturn("        bbit2","corner b",1);
+  if (pointInsideBoundingBox2D(boxStart,boxEnd,c)) debugreturn("        bbit2","corner c",1);
 
   // Otherwise, (for now just an approximation) check if the box corners or middle are in the triangle
   HighPrecisionVector2D boxUpperRight(boxEnd.x,boxStart.y);
   HighPrecisionVector2D boxLowerLeft(boxStart.x,boxEnd.y);
   HighPrecisionVector2D boxMiddle((boxStart.x + boxEnd.x) / 2,(boxStart.y + boxEnd.y) / 2);
-  if (pointInsideTriangle2D(a,b,c,boxStart)) debugreturn("bbit2","start",1);
-  if (pointInsideTriangle2D(a,b,c,boxEnd)) debugreturn("bbit2","end",1);
-  if (pointInsideTriangle2D(a,b,c,boxUpperRight)) debugreturn("bbit2","upper",1);
-  if (pointInsideTriangle2D(a,b,c,boxLowerLeft)) debugreturn("bbit2","lower",1);
-  if (pointInsideTriangle2D(a,b,c,boxMiddle)) debugreturn("bbit2","middle",1);
+  if (pointInsideTriangle2D(a,b,c,boxStart)) debugreturn("        bbit2","start",1);
+  if (pointInsideTriangle2D(a,b,c,boxEnd)) debugreturn("        bbit2","end",1);
+  if (pointInsideTriangle2D(a,b,c,boxUpperRight)) debugreturn("        bbit2","upper",1);
+  if (pointInsideTriangle2D(a,b,c,boxLowerLeft)) debugreturn("        bbit2","lower",1);
+  if (pointInsideTriangle2D(a,b,c,boxMiddle)) debugreturn("        bbit2","middle",1);
   
   // Otherwise no
-  debugreturn("bbit2","fallback",0);
+  debugreturn("        bbit2","fallback",0);
 }
 
 bool
@@ -316,23 +331,29 @@ OutlinerMath::boundingBoxIntersectsTriangle3D(const aiVector3D& a,
                                               const HighPrecisionVector3D& boxStart,
                                               const HighPrecisionVector3D& boxEnd) {
   // Sanity checks
+  deepdeepdebugf("        bbit3 starts");
   assert(boxStart.x <= boxEnd.x);
   assert(boxStart.y <= boxEnd.y);
   assert(boxStart.z <= boxEnd.z);
   
   // Heuristic algorithm, first check if there's an xy-plane match
+  deepdeepdebugf("        bbit3 2d");
   aiVector2D a2(a.x,a.y);
   aiVector2D b2(b.x,b.y);
   aiVector2D c2(c.x,c.y);
+  deepdeepdebugf("        bbit3 boxes");
   HighPrecisionVector2D boxStart2(boxStart.x,boxStart.y);
   HighPrecisionVector2D boxEnd2(boxEnd.x,boxEnd.y);
+  deepdeepdebugf("        bbit3 xy plane check");
   if (!boundingBoxIntersectsTriangle2D(a2,b2,c2,boxStart2,boxEnd2)) return(0);
-
+  deepdeepdebugf("        bbit2 call returned");
+  
   // If there was a match, check if the range of the triangle in
   // z axis overlaps with the given bounding box
   outlinerhighprecisionreal zlow = outlinermin3(a.z,b.z,c.z);
   outlinerhighprecisionreal zhigh = outlinermax3(a.z,b.z,c.z);
-  return(overlap(zlow,zhigh,boxStart.z,boxEnd.z));
+  deepdeepdebugf("        bbit3 z overlap check %.2f..%.2f", zlow, zhigh);
+  debugreturn("        bbit3","final",outlineroverlap(zlow,zhigh,boxStart.z,boxEnd.z));
 }
 
 bool
@@ -342,20 +363,20 @@ OutlinerMath::boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
                                        HighPrecisionVector3D& boundingBox2End) {
   // Following the algorithm from https://math.stackexchange.com/questions/2651710/simplest-way-to-determine-if-two-3d-boxes-intersect
 
-  bool xOverlap = (between(boundingBox1Start.x,boundingBox2Start.x,boundingBox1End.x) ||
-                   between(boundingBox1Start.x,boundingBox2End.x,boundingBox1End.x) ||
-                   between(boundingBox2Start.x,boundingBox1Start.x,boundingBox2End.x) ||
-                   between(boundingBox2Start.x,boundingBox1End.x,boundingBox2End.x));
+  bool xOverlap = (outlinerbetween(boundingBox1Start.x,boundingBox2Start.x,boundingBox1End.x) ||
+                   outlinerbetween(boundingBox1Start.x,boundingBox2End.x,boundingBox1End.x) ||
+                   outlinerbetween(boundingBox2Start.x,boundingBox1Start.x,boundingBox2End.x) ||
+                   outlinerbetween(boundingBox2Start.x,boundingBox1End.x,boundingBox2End.x));
   if (!xOverlap) return(0);
-  bool yOverlap = (between(boundingBox1Start.y,boundingBox2Start.y,boundingBox1End.y) ||
-                   between(boundingBox1Start.y,boundingBox2End.y,boundingBox1End.y) ||
-                   between(boundingBox2Start.y,boundingBox1Start.y,boundingBox2End.y) ||
-                   between(boundingBox2Start.y,boundingBox1End.y,boundingBox2End.y));
+  bool yOverlap = (outlinerbetween(boundingBox1Start.y,boundingBox2Start.y,boundingBox1End.y) ||
+                   outlinerbetween(boundingBox1Start.y,boundingBox2End.y,boundingBox1End.y) ||
+                   outlinerbetween(boundingBox2Start.y,boundingBox1Start.y,boundingBox2End.y) ||
+                   outlinerbetween(boundingBox2Start.y,boundingBox1End.y,boundingBox2End.y));
   if (!yOverlap) return(0);
-  bool zOverlap = (between(boundingBox1Start.z,boundingBox2Start.z,boundingBox1End.z) ||
-                   between(boundingBox1Start.z,boundingBox2End.z,boundingBox1End.z) ||
-                   between(boundingBox2Start.z,boundingBox1Start.z,boundingBox2End.z) ||
-                   between(boundingBox2Start.z,boundingBox1End.z,boundingBox2End.z));
+  bool zOverlap = (outlinerbetween(boundingBox1Start.z,boundingBox2Start.z,boundingBox1End.z) ||
+                   outlinerbetween(boundingBox1Start.z,boundingBox2End.z,boundingBox1End.z) ||
+                   outlinerbetween(boundingBox2Start.z,boundingBox1Start.z,boundingBox2End.z) ||
+                   outlinerbetween(boundingBox2Start.z,boundingBox1End.z,boundingBox2End.z));
   if (!zOverlap) return(0);
   return(1);
 }
@@ -401,7 +422,7 @@ OutlinerMath::lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
   // Check for the case of parallel lines
   if (equationTotalDifferenceX == 0) {
     if (lineStartX != verticalX) return(0);
-    if (overlap(lineStartY,lineEndY,verticalStartY,verticalEndY)) {
+    if (outlineroverlap(lineStartY,lineEndY,verticalStartY,verticalEndY)) {
       intersectionPoint.x = verticalX;
       if (lineStartY <= verticalStartY && verticalStartY <= lineEndY) intersectionPoint.y = verticalStartY;
       else if (verticalStartY <= lineStartY && lineStartY <= verticalEndY) intersectionPoint.y = lineStartY;
@@ -416,13 +437,13 @@ OutlinerMath::lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
   outlinerhighprecisionreal verticalLineDifferenceX = verticalX - lineStartX; // positive or negative
 
   // Check if vertical line is in the range on X
-  if (!between(lineStartX,verticalX,lineEndX)) return(0);
+  if (!outlinerbetween(lineStartX,verticalX,lineEndX)) return(0);
 
   // Calculate resulting Y at vertical line position
   outlinerhighprecisionreal lineY = equationBaseY + verticalLineDifferenceX * equationFactor;
 
   // Check if the resulting position is within the vertical line Y range
-  if (!between(verticalStartY,lineY,verticalEndY)) return(0);
+  if (!outlinerbetween(verticalStartY,lineY,verticalEndY)) return(0);
 
   // Lines intersect! Set the intersection point
   intersectionPoint.x = verticalX;
@@ -471,7 +492,7 @@ OutlinerMath::lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
   // Check for the case of parallel lines
   if (equationTotalDifferenceY == 0) {
     if (lineStartY != horizontalY) return(0);
-    if (overlap(lineStartX,lineEndX,horizontalStartX,horizontalEndX)) {
+    if (outlineroverlap(lineStartX,lineEndX,horizontalStartX,horizontalEndX)) {
       intersectionPoint.y = horizontalY;
       if (lineStartX <= horizontalStartX && horizontalStartX <= lineEndX) intersectionPoint.x = horizontalStartX;
       else if (horizontalStartX <= lineStartX && lineStartX <= horizontalEndX) intersectionPoint.x = lineStartX;
@@ -486,13 +507,13 @@ OutlinerMath::lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
   outlinerhighprecisionreal horizontalLineDifferenceY = horizontalY - lineStartY; // positive or negative
 
   // Check if horizontal line is in the range on Y
-  if (!between(lineStartY,horizontalY,lineEndY)) return(0);
+  if (!outlinerbetween(lineStartY,horizontalY,lineEndY)) return(0);
 
   // Calculate resulting X at horizontal line position
   outlinerhighprecisionreal lineX = equationBaseX + horizontalLineDifferenceY * equationFactor;
 
   // Check if the resulting position is within the horizontal line X range
-  if (!between(horizontalStartX,lineX,horizontalEndX)) return(0);
+  if (!outlinerbetween(horizontalStartX,lineX,horizontalEndX)) return(0);
 
   // Lines intersect! Set the intersection point
   intersectionPoint.x = lineX;
@@ -755,35 +776,35 @@ OutlinerMath::utilityTests(void) {
 
   debugf("utility tests...");
   // Between tests
-  assert(between(1,2,3));
-  assert(between(1,2,2));
-  assert(!between(1,3,2));
-  assert(!between(3,2,1));
+  assert(outlinerbetween(1,2,3));
+  assert(outlinerbetween(1,2,2));
+  assert(!outlinerbetween(1,3,2));
+  assert(!outlinerbetween(3,2,1));
 
   // Betweenanyorder tests
-  assert(betweenanyorder(1,2,3));
-  assert(betweenanyorder(1,2,2));
-  assert(betweenanyorder(2,2,1));
-  assert(!betweenanyorder(1,3,2));
-  assert(!betweenanyorder(2,3,1));
-  assert(betweenanyorder(3,2,1));
+  assert(outlinerbetweenanyorder(1,2,3));
+  assert(outlinerbetweenanyorder(1,2,2));
+  assert(outlinerbetweenanyorder(2,2,1));
+  assert(!outlinerbetweenanyorder(1,3,2));
+  assert(!outlinerbetweenanyorder(2,3,1));
+  assert(outlinerbetweenanyorder(3,2,1));
 
   // Overlap tests
-  assert(overlap(1,2,2,4));
-  assert(overlap(1,10,2,4));
-  assert(overlap(2,3,0,10));
-  assert(!overlap(1,2,3,4));
-  assert(!overlap(3,4,1,2));
+  assert(outlineroverlap(1,2,2,4));
+  assert(outlineroverlap(1,10,2,4));
+  assert(outlineroverlap(2,3,0,10));
+  assert(!outlineroverlap(1,2,3,4));
+  assert(!outlineroverlap(3,4,1,2));
 
   // Overlapanyorder tests
-  assert(overlapanyorder(1,2,2,4));
-  assert(overlapanyorder(2,1,2,4));
-  assert(overlapanyorder(2,1,4,2));
-  assert(overlapanyorder(1,2,4,2));
-  assert(overlapanyorder(1,10,4,2));
-  assert(overlapanyorder(2,3,100,1));
-  assert(!overlapanyorder(1,2,3,4));
-  assert(!overlapanyorder(4,3,2,1));
+  assert(outlineroverlapanyorder(1,2,2,4));
+  assert(outlineroverlapanyorder(2,1,2,4));
+  assert(outlineroverlapanyorder(2,1,4,2));
+  assert(outlineroverlapanyorder(1,2,4,2));
+  assert(outlineroverlapanyorder(1,10,4,2));
+  assert(outlineroverlapanyorder(2,3,100,1));
+  assert(!outlineroverlapanyorder(1,2,3,4));
+  assert(!outlineroverlapanyorder(4,3,2,1));
 }
 
 void
@@ -1243,6 +1264,16 @@ OutlinerMath::triangleTests(void) {
   assert(!ans3);
   ans3 = boundingBoxIntersectsTriangle3D(a3,b3,c3,boundingStart3b,boundingEnd3b);
   assert(ans3);
+
+  // Bug test for 3D triangle cases
+  debugf("triangle tests (3D bug)...");
+  HighPrecisionVector3D bugBoxStart(0.00,-1.00,0.00);
+  HighPrecisionVector3D bugBoxEnd(0.00,-0.50,0.50);
+  aiVector3D buga(1.00, -1.00, -1.00);
+  aiVector3D bugb(-1.00,-1.00, 1.00);
+  aiVector3D bugc(-1.00,-1.00,-1.00);
+  bool ansbug = boundingBoxIntersectsTriangle3D(buga,bugb,bugc,bugBoxStart,bugBoxEnd);
+  assert(ansbug);
 }
 
 void

@@ -26,6 +26,7 @@ struct ProcessorCrossSectionInfo {
   const char* filename;
   HighPrecisionVector2D start;
   HighPrecisionVector2D end;
+  const char* label; // 0 if no label desired
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -22,8 +22,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 struct ProcessorCrossSectionLineIterator {
-  outlinerhighprecisionreal x;
-  outlinerhighprecisionreal y;
+  HighPrecisionVector2D point;
+  unsigned int step;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,6 +44,7 @@ public:
   
 private:
 
+  const unsigned int freespacearound = 2;
   const char* fileName;
   const enum outlinerdirection sliceDirection;
   const HighPrecisionVector2D lineStart;
@@ -107,15 +108,18 @@ private:
   void drawCrossSectionFace(const aiScene* scene,
                             const aiMesh* mesh,
                             const aiFace* face,
+                            unsigned int firstStepInBoundingBox,
+                            unsigned int currentStep,
                             outlinerhighprecisionreal x,
-                            outlinerhighprecisionreal y);
+                            outlinerhighprecisionreal y,
+                            outlinerhighprecisionreal z);
 
   //
   // Coordinate operations
   //
 
-  unsigned int coordinateXYToImageXIndex(outlinerhighprecisionreal x,
-                                         outlinerhighprecisionreal y);
+  unsigned int coordinateLineStepToImageXIndex(unsigned int firstStepInBoundingBox,
+                                               unsigned int currentStep);
   unsigned int coordinateZToImageYIndex(outlinerhighprecisionreal z);
   
   //

@@ -79,6 +79,7 @@ basic-tests:	cave-outliner \
 		house-pixel-test \
 		house-line-test \
 		cube-cross-section-simple-test \
+		cube-reduced-cross-section-test \
 		cube-cross-section-test \
 		house-cross-section-test
 
@@ -145,6 +146,12 @@ cube-cross-section-simple-test:
 	@./cave-outliner --quiet --pixel --crosssections 1 test/cube-cross-section-simple-%.svg --step 1 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-simple.svg
 	@diff test/cube-cross-section-simple.svg test/cube-cross-section-simple.svg.expected
 	@diff test/cube-cross-section-simple-0.svg test/cube-cross-section-simple-0.svg.expected
+
+cube-reduced-cross-section-test:
+	@echo 'Running test case cube-reduced-cross-section-test...'
+	@./cave-outliner --quiet --pixel --crosssections 1 test/cube-reduced-cross-section-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube-reduced.stl test/cube-reduced-cross-section.svg
+	@diff test/cube-reduced-cross-section.svg test/cube-reduced-cross-section.svg.expected
+	@diff test/cube-reduced-cross-section-0.svg test/cube-reduced-cross-section-0.svg.expected
 
 cube-cross-section-test:
 	@echo 'Running test case cube-cross-section-test...'

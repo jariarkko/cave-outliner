@@ -24,6 +24,7 @@ Options:
     --crosssection x file    Produce also a cross section at a given x position, output to file.\n";
     --crosssections n pat    Produce n cross sections at different x positions, output to files (percent
                              sign denotes the cross section number in the file name pattern).
+    --label                  Label cross sections
     --linewidth n            Set the width of the lines in output picture. The value can be a
                              decimal number.
     --multiplier n           Multiply image size by n (default 1).

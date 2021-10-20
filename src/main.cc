@@ -37,6 +37,7 @@ static void processHelp(void);
 static void runTests(void);
 static char* makeFilenameFromPattern(const char* pattern,
                                      unsigned int index);
+static const char* getCrossSectionLabel(void);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Local variables ////////////////////////////////////////////////////////////////////////////
@@ -66,6 +67,8 @@ static unsigned int nAutomaticCrossSections = 0;
 static const char* automaticCrossSectionFilenamePattern = 0;
 static unsigned int nCrossSections = 0;
 static struct ProcessorCrossSectionInfo crossSections[outlinermaxcrosssections];
+static bool labelCrossSections = 0;
+static unsigned int crossSectionLabelCount = 0;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program and option handling ///////////////////////////////////////////////////////////
@@ -148,9 +151,12 @@ main(int argc, char** argv) {
       crossSections[nCrossSections].end.x = num;
       crossSections[nCrossSections].end.y = 0;
       crossSections[nCrossSections].filename = file;
+      crossSections[nCrossSections].label = getCrossSectionLabel();
       nCrossSections++;
       argc--;argv++;
       argc--;argv++;
+    } else if (strcmp(argv[1],"--label") == 0) {
+      labelCrossSections = 1;
     } else if (strcmp(argv[1],"--linewidth") == 0 && argc > 2) {
       float num = atof(argv[2]);
       if (num <= 0.0) {
@@ -303,7 +309,9 @@ main(int argc, char** argv) {
       crossSections[nCrossSections].start.y = yOutputStart;
       crossSections[nCrossSections].end.y = yOutputEnd;
       crossSections[nCrossSections].filename = newFilename;
-      debugf("cross section file %s at x %.2f from y %.2f to %.2f, step was %.2f",
+      crossSections[nCrossSections].label = getCrossSectionLabel();
+      debugf("cross section %s file %s at x %.2f from y %.2f to %.2f, step was %.2f",
+             crossSections[nCrossSections].label == 0 ? "(none)" : crossSections[nCrossSections].label,
              newFilename,
              crossSections[nCrossSections].start.x,
              crossSections[nCrossSections].start.y,
@@ -351,6 +359,7 @@ main(int argc, char** argv) {
   }
 
   // Done
+  infof("done");
   return(0);
 }
 
@@ -389,6 +398,7 @@ processHelp(void) {
   std::cout << "  --crosssection x file    Produce also a cross section at a given x position, output to file.\n";
   std::cout << "  --crosssections n pat    Produce n cross sections at different x positions, output to files (percent\n";
   std::cout << "                           sign denotes the cross section number in the file name pattern).\n";
+  std::cout << "  --label                  Label cross sections.\n";
   std::cout << "  --multiplier n           Multiply image size by n (default 1).\n";
   std::cout << "  --linewidth n            Set the width of the lines in output picture. The value can be a\n";
   std::cout << "                           decimal number.\n";
@@ -479,6 +489,37 @@ makeFilenameFromPattern(const char* pattern,
   strncat(result,rest,newFilenameLength);
   return(result);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Cross section labels ///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+static const char*
+getCrossSectionLabel(void) {
+  if (labelCrossSections) {
+    char buf[20];
+    const unsigned int nAlphabet = 25;
+    memset(buf,0,sizeof(buf));
+    if (crossSectionLabelCount <= nAlphabet) {
+      snprintf(buf,sizeof(buf)-1,"%c",
+               ('A' + crossSectionLabelCount));
+    } else {
+      snprintf(buf,sizeof(buf)-1,"%c%u",
+               ('A' + (crossSectionLabelCount % nAlphabet)),
+               1 + (crossSectionLabelCount / nAlphabet));
+    }
+    crossSectionLabelCount++;
+    const char* result = strdup(buf);
+    if (result == 0) {
+      errf("Cannot allocate a string of %u bytes", strlen(buf));
+      exit(1);
+    }
+    return(result);
+  } else {
+    return(0);
+  }
+}
+                
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Test functions /////////////////////////////////////////////////////////////////////////////

@@ -57,6 +57,7 @@ debugf(const char* format, ...) {
     std::cerr << OUTLINER_DEBUGPREFIX;
     std::cerr << buf;
     std::cerr << "\n";
+    std::cerr.flush();
     
   }
   
@@ -79,6 +80,7 @@ deepdebugf(const char* format, ...) {
     std::cerr << OUTLINER_DEBUGPREFIX;
     std::cerr << buf;
     std::cerr << "\n";
+    std::cerr.flush();
     
   }
   
@@ -101,6 +103,7 @@ deepdeepdebugf(const char* format, ...) {
     std::cerr << OUTLINER_DEBUGPREFIX;
     std::cerr << buf;
     std::cerr << "\n";
+    std::cerr.flush();
     
   }
   
@@ -121,6 +124,7 @@ errf(const char* format, ...) {
   std::cerr << OUTLINER_ERRPREFIX;
   std::cerr << buf;
   std::cerr << " -- exit\n";
+  std::cerr.flush();
   
 }
 
@@ -141,6 +145,7 @@ infof(const char* format, ...) {
     std::cout << OUTLINER_INFOPREFIX;
     std::cout << buf;
     std::cout << "\n";
+    std::cout.flush();
 
   }
 }

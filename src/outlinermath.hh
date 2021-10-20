@@ -37,6 +37,11 @@ public:
                                const HighPrecisionVector2D& box2End,
                                HighPrecisionVector2D& resultBoxStart,
                                HighPrecisionVector2D& resultBoxEnd);
+  static void triangleDescribe(const aiVector3D& a,
+                               const aiVector3D& b,
+                               const aiVector3D& c,
+                               char* buf,
+                               unsigned int bufSize);
   static void triangleBoundingBox2D(const aiVector2D& a,
                                     const aiVector2D& b,
                                     const aiVector2D& c,

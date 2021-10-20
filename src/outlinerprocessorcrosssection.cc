@@ -88,12 +88,17 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   infof("  cross section bounding box (%.2f,%.2f) to (%.2f,%.2f)",
         sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
         sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y);
-  infof("  steps %.2f and %.2f", proc.stepy, stepz);
+  debugf("cross section bounding box (%.2f,%.2f) to (%.2f,%.2f)",
+        sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
+        sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y);
+   debugf("steps %.2f and %.2f", proc.stepy, stepz);
   
   // Increase bounding box to each side
-  sliceVerticalBoundingBoxStart.x -= 2*proc.stepy;
-  sliceVerticalBoundingBoxStart.y -= 2*stepz;
-  infof("  cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
+  sliceVerticalBoundingBoxStart.x -= freespacearound*proc.stepy;
+  sliceVerticalBoundingBoxStart.y -= freespacearound*stepz;
+  sliceVerticalBoundingBoxEnd.x += freespacearound*proc.stepy;
+  sliceVerticalBoundingBoxEnd.y += freespacearound*stepz;
+  debugf("  cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
          sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
          sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y);
   
@@ -153,8 +158,12 @@ ProcessorCrossSection::calculateLineEquation(void) {
     errf("Cross-section starting and ending points cannot be same");
     exit(1);
   }
+  outlinerhighprecisionreal totalDifference = xDifference + yDifference;
+  outlinerhighprecisionreal xDifferenceFraction = xDifference / totalDifference;
+  outlinerhighprecisionreal yDifferenceFraction = yDifference / totalDifference;
   lineLength = sqrt(xDifference*xDifference + yDifference*yDifference);
-  lineStep = (proc.stepx + proc.stepy)/2.0;
+  lineStep = (proc.stepx * xDifferenceFraction) + (proc.stepy * yDifferenceFraction);
+  //lineStep = (proc.stepx + proc.stepy)/2.0;
   lineSteps = lineLength/lineStep;
   lineStepX = xDifference / lineSteps;
   lineStepY = yDifference / lineSteps;
@@ -167,23 +176,25 @@ ProcessorCrossSection::calculateLineEquation(void) {
 
 void
 ProcessorCrossSection::lineIteratorInit(struct ProcessorCrossSectionLineIterator& iter) {
-  iter.x = lineStart.x;
-  iter.y = lineStart.y;
+  iter.point.x = lineStart.x;
+  iter.point.y = lineStart.y;
+  iter.step = 0;
 }
 
 bool
 ProcessorCrossSection::lineIteratorDone(struct ProcessorCrossSectionLineIterator& iter) {
-  if (lineEnd.x > lineStart.x && iter.x > lineEnd.x) return(1);
-  if (lineEnd.x < lineStart.x && iter.x < lineEnd.x) return(1);
-  if (lineEnd.y > lineStart.y && iter.y > lineEnd.y) return(1);
-  if (lineEnd.y < lineStart.y && iter.y < lineEnd.y) return(1);
+  if (lineEnd.x > lineStart.x && iter.point.x > lineEnd.x) return(1);
+  if (lineEnd.x < lineStart.x && iter.point.x < lineEnd.x) return(1);
+  if (lineEnd.y > lineStart.y && iter.point.y > lineEnd.y) return(1);
+  if (lineEnd.y < lineStart.y && iter.point.y < lineEnd.y) return(1);
   return(0);
 }
 
 void
 ProcessorCrossSection::lineIteratorNext(struct ProcessorCrossSectionLineIterator& iter) {
-  iter.x += lineStepX;
-  iter.y += lineStepY;
+  iter.point.x += lineStepX;
+  iter.point.y += lineStepY;
+  iter.step++;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,6 +206,7 @@ ProcessorCrossSection::drawCrossSection(const aiScene* scene) {
 
   // Sanity checks
   assert(scene != 0);
+  debugf("drawing cross section scene");
 
   // Actual matrix calculations
   drawCrossSectionNode(scene,scene->mRootNode);
@@ -222,17 +234,40 @@ ProcessorCrossSection::drawCrossSectionMesh(const aiScene* scene,
                                             const aiMesh* mesh) {
   assert(scene != 0);
   assert(mesh != 0);
+  bool firstStepInBoundingBoxSeen = 0;
+  unsigned int firstStepInBoundingBox = 0;
   struct ProcessorCrossSectionLineIterator iter;
   lineIteratorInit(iter);
   for (; !lineIteratorDone(iter); lineIteratorNext(iter)) {
+    deepdebugf("  drawCrossSectionMesh: line iterator step (%.2f,%.2f)", iter.point.x, iter.point.y);
+    if (!outlinerbetweenanyorder(sliceVerticalBoundingBoxStart.x,
+                                 iter.point.y,
+                                 sliceVerticalBoundingBoxEnd.x)) {
+      deepdeepdebugf("  skip iterator step outside bounding box");
+      continue;
+    }
+    if (!firstStepInBoundingBoxSeen) {
+      firstStepInBoundingBox = iter.step;
+      firstStepInBoundingBoxSeen = 1;
+      deepdebugf("  setting first step to %u", firstStepInBoundingBox);
+    }
     unsigned int nFaces = 0;
     const aiFace** faces = 0;
-    proc.indexed.getFaces(mesh,iter.x,iter.y,&nFaces,&faces);
+    proc.indexed.getFaces(mesh,iter.point.x,iter.point.y,&nFaces,&faces);
     if (nFaces > 0) {
-      deepdebugf("drawCrossSectionMesh: got %u cross section faces from (%.2f,%.2f)", nFaces, iter.x, iter.y);
-      for (unsigned int f = 0; f < nFaces; f++) {
-        drawCrossSectionFace(scene,mesh,faces[f],
-                             iter.x, iter.y);
+      deepdebugf("  drawCrossSectionMesh: got %u cross section faces from (%.2f,%.2f)",
+                 nFaces, iter.point.x, iter.point.y);
+      for  (outlinerhighprecisionreal z = sliceVerticalBoundingBoxStart.y;
+            z <= sliceVerticalBoundingBoxEnd.y;
+            z += stepz) {
+        deepdebugf("  drawCrossSectionMesh: z iterator step (%.2f,%.2f,%.2f)",
+                   iter.point.x, iter.point.y, z);
+        for (unsigned int f = 0; f < nFaces; f++) {
+          drawCrossSectionFace(scene,mesh,faces[f],
+                               firstStepInBoundingBox,
+                               iter.step,
+                               iter.point.x, iter.point.y, z);
+        }
       }
     }
   }
@@ -242,8 +277,11 @@ void
 ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
                                             const aiMesh* mesh,
                                             const aiFace* face,
+                                            unsigned int firstStepInBoundingBox,
+                                            unsigned int currentStep,
                                             outlinerhighprecisionreal x,
-                                            outlinerhighprecisionreal y) {
+                                            outlinerhighprecisionreal y,
+                                            outlinerhighprecisionreal z) {
   assert(scene != 0);
   assert(mesh != 0);
   assert(face != 0);
@@ -252,18 +290,29 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
   aiVector3D b3;
   aiVector3D c3;
   proc.faceGetVertices3D(mesh,face,a3,b3,c3);
-  for  (outlinerhighprecisionreal z = sliceVerticalBoundingBoxStart.y;
-        z <= sliceVerticalBoundingBoxEnd.y;
-        z += stepz) {
-    HighPrecisionVector3D point(x,y,z);
-    HighPrecisionVector3D stepboundingbox(x+lineStepX,y+lineStepY,z+stepz);
-    if (OutlinerMath::boundingBoxIntersectsTriangle3D(a3,b3,c3,point,stepboundingbox)) {
-      deepdebugf("cross section draw xyz match at (%.2f,%.2f,%.2f)",x,y,z);
-      unsigned int xIndex = coordinateXYToImageXIndex(x,y);
-      unsigned int yIndex = coordinateZToImageYIndex(z);
-      infof("      set matrix %u,%u", xIndex, yIndex);
-      matrix->setMaterialMatrix(xIndex,yIndex);
-    }
+  HighPrecisionVector3D point(x,y,z);
+  HighPrecisionVector3D stepboundingbox(x+lineStepX,y+lineStepY,z+stepz);
+  char buf[80];
+  OutlinerMath::triangleDescribe(a3,b3,c3,buf,sizeof(buf));
+  deepdeepdebugf("describe done, result = %s", buf);
+  if (OutlinerMath::boundingBoxIntersectsTriangle3D(a3,b3,c3,point,stepboundingbox)) {
+    unsigned int xIndex = coordinateLineStepToImageXIndex(firstStepInBoundingBox,currentStep);
+    unsigned int yIndex = coordinateZToImageYIndex(z);
+    deepdebugf("    cross section draw face xyz match     at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) steps %u (%u) triangle %s => matrix %u,%u",
+               x, stepboundingbox.x, y, stepboundingbox.y, z, stepboundingbox.z,
+               currentStep, firstStepInBoundingBox,
+               buf,
+               xIndex, yIndex);
+    matrix->setMaterialMatrix(xIndex,yIndex);
+  } else {
+    deepdeepdebugf("      going to debug");
+    deepdebugf("    cross section draw face xyz non-match at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) "
+               "face (%5.2f,%5.2f,%5.2f) x (%5.2f,%5.2f,%5.2f) x (%5.2f,%5.2f,%5.2f) triangle %s",
+               x, stepboundingbox.x, y, stepboundingbox.y, z, stepboundingbox.z,
+               a3.x, a3.y, a3.z,
+               b3.x, b3.y, b3.z,
+               c3.x, c3.y, c3.z,
+               buf);
   }
 }
 
@@ -272,13 +321,14 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 unsigned int
-ProcessorCrossSection::coordinateXYToImageXIndex(outlinerhighprecisionreal x,
-                                                 outlinerhighprecisionreal y) {
+ProcessorCrossSection::coordinateLineStepToImageXIndex(unsigned int firstStepInBoundingBox,
+                                                       unsigned int currentStep) {
   assert(matrix != 0);
-  outlinerhighprecisionreal thisXDifference = x - lineStart.x;
-  outlinerhighprecisionreal thisYDifference = y - lineStart.y;
-  outlinerhighprecisionreal thisLineLength = sqrt(thisXDifference*thisXDifference + thisYDifference*thisYDifference);
-  unsigned int result = (unsigned int)((thisLineLength * (matrix->xIndexSize + 1)) / lineLength);
+  unsigned int result = (currentStep - firstStepInBoundingBox);
+  //outlinerhighprecisionreal thisXDifference = x - lineStart.x;
+  //outlinerhighprecisionreal thisYDifference = y - lineStart.y;
+  //outlinerhighprecisionreal thisLineLength = sqrt(thisXDifference*thisXDifference + thisYDifference*thisYDifference);
+  //unsigned int result = (unsigned int)((thisLineLength * (matrix->xIndexSize + 1)) / lineLength);
   assert(result < matrix->xIndexSize);
   return(result);
 }
@@ -292,8 +342,8 @@ ProcessorCrossSection::coordinateZToImageYIndex(outlinerhighprecisionreal z) {
     (z - sliceVerticalBoundingBoxStart.y) /
     (sliceVerticalBoundingBoxEnd.y - sliceVerticalBoundingBoxStart.y);
   unsigned int result = (unsigned int)(diff * (matrix->yIndexSize-1));
-  infof("    cross section coordinate z %.2f (diff %.4f) to %u (yIndexSize %u)",
-        z, diff, result, matrix->yIndexSize);
+  deepdeepdebugf("      cross section coordinate z %.2f (diff %.4f) to %u (yIndexSize %u)",
+                 z, diff, result, matrix->yIndexSize);
   assert(result < matrix->yIndexSize);
   return(result);
 }
@@ -353,12 +403,12 @@ ProcessorCrossSection::sliceVerticalBoundingBoxMesh(const aiScene* scene,
   for (; !lineIteratorDone(iter); lineIteratorNext(iter)) {
     unsigned int nFaces = 0;
     const aiFace** faces = 0;
-    proc.indexed.getFaces(mesh,iter.x,iter.y,&nFaces,&faces);
+    proc.indexed.getFaces(mesh,iter.point.x,iter.point.y,&nFaces,&faces);
     if (nFaces > 0) {
-      deepdebugf("got %u cross section faces from (%.2f,%.2f)", nFaces, iter.x, iter.y);
+      deepdebugf("got %u cross section faces from (%.2f,%.2f)", nFaces, iter.point.x, iter.point.y);
       for (unsigned int f = 0; f < nFaces; f++) {
         sliceVerticalBoundingBoxFace(scene,mesh,faces[f],
-                                     iter.x, iter.y,
+                                     iter.point.x, iter.point.y,
                                      set,
                                      sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd);
       }

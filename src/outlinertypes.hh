@@ -41,4 +41,18 @@ enum outlineralgorithm {
 #define outlinermax3(a,b,c)  (outlinermax((a),outlinermax((b),(c))))
 #define outlinersaneindex(x) ((x) < (2U*1000U*1000U*1000U))
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Math common utilities //////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+#define outlinerbetweenanyorder(a,b,c)    ((a) < (c) ? outlinerbetween(a,b,c) :                           \
+                                                       outlinerbetween(c,b,a))
+#define outlinerbetween(a,b,c)            ((a) <= (b) && (b) <= (c))
+#define outlineroverlapanyorder(a,b,c,d)  (((a) <= (b) && (c) <= (d)) ? outlineroverlap(a,b,c,d) :         \
+                                           (((b) <= (a) && (c) <= (d)) ? outlineroverlap(b,a,c,d) :        \
+                                            (((b) <= (a) && (d) <= (c)) ? outlineroverlap(b,a,d,c) :       \
+                                             outlineroverlap(a,b,d,c))))
+#define outlineroverlap(a,b,c,d)          ((((a) <= (c)) && ((c) <= (b))) ||                               \
+                                           (((c) <= (a)) && ((a) <= (d))))
+
 #endif // OUTLINERTYPES_HH

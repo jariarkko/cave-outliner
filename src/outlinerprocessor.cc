@@ -211,10 +211,10 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
   infof("constructing output of %ux%u pixels...",
         theMatrix->xIndexSize, theMatrix->yIndexSize);
   deepdebugf("algorithm %u", algorithm);
-  infof("  covering model from (%.2f,%.2,f) to (%.2f,%.2f)",
-        xStart, yStart,
-        xStart + theMatrix->xIndexSize * xStep,
-        yStart + theMatrix->yIndexSize * yStep);
+  debugf("  covering model from (%.2f,%.2,f) to (%.2f,%.2f)",
+         xStart, yStart,
+         xStart + theMatrix->xIndexSize * xStep,
+         yStart + theMatrix->yIndexSize * yStep);
   unsigned int nBorderTo;
   bool borderTablePrev[maxNeighbors];
   unsigned int borderTableX[maxNeighbors];
@@ -721,7 +721,7 @@ bool
 Processor::processSceneCrossSection(const aiScene* scene,
                                     unsigned int c,
                                     const struct ProcessorCrossSectionInfo* crossSection) {
-  infof("Cross section %u at (%.2f,%.2f)-(%.2f,%.2f) to file %s",
+  infof("cross section %u at (%.2f,%.2f)-(%.2f,%.2f) to file %s",
         c,
         crossSection->start.x,
         crossSection->start.y,
