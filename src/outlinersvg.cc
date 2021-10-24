@@ -42,6 +42,8 @@ SvgCreator::SvgCreator(const char* fileName,
   originalLines = 0;
   finalLines = 0;
   joins = 0;
+  strings = 0;
+  characters = 0;
   
   debugf("coordinate normalization starts (%.2f,%.2f) factors (%f,%f) linewidth %f",
          xStart, yStart, xFactor, yFactor, linewidth);
@@ -59,6 +61,7 @@ SvgCreator::~SvgCreator() {
   infof("    file size %.1f KB", (bytes / 1000.0));
   infof("    image has %u pixels", pixels);
   infof("    image has %u lines (from originally %u line components)", finalLines, originalLines);
+  infof("    image has %u strings (%u characters)", strings, characters);
   lineTableInfos();
   lineTableDeinit();
   lineTable = 0;
@@ -68,7 +71,8 @@ void
 SvgCreator::line(outlinerhighprecisionreal fromX,
                  outlinerhighprecisionreal fromY,
                  outlinerhighprecisionreal toX,
-                 outlinerhighprecisionreal toY) {
+                 outlinerhighprecisionreal toY,
+                 bool dashed) {
 
   if (originalLines == 0 && pixels == 0) {
     infof("  image size %u x %u", xSize, ySize);
@@ -84,14 +88,15 @@ SvgCreator::line(outlinerhighprecisionreal fromX,
   coordinateNormalization(toX,toY,toXInt,toYInt);
 
   deepdebugf("SvgCreator::line");
-  addLine(fromXInt,fromYInt,toXInt,toYInt);
+  addLine(fromXInt,fromYInt,toXInt,toYInt,dashed);
 }
 
 void
 SvgCreator::addLine(unsigned int x1,
                     unsigned int y1,
                     unsigned int x2,
-                    unsigned int y2) {
+                    unsigned int y2,
+                    bool dashed) {
   deepdebugf("addLine");
   if (mergedLines) {
     unsigned int matchIndex;
@@ -100,6 +105,7 @@ SvgCreator::addLine(unsigned int x1,
     struct OutlinerSvgLine* match =
       matchingLine(x1,y1,
                    x2,y2,
+                   dashed,
                    matchIndex,
                    isStart,
                    reverseOriginal);
@@ -113,6 +119,7 @@ SvgCreator::addLine(unsigned int x1,
       entry->refCount = 0;
       entry->printed = 0;
       entry->nPoints = 2;
+      entry->dashed = dashed;
       entry->points[0].x = x1;
       entry->points[0].y = y1;
       entry->points[1].x = x2;
@@ -123,6 +130,7 @@ SvgCreator::addLine(unsigned int x1,
       assert(match->nPoints > 0);
       assert(match->nPoints < OutlinerSvgMaxLinePoints);
       assert(match->refCount == 2);
+      assert(dashed == match->dashed);
       deepdebugf("line match for (%u,%u)-(%u,%u) in index %u start %u reverse %u",
                  x1, y1, x2, y2, matchIndex, isStart, reverseOriginal);
       lineTableEntryUnlink(match,matchIndex);
@@ -174,6 +182,7 @@ SvgCreator::addLine(unsigned int x1,
     line.points[0].y = y1;
     line.points[1].x = x2;
     line.points[1].y = y2;
+    line.dashed = dashed;
     emitLine(line);
   }
 }
@@ -207,11 +216,14 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
     file << "\"";
   }
   if (smooth) {
-    file << " fill=\"none\" stroke=\"black\" stroke-width=\"" << linewidth << "\" />\n";
+    file << " fill=\"none\" stroke=\"black\" ";
   } else {
-    file << " fill=\"none\" stroke=\"black\" stroke-width=\"" << linewidth << "\" />\n";
-    //file << " style=\"fill:none;stroke:black;stroke-width=" << linewidth << "\" />\n";
+    file << " fill=\"none\" stroke=\"black\" ";
   }
+  if (line.dashed) {
+    file << " stroke-dasharray=\"1 1\" ";
+  }
+  file << "stroke-width=\"" << linewidth << "\" />\n";
   finalLines++;
 }
 
@@ -231,6 +243,24 @@ SvgCreator::pixel(outlinerhighprecisionreal x,
   }
   file << " stroke-width=\"0\" stroke=\"black\" />\n";
   pixels++;
+}
+
+void
+SvgCreator::text(outlinerhighprecisionreal x,
+                 outlinerhighprecisionreal y,
+                 const char* string) {
+  deepdebugf("SvgCreator::text");
+  assert(string != 0);
+  unsigned int xInt;
+  unsigned int yInt;
+  coordinateNormalization(x,y,xInt,yInt);
+  file << "<text x=\"" << xInt*multiplier << "\" y=\"" << yInt*multiplier << "\"";
+  file << " fill=\"black\">";
+  file << string;
+  file << "</text>\n";
+  strings++;
+  characters += strlen(string);
+  infof("text to (%.2f,%.2f) which is (%u,%u)", x, y, xInt, yInt);
 }
 
 void
@@ -295,6 +325,7 @@ SvgCreator::matchingLine(unsigned int x1,
                          unsigned int y1,
                          unsigned int x2,
                          unsigned int y2,
+                         bool dashed,
                          unsigned int& matchIndex,
                          bool& matchesStart,
                          bool& reverseOriginal) {
@@ -305,7 +336,7 @@ SvgCreator::matchingLine(unsigned int x1,
   struct OutlinerSvgLine* result = 0;
 
   // See if we can find a line that ends in (x1,y1)
-  if ((result = matchingLineAux(x1,y1,1,head)) != 0) {
+  if ((result = matchingLineAux(x1,y1,dashed,1,head)) != 0) {
     matchIndex = head;
     matchesStart = 0;
     reverseOriginal = 0;
@@ -313,7 +344,7 @@ SvgCreator::matchingLine(unsigned int x1,
   }
 
   // See if we can find a line that starts with (x2,y2)
-  if ((result = matchingLineAux(x2,y2,0,tail)) != 0) {
+  if ((result = matchingLineAux(x2,y2,dashed,0,tail)) != 0) {
     matchIndex = tail;
     matchesStart = 1;
     reverseOriginal = 0;
@@ -321,7 +352,7 @@ SvgCreator::matchingLine(unsigned int x1,
   }
   
   // See if we can find a line that ends in (x2,y2)
-  if ((result = matchingLineAux(x2,y2,1,tail)) != 0) {
+  if ((result = matchingLineAux(x2,y2,dashed,1,tail)) != 0) {
     matchIndex = tail;
     matchesStart = 0;
     reverseOriginal = 1;
@@ -329,7 +360,7 @@ SvgCreator::matchingLine(unsigned int x1,
   }
 
   // See if we can find a line that starts with (x1,y1)
-  if ((result = matchingLineAux(x1,y1,0,head)) != 0) {
+  if ((result = matchingLineAux(x1,y1,dashed,0,head)) != 0) {
     matchIndex = head;
     matchesStart = 1;
     reverseOriginal = 1;
@@ -346,9 +377,10 @@ SvgCreator::matchingLine(unsigned int x1,
 struct OutlinerSvgLine*
 SvgCreator::matchingLineAux(unsigned int x,
                             unsigned int y,
+                            bool dashed,
                             bool lookForTailMatch,
                             unsigned int index) {
-  return(matchingLineAuxAvoid(0,x,y,lookForTailMatch,
+  return(matchingLineAuxAvoid(0,x,y,dashed,lookForTailMatch,
                               index));
 }
 
@@ -356,6 +388,7 @@ struct OutlinerSvgLine*
 SvgCreator::matchingLineAuxAvoid(struct OutlinerSvgLine* avoid,
                                  unsigned int x,
                                  unsigned int y,
+                                 bool dashed,
                                  bool lookForTailMatch,
                                  unsigned int index) {
   struct OutlinerSvgLineList* list = lineTable[index];
@@ -379,9 +412,10 @@ SvgCreator::matchingLineAuxAvoid(struct OutlinerSvgLine* avoid,
     //
     //    1/ the line is already at max capacity or
     //    2/ we are trying to avoid the line object in this entry
+    //    3/ dashing does not match
     //
     
-    if (line != avoid && line->nPoints < OutlinerSvgMaxLinePoints) {
+    if (line != avoid && line->nPoints < OutlinerSvgMaxLinePoints && dashed == line->dashed) {
     
       // Is there a match here?
       if (!lookForTailMatch && line->points[first].x == x && line->points[first].y == y) return(line);
@@ -416,12 +450,12 @@ SvgCreator::matchingLineJoin(struct OutlinerSvgLine* target,
   struct OutlinerSvgLine* result = 0;
   if (fromStart) {
     // See if we can find a line that ends with (x,y)
-    if ((result = matchingLineAuxAvoid(target,x,y,1,searchIndex)) != 0) {
+    if ((result = matchingLineAuxAvoid(target,x,y,target->dashed,1,searchIndex)) != 0) {
       return(result);
     }
   } else {
     // See if we can find a line that starts with (x,y)
-    if ((result = matchingLineAuxAvoid(target,x,y,0,searchIndex)) != 0) {
+    if ((result = matchingLineAuxAvoid(target,x,y,target->dashed,0,searchIndex)) != 0) {
       return(result);
     }
   }
@@ -444,6 +478,7 @@ SvgCreator::lineTableJoin(struct OutlinerSvgLine* entry,
   assert(fromStart == 0 || fromStart == 1);
   assert(entryIndex < lineTableSize);
   assert(entry->nPoints + join->nPoints <= OutlinerSvgMaxLinePoints);
+  assert(entry->dashed == join->dashed);
   assert(entry->refCount == 2);
   deepdebugf("join point 1 entry ref count %u", entry->refCount);
   assert(join->refCount == 2);

@@ -34,6 +34,7 @@ class ProcessorCrossSection {
 
 public:
   ProcessorCrossSection(const char* fileNameIn,
+                        const char* labelIn, // 0 if no label desired
                         enum outlinerdirection sliceDirectionIn,
                         const HighPrecisionVector2D& lineStartIn,
                         const HighPrecisionVector2D& lineEndIn,
@@ -41,11 +42,15 @@ public:
                         Processor& procIn);
   ~ProcessorCrossSection();
   bool processSceneCrossSection(const aiScene* scene);
+  void getLineActualEndPoints(HighPrecisionVector2D& actualLineStart,
+                              HighPrecisionVector2D& actualLineEnd,
+                              outlinerhighprecisionreal extralineatends);
   
 private:
 
   const unsigned int freespacearound = 2;
   const char* fileName;
+  const char* label; // 0 if no label desired
   const enum outlinerdirection sliceDirection;
   const HighPrecisionVector2D lineStart;
   const HighPrecisionVector2D lineEnd;
@@ -62,7 +67,7 @@ private:
   MaterialMatrix* matrix;
   Processor& proc;
   SvgCreator* svg;
-
+  
   //
   // Internal state management
   //
@@ -127,6 +132,7 @@ private:
   //
   
   void calculateLineEquation(void);
+  outlinerhighprecisionreal calculateLineXBasedOnY(outlinerhighprecisionreal y);
   void lineIteratorInit(struct ProcessorCrossSectionLineIterator& iter);
   bool lineIteratorDone(struct ProcessorCrossSectionLineIterator& iter);
   void lineIteratorNext(struct ProcessorCrossSectionLineIterator& iter);

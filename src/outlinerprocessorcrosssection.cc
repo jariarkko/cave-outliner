@@ -21,12 +21,14 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ProcessorCrossSection::ProcessorCrossSection(const char* fileNameIn,
+                                             const char* labelIn, // 0 if no label desired
                                              enum outlinerdirection sliceDirectionIn,
                                              const HighPrecisionVector2D& lineStartIn,
                                              const HighPrecisionVector2D& lineEndIn,
                                              outlinerhighprecisionreal stepzIn,
                                              Processor& procIn) :
   fileName(fileNameIn),
+  label(labelIn),
   sliceDirection(sliceDirectionIn),
   lineStart(lineStartIn),
   lineEnd(lineEndIn),
@@ -91,30 +93,48 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   debugf("cross section bounding box (%.2f,%.2f) to (%.2f,%.2f)",
         sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
         sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y);
-   debugf("steps %.2f and %.2f", proc.stepy, stepz);
+  debugf("steps %.2f and %.2f", proc.stepy, stepz);
   
-  // Increase bounding box to each side
-  sliceVerticalBoundingBoxStart.x -= freespacearound*proc.stepy;
-  sliceVerticalBoundingBoxStart.y -= freespacearound*stepz;
-  sliceVerticalBoundingBoxEnd.x += freespacearound*proc.stepy;
-  sliceVerticalBoundingBoxEnd.y += freespacearound*stepz;
-  debugf("  cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
-         sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
-         sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y);
+  // Increase bounding box to each side for the actual image
+  HighPrecisionVector2D sliceVerticalBoundingBoxExtendedStart = sliceVerticalBoundingBoxStart;
+  HighPrecisionVector2D sliceVerticalBoundingBoxExtendedEnd = sliceVerticalBoundingBoxEnd;
+  sliceVerticalBoundingBoxExtendedStart.x -= freespacearound*proc.stepy;
+  sliceVerticalBoundingBoxExtendedStart.y -= freespacearound*stepz;
+  sliceVerticalBoundingBoxExtendedEnd.x += freespacearound*proc.stepy;
+  sliceVerticalBoundingBoxExtendedEnd.y += freespacearound*stepz;
+  if (label != 0) {
+    outlinerhighprecisionreal incr = outlinertitlespacey*stepz;
+    infof("increasing cross-section image vertical size by %.2f (%u*%.2f) to accommodate label",
+          incr, outlinertitlespacey, stepz);
+    sliceVerticalBoundingBoxExtendedEnd.y += incr;
+    if ((sliceVerticalBoundingBoxExtendedEnd.x - sliceVerticalBoundingBoxExtendedStart.x)/proc.stepy < outlinertitlespacex) {
+      outlinerhighprecisionreal incr2 = outlinertitlespacex*proc.stepy;
+      infof("increasing cross-section image horizontal size by %.2f (%u*%.2f) to accommodate label",
+            incr2, outlinertitlespacex, proc.stepy);
+      sliceVerticalBoundingBoxExtendedEnd.x = sliceVerticalBoundingBoxExtendedStart.x + incr2;
+    }
+  }
+  infof("  cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
+        sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
+        sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y);
   
   // Create a material matrix
   matrix = new MaterialMatrix(sliceVerticalBoundingBoxStart,
                               sliceVerticalBoundingBoxEnd,
                               proc.stepy,
                               stepz);
-  debugf("  slice bounding box after matrix creation (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
+  infof("  slice bounding box after matrix creation (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
          sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
          sliceVerticalBoundingBoxStart.x + proc.stepy * matrix->xIndexSize,
          sliceVerticalBoundingBoxStart.y + stepz * matrix->yIndexSize,
          proc.stepy, stepz);
+  infof("  extended slice bounding box after matrix creation (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
+        sliceVerticalBoundingBoxExtendedStart.x, sliceVerticalBoundingBoxExtendedStart.y,
+        sliceVerticalBoundingBoxExtendedEnd.x, sliceVerticalBoundingBoxExtendedEnd.y,
+        proc.stepy, stepz);
   
   // Create an image base of the bounding size
-  svg = proc.createSvg(fileName,sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd,sliceDirection);
+  svg = proc.createSvg(fileName,sliceVerticalBoundingBoxExtendedStart,sliceVerticalBoundingBoxExtendedEnd,sliceDirection);
 
   debugf("  slice bounding box after svg creation (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
          sliceVerticalBoundingBoxStart.x, sliceVerticalBoundingBoxStart.y,
@@ -128,6 +148,23 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
          sliceVerticalBoundingBoxEnd.x, sliceVerticalBoundingBoxEnd.y,
          proc.stepy, stepz);
 
+  // Add label, if needed
+  if (label != 0) {
+    char labelText[50];
+    const char* labelPrefix = " Cross-section ";
+    unsigned int neededSpace = strlen(labelPrefix) + strlen(label) + 1;
+    memset(labelText,0,sizeof(labelText));
+    if (sizeof(labelText) < neededSpace) {
+      errf("Cross-section label length too long");
+      snprintf(labelText,sizeof(labelText)-1,"...");
+    } else {
+      snprintf(labelText,sizeof(labelText)-1,"%s%s", labelPrefix, label);
+    }
+    svg->text(sliceVerticalBoundingBoxStart.x,
+              sliceVerticalBoundingBoxEnd.y + 6*stepz,
+              labelText);
+  }
+  
   // Now there's a matrix filled with a flag for each coordinate,
   // whether there was material or not. And small holes have been filled per above.
   // Draw the output based on all this.
@@ -150,8 +187,30 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
 
 void
 ProcessorCrossSection::calculateLineEquation(void) {
+
+  // Debugs
   debugf("calculate cross section line equation for (%.2f,%.2f)-(%.2f,%.2f)",
          lineStart.x, lineStart.y, lineEnd.x, lineEnd.y);
+
+  //
+  // Calculate the line as an equation
+  //
+  //   (x,y) = (x0 + n * xStep, y0 + n * yStep)
+  //
+  // where x0 = lineStart.x, y0 = lineStart.y, xStep = lineStepX, and
+  // yStep = lineStepY. From this equation we can also calculate y for
+  // any given x:
+  //
+  //   n = (x-x0) / xStep
+  //   y = y0 + n * yStep
+  //
+  // Similarly, for the other direction:
+  //
+  //   n = (y-y0) / yStep
+  //   x = x0 + n * xStep
+  //
+  
+  // Calculations
   xDifference = lineEnd.x - lineStart.x;
   yDifference = lineEnd.y - lineStart.y;
   if (xDifference == 0 && yDifference == 0) {
@@ -163,7 +222,6 @@ ProcessorCrossSection::calculateLineEquation(void) {
   outlinerhighprecisionreal yDifferenceFraction = yDifference / totalDifference;
   lineLength = sqrt(xDifference*xDifference + yDifference*yDifference);
   lineStep = (proc.stepx * xDifferenceFraction) + (proc.stepy * yDifferenceFraction);
-  //lineStep = (proc.stepx + proc.stepy)/2.0;
   lineSteps = lineLength/lineStep;
   lineStepX = xDifference / lineSteps;
   lineStepY = yDifference / lineSteps;
@@ -172,6 +230,62 @@ ProcessorCrossSection::calculateLineEquation(void) {
          lineSteps,
          lineStepX,
          lineStepY);
+}
+
+outlinerhighprecisionreal
+ProcessorCrossSection::calculateLineXBasedOnY(outlinerhighprecisionreal y) {
+  
+  //
+  // We can do this per the equations
+  // derived earlier, i.e., calculate x for any given y:
+  //
+  //   n = (y-y0) / yStep
+  //   x = x0 + n * xStep
+  //
+
+  // Sanity checks
+  if (lineStepY == 0) {
+    errf("Cannot calculate actual line end points for a cross section that is horizontal");
+    exit(1);
+  }
+
+  // Do the actual calculations
+  outlinerhighprecisionreal n = (y - lineStart.y) / lineStepY;
+  outlinerhighprecisionreal x = lineStart.x + n*lineStepX;
+  return(x);
+}
+
+void
+ProcessorCrossSection::getLineActualEndPoints(HighPrecisionVector2D& actualLineStart,
+                                              HighPrecisionVector2D& actualLineEnd,
+                                              outlinerhighprecisionreal extralineatends) {
+  // We need to take the bounding box of the cross section, and the xy
+  // plane (plan-view) position of the points where the bounding box
+  // and the line equation intersect. We can do this per the equations
+  // derived earlier, i.e., calculate x for any given y:
+  //
+  //   n = (y-y0) / yStep
+  //   x = x0 + n * xStep
+  //
+  // In addition, we will adjust the line such that there is
+  // extralineatends more space in y direction at both ends of the
+  // line.
+  //
+  // Also, note that the slice bounding box (x,y) is (y,z) in the 3d
+  // model.
+  //
+  
+  outlinerhighprecisionreal bottomY = sliceVerticalBoundingBoxStart.x - extralineatends;
+  outlinerhighprecisionreal bottomX = calculateLineXBasedOnY(bottomY);
+  
+  outlinerhighprecisionreal topY = sliceVerticalBoundingBoxEnd.x + extralineatends;
+  outlinerhighprecisionreal topX = calculateLineXBasedOnY(topY);
+
+  actualLineStart.x = bottomX;
+  actualLineStart.y = bottomY;
+  
+  actualLineEnd.x = topX;
+  actualLineEnd.y = topY;
 }
 
 void

@@ -189,13 +189,13 @@ Processor::processScene(const aiScene* scene,
               stepx,
               stepy);
 
-  // Main result (plan view) is done, flush the image output
-  svgDone();
-  
   // Process cross sections
   if (!processSceneCrossSections(scene,nCrossSections,crossSections)) {
     return(0);
   }
+  
+  // Main result (plan view) is also done, flush the image output
+  svgDone();
   
   // Done, all good
   return(1);
@@ -208,7 +208,7 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
                        outlinerhighprecisionreal yStart,
                        outlinerhighprecisionreal xStep,
                        outlinerhighprecisionreal yStep) {
-  infof("constructing output of %ux%u pixels...",
+  infof("constructing output core of %ux%u pixels...",
         theMatrix->xIndexSize, theMatrix->yIndexSize);
   deepdebugf("algorithm %u", algorithm);
   debugf("  covering model from (%.2f,%.2,f) to (%.2f,%.2f)",
@@ -638,10 +638,13 @@ Processor::createSvg(const char* svgFileName,
                           xSize,ySize,
                           xSizeInt,ySizeInt,
                           xFactor,yFactor);
-  deepdebugf("SVG %s size y %.2f..%.2f step %.2f ysize %.2f ysizeint %u",
-             svgFileName,
-             yOutputStart, yOutputEnd, stepy, ySize, ySizeInt);
-  debugf("SVG size will be %u x %u", xSizeInt, ySizeInt);
+  infof("SVG %s size x %.2f..%.2f step %.2f xsize %.2f xsizeint %u",
+        svgFileName,
+        xOutputStart, xOutputEnd, stepx, xSize, xSizeInt);
+  infof("  size y %.2f..%.2f step %.2f ysize %.2f ysizeint %u",
+        svgFileName,
+        yOutputStart, yOutputEnd, stepy, ySize, ySizeInt);
+  infof("SVG size will be %u x %u", xSizeInt, ySizeInt);
   
   // Create the object
   SvgCreator* result = new SvgCreator(svgFileName,
@@ -689,7 +692,7 @@ Processor::createSvgCalculateSizes(const HighPrecisionVector2D& svgBoundingBoxSt
                                    outlinerhighprecisionreal& yFactor) {
   
   xOutputStart = svgBoundingBoxStart.x;
-  xOutputEnd = svgBoundingBoxEnd.y;
+  xOutputEnd = svgBoundingBoxEnd.x;
   yOutputStart = svgBoundingBoxStart.y;
   yOutputEnd = svgBoundingBoxEnd.y;
   xSize = (xOutputEnd - xOutputStart) / stepx;
@@ -728,13 +731,36 @@ Processor::processSceneCrossSection(const aiScene* scene,
         crossSection->end.x,
         crossSection->end.y,
         crossSection->filename);
-  ProcessorCrossSection proc(crossSection->filename,
-                             DirectionOperations::screenx(direction),
-                             crossSection->start,
-                             crossSection->end,
-                             stepz,
-                             *this);
-  proc.processSceneCrossSection(scene);
+  ProcessorCrossSection csproc(crossSection->filename,
+                               crossSection->label,
+                               DirectionOperations::screenx(direction),
+                               crossSection->start,
+                               crossSection->end,
+                               stepz,
+                               *this);
+  csproc.processSceneCrossSection(scene);
+  if (crossSection->label != 0) {
+    HighPrecisionVector2D actualLineStart;
+    HighPrecisionVector2D actualLineEnd;
+    csproc.getLineActualEndPoints(actualLineStart,actualLineEnd,
+                                  outlinercrosssectionextraline * stepy);
+    addCrossSectionLine(crossSection->label,
+                        actualLineStart,actualLineEnd);
+  }
   return(1);
+}
+
+void
+Processor::addCrossSectionLine(const char* label,
+                               HighPrecisionVector2D& actualLineStart,
+                               HighPrecisionVector2D& actualLineEnd) {
+  assert(svg != 0);
+  assert(label != 0);
+  svg->line(actualLineStart.x,actualLineStart.y,
+            actualLineEnd.x,actualLineEnd.y,
+            1);
+  svg->text(actualLineEnd.x - 2*stepx,
+            actualLineEnd.y + 4*stepy,
+            label);
 }
 

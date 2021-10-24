@@ -81,6 +81,8 @@ basic-tests:	cave-outliner \
 		cube-cross-section-simple-test \
 		cube-reduced-cross-section-test \
 		cube-cross-section-test \
+		cube-cross-section-label-test \
+		cube-cross-section-highres-label-test \
 		house-cross-section-test
 
 cube-pixel-test:
@@ -158,6 +160,18 @@ cube-cross-section-test:
 	@./cave-outliner --quiet --pixel --crosssections 1 test/cube-cross-section-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section.svg
 	@diff test/cube-cross-section.svg test/cube-cross-section.svg.expected
 	@diff test/cube-cross-section-0.svg test/cube-cross-section-0.svg.expected
+
+cube-cross-section-label-test:
+	@echo 'Running test case cube-cross-section-label-test...'
+	@./cave-outliner --quiet --pixel --label --crosssections 1 test/cube-cross-section-label-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-label.svg
+	@diff test/cube-cross-section-label.svg test/cube-cross-section-label.svg.expected
+	@diff test/cube-cross-section-label-0.svg test/cube-cross-section-label-0.svg.expected
+
+cube-cross-section-highres-label-test:
+	@echo 'Running test case cube-cross-section-high-res-label-test...'
+	@./cave-outliner --quiet --pixel --label --crosssections 1 test/cube-cross-section-highres-label-%.svg --step 0.05 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-highres-label.svg
+	@diff test/cube-cross-section-highres-label.svg test/cube-cross-section-highres-label.svg.expected
+	@diff test/cube-cross-section-highres-label-0.svg test/cube-cross-section-highres-label-0.svg.expected
 
 updateversion:
 	@echo This makefile target updates one software source file based on tags in GitHub,

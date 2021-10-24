@@ -178,7 +178,10 @@ private:
   bool processSceneCrossSection(const aiScene* scene,
                                 unsigned int c,
                                 const struct ProcessorCrossSectionInfo* crossSection);
-
+  void addCrossSectionLine(const char* label,
+                           HighPrecisionVector2D& actualLineStart,
+                           HighPrecisionVector2D& actualLineEnd);
+  
   //
   // Image drawing
   //

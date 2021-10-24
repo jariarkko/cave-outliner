@@ -23,6 +23,7 @@ struct OutlinerSvgCoord {
 
 struct OutlinerSvgLine {
   unsigned int refCount;
+  bool dashed;
   unsigned int nPoints;
   bool printed;
   struct OutlinerSvgCoord points[OutlinerSvgMaxLinePoints];
@@ -56,9 +57,13 @@ class SvgCreator {
   void line(outlinerhighprecisionreal fromX,
             outlinerhighprecisionreal fromY,
             outlinerhighprecisionreal toX,
-            outlinerhighprecisionreal toY);
+            outlinerhighprecisionreal toY,
+            bool dashed = 0);
   void pixel(outlinerhighprecisionreal x,
              outlinerhighprecisionreal y);
+  void text(outlinerhighprecisionreal x,
+            outlinerhighprecisionreal y,
+            const char* string);
   bool ok();
   
  private:
@@ -78,7 +83,9 @@ class SvgCreator {
   unsigned int originalLines;
   unsigned int finalLines;
   unsigned int joins;
-
+  unsigned int strings;
+  unsigned int characters;
+  
   unsigned int lineTableSize;
   struct OutlinerSvgLineList** lineTable;
   
@@ -91,7 +98,8 @@ class SvgCreator {
   void addLine(unsigned int x1,
                unsigned int y1,
                unsigned int x2,
-               unsigned int y2);
+               unsigned int y2,
+               bool dashed);
   void emitLine(const struct OutlinerSvgLine& line);
 
   void lineTableInit(void);
@@ -100,6 +108,7 @@ class SvgCreator {
                                        unsigned int y1,
                                        unsigned int x2,
                                        unsigned int y2,
+                                       bool dashed,
                                        unsigned int& matchIndex,
                                        bool& matchesStart,
                                        bool& reverseOriginal);
@@ -109,11 +118,13 @@ class SvgCreator {
                                            bool fromStart);
   struct OutlinerSvgLine* matchingLineAux(unsigned int x,
                                           unsigned int y,
+                                          bool dashed,
                                           bool lookForTailMatch,
                                           unsigned int index);
   struct OutlinerSvgLine* matchingLineAuxAvoid(struct OutlinerSvgLine* avoid,
                                                unsigned int x,
                                                unsigned int y,
+                                               bool dashed,
                                                bool lookForTailMatch,
                                                unsigned int index);
   void lineTableJoin(struct OutlinerSvgLine* entry,
