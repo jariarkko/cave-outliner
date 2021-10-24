@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+          "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+     width="97" height="59">
+<rect x="0" y="0" width="97" height="59" fill="white" stroke="white" stroke-width="0"/>
+<text x="2" y="10" fill="black"> Cross-section A</text>
+<rect x="2" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="2" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="3" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="3" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="4" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="4" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="5" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="5" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="6" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="6" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="7" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="7" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="8" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="8" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="9" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="9" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="10" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="10" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="11" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="11" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="12" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="12" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="13" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="13" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="14" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="14" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="15" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="15" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="16" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="16" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="17" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="17" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="18" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="18" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="19" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="19" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="20" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="20" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="21" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="21" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="22" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="22" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="23" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="23" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="24" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="24" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="25" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="25" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="26" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="26" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="27" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="27" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="28" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="28" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="29" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="29" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="30" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="30" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="31" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="31" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="32" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="32" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="33" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="33" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="34" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="34" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="35" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="35" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="36" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="36" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="37" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="37" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="38" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="38" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="39" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="39" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="40" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="40" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="41" y="56" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="41" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+</svg>
