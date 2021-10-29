@@ -25,8 +25,8 @@ Processor::Processor(const char* fileNameIn,
                      bool smoothIn,
                      bool mergedLinesIn,
                      float linewidthIn,
-                     HighPrecisionVector3D boundingBoxStartIn,
-                     HighPrecisionVector3D boundingBoxEndIn,
+                     OutlinerVector3D boundingBoxStartIn,
+                     OutlinerVector3D boundingBoxEndIn,
                      outlinerreal stepxIn,
                      outlinerreal stepyIn,
                      outlinerreal stepzIn,
@@ -67,8 +67,8 @@ Processor::Processor(const char* fileNameIn,
   boundingBoxStart2D.y = DirectionOperations::outputy(direction,boundingBoxStart);
   boundingBoxEnd2D.x = DirectionOperations::outputx(direction,boundingBoxEnd);
   boundingBoxEnd2D.y = DirectionOperations::outputy(direction,boundingBoxEnd);
-  HighPrecisionVector2D boundingBoxStart2DExtended(boundingBoxStart2D);
-  HighPrecisionVector2D boundingBoxEnd2DExtended(boundingBoxEnd2D);
+  OutlinerVector2D boundingBoxStart2DExtended(boundingBoxStart2D);
+  OutlinerVector2D boundingBoxEnd2DExtended(boundingBoxEnd2D);
   if (labels) {
     boundingBoxStart2DExtended.y -= ((outlinertitlespacey * stepy) / multiplier);
     boundingBoxEnd2DExtended.y += ((outlinertitlespacey * stepy) / multiplier);
@@ -334,8 +334,8 @@ void
 Processor::faceGetVertices2D(const aiMesh* mesh,
                              const aiFace* face,
                              enum outlinerdirection thisDirection,
-                             HighPrecisionTriangle2D& t) {
-  HighPrecisionTriangle3D ft;
+                             OutlinerTriangle2D& t) {
+  OutlinerTriangle3D ft;
   faceGetVertices3D(mesh,face,ft);
   aiVector2D aOne(DirectionOperations::outputx(thisDirection,ft.a),DirectionOperations::outputy(thisDirection,ft.a));
   aiVector2D bOne(DirectionOperations::outputx(thisDirection,ft.b),DirectionOperations::outputy(thisDirection,ft.b));
@@ -348,7 +348,7 @@ Processor::faceGetVertices2D(const aiMesh* mesh,
 void
 Processor::faceGetVertices3D(const aiMesh* mesh,
                              const aiFace* face,
-                             HighPrecisionTriangle3D& t) {
+                             OutlinerTriangle3D& t) {
   assert(face != 0);
   if (face->mNumIndices != 3) {
     errf("Cannot handle a face with %u indices", face->mNumIndices);
@@ -382,10 +382,10 @@ Processor::faceHasMaterial(const aiScene* scene,
                            outlinerreal y) {
   assert(scene != 0);
   assert(mesh != 0);
-  HighPrecisionTriangle2D t;
+  OutlinerTriangle2D t;
   faceGetVertices2D(mesh,face,direction,t);
-  HighPrecisionVector2D point(x,y);
-  HighPrecisionVector2D stepboundingbox(x+stepx,y+stepy);
+  OutlinerVector2D point(x,y);
+  OutlinerVector2D stepboundingbox(x+stepx,y+stepy);
   if (OutlinerMath::boundingBoxIntersectsTriangle2D(t,point,stepboundingbox)) {
     deepdebugf("found out that (%.2f,%.2f) is hitting a face",x,y);
     return(1);
@@ -615,8 +615,8 @@ Processor::indexToCoordinateY(unsigned int yIndex) {
 
 SvgCreator*
 Processor::createSvg(const char* svgFileName,
-                     const HighPrecisionVector2D& svgBoundingBoxStart,
-                     const HighPrecisionVector2D& svgBoundingBoxEnd,
+                     const OutlinerVector2D& svgBoundingBoxStart,
+                     const OutlinerVector2D& svgBoundingBoxEnd,
                      enum outlinerdirection svgDirection) {
   
   // Calculate sizes
@@ -676,8 +676,8 @@ Processor::createSvg(const char* svgFileName,
 }
 
 void
-Processor::createSvgCalculateSizes(const HighPrecisionVector2D& svgBoundingBoxStart,
-                                   const HighPrecisionVector2D& svgBoundingBoxEnd,
+Processor::createSvgCalculateSizes(const OutlinerVector2D& svgBoundingBoxStart,
+                                   const OutlinerVector2D& svgBoundingBoxEnd,
                                    const outlinerreal stepx,
                                    const outlinerreal stepy,
                                    const enum outlinerdirection svgDirection,
@@ -741,8 +741,8 @@ Processor::processSceneCrossSection(const aiScene* scene,
                                *this);
   csproc.processSceneCrossSection(scene);
   if (crossSection->label != 0) {
-    HighPrecisionVector2D actualLineStart;
-    HighPrecisionVector2D actualLineEnd;
+    OutlinerVector2D actualLineStart;
+    OutlinerVector2D actualLineEnd;
     csproc.getLineActualEndPoints(actualLineStart,actualLineEnd,
                                   outlinercrosssectionextraline * stepy);
     addCrossSectionLine(crossSection->label,
@@ -753,8 +753,8 @@ Processor::processSceneCrossSection(const aiScene* scene,
 
 void
 Processor::addCrossSectionLine(const char* label,
-                               HighPrecisionVector2D& actualLineStart,
-                               HighPrecisionVector2D& actualLineEnd) {
+                               OutlinerVector2D& actualLineStart,
+                               OutlinerVector2D& actualLineEnd) {
   assert(svg != 0);
   assert(label != 0);
   infof("addCrossSectionLine (%.2f,%.2f) to (%.2f,%.2f)",

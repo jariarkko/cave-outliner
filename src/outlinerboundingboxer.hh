@@ -6,14 +6,14 @@ class BoundingBoxer {
 
 public:
   BoundingBoxer(const aiScene* scene);
-  void getBoundingBox(HighPrecisionVector3D& boundingBoxStartOut,
-                      HighPrecisionVector3D& boundingBoxEndOut);
+  void getBoundingBox(OutlinerVector3D& boundingBoxStartOut,
+                      OutlinerVector3D& boundingBoxEndOut);
   ~BoundingBoxer();
 
 private:
   bool boundingBoxSet;
-  HighPrecisionVector3D boundingBoxStart;
-  HighPrecisionVector3D boundingBoxEnd;
+  OutlinerVector3D boundingBoxStart;
+  OutlinerVector3D boundingBoxEnd;
 
   void boundingScene(const aiScene* scene);
   void boundingNode(const aiScene* scene,

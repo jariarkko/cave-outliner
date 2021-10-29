@@ -18,8 +18,8 @@
 // Material matrix maintenance ////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-MaterialMatrix::MaterialMatrix(HighPrecisionVector2D boundingboxstart,
-                               HighPrecisionVector2D boundingboxend,
+MaterialMatrix::MaterialMatrix(OutlinerVector2D boundingboxstart,
+                               OutlinerVector2D boundingboxend,
                                outlinerreal stepx,
                                outlinerreal stepy) {
   xIndexSize = ((unsigned int)ceil(((boundingboxend.x - boundingboxstart.x) / stepx))) + 2;
@@ -116,8 +116,8 @@ MaterialMatrix::test(void) {
   
   // Simple test
   {
-    HighPrecisionVector2D boundingboxstart(0,0);
-    HighPrecisionVector2D boundingboxend(10,10);
+    OutlinerVector2D boundingboxstart(0,0);
+    OutlinerVector2D boundingboxend(10,10);
     float stepx = 1.0;
     float stepy = 1.0;
     MaterialMatrix test1(boundingboxstart,boundingboxend,stepx,stepy);
@@ -155,8 +155,8 @@ MaterialMatrix::test(void) {
   
   // Large test
   {
-    HighPrecisionVector2D boundingboxstart(0,0);
-    HighPrecisionVector2D boundingboxend(1000,1000);
+    OutlinerVector2D boundingboxstart(0,0);
+    OutlinerVector2D boundingboxend(1000,1000);
     float stepx = 0.1;
     float stepy = 0.1;
     MaterialMatrix test2(boundingboxstart,boundingboxend,stepx,stepy);

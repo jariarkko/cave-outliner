@@ -24,8 +24,8 @@ class IndexedMesh;
 
 struct ProcessorCrossSectionInfo {
   const char* filename;
-  HighPrecisionVector2D start;
-  HighPrecisionVector2D end;
+  OutlinerVector2D start;
+  OutlinerVector2D end;
   const char* label; // 0 if no label desired
 };
 
@@ -41,8 +41,8 @@ public:
             bool smoothIn,
             bool mergedLinesIn,
             float linewidthIn,
-            HighPrecisionVector3D boundingBoxStartIn,
-            HighPrecisionVector3D boundingBoxEndIn,
+            OutlinerVector3D boundingBoxStartIn,
+            OutlinerVector3D boundingBoxEndIn,
             outlinerreal stepxIn,
             outlinerreal stepyIn,
             outlinerreal stepzIn,
@@ -67,10 +67,10 @@ private:
   float linewidth;
   SvgCreator* svg;
   const unsigned int maxNeighbors = 8;
-  HighPrecisionVector3D boundingBoxStart;
-  HighPrecisionVector3D boundingBoxEnd;
-  HighPrecisionVector2D boundingBoxStart2D;
-  HighPrecisionVector2D boundingBoxEnd2D;
+  OutlinerVector3D boundingBoxStart;
+  OutlinerVector3D boundingBoxEnd;
+  OutlinerVector2D boundingBoxStart2D;
+  OutlinerVector2D boundingBoxEnd2D;
   outlinerreal stepx;
   outlinerreal stepy;
   outlinerreal stepz;
@@ -78,8 +78,8 @@ private:
   enum outlineralgorithm algorithm;
   unsigned int holethreshold;
   bool labels;
-  HighPrecisionVector2D planviewBoundingBoxStart;
-  HighPrecisionVector2D planviewBoundingBoxEnd;
+  OutlinerVector2D planviewBoundingBoxStart;
+  OutlinerVector2D planviewBoundingBoxEnd;
   MaterialMatrix matrix;
   IndexedMesh& indexed;
 
@@ -152,10 +152,10 @@ private:
   void faceGetVertices2D(const aiMesh* mesh,
                          const aiFace* face,
                          enum outlinerdirection thisDirection,
-                         HighPrecisionTriangle2D& t);
+                         OutlinerTriangle2D& t);
   void faceGetVertices3D(const aiMesh* mesh,
                          const aiFace* face,
-                         HighPrecisionTriangle3D& t);
+                         OutlinerTriangle3D& t);
   
   //
   // Coordinate management
@@ -177,8 +177,8 @@ private:
                                 unsigned int c,
                                 const struct ProcessorCrossSectionInfo* crossSection);
   void addCrossSectionLine(const char* label,
-                           HighPrecisionVector2D& actualLineStart,
-                           HighPrecisionVector2D& actualLineEnd);
+                           OutlinerVector2D& actualLineStart,
+                           OutlinerVector2D& actualLineEnd);
   
   //
   // Image drawing
@@ -196,12 +196,12 @@ private:
   //
   
   SvgCreator* createSvg(const char* svgFileName,
-                        const HighPrecisionVector2D& svgBoundingBoxStart,
-                        const HighPrecisionVector2D& svgBoundingBoxEnd,
+                        const OutlinerVector2D& svgBoundingBoxStart,
+                        const OutlinerVector2D& svgBoundingBoxEnd,
                         enum outlinerdirection svgDirection);
   void svgDone();
-  void createSvgCalculateSizes(const HighPrecisionVector2D& svgBoundingBoxStart,
-                               const HighPrecisionVector2D& svgBoundingBoxEnd,
+  void createSvgCalculateSizes(const OutlinerVector2D& svgBoundingBoxStart,
+                               const OutlinerVector2D& svgBoundingBoxEnd,
                                const outlinerreal stepx,
                                const outlinerreal stepy,
                                const enum outlinerdirection svgDirection,

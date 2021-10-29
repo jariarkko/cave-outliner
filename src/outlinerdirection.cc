@@ -52,7 +52,7 @@ DirectionOperations::outputx(enum outlinerdirection direction,
 
 float
 DirectionOperations::outputx(enum outlinerdirection direction,
-                             const HighPrecisionVector3D& point) {
+                             const OutlinerVector3D& point) {
   switch (direction) {
   case dir_z:
     return(point.x);
@@ -84,7 +84,7 @@ DirectionOperations::outputy(enum outlinerdirection direction,
 
 float
 DirectionOperations::outputy(enum outlinerdirection direction,
-                             const HighPrecisionVector3D& point) {
+                             const OutlinerVector3D& point) {
   switch (direction) {
   case dir_z:
     return(point.y);
@@ -116,7 +116,7 @@ DirectionOperations::outputz(enum outlinerdirection direction,
 
 float
 DirectionOperations::outputz(enum outlinerdirection direction,
-                             const HighPrecisionVector3D& point) {
+                             const OutlinerVector3D& point) {
   switch (direction) {
   case dir_z:
     return(point.z);

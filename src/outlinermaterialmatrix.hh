@@ -7,8 +7,8 @@
 class MaterialMatrix {
 
 public:
-  MaterialMatrix(HighPrecisionVector2D boundingboxstart,
-                 HighPrecisionVector2D boundingboxend,
+  MaterialMatrix(OutlinerVector2D boundingboxstart,
+                 OutlinerVector2D boundingboxend,
                  outlinerreal stepx,
                  outlinerreal stepy);
   ~MaterialMatrix();

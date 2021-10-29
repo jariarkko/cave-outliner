@@ -22,7 +22,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 struct ProcessorCrossSectionLineIterator {
-  HighPrecisionVector2D point;
+  OutlinerVector2D point;
   unsigned int step;
 };
 
@@ -36,14 +36,14 @@ public:
   ProcessorCrossSection(const char* fileNameIn,
                         const char* labelIn, // 0 if no label desired
                         enum outlinerdirection sliceDirectionIn,
-                        const HighPrecisionVector2D& lineStartIn,
-                        const HighPrecisionVector2D& lineEndIn,
+                        const OutlinerVector2D& lineStartIn,
+                        const OutlinerVector2D& lineEndIn,
                         outlinerreal stepzIn,
                         Processor& procIn);
   ~ProcessorCrossSection();
   bool processSceneCrossSection(const aiScene* scene);
-  void getLineActualEndPoints(HighPrecisionVector2D& actualLineStart,
-                              HighPrecisionVector2D& actualLineEnd,
+  void getLineActualEndPoints(OutlinerVector2D& actualLineStart,
+                              OutlinerVector2D& actualLineEnd,
                               outlinerreal extralineatends);
   
 private:
@@ -52,8 +52,8 @@ private:
   const char* fileName;
   const char* label; // 0 if no label desired
   const enum outlinerdirection sliceDirection;
-  const HighPrecisionVector2D lineStart;
-  const HighPrecisionVector2D lineEnd;
+  const OutlinerVector2D lineStart;
+  const OutlinerVector2D lineEnd;
   outlinerreal stepz;
   outlinerreal xDifference;
   outlinerreal yDifference;
@@ -62,8 +62,8 @@ private:
   outlinerreal lineSteps;
   outlinerreal lineStepX;
   outlinerreal lineStepY;
-  HighPrecisionVector2D sliceVerticalBoundingBoxStart;
-  HighPrecisionVector2D sliceVerticalBoundingBoxEnd;
+  OutlinerVector2D sliceVerticalBoundingBoxStart;
+  OutlinerVector2D sliceVerticalBoundingBoxEnd;
   MaterialMatrix* matrix;
   Processor& proc;
   SvgCreator* svg;
@@ -80,26 +80,26 @@ private:
   //
   
   void sliceVerticalBoundingBox(const aiScene* scene,
-                                HighPrecisionVector2D& sliceBoundingBoxStart,
-                                HighPrecisionVector2D& sliceBoundingBoxEnd);
+                                OutlinerVector2D& sliceBoundingBoxStart,
+                                OutlinerVector2D& sliceBoundingBoxEnd);
   void sliceVerticalBoundingBoxNode(const aiScene* scene,
                                     const aiNode* node,
                                     bool& set,
-                                    HighPrecisionVector2D& sliceVerticalBoundingBoxStart,
-                                    HighPrecisionVector2D& sliceVerticalBoundingBoxEnd);
+                                    OutlinerVector2D& sliceVerticalBoundingBoxStart,
+                                    OutlinerVector2D& sliceVerticalBoundingBoxEnd);
   void sliceVerticalBoundingBoxMesh(const aiScene* scene,
                                     const aiMesh* mesh,
                                     bool& set,
-                                    HighPrecisionVector2D& sliceVerticalBoundingBoxStart,
-                                    HighPrecisionVector2D& sliceVerticalBoundingBoxEnd);
+                                    OutlinerVector2D& sliceVerticalBoundingBoxStart,
+                                    OutlinerVector2D& sliceVerticalBoundingBoxEnd);
   void sliceVerticalBoundingBoxFace(const aiScene* scene,
                                     const aiMesh* mesh,
                                     const aiFace* face,
                                     outlinerreal x,
                                     outlinerreal y,
                                     bool& set,
-                                    HighPrecisionVector2D& sliceVerticalBoundingBoxStart,
-                                    HighPrecisionVector2D& sliceVerticalBoundingBoxEnd);
+                                    OutlinerVector2D& sliceVerticalBoundingBoxStart,
+                                    OutlinerVector2D& sliceVerticalBoundingBoxEnd);
 
   //
   // Drawing cross sections

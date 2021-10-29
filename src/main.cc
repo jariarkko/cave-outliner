@@ -52,8 +52,8 @@ static float stepx = 1.0;
 static float stepy = 1.0;
 static float stepz = 1.0;
 static bool boundingBoxSet = 0;
-static HighPrecisionVector3D boundingBoxStart = {0,0,0};
-static HighPrecisionVector3D boundingBoxEnd = {0,0,0};
+static OutlinerVector3D boundingBoxStart = {0,0,0};
+static OutlinerVector3D boundingBoxEnd = {0,0,0};
 static enum outlinerdirection direction = dir_z;
 static enum outlineralgorithm algorithm = alg_pixel;
 static float linewidth =  outlinerdefaultlinewidth;
@@ -218,8 +218,8 @@ main(int argc, char** argv) {
         return(1);
       }
       boundingBoxSet = 1;
-      boundingBoxStart = HighPrecisionVector3D(startx,starty,startz);
-      boundingBoxEnd = HighPrecisionVector3D(endx,endy,endz);
+      boundingBoxStart = OutlinerVector3D(startx,starty,startz);
+      boundingBoxEnd = OutlinerVector3D(endx,endy,endz);
     } else if (strcmp(argv[1],"--tiling") == 0 && argc > 2) {
       if (atoi(argv[2]) < 1 || atoi(argv[2]) > 10000) {
         errf("Invalid tile count, must be at least one and a not too big for memory, %s given", argv[2]);
@@ -329,8 +329,8 @@ main(int argc, char** argv) {
   }
 
   // Build our own data structure
-  HighPrecisionVector2D bounding2DBoxStart(xOutputStart,yOutputStart);
-  HighPrecisionVector2D bounding2DBoxEnd(xOutputEnd,yOutputEnd);
+  OutlinerVector2D bounding2DBoxStart(xOutputStart,yOutputStart);
+  OutlinerVector2D bounding2DBoxEnd(xOutputEnd,yOutputEnd);
   IndexedMesh indexed(outlinermaxmeshes,tiles,
                       boundingBoxStart,boundingBoxEnd,
                       bounding2DBoxStart,bounding2DBoxEnd,

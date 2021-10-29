@@ -28,10 +28,10 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 bool
-OutlinerMath::boundingBoxEqual(const HighPrecisionVector2D& box1Start,
-                               const HighPrecisionVector2D& box1End,
-                               const HighPrecisionVector2D& box2Start,
-                               const HighPrecisionVector2D& box2End) {
+OutlinerMath::boundingBoxEqual(const OutlinerVector2D& box1Start,
+                               const OutlinerVector2D& box1End,
+                               const OutlinerVector2D& box2Start,
+                               const OutlinerVector2D& box2End) {
   return(box1Start.x == box2Start.x &&
          box1Start.y == box2Start.y &&
          box1End.x == box2End.x &&
@@ -39,12 +39,12 @@ OutlinerMath::boundingBoxEqual(const HighPrecisionVector2D& box1Start,
 }
 
 void
-OutlinerMath::boundingBoxIntersection(const HighPrecisionVector2D& box1Start,
-                                      const HighPrecisionVector2D& box1End,
-                                      const HighPrecisionVector2D& box2Start,
-                                      const HighPrecisionVector2D& box2End,
-                                      HighPrecisionVector2D& resultBoxStart,
-                                      HighPrecisionVector2D& resultBoxEnd) {
+OutlinerMath::boundingBoxIntersection(const OutlinerVector2D& box1Start,
+                                      const OutlinerVector2D& box1End,
+                                      const OutlinerVector2D& box2Start,
+                                      const OutlinerVector2D& box2End,
+                                      OutlinerVector2D& resultBoxStart,
+                                      OutlinerVector2D& resultBoxEnd) {
   resultBoxStart = box1Start;
   resultBoxEnd = box1End;
   if (box2Start.x > resultBoxStart.x) resultBoxStart.x = box2Start.x;
@@ -54,12 +54,12 @@ OutlinerMath::boundingBoxIntersection(const HighPrecisionVector2D& box1Start,
 }
 
 void
-OutlinerMath::boundingBoxUnion(const HighPrecisionVector2D& box1Start,
-                               const HighPrecisionVector2D& box1End,
-                               const HighPrecisionVector2D& box2Start,
-                               const HighPrecisionVector2D& box2End,
-                               HighPrecisionVector2D& resultBoxStart,
-                               HighPrecisionVector2D& resultBoxEnd) {
+OutlinerMath::boundingBoxUnion(const OutlinerVector2D& box1Start,
+                               const OutlinerVector2D& box1End,
+                               const OutlinerVector2D& box2Start,
+                               const OutlinerVector2D& box2End,
+                               OutlinerVector2D& resultBoxStart,
+                               OutlinerVector2D& resultBoxEnd) {
   resultBoxStart = box1Start;
   resultBoxEnd = box1End;
   if (box2Start.x < resultBoxStart.x) resultBoxStart.x = box2Start.x;
@@ -69,7 +69,7 @@ OutlinerMath::boundingBoxUnion(const HighPrecisionVector2D& box1Start,
 }
 
 void
-OutlinerMath::triangleDescribe(const HighPrecisionTriangle3D& triangle,
+OutlinerMath::triangleDescribe(const OutlinerTriangle3D& triangle,
                                char* buf,
                                unsigned int bufSize) {
   assert(buf != 0);
@@ -93,13 +93,13 @@ OutlinerMath::triangleDescribe(const HighPrecisionTriangle3D& triangle,
 }
 
 void
-OutlinerMath::triangleBoundingBox2D(const HighPrecisionTriangle2D& triangle,
-                                    HighPrecisionVector2D& boundingBoxStart,
-                                    HighPrecisionVector2D& boundingBoxEnd) {
+OutlinerMath::triangleBoundingBox2D(const OutlinerTriangle2D& triangle,
+                                    OutlinerVector2D& boundingBoxStart,
+                                    OutlinerVector2D& boundingBoxEnd) {
   
-  const HighPrecisionVector2D* nth1;
-  const HighPrecisionVector2D* nth2;
-  const HighPrecisionVector2D* nth3;
+  const OutlinerVector2D* nth1;
+  const OutlinerVector2D* nth2;
+  const OutlinerVector2D* nth3;
   outlinerreal xStart;
   outlinerreal xEnd;
   outlinerreal yStart;
@@ -127,13 +127,13 @@ OutlinerMath::triangleBoundingBox2D(const HighPrecisionTriangle2D& triangle,
 }
 
 void
-OutlinerMath::triangleBoundingBox3D(const HighPrecisionTriangle3D& triangle,
-                                    HighPrecisionVector3D& boundingBoxStart,
-                                    HighPrecisionVector3D& boundingBoxEnd) {
+OutlinerMath::triangleBoundingBox3D(const OutlinerTriangle3D& triangle,
+                                    OutlinerVector3D& boundingBoxStart,
+                                    OutlinerVector3D& boundingBoxEnd) {
 
-  const HighPrecisionVector3D* nth1;
-  const HighPrecisionVector3D* nth2;
-  const HighPrecisionVector3D* nth3;
+  const OutlinerVector3D* nth1;
+  const OutlinerVector3D* nth2;
+  const OutlinerVector3D* nth3;
   outlinerreal xStart;
   outlinerreal xEnd;
   outlinerreal yStart;
@@ -176,14 +176,14 @@ OutlinerMath::pointOnLine2D(const aiVector2D& a,
                             const aiVector2D& b,
                             const aiVector2D& point) {
   deepdeepdebugf("pointOnLine2D aiVector");
-  HighPrecisionVector2D tmp(point);
+  OutlinerVector2D tmp(point);
   return(pointOnLine2D(a,b,tmp));
 }
 
 bool
-OutlinerMath::pointOnLine2D(const HighPrecisionVector2D& a,
-                            const HighPrecisionVector2D& b,
-                            const HighPrecisionVector2D& point) {
+OutlinerMath::pointOnLine2D(const OutlinerVector2D& a,
+                            const OutlinerVector2D& b,
+                            const OutlinerVector2D& point) {
 
   // Debugs
   deepdeepdebugf("          pointOnLine2D high precision (%.2f,%.2f)-(%.2f,%.2f) vs. (%.2f,%.2f)",
@@ -223,8 +223,8 @@ OutlinerMath::pointOnLine2D(const HighPrecisionVector2D& a,
 }
 
 bool
-OutlinerMath::pointInsideTriangle2D(const HighPrecisionTriangle2D& triangle,
-                                    const HighPrecisionVector2D& point) {
+OutlinerMath::pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
+                                    const OutlinerVector2D& point) {
 
   // Check for a special case: all points are equal (resulting in
   // comparing to a point, not a triangle).
@@ -250,10 +250,10 @@ OutlinerMath::pointInsideTriangle2D(const HighPrecisionTriangle2D& triangle,
   // from https://mathworld.wolfram.com/TriangleInterior.html
 
   //deepdeepdebugf("pit2 regular case");
-  HighPrecisionVector2D v = point; 
-  HighPrecisionVector2D v0(triangle.a);
-  HighPrecisionVector2D v1; vectorTo(triangle.a,triangle.b,v1);
-  HighPrecisionVector2D v2; vectorTo(triangle.a,triangle.c,v2);
+  OutlinerVector2D v = point; 
+  OutlinerVector2D v0(triangle.a);
+  OutlinerVector2D v1; vectorTo(triangle.a,triangle.b,v1);
+  OutlinerVector2D v2; vectorTo(triangle.a,triangle.c,v2);
   //deepdeepdebugf("pit2 triangle v = (%.2f,%.2f)", v.x, v.y);
   //deepdeepdebugf("pit2 triangle v0 = (%.2f,%.2f)", v0.x, v0.y);
   //deepdeepdebugf("pit2 triangle v1 = (%.2f,%.2f)", v1.x, v1.y);
@@ -264,25 +264,25 @@ OutlinerMath::pointInsideTriangle2D(const HighPrecisionTriangle2D& triangle,
 }
 
 bool
-OutlinerMath::pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
-                                       const HighPrecisionVector2D& boxEnd,
+OutlinerMath::pointInsideBoundingBox2D(const OutlinerVector2D& boxStart,
+                                       const OutlinerVector2D& boxEnd,
                                        const aiVector2D& point) {
   return(point.x >= boxStart.x && point.x <= boxEnd.x &&
          point.y >= boxStart.y && point.y <= boxEnd.y);
 }
 
 bool
-OutlinerMath::pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
-                                       const HighPrecisionVector2D& boxEnd,
-                                       const HighPrecisionVector2D& point) {
+OutlinerMath::pointInsideBoundingBox2D(const OutlinerVector2D& boxStart,
+                                       const OutlinerVector2D& boxEnd,
+                                       const OutlinerVector2D& point) {
   return(point.x >= boxStart.x && point.x <= boxEnd.x &&
          point.y >= boxStart.y && point.y <= boxEnd.y);
 }
 
 bool
-OutlinerMath::boundingBoxIntersectsTriangle2D(const HighPrecisionTriangle2D& triangle,
-                                              const HighPrecisionVector2D& boxStart,
-                                              const HighPrecisionVector2D& boxEnd) {
+OutlinerMath::boundingBoxIntersectsTriangle2D(const OutlinerTriangle2D& triangle,
+                                              const OutlinerVector2D& boxStart,
+                                              const OutlinerVector2D& boxEnd) {
   
   // Debugs
   deepdeepdebugf("        boundingBoxIntersectsTriangle2D (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) and (%.2f,%.2f)-(%.2f,%.2f)",
@@ -296,9 +296,9 @@ OutlinerMath::boundingBoxIntersectsTriangle2D(const HighPrecisionTriangle2D& tri
   if (pointInsideBoundingBox2D(boxStart,boxEnd,triangle.c)) debugreturn("        bbit2","corner c",1);
 
   // Otherwise, (for now just an approximation) check if the box corners or middle are in the triangle
-  HighPrecisionVector2D boxUpperRight(boxEnd.x,boxStart.y);
-  HighPrecisionVector2D boxLowerLeft(boxStart.x,boxEnd.y);
-  HighPrecisionVector2D boxMiddle((boxStart.x + boxEnd.x) / 2,(boxStart.y + boxEnd.y) / 2);
+  OutlinerVector2D boxUpperRight(boxEnd.x,boxStart.y);
+  OutlinerVector2D boxLowerLeft(boxStart.x,boxEnd.y);
+  OutlinerVector2D boxMiddle((boxStart.x + boxEnd.x) / 2,(boxStart.y + boxEnd.y) / 2);
   if (pointInsideTriangle2D(triangle,boxStart)) debugreturn("        bbit2","start",1);
   if (pointInsideTriangle2D(triangle,boxEnd)) debugreturn("        bbit2","end",1);
   if (pointInsideTriangle2D(triangle,boxUpperRight)) debugreturn("        bbit2","upper",1);
@@ -310,9 +310,9 @@ OutlinerMath::boundingBoxIntersectsTriangle2D(const HighPrecisionTriangle2D& tri
 }
 
 bool
-OutlinerMath::boundingBoxIntersectsTriangle3D(const HighPrecisionTriangle3D& triangle,
-                                              const HighPrecisionVector3D& boxStart,
-                                              const HighPrecisionVector3D& boxEnd) {
+OutlinerMath::boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle,
+                                              const OutlinerVector3D& boxStart,
+                                              const OutlinerVector3D& boxEnd) {
   // Sanity checks
   deepdeepdebugf("        bbit3 starts");
   assert(boxStart.x <= boxEnd.x);
@@ -321,14 +321,14 @@ OutlinerMath::boundingBoxIntersectsTriangle3D(const HighPrecisionTriangle3D& tri
   
   // Heuristic algorithm, first check if there's an xy-plane match
   deepdeepdebugf("        bbit3 2d");
-  HighPrecisionVector2D a2(triangle.a.x,triangle.a.y);
-  HighPrecisionVector2D b2(triangle.b.x,triangle.b.y);
-  HighPrecisionVector2D c2(triangle.c.x,triangle.c.y);
+  OutlinerVector2D a2(triangle.a.x,triangle.a.y);
+  OutlinerVector2D b2(triangle.b.x,triangle.b.y);
+  OutlinerVector2D c2(triangle.c.x,triangle.c.y);
   deepdeepdebugf("        bbit3 boxes");
-  HighPrecisionVector2D boxStart2(boxStart.x,boxStart.y);
-  HighPrecisionVector2D boxEnd2(boxEnd.x,boxEnd.y);
+  OutlinerVector2D boxStart2(boxStart.x,boxStart.y);
+  OutlinerVector2D boxEnd2(boxEnd.x,boxEnd.y);
   deepdeepdebugf("        bbit3 xy plane check");
-  HighPrecisionTriangle2D t2(a2,b2,c2);
+  OutlinerTriangle2D t2(a2,b2,c2);
   if (!boundingBoxIntersectsTriangle2D(t2,boxStart2,boxEnd2)) return(0);
   deepdeepdebugf("        bbit2 call returned");
   
@@ -341,10 +341,10 @@ OutlinerMath::boundingBoxIntersectsTriangle3D(const HighPrecisionTriangle3D& tri
 }
 
 bool
-OutlinerMath::boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
-                                       HighPrecisionVector3D& boundingBox1End,
-                                       HighPrecisionVector3D& boundingBox2Start,
-                                       HighPrecisionVector3D& boundingBox2End) {
+OutlinerMath::boundingBoxesIntersect3D(OutlinerVector3D& boundingBox1Start,
+                                       OutlinerVector3D& boundingBox1End,
+                                       OutlinerVector3D& boundingBox2Start,
+                                       OutlinerVector3D& boundingBox2End) {
   // Following the algorithm from https://math.stackexchange.com/questions/2651710/simplest-way-to-determine-if-two-3d-boxes-intersect
 
   bool xOverlap = (outlinerbetween(boundingBox1Start.x,boundingBox2Start.x,boundingBox1End.x) ||
@@ -512,23 +512,23 @@ OutlinerMath::vectorEqual(const aiVector2D& a,
 }
 
 bool
-OutlinerMath::vectorEqual(const HighPrecisionVector2D& a,
-                          const HighPrecisionVector2D& b) {
+OutlinerMath::vectorEqual(const OutlinerVector2D& a,
+                          const OutlinerVector2D& b) {
   return(a.x == b.x && a.y == b.y);
 }
 
 void
-OutlinerMath::vectorTo(const HighPrecisionVector2D& from,
-                       const HighPrecisionVector2D& to,
-                       HighPrecisionVector2D& result) {
+OutlinerMath::vectorTo(const OutlinerVector2D& from,
+                       const OutlinerVector2D& to,
+                       OutlinerVector2D& result) {
   result = to;
   result.x -= from.x;
   result.y -= from.y;
 }
 
 outlinerreal
-OutlinerMath::determinant2x2(const HighPrecisionVector2D& u,
-                             const HighPrecisionVector2D& v) {
+OutlinerMath::determinant2x2(const OutlinerVector2D& u,
+                             const OutlinerVector2D& v) {
   return(u.x * v.y - u.y * v.x);
 }
 
@@ -537,12 +537,12 @@ OutlinerMath::determinant2x2(const HighPrecisionVector2D& u,
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void
-OutlinerMath::sortVectorsX2D(const HighPrecisionVector2D* a,
-                             const HighPrecisionVector2D* b,
-                             const HighPrecisionVector2D* c,
-                             const HighPrecisionVector2D** nth0,
-                             const HighPrecisionVector2D** nth1,
-                             const HighPrecisionVector2D** nth2) {
+OutlinerMath::sortVectorsX2D(const OutlinerVector2D* a,
+                             const OutlinerVector2D* b,
+                             const OutlinerVector2D* c,
+                             const OutlinerVector2D** nth0,
+                             const OutlinerVector2D** nth1,
+                             const OutlinerVector2D** nth2) {
 
   // There are 6 permutations of three numbers. Simply test for each condition.
   if (a->x < b->x) {
@@ -577,12 +577,12 @@ OutlinerMath::sortVectorsX2D(const HighPrecisionVector2D* a,
 }
 
 void
-OutlinerMath::sortVectorsY2D(const HighPrecisionVector2D* a,
-                             const HighPrecisionVector2D* b,
-                             const HighPrecisionVector2D* c,
-                             const HighPrecisionVector2D** nth0,
-                             const HighPrecisionVector2D** nth1,
-                             const HighPrecisionVector2D** nth2) {
+OutlinerMath::sortVectorsY2D(const OutlinerVector2D* a,
+                             const OutlinerVector2D* b,
+                             const OutlinerVector2D* c,
+                             const OutlinerVector2D** nth0,
+                             const OutlinerVector2D** nth1,
+                             const OutlinerVector2D** nth2) {
   // There are 6 permutations of three numbers. Simply test for each condition.
   if (a->y < b->y) {
     if (c->y < a->y) {
@@ -616,12 +616,12 @@ OutlinerMath::sortVectorsY2D(const HighPrecisionVector2D* a,
 }
 
 void
-OutlinerMath::sortVectorsX3D(const HighPrecisionVector3D* a,
-                             const HighPrecisionVector3D* b,
-                             const HighPrecisionVector3D* c,
-                             const HighPrecisionVector3D** nth0,
-                             const HighPrecisionVector3D** nth1,
-                             const HighPrecisionVector3D** nth2) {
+OutlinerMath::sortVectorsX3D(const OutlinerVector3D* a,
+                             const OutlinerVector3D* b,
+                             const OutlinerVector3D* c,
+                             const OutlinerVector3D** nth0,
+                             const OutlinerVector3D** nth1,
+                             const OutlinerVector3D** nth2) {
 
   // There are 6 permutations of three numbers. Simply test for each condition.
   if (a->x < b->x) {
@@ -656,12 +656,12 @@ OutlinerMath::sortVectorsX3D(const HighPrecisionVector3D* a,
 }
 
 void
-OutlinerMath::sortVectorsY3D(const HighPrecisionVector3D* a,
-                             const HighPrecisionVector3D* b,
-                             const HighPrecisionVector3D* c,
-                             const HighPrecisionVector3D** nth0,
-                             const HighPrecisionVector3D** nth1,
-                             const HighPrecisionVector3D** nth2) {
+OutlinerMath::sortVectorsY3D(const OutlinerVector3D* a,
+                             const OutlinerVector3D* b,
+                             const OutlinerVector3D* c,
+                             const OutlinerVector3D** nth0,
+                             const OutlinerVector3D** nth1,
+                             const OutlinerVector3D** nth2) {
   // There are 6 permutations of three numbers. Simply test for each condition.
   if (a->y < b->y) {
     if (c->y < a->y) {
@@ -695,12 +695,12 @@ OutlinerMath::sortVectorsY3D(const HighPrecisionVector3D* a,
 }
 
 void
-OutlinerMath::sortVectorsZ3D(const HighPrecisionVector3D* a,
-                             const HighPrecisionVector3D* b,
-                             const HighPrecisionVector3D* c,
-                             const HighPrecisionVector3D** nth0,
-                             const HighPrecisionVector3D** nth1,
-                             const HighPrecisionVector3D** nth2) {
+OutlinerMath::sortVectorsZ3D(const OutlinerVector3D* a,
+                             const OutlinerVector3D* b,
+                             const OutlinerVector3D* c,
+                             const OutlinerVector3D** nth0,
+                             const OutlinerVector3D** nth1,
+                             const OutlinerVector3D** nth2) {
   // There are 6 permutations of three numbers. Simply test for each condition.
   if (a->z < b->z) {
     if (c->z < a->z) {
@@ -794,9 +794,9 @@ OutlinerMath::utilityTests(void) {
 void
 OutlinerMath::vectorTests(void) {
   debugf("vector tests...");
-  HighPrecisionVector2D a(2,2);
-  HighPrecisionVector2D b(3,3);
-  HighPrecisionVector2D result;
+  OutlinerVector2D a(2,2);
+  OutlinerVector2D b(3,3);
+  OutlinerVector2D result;
   vectorTo(a,b,result);
   deepdebugf("vector test: result: (%f,%f)", result.x, result.y);
   assert(result.x == 1);
@@ -806,8 +806,8 @@ OutlinerMath::vectorTests(void) {
 void
 OutlinerMath::detTests(void) {
   debugf("det tests...");
-  HighPrecisionVector2D C1(4,2);
-  HighPrecisionVector2D C2(1,3);
+  OutlinerVector2D C1(4,2);
+  OutlinerVector2D C2(1,3);
   outlinerreal result = determinant2x2(C1,C2);
   deepdebugf("determinant result = %.2f", result);
   assert(result == 10);
@@ -819,22 +819,22 @@ OutlinerMath::boundingBoxTests(void) {
   aiVector2D a(0,0);
   aiVector2D b(0,3);
   aiVector2D c(2,0);
-  HighPrecisionVector2D boundingBoxStart;
-  HighPrecisionVector2D boundingBoxEnd;
+  OutlinerVector2D boundingBoxStart;
+  OutlinerVector2D boundingBoxEnd;
   debugf("bounding box tests");
-  HighPrecisionTriangle2D tone(a,a,a);
+  OutlinerTriangle2D tone(a,a,a);
   triangleBoundingBox2D(tone,boundingBoxStart,boundingBoxEnd);
   debugf("a,a,a bounding box [%.2f,%.2f] to [%.2f,%.2f]",
          boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
   assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
   assert(boundingBoxEnd.x == 0 && boundingBoxEnd.y == 0);
-  HighPrecisionTriangle2D t(a,b,c);
+  OutlinerTriangle2D t(a,b,c);
   triangleBoundingBox2D(t,boundingBoxStart,boundingBoxEnd);
   debugf("a,b,c bounding box [%.2f,%.2f] to [%.2f,%.2f]",
          boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
   assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
   assert(boundingBoxEnd.x == 2 && boundingBoxEnd.y == 3);
-  HighPrecisionTriangle2D trev(c,b,a);
+  OutlinerTriangle2D trev(c,b,a);
   triangleBoundingBox2D(trev,boundingBoxStart,boundingBoxEnd);
   debugf("c,b,a bounding box [%.2f,%.2f] to [%.2f,%.2f]",
          boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
@@ -843,26 +843,26 @@ OutlinerMath::boundingBoxTests(void) {
   aiVector2D x(-10,-10);
   aiVector2D y(10,10);
   aiVector2D z(30,9);
-  HighPrecisionTriangle2D trevx(z,y,x);
+  OutlinerTriangle2D trevx(z,y,x);
   triangleBoundingBox2D(trevx,boundingBoxStart,boundingBoxEnd);
   debugf("z,y,x bounding box [%.2f,%.2f] to [%.2f,%.2f]",
          boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
   assert(boundingBoxStart.x == -10 && boundingBoxStart.y == -10);
   assert(boundingBoxEnd.x == 30 && boundingBoxEnd.y == 10);
-  HighPrecisionTriangle2D trevx2(y,z,x);
+  OutlinerTriangle2D trevx2(y,z,x);
   triangleBoundingBox2D(trevx2,boundingBoxStart,boundingBoxEnd);
   debugf("y,z,x bounding box [%.2f,%.2f] to [%.2f,%.2f]",
          boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
   assert(boundingBoxStart.x == -10 && boundingBoxStart.y == -10);
   assert(boundingBoxEnd.x == 30 && boundingBoxEnd.y == 10);
 
-  HighPrecisionVector2D bbtest1start(10,10);
-  HighPrecisionVector2D bbtest1end(20,30);
-  HighPrecisionVector2D bbtest1point1(0,25);
-  HighPrecisionVector2D bbtest1point2(10,10);
-  HighPrecisionVector2D bbtest1point3(20,30);
-  HighPrecisionVector2D bbtest1point4(30,30);
-  HighPrecisionVector2D bbtest1point5(11,15);
+  OutlinerVector2D bbtest1start(10,10);
+  OutlinerVector2D bbtest1end(20,30);
+  OutlinerVector2D bbtest1point1(0,25);
+  OutlinerVector2D bbtest1point2(10,10);
+  OutlinerVector2D bbtest1point3(20,30);
+  OutlinerVector2D bbtest1point4(30,30);
+  OutlinerVector2D bbtest1point5(11,15);
   bool ans = pointInsideBoundingBox2D(bbtest1start,bbtest1end,bbtest1point1);
   assert(ans == 0);
   ans = pointInsideBoundingBox2D(bbtest1start,bbtest1end,bbtest1point2);
@@ -879,44 +879,44 @@ void
 OutlinerMath::boundingBoxIntersectionTests(void) {
   infof("bounding box intersection tests...");
   
-  HighPrecisionVector3D test1boundingBox1Start(0,0,0);
-  HighPrecisionVector3D test1boundingBox1End(100,100,100);
-  HighPrecisionVector3D test1boundingBox2Start(10,10,10);
-  HighPrecisionVector3D test1boundingBox2End(11,11,11);
+  OutlinerVector3D test1boundingBox1Start(0,0,0);
+  OutlinerVector3D test1boundingBox1End(100,100,100);
+  OutlinerVector3D test1boundingBox2Start(10,10,10);
+  OutlinerVector3D test1boundingBox2End(11,11,11);
   bool ans = boundingBoxesIntersect3D(test1boundingBox1Start,
                                       test1boundingBox1End,
                                       test1boundingBox2Start,
                                       test1boundingBox2End);
   assert(ans);
   
-  HighPrecisionVector3D test2boundingBox1Start(0,0,0);
-  HighPrecisionVector3D test2boundingBox1End(10,10,10);
-  HighPrecisionVector3D test2boundingBox2Start(11,11,11);
-  HighPrecisionVector3D test2boundingBox2End(12,12,12);
+  OutlinerVector3D test2boundingBox1Start(0,0,0);
+  OutlinerVector3D test2boundingBox1End(10,10,10);
+  OutlinerVector3D test2boundingBox2Start(11,11,11);
+  OutlinerVector3D test2boundingBox2End(12,12,12);
   ans = boundingBoxesIntersect3D(test2boundingBox1Start,
                                  test2boundingBox1End,
                                  test2boundingBox2Start,
                                  test2boundingBox2End);
   assert(!ans);
   
-  HighPrecisionVector3D test3boundingBox1Start(0,0,0);
-  HighPrecisionVector3D test3boundingBox1End(10,10,10);
-  HighPrecisionVector3D test3boundingBox2Start(0,0,11);
-  HighPrecisionVector3D test3boundingBox2End(2,2,12);
+  OutlinerVector3D test3boundingBox1Start(0,0,0);
+  OutlinerVector3D test3boundingBox1End(10,10,10);
+  OutlinerVector3D test3boundingBox2Start(0,0,11);
+  OutlinerVector3D test3boundingBox2End(2,2,12);
   ans = boundingBoxesIntersect3D(test3boundingBox1Start,
                                  test3boundingBox1End,
                                  test3boundingBox2Start,
                                  test3boundingBox2End);
   assert(!ans);
 
-  const HighPrecisionVector2D box1aStart(0,0);
-  const HighPrecisionVector2D box1aEnd(10,10);
-  const HighPrecisionVector2D box1bStart(3,0);
-  const HighPrecisionVector2D box1bEnd(7,6);
-  const HighPrecisionVector2D box2Start(2,2);
-  const HighPrecisionVector2D box2End(8,8);
-  HighPrecisionVector2D resultBoxStart;
-  HighPrecisionVector2D resultBoxEnd;
+  const OutlinerVector2D box1aStart(0,0);
+  const OutlinerVector2D box1aEnd(10,10);
+  const OutlinerVector2D box1bStart(3,0);
+  const OutlinerVector2D box1bEnd(7,6);
+  const OutlinerVector2D box2Start(2,2);
+  const OutlinerVector2D box2End(8,8);
+  OutlinerVector2D resultBoxStart;
+  OutlinerVector2D resultBoxEnd;
   boundingBoxIntersection(box1aStart,
                           box1aEnd,
                           box2Start,
@@ -940,14 +940,14 @@ OutlinerMath::boundingBoxIntersectionTests(void) {
 void
 OutlinerMath::boundingBoxEqualTests(void) {
   debugf("bounding box equal  tests...");
-  const HighPrecisionVector2D box1Start(0,0);
-  const HighPrecisionVector2D box1End(10,10);
-  const HighPrecisionVector2D box2Start(3,0);
-  const HighPrecisionVector2D box2End(7,6);
-  const HighPrecisionVector2D box3Start(0,0);
-  const HighPrecisionVector2D box3End(10,10);
-  const HighPrecisionVector2D box4Start(0,-1);
-  const HighPrecisionVector2D box4End(10,10);
+  const OutlinerVector2D box1Start(0,0);
+  const OutlinerVector2D box1End(10,10);
+  const OutlinerVector2D box2Start(3,0);
+  const OutlinerVector2D box2End(7,6);
+  const OutlinerVector2D box3Start(0,0);
+  const OutlinerVector2D box3End(10,10);
+  const OutlinerVector2D box4Start(0,-1);
+  const OutlinerVector2D box4End(10,10);
   bool ans;
   ans = boundingBoxEqual(box1Start,box1End,box2Start,box2End);
   assert(!ans);
@@ -962,14 +962,14 @@ void
 OutlinerMath::boundingBoxUnionTests(void) {
   infof("bounding box union tests...");
   
-  const HighPrecisionVector2D box1aStart(0,0);
-  const HighPrecisionVector2D box1aEnd(10,10);
-  const HighPrecisionVector2D box1bStart(-3,0);
-  const HighPrecisionVector2D box1bEnd(7,16);
-  const HighPrecisionVector2D box2Start(2,2);
-  const HighPrecisionVector2D box2End(8,8);
-  HighPrecisionVector2D resultBoxStart;
-  HighPrecisionVector2D resultBoxEnd;
+  const OutlinerVector2D box1aStart(0,0);
+  const OutlinerVector2D box1aEnd(10,10);
+  const OutlinerVector2D box1bStart(-3,0);
+  const OutlinerVector2D box1bEnd(7,16);
+  const OutlinerVector2D box2Start(2,2);
+  const OutlinerVector2D box2End(8,8);
+  OutlinerVector2D resultBoxStart;
+  OutlinerVector2D resultBoxEnd;
   boundingBoxUnion(box1aStart,
                    box1aEnd,
                    box2Start,
@@ -1017,7 +1017,7 @@ OutlinerMath::lineTests(void) {
     aiVector2D a(0,0);
     aiVector2D b(1,0);
     aiVector2D c(2,0);
-    HighPrecisionVector2D d(0.5,2);
+    OutlinerVector2D d(0.5,2);
     bool ans = pointOnLine2D(a,c,d);
     assert(ans == 0);
     ans = pointOnLine2D(a,b,c);
@@ -1031,7 +1031,7 @@ OutlinerMath::lineTests(void) {
     aiVector2D a(0,0);
     aiVector2D b(0,1);
     aiVector2D c(0,2);
-    HighPrecisionVector2D d(0.5,1);
+    OutlinerVector2D d(0.5,1);
     bool ans = pointOnLine2D(a,c,d);
     assert(ans == 0);
     ans = pointOnLine2D(a,b,c);
@@ -1196,19 +1196,19 @@ OutlinerMath::triangleTests(void) {
   aiVector2D a(0,0);
   aiVector2D b(0,2);
   aiVector2D c(2,0);
-  HighPrecisionVector2D pointfar(2,2);
-  HighPrecisionVector2D pointnear(0.5,0.5);
-  HighPrecisionVector2D pointverynear(0.1,0.2);
-  HighPrecisionVector2D pointata = a;
-  HighPrecisionVector2D pointatb = b;
-  HighPrecisionVector2D pointatc = c;
-  HighPrecisionVector2D pointbeyondb = b;
+  OutlinerVector2D pointfar(2,2);
+  OutlinerVector2D pointnear(0.5,0.5);
+  OutlinerVector2D pointverynear(0.1,0.2);
+  OutlinerVector2D pointata = a;
+  OutlinerVector2D pointatb = b;
+  OutlinerVector2D pointatc = c;
+  OutlinerVector2D pointbeyondb = b;
   pointbeyondb.x += 0.01;
   pointbeyondb.y += 0.01;
-  HighPrecisionVector2D pointbefore1(-0.001,0);
-  HighPrecisionVector2D pointbefore2(0,-0.001);
-  HighPrecisionVector2D pointbefore3(-0.001,-0.001);
-  HighPrecisionTriangle2D t(a,b,c);
+  OutlinerVector2D pointbefore1(-0.001,0);
+  OutlinerVector2D pointbefore2(0,-0.001);
+  OutlinerVector2D pointbefore3(-0.001,-0.001);
+  OutlinerTriangle2D t(a,b,c);
   bool ansfar = pointInsideTriangle2D(t,pointfar);
   deepdebugf("triangle test: pointfar = %u", ansfar);
   bool ansnear = pointInsideTriangle2D(t,pointnear);
@@ -1245,11 +1245,11 @@ OutlinerMath::triangleTests(void) {
   aiVector3D a3(0,0,10);
   aiVector3D b3(0,2,10);
   aiVector3D c3(2,0,10);
-  HighPrecisionVector3D boundingStart3a(0,0,0);
-  HighPrecisionVector3D boundingEnd3a(5,5,5);
-  HighPrecisionVector3D boundingStart3b(0,0,0);
-  HighPrecisionVector3D boundingEnd3b(5,5,10);
-  HighPrecisionTriangle3D t3(a3,b3,c3);
+  OutlinerVector3D boundingStart3a(0,0,0);
+  OutlinerVector3D boundingEnd3a(5,5,5);
+  OutlinerVector3D boundingStart3b(0,0,0);
+  OutlinerVector3D boundingEnd3b(5,5,10);
+  OutlinerTriangle3D t3(a3,b3,c3);
   bool ans3 = boundingBoxIntersectsTriangle3D(t3,boundingStart3a,boundingEnd3a);
   assert(!ans3);
   ans3 = boundingBoxIntersectsTriangle3D(t3,boundingStart3b,boundingEnd3b);
@@ -1257,12 +1257,12 @@ OutlinerMath::triangleTests(void) {
 
   // Bug test for 3D triangle cases
   debugf("triangle tests (3D bug)...");
-  HighPrecisionVector3D bugBoxStart(0.00,-1.00,0.00);
-  HighPrecisionVector3D bugBoxEnd(0.00,-0.50,0.50);
+  OutlinerVector3D bugBoxStart(0.00,-1.00,0.00);
+  OutlinerVector3D bugBoxEnd(0.00,-0.50,0.50);
   aiVector3D buga(1.00, -1.00, -1.00);
   aiVector3D bugb(-1.00,-1.00, 1.00);
   aiVector3D bugc(-1.00,-1.00,-1.00);
-  HighPrecisionTriangle3D bugt(buga,bugb,bugc);
+  OutlinerTriangle3D bugt(buga,bugb,bugc);
   bool ansbug = boundingBoxIntersectsTriangle3D(bugt,bugBoxStart,bugBoxEnd);
   assert(ansbug);
 }
@@ -1280,17 +1280,17 @@ OutlinerMath::triangleBoundingBoxTests(void) {
   aiVector2D degenerate2a(1,1);
   aiVector2D degenerate2b(1,1);
   aiVector2D degenerate2c(-1,-1);
-  HighPrecisionVector2D box1Start(-10,-10);
-  HighPrecisionVector2D box1End(-1,-1);
-  HighPrecisionVector2D box2Start(-10,-10);
-  HighPrecisionVector2D box2End(5,5);
-  HighPrecisionVector2D box3Start(-1000,-1000);
-  HighPrecisionVector2D box3End(1000,1000);
-  HighPrecisionVector2D box4Start(-10,-10);
-  HighPrecisionVector2D box4End(0,0);
-  HighPrecisionVector2D box5Start(0.0,0.0);
-  HighPrecisionVector2D box5End(0.0,0.50);
-  HighPrecisionTriangle2D t(a,b,c);
+  OutlinerVector2D box1Start(-10,-10);
+  OutlinerVector2D box1End(-1,-1);
+  OutlinerVector2D box2Start(-10,-10);
+  OutlinerVector2D box2End(5,5);
+  OutlinerVector2D box3Start(-1000,-1000);
+  OutlinerVector2D box3End(1000,1000);
+  OutlinerVector2D box4Start(-10,-10);
+  OutlinerVector2D box4End(0,0);
+  OutlinerVector2D box5Start(0.0,0.0);
+  OutlinerVector2D box5End(0.0,0.50);
+  OutlinerTriangle2D t(a,b,c);
   bool ans = boundingBoxIntersectsTriangle2D(t,box1Start,box1End);
   assert(!ans);
   ans = boundingBoxIntersectsTriangle2D(t,box2Start,box2End);
@@ -1299,10 +1299,10 @@ OutlinerMath::triangleBoundingBoxTests(void) {
   assert(ans);
   ans = boundingBoxIntersectsTriangle2D(t,box4Start,box4End);
   assert(ans);
-  HighPrecisionTriangle2D degenerate1t(degenerate1a,degenerate1b,degenerate1c);
+  OutlinerTriangle2D degenerate1t(degenerate1a,degenerate1b,degenerate1c);
   ans = boundingBoxIntersectsTriangle2D(degenerate1t,box5Start,box5End);
   assert(!ans);
-  HighPrecisionTriangle2D degenerate2t(degenerate2a,degenerate2b,degenerate2c);
+  OutlinerTriangle2D degenerate2t(degenerate2a,degenerate2b,degenerate2c);
   ans = boundingBoxIntersectsTriangle2D(degenerate2t,box5Start,box5End);
   assert(ans);
   infof("triangle bounding box tests ok");

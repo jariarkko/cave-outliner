@@ -21,55 +21,55 @@ class OutlinerMath {
 
 public:
   
-  static bool boundingBoxEqual(const HighPrecisionVector2D& box1Start,
-                               const HighPrecisionVector2D& box1End,
-                               const HighPrecisionVector2D& box2Start,
-                               const HighPrecisionVector2D& box2End);
-  static void boundingBoxIntersection(const HighPrecisionVector2D& box1Start,
-                                      const HighPrecisionVector2D& box1End,
-                                      const HighPrecisionVector2D& box2Start,
-                                      const HighPrecisionVector2D& box2End,
-                                      HighPrecisionVector2D& resultBoxStart,
-                                      HighPrecisionVector2D& resultBoxEnd);
-  static void boundingBoxUnion(const HighPrecisionVector2D& box1Start,
-                               const HighPrecisionVector2D& box1End,
-                               const HighPrecisionVector2D& box2Start,
-                               const HighPrecisionVector2D& box2End,
-                               HighPrecisionVector2D& resultBoxStart,
-                               HighPrecisionVector2D& resultBoxEnd);
-  static void triangleDescribe(const HighPrecisionTriangle3D& triangle,
+  static bool boundingBoxEqual(const OutlinerVector2D& box1Start,
+                               const OutlinerVector2D& box1End,
+                               const OutlinerVector2D& box2Start,
+                               const OutlinerVector2D& box2End);
+  static void boundingBoxIntersection(const OutlinerVector2D& box1Start,
+                                      const OutlinerVector2D& box1End,
+                                      const OutlinerVector2D& box2Start,
+                                      const OutlinerVector2D& box2End,
+                                      OutlinerVector2D& resultBoxStart,
+                                      OutlinerVector2D& resultBoxEnd);
+  static void boundingBoxUnion(const OutlinerVector2D& box1Start,
+                               const OutlinerVector2D& box1End,
+                               const OutlinerVector2D& box2Start,
+                               const OutlinerVector2D& box2End,
+                               OutlinerVector2D& resultBoxStart,
+                               OutlinerVector2D& resultBoxEnd);
+  static void triangleDescribe(const OutlinerTriangle3D& triangle,
                                char* buf,
                                unsigned int bufSize);
-  static void triangleBoundingBox2D(const HighPrecisionTriangle2D& triangle,
-                                    HighPrecisionVector2D& boundingBoxStart,
-                                    HighPrecisionVector2D& boundingBoxEnd);
-  static void triangleBoundingBox3D(const HighPrecisionTriangle3D& triangle,
-                                    HighPrecisionVector3D& boundingBoxStart,
-                                    HighPrecisionVector3D& boundingBoxEnd);
-  static bool pointInsideTriangle2D(const HighPrecisionTriangle2D& triangle,
-                                    const HighPrecisionVector2D& point);
-  static bool pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
-                                       const HighPrecisionVector2D& boxEnd,
+  static void triangleBoundingBox2D(const OutlinerTriangle2D& triangle,
+                                    OutlinerVector2D& boundingBoxStart,
+                                    OutlinerVector2D& boundingBoxEnd);
+  static void triangleBoundingBox3D(const OutlinerTriangle3D& triangle,
+                                    OutlinerVector3D& boundingBoxStart,
+                                    OutlinerVector3D& boundingBoxEnd);
+  static bool pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
+                                    const OutlinerVector2D& point);
+  static bool pointInsideBoundingBox2D(const OutlinerVector2D& boxStart,
+                                       const OutlinerVector2D& boxEnd,
                                        const aiVector2D& point);
-  static bool pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
-                                       const HighPrecisionVector2D& boxEnd,
-                                       const HighPrecisionVector2D& point);
-  static bool boundingBoxIntersectsTriangle2D(const HighPrecisionTriangle2D& triangle,
-                                              const HighPrecisionVector2D& boxStart,
-                                              const HighPrecisionVector2D& boxEnd);
-  static bool boundingBoxIntersectsTriangle3D(const HighPrecisionTriangle3D& triangle,
-                                              const HighPrecisionVector3D& boxStart,
-                                              const HighPrecisionVector3D& boxEnd);
-  static bool boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
-                                       HighPrecisionVector3D& boundingBox1End,
-                                       HighPrecisionVector3D& boundingBox2Start,
-                                       HighPrecisionVector3D& boundingBox2End);
+  static bool pointInsideBoundingBox2D(const OutlinerVector2D& boxStart,
+                                       const OutlinerVector2D& boxEnd,
+                                       const OutlinerVector2D& point);
+  static bool boundingBoxIntersectsTriangle2D(const OutlinerTriangle2D& triangle,
+                                              const OutlinerVector2D& boxStart,
+                                              const OutlinerVector2D& boxEnd);
+  static bool boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle,
+                                              const OutlinerVector3D& boxStart,
+                                              const OutlinerVector3D& boxEnd);
+  static bool boundingBoxesIntersect3D(OutlinerVector3D& boundingBox1Start,
+                                       OutlinerVector3D& boundingBox1End,
+                                       OutlinerVector3D& boundingBox2Start,
+                                       OutlinerVector3D& boundingBox2End);
   static bool pointOnLine2D(const aiVector2D& a,
                             const aiVector2D& b,
                             const aiVector2D& point);
-  static bool pointOnLine2D(const HighPrecisionVector2D& a,
-                            const HighPrecisionVector2D& b,
-                            const HighPrecisionVector2D& point);
+  static bool pointOnLine2D(const OutlinerVector2D& a,
+                            const OutlinerVector2D& b,
+                            const OutlinerVector2D& point);
   static bool lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
                                            const aiVector2D& lineEnd,
                                            const aiVector2D& verticalLineStart,
@@ -82,13 +82,13 @@ public:
                                              aiVector2D& intersectionPoint);
   static bool vectorEqual(const aiVector2D& a,
                           const aiVector2D& b);
-  static bool vectorEqual(const HighPrecisionVector2D& a,
-                          const HighPrecisionVector2D& b);
-  static void vectorTo(const HighPrecisionVector2D& from,
-                       const HighPrecisionVector2D& to,
-                       HighPrecisionVector2D& result);
-  static outlinerreal determinant2x2(const HighPrecisionVector2D& u,
-                                     const HighPrecisionVector2D& v);
+  static bool vectorEqual(const OutlinerVector2D& a,
+                          const OutlinerVector2D& b);
+  static void vectorTo(const OutlinerVector2D& from,
+                       const OutlinerVector2D& to,
+                       OutlinerVector2D& result);
+  static outlinerreal determinant2x2(const OutlinerVector2D& u,
+                                     const OutlinerVector2D& v);
   static void mathTests(void);
 
 private:
@@ -105,36 +105,36 @@ private:
   static void lineTests(void);
   static void lineIntersectionTests(void);
   static void triangleTests(void);
-  static void sortVectorsX2D(const HighPrecisionVector2D* a,
-                             const HighPrecisionVector2D* b,
-                             const HighPrecisionVector2D* c,
-                             const HighPrecisionVector2D** nth0,
-                             const HighPrecisionVector2D** nth1,
-                             const HighPrecisionVector2D** nth2);
-  static void sortVectorsY2D(const HighPrecisionVector2D* a,
-                             const HighPrecisionVector2D* b,
-                             const HighPrecisionVector2D* c,
-                             const HighPrecisionVector2D** nth0,
-                             const HighPrecisionVector2D** nth1,
-                             const HighPrecisionVector2D** nth2);
-  static void sortVectorsX3D(const HighPrecisionVector3D* a,
-                             const HighPrecisionVector3D* b,
-                             const HighPrecisionVector3D* c,
-                             const HighPrecisionVector3D** nth0,
-                             const HighPrecisionVector3D** nth1,
-                             const HighPrecisionVector3D** nth2);
-  static void sortVectorsY3D(const HighPrecisionVector3D* a,
-                             const HighPrecisionVector3D* b,
-                             const HighPrecisionVector3D* c,
-                             const HighPrecisionVector3D** nth0,
-                             const HighPrecisionVector3D** nth1,
-                             const HighPrecisionVector3D** nth2);
-  static void sortVectorsZ3D(const HighPrecisionVector3D* a,
-                             const HighPrecisionVector3D* b,
-                             const HighPrecisionVector3D* c,
-                             const HighPrecisionVector3D** nth0,
-                             const HighPrecisionVector3D** nth1,
-                             const HighPrecisionVector3D** nth2);
+  static void sortVectorsX2D(const OutlinerVector2D* a,
+                             const OutlinerVector2D* b,
+                             const OutlinerVector2D* c,
+                             const OutlinerVector2D** nth0,
+                             const OutlinerVector2D** nth1,
+                             const OutlinerVector2D** nth2);
+  static void sortVectorsY2D(const OutlinerVector2D* a,
+                             const OutlinerVector2D* b,
+                             const OutlinerVector2D* c,
+                             const OutlinerVector2D** nth0,
+                             const OutlinerVector2D** nth1,
+                             const OutlinerVector2D** nth2);
+  static void sortVectorsX3D(const OutlinerVector3D* a,
+                             const OutlinerVector3D* b,
+                             const OutlinerVector3D* c,
+                             const OutlinerVector3D** nth0,
+                             const OutlinerVector3D** nth1,
+                             const OutlinerVector3D** nth2);
+  static void sortVectorsY3D(const OutlinerVector3D* a,
+                             const OutlinerVector3D* b,
+                             const OutlinerVector3D* c,
+                             const OutlinerVector3D** nth0,
+                             const OutlinerVector3D** nth1,
+                             const OutlinerVector3D** nth2);
+  static void sortVectorsZ3D(const OutlinerVector3D* a,
+                             const OutlinerVector3D* b,
+                             const OutlinerVector3D* c,
+                             const OutlinerVector3D** nth0,
+                             const OutlinerVector3D** nth1,
+                             const OutlinerVector3D** nth2);
   
 };
 

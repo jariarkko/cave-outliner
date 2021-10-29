@@ -33,8 +33,8 @@ BoundingBoxer::BoundingBoxer(const aiScene* scene) {
 }
 
 void
-BoundingBoxer::getBoundingBox(HighPrecisionVector3D& boundingBoxStartOut,
-                              HighPrecisionVector3D& boundingBoxEndOut) {
+BoundingBoxer::getBoundingBox(OutlinerVector3D& boundingBoxStartOut,
+                              OutlinerVector3D& boundingBoxEndOut) {
   assert(boundingBoxSet);
   boundingBoxStartOut = boundingBoxStart;
   boundingBoxEndOut = boundingBoxEnd;
@@ -101,9 +101,9 @@ BoundingBoxer::boundingFace(const aiMesh* mesh,
   const aiVector3D& vertexA = mesh->mVertices[face->mIndices[0]];
   const aiVector3D& vertexB = mesh->mVertices[face->mIndices[1]];
   const aiVector3D& vertexC = mesh->mVertices[face->mIndices[2]];
-  HighPrecisionVector3D elementBoundingBoxStart;
-  HighPrecisionVector3D elementBoundingBoxEnd;
-  HighPrecisionTriangle3D triangle3(vertexA,vertexB,vertexC);
+  OutlinerVector3D elementBoundingBoxStart;
+  OutlinerVector3D elementBoundingBoxEnd;
+  OutlinerTriangle3D triangle3(vertexA,vertexB,vertexC);
   OutlinerMath::triangleBoundingBox3D(triangle3,
                                       elementBoundingBoxStart,
                                       elementBoundingBoxEnd);
