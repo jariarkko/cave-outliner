@@ -325,9 +325,9 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
   OutlinerTriangle3D t3(*vertexA,*vertexB,*vertexC);
   OutlinerMath::triangleBoundingBox3D(t3,
                                       elementBoundingBoxStart,elementBoundingBoxEnd);
-  if (!OutlinerMath::boundingBoxesIntersect3D(modelBoundingBoxStart,
-                                              modelBoundingBoxEnd,
-                                              elementBoundingBoxStart,elementBoundingBoxEnd)) {
+  OutlinerBox3D modelBoundingBox(modelBoundingBoxStart,modelBoundingBoxEnd);
+  OutlinerBox3D elementBoundingBox(elementBoundingBoxStart,elementBoundingBoxEnd);
+  if (!OutlinerMath::boundingBoxesIntersect3D(modelBoundingBox,elementBoundingBox)) {
     deepdebugf("not including face due to not being inside model bounding box");
     shadow.nOutsideModelBoundingBox++;
     return;

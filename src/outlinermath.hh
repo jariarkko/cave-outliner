@@ -38,16 +38,11 @@ class OutlinerMath {
 
 public:
   
-  static bool boundingBoxEqual(const OutlinerVector2D& box1Start,
-                               const OutlinerVector2D& box1End,
-                               const OutlinerVector2D& box2Start,
-                               const OutlinerVector2D& box2End);
-  static void boundingBoxIntersection(const OutlinerVector2D& box1Start,
-                                      const OutlinerVector2D& box1End,
-                                      const OutlinerVector2D& box2Start,
-                                      const OutlinerVector2D& box2End,
-                                      OutlinerVector2D& resultBoxStart,
-                                      OutlinerVector2D& resultBoxEnd);
+  static bool boundingBoxEqual(const OutlinerBox2D& box1,
+                               const OutlinerBox2D& box2);
+  static void boundingBoxIntersection(const OutlinerBox2D& box1,
+                                      const OutlinerBox2D& box2,
+                                      OutlinerBox2D& resultBox);
   static void boundingBoxUnion(const OutlinerVector2D& box1Start,
                                const OutlinerVector2D& box1End,
                                const OutlinerVector2D& box2Start,
@@ -74,10 +69,8 @@ public:
   static bool boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle,
                                               const OutlinerVector3D& boxStart,
                                               const OutlinerVector3D& boxEnd);
-  static bool boundingBoxesIntersect3D(OutlinerVector3D& boundingBox1Start,
-                                       OutlinerVector3D& boundingBox1End,
-                                       OutlinerVector3D& boundingBox2Start,
-                                       OutlinerVector3D& boundingBox2End);
+  static bool boundingBoxesIntersect3D(OutlinerBox3D& boundingBox1,
+                                       OutlinerBox3D& boundingBox2);
   static bool pointOnLine2D(const OutlinerLine2D& line,
                             const OutlinerVector2D& point);
   static bool lineIntersectsVerticalLine2D(const OutlinerLine2D& line,

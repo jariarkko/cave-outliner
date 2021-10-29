@@ -623,8 +623,10 @@ ProcessorCrossSection::sliceVerticalBoundingBoxFace(const aiScene* scene,
                  x, y,
                  newBoundingBoxStart.x, newBoundingBoxStart.y,
                  newBoundingBoxEnd.x, newBoundingBoxEnd.y);
-      if (!OutlinerMath::boundingBoxEqual(sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd,
-                                          newBoundingBoxStart,newBoundingBoxEnd)) {
+      OutlinerBox2D sliceVerticalBoundingBox(sliceVerticalBoundingBoxStart,sliceVerticalBoundingBoxEnd);
+      OutlinerBox2D newBoundingBox(newBoundingBoxStart,newBoundingBoxEnd);
+      if (!OutlinerMath::boundingBoxEqual(sliceVerticalBoundingBox,
+                                          newBoundingBox)) {
         sliceVerticalBoundingBoxStart = newBoundingBoxStart;
         sliceVerticalBoundingBoxEnd = newBoundingBoxEnd;
         deepdebugf("setting new cross section bounding box to (%.2f,%.2f)-(%.2f,%.2f)",
