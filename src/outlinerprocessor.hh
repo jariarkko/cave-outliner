@@ -49,6 +49,7 @@ public:
             enum outlinerdirection directionIn,
             enum outlineralgorithm algorithmIn,
             unsigned int holethresholdIn,
+            bool labelsIn,
             IndexedMesh& indexedIn);
   ~Processor();
   
@@ -76,6 +77,7 @@ private:
   enum outlinerdirection direction;
   enum outlineralgorithm algorithm;
   unsigned int holethreshold;
+  bool labels;
   HighPrecisionVector2D planviewBoundingBoxStart;
   HighPrecisionVector2D planviewBoundingBoxEnd;
   MaterialMatrix matrix;

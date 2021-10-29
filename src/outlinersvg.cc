@@ -31,6 +31,8 @@ SvgCreator::SvgCreator(const char* fileName,
   this->xSize = xSize;
   this->ySize = ySize;
   this->multiplier = multiplier;
+  this->xSizeMultiplied = xSize*multiplier;
+  this->ySizeMultiplied = ySize*multiplier;
   this->xStart = xStart;
   this->yStart = yStart;
   this->xFactor = xFactor;
@@ -67,6 +69,16 @@ SvgCreator::~SvgCreator() {
   lineTable = 0;
 }
 
+outlinerhighprecisionreal
+SvgCreator::getPixelXSize(void) {
+  return((1.0/xFactor)/multiplier);
+}
+
+outlinerhighprecisionreal
+SvgCreator::getPixelYSize(void) {
+  return((1.0/yFactor)/multiplier);
+}
+
 void
 SvgCreator::line(outlinerhighprecisionreal fromX,
                  outlinerhighprecisionreal fromY,
@@ -87,7 +99,8 @@ SvgCreator::line(outlinerhighprecisionreal fromX,
   unsigned int toYInt;
   coordinateNormalization(toX,toY,toXInt,toYInt);
 
-  deepdebugf("SvgCreator::line");
+  infof("SvgCreator::line (%u,%u) to (%u,%u)",
+        fromXInt,fromYInt,toXInt,toYInt);
   addLine(fromXInt,fromYInt,toXInt,toYInt,dashed);
 }
 
@@ -192,8 +205,8 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
   deepdebugf("SvgCreator::emitLine");
   assert(line.nPoints >= 2);
   if (line.nPoints == 2) {
-    file << "<line x1=\"" << (line.points[0].x * multiplier) << "\" y1=\"" << (line.points[0].y * multiplier) << "\"";
-    file << " x2=\"" << (line.points[1].x * multiplier) << "\" y2=\"" << (line.points[1].y * multiplier) << "\"";
+    file << "<line x1=\"" << line.points[0].x << "\" y1=\"" << line.points[0].y << "\"";
+    file << " x2=\"" << line.points[1].x << "\" y2=\"" << line.points[1].y << "\"";
   } else {
     if (smooth) {
       file << "<path d=\"";
@@ -205,12 +218,12 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
       unsigned int y = line.points[i].y;
       if (smooth) {
         if (i == 0) {
-          file << x*multiplier << " " << y*multiplier <<  " ";
+          file << x << " " << y <<  " ";
         } else {
-          file << "S" << x*multiplier << " " << y*multiplier <<  " ";
+          file << "S" << x << " " << y <<  " ";
         }
       } else {
-        file << x*multiplier << "," << y*multiplier <<  " ";
+        file << x << "," << y <<  " ";
       }
     }
     file << "\"";
@@ -234,13 +247,9 @@ SvgCreator::pixel(outlinerhighprecisionreal x,
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
-  file << "<rect x=\"" << xInt*multiplier << "\" y=\"" << yInt*multiplier << "\"";
-  file << " width=\"" << linewidth << "\" height=\"" << linewidth << "\"";
-  if (linewidth <= 1.0) {
-    file << " fill=\"black\"";
-  } else {
-    file << " fill=\"black\"";
-  }
+  file << "<rect x=\"" << xInt << "\" y=\"" << yInt << "\"";
+  file << " width=\"" << multiplier << "\" height=\"" << multiplier << "\"";
+  file << " fill=\"black\"";
   file << " stroke-width=\"0\" stroke=\"black\" />\n";
   pixels++;
 }
@@ -254,7 +263,7 @@ SvgCreator::text(outlinerhighprecisionreal x,
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
-  file << "<text x=\"" << xInt*multiplier << "\" y=\"" << yInt*multiplier << "\"";
+  file << "<text x=\"" << xInt << "\" y=\"" << yInt << "\"";
   file << " fill=\"black\">";
   file << string;
   file << "</text>\n";
@@ -270,12 +279,14 @@ SvgCreator::coordinateNormalization(outlinerhighprecisionreal x,
                                     unsigned int& yInt) {
   outlinerhighprecisionreal xNormalized = (x - xStart) * xFactor;
   outlinerhighprecisionreal yNormalized = (y - yStart) * yFactor;
-  if (xNormalized > (outlinerhighprecisionreal)xSize) xInt = xSize; else xInt = xNormalized;
-  if (yNormalized > ySize) yInt = ySize; else yInt = ySize - yNormalized;
+  if (xNormalized > (outlinerhighprecisionreal)xSize) xInt = xSizeMultiplied; else xInt = (xNormalized*multiplier);
+  if (yNormalized > ySize) yInt = ySizeMultiplied; else yInt = ySizeMultiplied - (yNormalized*multiplier);
   deepdebugf("coordinate normalization (%.2f,%.2f) to (%u,%u) with yNormalized %.2f ySize %u yStart %.2f and yFactor %.2f",
              x, y,
              xInt, yInt,
              yNormalized, ySize, yStart, yFactor);
+  assert(xInt <= xSizeMultiplied);
+  assert(yInt <= ySizeMultiplied);
 }
 
 bool
@@ -597,10 +608,10 @@ SvgCreator::lineTableIndexes(const struct OutlinerSvgLine& line,
   unsigned int y1 = line.points[0].y;
   unsigned int xe = line.points[line.nPoints-1].x;
   unsigned int ye = line.points[line.nPoints-1].y;
-  assert(x1 <= xSize);
-  assert(y1 <= ySize);
-  assert(xe <= xSize);
-  assert(ye <= ySize);
+  assert(x1 <= xSizeMultiplied);
+  assert(y1 <= ySizeMultiplied);
+  assert(xe <= xSizeMultiplied);
+  assert(ye <= ySizeMultiplied);
   head = lineTableIndex(x1,y1);
   tail = lineTableIndex(xe,ye);
 }
@@ -608,9 +619,9 @@ SvgCreator::lineTableIndexes(const struct OutlinerSvgLine& line,
 unsigned int
 SvgCreator::lineTableIndex(unsigned int x,
                            unsigned int y) {
-  deepdeepdebugf("lineTableIndex(%u,%u)", x, y);
-  assert(x <= xSize);
-  assert(y <= ySize);
+  deepdeepdebugf("lineTableIndex(%u/%u,%u/%u)", x, xSizeMultiplied, y, ySizeMultiplied);
+  assert(x <= xSizeMultiplied);
+  assert(y <= ySizeMultiplied);
   unsigned int result = x + y;
   assert(result < lineTableSize);
   return(result);
@@ -637,7 +648,7 @@ SvgCreator::lineTableEntryDelete(struct OutlinerSvgLineList*& entry) {
 void
 SvgCreator::lineTableInit(void) {
   deepdebugf("line table init");
-  lineTableSize = (xSize+1) + (ySize+1);
+  lineTableSize = (xSizeMultiplied+1) + (ySizeMultiplied+1);
   lineTable = new struct OutlinerSvgLineList* [lineTableSize];
   if  (lineTable == 0) {
     errf("Cannot allocate line table of size %u", lineTableSize);

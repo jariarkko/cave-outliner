@@ -351,6 +351,7 @@ main(int argc, char** argv) {
                       direction,
                       algorithm,
                       holethreshold,
+                      (labelCrossSections && nCrossSections > 0),
                       indexed);
   if (!processor.processScene(scene,
                               nCrossSections,

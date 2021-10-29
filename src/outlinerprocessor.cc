@@ -33,6 +33,7 @@ Processor::Processor(const char* fileNameIn,
                      enum outlinerdirection directionIn,
                      enum outlineralgorithm algorithmIn,
                      unsigned int holethresholdIn,
+                     bool labelsIn,
                      IndexedMesh& indexedIn) :
   fileName(fileNameIn),
   multiplier(multiplierIn),
@@ -48,6 +49,7 @@ Processor::Processor(const char* fileNameIn,
   direction(directionIn),
   algorithm(algorithmIn),
   holethreshold(holethresholdIn),
+  labels(labelsIn),
   planviewBoundingBoxStart(DirectionOperations::outputx(direction,boundingBoxStart),
                            DirectionOperations::outputy(direction,boundingBoxStart)),
   planviewBoundingBoxEnd(DirectionOperations::outputx(direction,boundingBoxEnd),
@@ -65,7 +67,13 @@ Processor::Processor(const char* fileNameIn,
   boundingBoxStart2D.y = DirectionOperations::outputy(direction,boundingBoxStart);
   boundingBoxEnd2D.x = DirectionOperations::outputx(direction,boundingBoxEnd);
   boundingBoxEnd2D.y = DirectionOperations::outputy(direction,boundingBoxEnd);
-  svg = createSvg(fileName,boundingBoxStart2D,boundingBoxEnd2D,direction);
+  HighPrecisionVector2D boundingBoxStart2DExtended(boundingBoxStart2D);
+  HighPrecisionVector2D boundingBoxEnd2DExtended(boundingBoxEnd2D);
+  if (labels) {
+    boundingBoxStart2DExtended.y -= ((outlinertitlespacey * stepy) / multiplier);
+    boundingBoxEnd2DExtended.y += ((outlinertitlespacey * stepy) / multiplier);
+  }
+  svg = createSvg(fileName,boundingBoxStart2DExtended,boundingBoxEnd2DExtended,direction);
 }
 
 Processor::~Processor() {
@@ -642,9 +650,10 @@ Processor::createSvg(const char* svgFileName,
         svgFileName,
         xOutputStart, xOutputEnd, stepx, xSize, xSizeInt);
   infof("  size y %.2f..%.2f step %.2f ysize %.2f ysizeint %u",
-        svgFileName,
         yOutputStart, yOutputEnd, stepy, ySize, ySizeInt);
-  infof("SVG size will be %u x %u", xSizeInt, ySizeInt);
+  infof("SVG size will be %u x %u (%u x %u multiplied)",
+        xSizeInt, ySizeInt,
+        xSizeInt*multiplier, ySizeInt*multiplier);
   
   // Create the object
   SvgCreator* result = new SvgCreator(svgFileName,
@@ -756,11 +765,17 @@ Processor::addCrossSectionLine(const char* label,
                                HighPrecisionVector2D& actualLineEnd) {
   assert(svg != 0);
   assert(label != 0);
+  infof("addCrossSectionLine (%.2f,%.2f) to (%.2f,%.2f)",
+        actualLineStart.x,actualLineStart.y,
+        actualLineEnd.x,actualLineEnd.y);
   svg->line(actualLineStart.x,actualLineStart.y,
             actualLineEnd.x,actualLineEnd.y,
             1);
-  svg->text(actualLineEnd.x - 2*stepx,
-            actualLineEnd.y + 4*stepy,
+  infof("    process cross-section line text %.2f - font %u * 0.5 * pixelXSize %.2f = %.2f",
+        actualLineEnd.x, outlinerdefaultfontxsize, svg->getPixelXSize(),
+        actualLineEnd.x - outlinerdefaultfontxsize * 0.5 * svg->getPixelXSize());
+  svg->text(actualLineEnd.x - outlinerdefaultfontxsize * 0.5 * svg->getPixelXSize(),
+            actualLineEnd.y + outlinerdefaultfontysize * 0.1 * svg->getPixelYSize(),
             label);
 }
 

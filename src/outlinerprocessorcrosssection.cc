@@ -103,14 +103,14 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   sliceVerticalBoundingBoxExtendedEnd.x += freespacearound*proc.stepy;
   sliceVerticalBoundingBoxExtendedEnd.y += freespacearound*stepz;
   if (label != 0) {
-    outlinerhighprecisionreal incr = outlinertitlespacey*stepz;
-    infof("increasing cross-section image vertical size by %.2f (%u*%.2f) to accommodate label",
-          incr, outlinertitlespacey, stepz);
+    outlinerhighprecisionreal incr = (outlinertitlespacey*stepz) / proc.multiplier;
+    infof("increasing cross-section image vertical size by %.2f (%u*%.2f)/%.2f to accommodate label",
+          incr, outlinertitlespacey, stepz, proc.multiplier);
     sliceVerticalBoundingBoxExtendedEnd.y += incr;
     if ((sliceVerticalBoundingBoxExtendedEnd.x - sliceVerticalBoundingBoxExtendedStart.x)/proc.stepy < outlinertitlespacex) {
-      outlinerhighprecisionreal incr2 = outlinertitlespacex*proc.stepy;
-      infof("increasing cross-section image horizontal size by %.2f (%u*%.2f) to accommodate label",
-            incr2, outlinertitlespacex, proc.stepy);
+      outlinerhighprecisionreal incr2 = (outlinertitlespacex*proc.stepy) / proc.multiplier;
+      infof("increasing cross-section image horizontal size by %.2f (%u*%.2f)/%.2f to accommodate label",
+            incr2, outlinertitlespacex, proc.stepy, proc.multiplier);
       sliceVerticalBoundingBoxExtendedEnd.x = sliceVerticalBoundingBoxExtendedStart.x + incr2;
     }
   }
@@ -151,7 +151,7 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   // Add label, if needed
   if (label != 0) {
     char labelText[50];
-    const char* labelPrefix = " Cross-section ";
+    const char* labelPrefix = "Cross-section ";
     unsigned int neededSpace = strlen(labelPrefix) + strlen(label) + 1;
     memset(labelText,0,sizeof(labelText));
     if (sizeof(labelText) < neededSpace) {
@@ -160,8 +160,11 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
     } else {
       snprintf(labelText,sizeof(labelText)-1,"%s%s", labelPrefix, label);
     }
+    debugf("    cross section label y from end %.2f + (empty %u *  pixelysize %.2f) = %.2f",
+           sliceVerticalBoundingBoxEnd.y, outlinertitlespaceempty, svg->getPixelYSize(),
+           sliceVerticalBoundingBoxEnd.y + (outlinertitlespaceempty * svg->getPixelYSize()));
     svg->text(sliceVerticalBoundingBoxStart.x,
-              sliceVerticalBoundingBoxEnd.y + 6*stepz,
+              sliceVerticalBoundingBoxEnd.y + (outlinertitlespaceempty * svg->getPixelYSize()),
               labelText);
   }
   

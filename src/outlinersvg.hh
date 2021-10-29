@@ -64,6 +64,8 @@ class SvgCreator {
   void text(outlinerhighprecisionreal x,
             outlinerhighprecisionreal y,
             const char* string);
+  outlinerhighprecisionreal getPixelXSize(void);
+  outlinerhighprecisionreal getPixelYSize(void);
   bool ok();
   
  private:
@@ -72,6 +74,8 @@ class SvgCreator {
   unsigned int xSize;
   unsigned int ySize;
   unsigned int multiplier;
+  unsigned int xSizeMultiplied;
+  unsigned int ySizeMultiplied;
   outlinerhighprecisionreal xStart;
   outlinerhighprecisionreal yStart;
   outlinerhighprecisionreal xFactor;
