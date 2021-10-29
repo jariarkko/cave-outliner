@@ -172,41 +172,38 @@ OutlinerMath::triangleBoundingBox3D(const OutlinerTriangle3D& triangle,
 }
 
 bool
-OutlinerMath::pointOnLine2D(const OutlinerVector2D& a,
-                            const OutlinerVector2D& b,
+OutlinerMath::pointOnLine2D(const OutlinerLine2D& line,
                             const OutlinerVector2D& point) {
 
   // Debugs
   deepdeepdebugf("          pointOnLine2D high precision (%.2f,%.2f)-(%.2f,%.2f) vs. (%.2f,%.2f)",
-                 a.x, a.y, b.x, b.y,
+                 line.start.x, line.start.y, line.end.x, line.end.y,
                  point.x, point.y);
   
   // Check for a special case: line points are equal, resulting in
   // comparing to a point, not a line.
   
-  if (vectorEqual(a,b))  {
-    debugreturn("          pol2","line points equal",vectorEqual(a,point));
+  if (vectorEqual(line.start,line.end))  {
+    debugreturn("          pol2","line points equal",vectorEqual(line.start,point));
   }
 
   // Check for a special case: line is horizontal
-  if (a.y == b.y) {
-    if (point.y != a.y) debugreturn("          pol","horizontal y diff",0);
-    debugreturn("          pol2","line is horizontal",outlinerbetweenanyorder(a.x,point.x,b.x));
-    //a.x <= point.x && point.x <= b.x);
+  if (line.start.y == line.end.y) {
+    if (point.y != line.start.y) debugreturn("          pol","horizontal y diff",0);
+    debugreturn("          pol2","line is horizontal",outlinerbetweenanyorder(line.start.x,point.x,line.end.x));
   }
   
   // Check for a special case: line is vertical
-  if (a.x == b.x) {
-    if (point.x != a.x) debugreturn("          pol2","vertical x diff",0);
-    debugreturn("          pol2","line is vertical",outlinerbetweenanyorder(a.y,point.y,b.y));
-    //a.y <= point.y && point.y <= b.y);
+  if (line.start.x == line.end.x) {
+    if (point.x != line.start.x) debugreturn("          pol2","vertical x diff",0);
+    debugreturn("          pol2","line is vertical",outlinerbetweenanyorder(line.start.y,point.y,line.end.y));
   }
   
   // Not a special case. Run the general check, taking algorithm from
   // https://stackoverflow.com/questions/17692922/check-is-a-point-x-y-is-between-two-points-drawn-on-a-straight-line
 
-  float alpha1 = (point.x - a.x) / (b.x - a.x);
-  float alpha2 = (point.y - a.y) / (b.y - a.y);
+  float alpha1 = (point.x - line.start.x) / (line.end.x - line.start.x);
+  float alpha2 = (point.y - line.start.y) / (line.end.y - line.start.y);
   if (alpha1 != alpha2) debugreturn("          pol2","alpha diff",0);
   if (alpha1 < 0) debugreturn("          pol2","alpha neg",0);
   if (alpha1 > 1) debugreturn("          pol2","alpha above one",0);
@@ -227,14 +224,14 @@ OutlinerMath::pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
   // Check for a special case: triangle collapses to a line (at least
   // in 2D).
   if (vectorEqual(triangle.a,triangle.b)) {
-    //deepdeepdebugf("pit2 special case AB equal");
-    debugreturn("        pit2","point on AB line",pointOnLine2D(triangle.a,triangle.c,point));
+    OutlinerLine2D ac(triangle.a,triangle.c);
+    debugreturn("        pit2","point on AB line",pointOnLine2D(ac,point));
   } else if (vectorEqual(triangle.a,triangle.c)) {
-    //deepdeepdebugf("pit2 special case AC equal");
-    debugreturn("        pit2","point on AC line",pointOnLine2D(triangle.a,triangle.b,point));
+    OutlinerLine2D ab(triangle.a,triangle.b);
+    debugreturn("        pit2","point on AC line",pointOnLine2D(ab,point));
   } else if (vectorEqual(triangle.b,triangle.c)) {
-    //deepdeepdebugf("pit2 special case BC equal");
-    debugreturn("        pit2","point on BC line ",pointOnLine2D(triangle.a,triangle.b,point));
+    OutlinerLine2D ab(triangle.a,triangle.b);
+    debugreturn("        pit2","point on BC line",pointOnLine2D(ab,point));
   }
   
   // Not a special case. For the general case, we take the algorithm
@@ -349,33 +346,31 @@ OutlinerMath::boundingBoxesIntersect3D(OutlinerVector3D& boundingBox1Start,
 }
 
 bool
-OutlinerMath::lineIntersectsVerticalLine2D(const OutlinerVector2D& lineStart,
-                                           const OutlinerVector2D& lineEnd,
-                                           const OutlinerVector2D& verticalLineStart,
-                                           const OutlinerVector2D& verticalLineEnd,
+OutlinerMath::lineIntersectsVerticalLine2D(const OutlinerLine2D& line,
+                                           const OutlinerLine2D& verticalLine,
                                            OutlinerVector2D& intersectionPoint) {
-  assert(verticalLineStart.x == verticalLineEnd.x);
+  assert(verticalLine.start.x == verticalLine.end.x);
 
   // Fetch basic values
-  outlinerreal verticalStartY = outlinermin(verticalLineStart.y,verticalLineEnd.y);
-  outlinerreal verticalEndY = outlinermax(verticalLineStart.y,verticalLineEnd.y);
-  outlinerreal verticalX = verticalLineStart.x;
+  outlinerreal verticalStartY = outlinermin(verticalLine.start.y,verticalLine.end.y);
+  outlinerreal verticalEndY = outlinermax(verticalLine.start.y,verticalLine.end.y);
+  outlinerreal verticalX = verticalLine.start.x;
   
   // Order line points such that X grows from start to end
   outlinerreal lineStartX;
   outlinerreal lineStartY;
   outlinerreal lineEndX;
   outlinerreal lineEndY;
-  if (lineStart.x <= lineEnd.x) {
-    lineStartX = lineStart.x;
-    lineStartY = lineStart.y;
-    lineEndX = lineEnd.x;
-    lineEndY = lineEnd.y;
+  if (line.start.x <= line.end.x) {
+    lineStartX = line.start.x;
+    lineStartY = line.start.y;
+    lineEndX = line.end.x;
+    lineEndY = line.end.y;
   } else {
-    lineStartX = lineEnd.x;
-    lineStartY = lineEnd.y;
-    lineEndX = lineStart.x;
-    lineEndY = lineStart.y;
+    lineStartX = line.end.x;
+    lineStartY = line.end.y;
+    lineEndX = line.start.x;
+    lineEndY = line.start.y;
   }
   
   // Calculate line equation
@@ -419,33 +414,31 @@ OutlinerMath::lineIntersectsVerticalLine2D(const OutlinerVector2D& lineStart,
 }
 
 bool
-OutlinerMath::lineIntersectsHorizontalLine2D(const OutlinerVector2D& lineStart,
-                                             const OutlinerVector2D& lineEnd,
-                                             const OutlinerVector2D& horizontalLineStart,
-                                             const OutlinerVector2D& horizontalLineEnd,
+OutlinerMath::lineIntersectsHorizontalLine2D(const OutlinerLine2D& line,
+                                             const OutlinerLine2D& horizontalLine,
                                              OutlinerVector2D& intersectionPoint) {
-  assert(horizontalLineStart.y == horizontalLineEnd.y);
+  assert(horizontalLine.start.y == horizontalLine.end.y);
   
   // Fetch basic values
-  outlinerreal horizontalStartX = outlinermin(horizontalLineStart.x,horizontalLineEnd.x);
-  outlinerreal horizontalEndX = outlinermax(horizontalLineStart.x,horizontalLineEnd.x);
-  outlinerreal horizontalY = horizontalLineStart.y;
+  outlinerreal horizontalStartX = outlinermin(horizontalLine.start.x,horizontalLine.end.x);
+  outlinerreal horizontalEndX = outlinermax(horizontalLine.start.x,horizontalLine.end.x);
+  outlinerreal horizontalY = horizontalLine.start.y;
   
   // Order line points such that Y grows from start to end
   outlinerreal lineStartX;
   outlinerreal lineStartY;
   outlinerreal lineEndX;
   outlinerreal lineEndY;
-  if (lineStart.y <= lineEnd.y) {
-    lineStartX = lineStart.x;
-    lineStartY = lineStart.y;
-    lineEndX = lineEnd.x;
-    lineEndY = lineEnd.y;
+  if (line.start.y <= line.end.y) {
+    lineStartX = line.start.x;
+    lineStartY = line.start.y;
+    lineEndX = line.end.x;
+    lineEndY = line.end.y;
   } else {
-    lineStartX = lineEnd.x;
-    lineStartY = lineEnd.y;
-    lineEndX = lineStart.x;
-    lineEndY = lineStart.y;
+    lineStartX = line.end.x;
+    lineStartY = line.end.y;
+    lineEndX = line.start.x;
+    lineEndY = line.start.y;
   }
   
   // Calculate line equation
@@ -993,13 +986,15 @@ OutlinerMath::lineTests(void) {
   {
     OutlinerVector2D a(0,0);
     OutlinerVector2D b(1,0);
+    OutlinerLine2D ab(a,b);
     OutlinerVector2D c(2,0);
+    OutlinerLine2D ac(a,c);
     OutlinerVector2D d(0.5,2);
-    bool ans = pointOnLine2D(a,c,d);
+    bool ans = pointOnLine2D(ac,d);
     assert(ans == 0);
-    ans = pointOnLine2D(a,b,c);
+    ans = pointOnLine2D(ab,c);
     assert(ans == 0);
-    ans = pointOnLine2D(a,c,b);
+    ans = pointOnLine2D(ac,b);
     assert(ans == 1);
   }
   
@@ -1007,13 +1002,15 @@ OutlinerMath::lineTests(void) {
   {
     OutlinerVector2D a(0,0);
     OutlinerVector2D b(0,1);
+    OutlinerLine2D ab(a,b);
     OutlinerVector2D c(0,2);
+    OutlinerLine2D ac(a,c);
     OutlinerVector2D d(0.5,1);
-    bool ans = pointOnLine2D(a,c,d);
+    bool ans = pointOnLine2D(ac,d);
     assert(ans == 0);
-    ans = pointOnLine2D(a,b,c);
+    ans = pointOnLine2D(ab,c);
     assert(ans == 0);
-    ans = pointOnLine2D(a,c,b);
+    ans = pointOnLine2D(ac,b);
     assert(ans == 1);
   }
   
@@ -1021,13 +1018,15 @@ OutlinerMath::lineTests(void) {
   {
     OutlinerVector2D a(0,0);
     OutlinerVector2D b(1,1);
+    OutlinerLine2D ab(a,b);
     OutlinerVector2D c(2,2);
+    OutlinerLine2D ac(a,c);
     OutlinerVector2D d(1,2);
-    bool ans = pointOnLine2D(a,c,d);
+    bool ans = pointOnLine2D(ac,d);
     assert(ans == 0);
-    ans = pointOnLine2D(a,b,c);
+    ans = pointOnLine2D(ab,c);
     assert(ans == 0);
-    ans = pointOnLine2D(a,c,b);
+    ans = pointOnLine2D(ac,b);
     assert(ans == 1);
   }
 
@@ -1047,16 +1046,20 @@ OutlinerMath::lineIntersectionTests(void) {
     OutlinerVector2D vl1end(1,40);
     OutlinerVector2D vl2start(11,0);
     OutlinerVector2D vl2end(11,40);
+    OutlinerLine2D ab1(a,b1);
+    OutlinerLine2D ab2(a,b2);
+    OutlinerLine2D vl1(vl1start,vl1end);
+    OutlinerLine2D vl2(vl2start,vl2end);
     OutlinerVector2D inter;
     bool ans;
-    ans = lineIntersectsVerticalLine2D(a,b1,vl1start,vl1end,inter);
+    ans = lineIntersectsVerticalLine2D(ab1,vl1,inter);
     assert(!ans);
-    ans = lineIntersectsVerticalLine2D(a,b1,vl2start,vl2end,inter);
+    ans = lineIntersectsVerticalLine2D(ab1,vl2,inter);
     assert(ans);
     deepdebugf("vertical line intersection %.2f, %.2f", inter.x, inter.y);
     assert(inter.x == 11);
     assert(inter.y == 11);
-    ans = lineIntersectsVerticalLine2D(a,b2,vl2start,vl2end,inter);
+    ans = lineIntersectsVerticalLine2D(ab2,vl2,inter);
     assert(ans);
     deepdebugf("vertical line intersection %.2f, %.2f", inter.x, inter.y);
     assert(inter.x == 11);
@@ -1075,18 +1078,23 @@ OutlinerMath::lineIntersectionTests(void) {
     OutlinerVector2D vl3end(11,15);
     OutlinerVector2D vl4start(11,10);
     OutlinerVector2D vl4end(11,16);
+    OutlinerLine2D ab(a,b);
+    OutlinerLine2D vl1(vl1start,vl1end);
+    OutlinerLine2D vl2(vl2start,vl2end);
+    OutlinerLine2D vl3(vl3start,vl3end);
+    OutlinerLine2D vl4(vl4start,vl4end);
     OutlinerVector2D inter;
     bool ans;
-    ans = lineIntersectsVerticalLine2D(a,b,vl1start,vl1end,inter);
+    ans = lineIntersectsVerticalLine2D(ab,vl1,inter);
     assert(!ans);
-    ans = lineIntersectsVerticalLine2D(a,b,vl2start,vl2end,inter);
+    ans = lineIntersectsVerticalLine2D(ab,vl2,inter);
     assert(!ans);
-    ans = lineIntersectsVerticalLine2D(a,b,vl3start,vl3end,inter);
+    ans = lineIntersectsVerticalLine2D(ab,vl3,inter);
     assert(ans);
     deepdebugf("vertical line intersection %.2f, %.2f", inter.x, inter.y);
     assert(inter.x == 11);
     assert(inter.y == 15);
-    ans = lineIntersectsVerticalLine2D(a,b,vl4start,vl4end,inter);
+    ans = lineIntersectsVerticalLine2D(ab,vl4,inter);
     assert(ans);
     deepdebugf("vertical line intersection %.2f, %.2f", inter.x, inter.y);
     assert(inter.x == 11);
@@ -1103,13 +1111,17 @@ OutlinerMath::lineIntersectionTests(void) {
     OutlinerVector2D vl2end(10,9);
     OutlinerVector2D vl3start(10,15);
     OutlinerVector2D vl3end(10,16);
+    OutlinerLine2D ab(a,b);
+    OutlinerLine2D vl1(vl1start,vl1end);
+    OutlinerLine2D vl2(vl2start,vl2end);
+    OutlinerLine2D vl3(vl3start,vl3end);
     OutlinerVector2D inter;
     bool ans;
-    ans = lineIntersectsVerticalLine2D(a,b,vl1start,vl1end,inter);
+    ans = lineIntersectsVerticalLine2D(ab,vl1,inter);
     assert(!ans);
-    ans = lineIntersectsVerticalLine2D(a,b,vl2start,vl2end,inter);
+    ans = lineIntersectsVerticalLine2D(ab,vl2,inter);
     assert(!ans);
-    ans = lineIntersectsVerticalLine2D(a,b,vl3start,vl3end,inter);
+    ans = lineIntersectsVerticalLine2D(ab,vl3,inter);
     assert(ans);
     deepdebugf("vertical parallel line intersection %.2f, %.2f", inter.x, inter.y);
     assert(inter.x == 10);
@@ -1126,19 +1138,23 @@ OutlinerMath::lineIntersectionTests(void) {
     OutlinerVector2D hl2end(20,15);
     OutlinerVector2D hl3start(0,21);
     OutlinerVector2D hl3end(20,21);
+    OutlinerLine2D ab(a,b);
+    OutlinerLine2D hl1(hl1start,hl1end);
+    OutlinerLine2D hl2(hl2start,hl2end);
+    OutlinerLine2D hl3(hl3start,hl3end);
     OutlinerVector2D inter;
     bool ans;
-    ans = lineIntersectsHorizontalLine2D(a,b,hl1start,hl1end,inter);
+    ans = lineIntersectsHorizontalLine2D(ab,hl1,inter);
     assert(ans);
     deepdebugf("horizontal line intersection %.2f, %.2f", inter.x, inter.y);
     assert(inter.x == 10);
     assert(inter.y == 10);
-    ans = lineIntersectsHorizontalLine2D(a,b,hl2start,hl2end,inter);
+    ans = lineIntersectsHorizontalLine2D(ab,hl2,inter);
     assert(ans);
     deepdebugf("horizontal line intersection %.2f, %.2f", inter.x, inter.y);
     assert(inter.x == 15);
     assert(inter.y == 15);
-    ans = lineIntersectsHorizontalLine2D(a,b,hl3start,hl3end,inter);
+    ans = lineIntersectsHorizontalLine2D(ab,hl3,inter);
     assert(!ans);
   }
   
@@ -1152,13 +1168,17 @@ OutlinerMath::lineIntersectionTests(void) {
     OutlinerVector2D hl2end(9,10);
     OutlinerVector2D hl3start(15,10);
     OutlinerVector2D hl3end(16,10);
+    OutlinerLine2D ab(a,b);
+    OutlinerLine2D hl1(hl1start,hl1end);
+    OutlinerLine2D hl2(hl2start,hl2end);
+    OutlinerLine2D hl3(hl3start,hl3end);
     OutlinerVector2D inter;
     bool ans;
-    ans = lineIntersectsHorizontalLine2D(a,b,hl1start,hl1end,inter);
+    ans = lineIntersectsHorizontalLine2D(ab,hl1,inter);
     assert(!ans);
-    ans = lineIntersectsHorizontalLine2D(a,b,hl2start,hl2end,inter);
+    ans = lineIntersectsHorizontalLine2D(ab,hl2,inter);
     assert(!ans);
-    ans = lineIntersectsHorizontalLine2D(a,b,hl3start,hl3end,inter);
+    ans = lineIntersectsHorizontalLine2D(ab,hl3,inter);
     assert(ans);
     deepdebugf("horizontal parallel line intersection %.2f, %.2f", inter.x, inter.y);
     assert(inter.y == 10);

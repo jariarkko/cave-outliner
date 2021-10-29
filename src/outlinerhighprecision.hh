@@ -10,6 +10,10 @@
 #include <assimp/scene.h>
 #include "outlinertypes.hh"
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Vectors ////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 class OutlinerVector2D {
 public:
   outlinerreal x;
@@ -33,6 +37,58 @@ public:
                    const outlinerreal yIn,
                    const outlinerreal zIn) : x(xIn), y(yIn), z(zIn) {}
 };
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Lines //////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+class OutlinerLine2D {
+public:
+  OutlinerVector2D start;
+  OutlinerVector2D end;
+  OutlinerLine2D() {}
+  OutlinerLine2D(const OutlinerLine2D& in) : start(in.start), end(in.end) {}
+  OutlinerLine2D(const OutlinerVector2D& startIn,
+                 const OutlinerVector2D& endIn) : start(startIn), end(endIn) {}
+};
+
+class OutlinerLine3D {
+public:
+  OutlinerVector3D start;
+  OutlinerVector3D end;
+  OutlinerLine3D() {}
+  OutlinerLine3D(const OutlinerLine3D& in) : start(in.start), end(in.end) {}
+  OutlinerLine3D(const OutlinerVector3D& startIn,
+                 const OutlinerVector3D& endIn) : start(startIn), end(endIn) {}
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Bounding boxes /////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+class OutlinerBox2D {
+public:
+  OutlinerVector2D start;
+  OutlinerVector2D end;
+  OutlinerBox2D() {}
+  OutlinerBox2D(const OutlinerLine2D& in) : start(in.start), end(in.end) {}
+  OutlinerBox2D(const OutlinerVector2D& startIn,
+                const OutlinerVector2D& endIn) : start(startIn), end(endIn) {}
+};
+
+class OutlinerBox3D {
+public:
+  OutlinerVector3D start;
+  OutlinerVector3D end;
+  OutlinerBox3D() {}
+  OutlinerBox3D(const OutlinerBox3D& in) : start(in.start), end(in.end) {}
+  OutlinerBox3D(const OutlinerVector3D& startIn,
+                const OutlinerVector3D& endIn) : start(startIn), end(endIn) {}
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Triangles //////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 class OutlinerTriangle2D {
 public:

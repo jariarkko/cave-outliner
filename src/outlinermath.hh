@@ -61,18 +61,13 @@ public:
                                        OutlinerVector3D& boundingBox1End,
                                        OutlinerVector3D& boundingBox2Start,
                                        OutlinerVector3D& boundingBox2End);
-  static bool pointOnLine2D(const OutlinerVector2D& a,
-                            const OutlinerVector2D& b,
+  static bool pointOnLine2D(const OutlinerLine2D& line,
                             const OutlinerVector2D& point);
-  static bool lineIntersectsVerticalLine2D(const OutlinerVector2D& lineStart,
-                                           const OutlinerVector2D& lineEnd,
-                                           const OutlinerVector2D& verticalLineStart,
-                                           const OutlinerVector2D& verticalLineEnd,
+  static bool lineIntersectsVerticalLine2D(const OutlinerLine2D& line,
+                                           const OutlinerLine2D& verticalLine,
                                            OutlinerVector2D& intersectionPoint);
-  static bool lineIntersectsHorizontalLine2D(const OutlinerVector2D& lineStart,
-                                             const OutlinerVector2D& lineEnd,
-                                             const OutlinerVector2D& horizontalLineStart,
-                                             const OutlinerVector2D& horizontalLineEnd,
+  static bool lineIntersectsHorizontalLine2D(const OutlinerLine2D& line,
+                                             const OutlinerLine2D& horizontalLine,
                                              OutlinerVector2D& intersectionPoint);
   static bool vectorEqual(const OutlinerVector2D& a,
                           const OutlinerVector2D& b);
