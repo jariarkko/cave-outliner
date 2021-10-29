@@ -50,8 +50,8 @@ public:
   void addMesh(const aiScene* scene,
                const aiMesh* mesh);
   void getFaces(const aiMesh* mesh,
-                outlinerhighprecisionreal x,
-                outlinerhighprecisionreal y,
+                outlinerreal x,
+                outlinerreal y,
                 unsigned int* p_nFaces,
                 const aiFace*** p_faces);
    ~IndexedMesh();
@@ -66,8 +66,8 @@ private:
   HighPrecisionVector2D viewBoundingBoxStart;
   HighPrecisionVector2D viewBoundingBoxEnd;
   enum outlinerdirection direction;
-  outlinerhighprecisionreal tileSizeX;
-  outlinerhighprecisionreal tileSizeY;
+  outlinerreal tileSizeX;
+  outlinerreal tileSizeY;
   
   struct IndexedMeshOneMesh* meshes;
   
@@ -90,8 +90,8 @@ private:
                     unsigned int tileY,
                     unsigned int* p_nFaces,
                     const aiFace*** p_faces);
-  void coordsToTile(outlinerhighprecisionreal x,
-                    outlinerhighprecisionreal y,
+  void coordsToTile(outlinerreal x,
+                    outlinerreal y,
                     unsigned int& tileX,
                     unsigned int& tileY);
   void getShadow(const aiMesh* mesh,

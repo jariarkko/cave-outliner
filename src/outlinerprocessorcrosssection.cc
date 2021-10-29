@@ -25,7 +25,7 @@ ProcessorCrossSection::ProcessorCrossSection(const char* fileNameIn,
                                              enum outlinerdirection sliceDirectionIn,
                                              const HighPrecisionVector2D& lineStartIn,
                                              const HighPrecisionVector2D& lineEndIn,
-                                             outlinerhighprecisionreal stepzIn,
+                                             outlinerreal stepzIn,
                                              Processor& procIn) :
   fileName(fileNameIn),
   label(labelIn),
@@ -103,12 +103,12 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   sliceVerticalBoundingBoxExtendedEnd.x += freespacearound*proc.stepy;
   sliceVerticalBoundingBoxExtendedEnd.y += freespacearound*stepz;
   if (label != 0) {
-    outlinerhighprecisionreal incr = (outlinertitlespacey*stepz) / proc.multiplier;
+    outlinerreal incr = (outlinertitlespacey*stepz) / proc.multiplier;
     infof("increasing cross-section image vertical size by %.2f (%u*%.2f)/%.2f to accommodate label",
           incr, outlinertitlespacey, stepz, proc.multiplier);
     sliceVerticalBoundingBoxExtendedEnd.y += incr;
     if ((sliceVerticalBoundingBoxExtendedEnd.x - sliceVerticalBoundingBoxExtendedStart.x)/proc.stepy < outlinertitlespacex) {
-      outlinerhighprecisionreal incr2 = (outlinertitlespacex*proc.stepy) / proc.multiplier;
+      outlinerreal incr2 = (outlinertitlespacex*proc.stepy) / proc.multiplier;
       infof("increasing cross-section image horizontal size by %.2f (%u*%.2f)/%.2f to accommodate label",
             incr2, outlinertitlespacex, proc.stepy, proc.multiplier);
       sliceVerticalBoundingBoxExtendedEnd.x = sliceVerticalBoundingBoxExtendedStart.x + incr2;
@@ -220,9 +220,9 @@ ProcessorCrossSection::calculateLineEquation(void) {
     errf("Cross-section starting and ending points cannot be same");
     exit(1);
   }
-  outlinerhighprecisionreal totalDifference = xDifference + yDifference;
-  outlinerhighprecisionreal xDifferenceFraction = xDifference / totalDifference;
-  outlinerhighprecisionreal yDifferenceFraction = yDifference / totalDifference;
+  outlinerreal totalDifference = xDifference + yDifference;
+  outlinerreal xDifferenceFraction = xDifference / totalDifference;
+  outlinerreal yDifferenceFraction = yDifference / totalDifference;
   lineLength = sqrt(xDifference*xDifference + yDifference*yDifference);
   lineStep = (proc.stepx * xDifferenceFraction) + (proc.stepy * yDifferenceFraction);
   lineSteps = lineLength/lineStep;
@@ -235,8 +235,8 @@ ProcessorCrossSection::calculateLineEquation(void) {
          lineStepY);
 }
 
-outlinerhighprecisionreal
-ProcessorCrossSection::calculateLineXBasedOnY(outlinerhighprecisionreal y) {
+outlinerreal
+ProcessorCrossSection::calculateLineXBasedOnY(outlinerreal y) {
   
   //
   // We can do this per the equations
@@ -253,15 +253,15 @@ ProcessorCrossSection::calculateLineXBasedOnY(outlinerhighprecisionreal y) {
   }
 
   // Do the actual calculations
-  outlinerhighprecisionreal n = (y - lineStart.y) / lineStepY;
-  outlinerhighprecisionreal x = lineStart.x + n*lineStepX;
+  outlinerreal n = (y - lineStart.y) / lineStepY;
+  outlinerreal x = lineStart.x + n*lineStepX;
   return(x);
 }
 
 void
 ProcessorCrossSection::getLineActualEndPoints(HighPrecisionVector2D& actualLineStart,
                                               HighPrecisionVector2D& actualLineEnd,
-                                              outlinerhighprecisionreal extralineatends) {
+                                              outlinerreal extralineatends) {
   // We need to take the bounding box of the cross section, and the xy
   // plane (plan-view) position of the points where the bounding box
   // and the line equation intersect. We can do this per the equations
@@ -278,11 +278,11 @@ ProcessorCrossSection::getLineActualEndPoints(HighPrecisionVector2D& actualLineS
   // model.
   //
   
-  outlinerhighprecisionreal bottomY = sliceVerticalBoundingBoxStart.x - extralineatends;
-  outlinerhighprecisionreal bottomX = calculateLineXBasedOnY(bottomY);
+  outlinerreal bottomY = sliceVerticalBoundingBoxStart.x - extralineatends;
+  outlinerreal bottomX = calculateLineXBasedOnY(bottomY);
   
-  outlinerhighprecisionreal topY = sliceVerticalBoundingBoxEnd.x + extralineatends;
-  outlinerhighprecisionreal topX = calculateLineXBasedOnY(topY);
+  outlinerreal topY = sliceVerticalBoundingBoxEnd.x + extralineatends;
+  outlinerreal topX = calculateLineXBasedOnY(topY);
 
   actualLineStart.x = bottomX;
   actualLineStart.y = bottomY;
@@ -374,7 +374,7 @@ ProcessorCrossSection::drawCrossSectionMesh(const aiScene* scene,
     if (nFaces > 0) {
       deepdebugf("  drawCrossSectionMesh: got %u cross section faces from (%.2f,%.2f)",
                  nFaces, iter.point.x, iter.point.y);
-      for  (outlinerhighprecisionreal z = sliceVerticalBoundingBoxStart.y;
+      for  (outlinerreal z = sliceVerticalBoundingBoxStart.y;
             z <= sliceVerticalBoundingBoxEnd.y;
             z += stepz) {
         deepdebugf("  drawCrossSectionMesh: z iterator step (%.2f,%.2f,%.2f)",
@@ -396,9 +396,9 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
                                             const aiFace* face,
                                             unsigned int firstStepInBoundingBox,
                                             unsigned int currentStep,
-                                            outlinerhighprecisionreal x,
-                                            outlinerhighprecisionreal y,
-                                            outlinerhighprecisionreal z) {
+                                            outlinerreal x,
+                                            outlinerreal y,
+                                            outlinerreal z) {
   assert(scene != 0);
   assert(mesh != 0);
   assert(face != 0);
@@ -440,20 +440,20 @@ ProcessorCrossSection::coordinateLineStepToImageXIndex(unsigned int firstStepInB
                                                        unsigned int currentStep) {
   assert(matrix != 0);
   unsigned int result = (currentStep - firstStepInBoundingBox);
-  //outlinerhighprecisionreal thisXDifference = x - lineStart.x;
-  //outlinerhighprecisionreal thisYDifference = y - lineStart.y;
-  //outlinerhighprecisionreal thisLineLength = sqrt(thisXDifference*thisXDifference + thisYDifference*thisYDifference);
+  //outlinerreal thisXDifference = x - lineStart.x;
+  //outlinerreal thisYDifference = y - lineStart.y;
+  //outlinerreal thisLineLength = sqrt(thisXDifference*thisXDifference + thisYDifference*thisYDifference);
   //unsigned int result = (unsigned int)((thisLineLength * (matrix->xIndexSize + 1)) / lineLength);
   assert(result < matrix->xIndexSize);
   return(result);
 }
  
 unsigned int
-ProcessorCrossSection::coordinateZToImageYIndex(outlinerhighprecisionreal z) {
+ProcessorCrossSection::coordinateZToImageYIndex(outlinerreal z) {
   assert(matrix != 0);
   assert(z >= sliceVerticalBoundingBoxStart.y);
   assert(z <= sliceVerticalBoundingBoxEnd.y);
-  outlinerhighprecisionreal diff =
+  outlinerreal diff =
     (z - sliceVerticalBoundingBoxStart.y) /
     (sliceVerticalBoundingBoxEnd.y - sliceVerticalBoundingBoxStart.y);
   unsigned int result = (unsigned int)(diff * (matrix->yIndexSize-1));
@@ -535,8 +535,8 @@ void
 ProcessorCrossSection::sliceVerticalBoundingBoxFace(const aiScene* scene,
                                                     const aiMesh* mesh,
                                                     const aiFace* face,
-                                                    outlinerhighprecisionreal x,
-                                                    outlinerhighprecisionreal y,
+                                                    outlinerreal x,
+                                                    outlinerreal y,
                                                     bool& set,
                                                     HighPrecisionVector2D& sliceVerticalBoundingBoxStart,
                                                     HighPrecisionVector2D& sliceVerticalBoundingBoxEnd) {

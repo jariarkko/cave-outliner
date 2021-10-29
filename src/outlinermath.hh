@@ -87,8 +87,8 @@ public:
   static void vectorTo(const HighPrecisionVector2D& from,
                        const HighPrecisionVector2D& to,
                        HighPrecisionVector2D& result);
-  static outlinerhighprecisionreal determinant2x2(const HighPrecisionVector2D& u,
-                                                  const HighPrecisionVector2D& v);
+  static outlinerreal determinant2x2(const HighPrecisionVector2D& u,
+                                     const HighPrecisionVector2D& v);
   static void mathTests(void);
 
 private:

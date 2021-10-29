@@ -9,8 +9,8 @@ class MaterialMatrix {
 public:
   MaterialMatrix(HighPrecisionVector2D boundingboxstart,
                  HighPrecisionVector2D boundingboxend,
-                 outlinerhighprecisionreal stepx,
-                 outlinerhighprecisionreal stepy);
+                 outlinerreal stepx,
+                 outlinerreal stepy);
   ~MaterialMatrix();
   void setMaterialMatrix(unsigned int xIndex,
                          unsigned int yIndex);

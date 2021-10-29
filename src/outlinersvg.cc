@@ -17,13 +17,13 @@ SvgCreator::SvgCreator(const char* fileName,
                        unsigned int xSize,
                        unsigned int ySize,
                        unsigned int multiplier,
-                       outlinerhighprecisionreal xStart,
-                       outlinerhighprecisionreal yStart,
-                       outlinerhighprecisionreal xFactor,
-                       outlinerhighprecisionreal yFactor,
+                       outlinerreal xStart,
+                       outlinerreal yStart,
+                       outlinerreal xFactor,
+                       outlinerreal yFactor,
                        bool smooth,
                        bool mergedLines,
-                       outlinerhighprecisionreal linewidth) {
+                       outlinerreal linewidth) {
   assert(xSize > 0);
   assert(ySize > 0);
   assert(linewidth > 0.0);
@@ -69,21 +69,21 @@ SvgCreator::~SvgCreator() {
   lineTable = 0;
 }
 
-outlinerhighprecisionreal
+outlinerreal
 SvgCreator::getPixelXSize(void) {
   return((1.0/xFactor)/multiplier);
 }
 
-outlinerhighprecisionreal
+outlinerreal
 SvgCreator::getPixelYSize(void) {
   return((1.0/yFactor)/multiplier);
 }
 
 void
-SvgCreator::line(outlinerhighprecisionreal fromX,
-                 outlinerhighprecisionreal fromY,
-                 outlinerhighprecisionreal toX,
-                 outlinerhighprecisionreal toY,
+SvgCreator::line(outlinerreal fromX,
+                 outlinerreal fromY,
+                 outlinerreal toX,
+                 outlinerreal toY,
                  bool dashed) {
 
   if (originalLines == 0 && pixels == 0) {
@@ -241,8 +241,8 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
 }
 
 void
-SvgCreator::pixel(outlinerhighprecisionreal x,
-                  outlinerhighprecisionreal y) {
+SvgCreator::pixel(outlinerreal x,
+                  outlinerreal y) {
   deepdebugf("SvgCreator::pixel");
   unsigned int xInt;
   unsigned int yInt;
@@ -255,8 +255,8 @@ SvgCreator::pixel(outlinerhighprecisionreal x,
 }
 
 void
-SvgCreator::text(outlinerhighprecisionreal x,
-                 outlinerhighprecisionreal y,
+SvgCreator::text(outlinerreal x,
+                 outlinerreal y,
                  const char* string) {
   deepdebugf("SvgCreator::text");
   assert(string != 0);
@@ -273,13 +273,13 @@ SvgCreator::text(outlinerhighprecisionreal x,
 }
 
 void
-SvgCreator::coordinateNormalization(outlinerhighprecisionreal x,
-                                    outlinerhighprecisionreal y,
+SvgCreator::coordinateNormalization(outlinerreal x,
+                                    outlinerreal y,
                                     unsigned int& xInt,
                                     unsigned int& yInt) {
-  outlinerhighprecisionreal xNormalized = (x - xStart) * xFactor;
-  outlinerhighprecisionreal yNormalized = (y - yStart) * yFactor;
-  if (xNormalized > (outlinerhighprecisionreal)xSize) xInt = xSizeMultiplied; else xInt = (xNormalized*multiplier);
+  outlinerreal xNormalized = (x - xStart) * xFactor;
+  outlinerreal yNormalized = (y - yStart) * yFactor;
+  if (xNormalized > (outlinerreal)xSize) xInt = xSizeMultiplied; else xInt = (xNormalized*multiplier);
   if (yNormalized > ySize) yInt = ySizeMultiplied; else yInt = ySizeMultiplied - (yNormalized*multiplier);
   deepdebugf("coordinate normalization (%.2f,%.2f) to (%u,%u) with yNormalized %.2f ySize %u yStart %.2f and yFactor %.2f",
              x, y,

@@ -75,12 +75,12 @@ OutlinerMath::triangleDescribe(const HighPrecisionTriangle3D& triangle,
   assert(buf != 0);
   assert(bufSize > 0);
   memset(buf,0,bufSize);
-  outlinerhighprecisionreal xlow = outlinermin3(triangle.a.x,triangle.b.x,triangle.c.x);
-  outlinerhighprecisionreal xhigh = outlinermax3(triangle.a.x,triangle.b.x,triangle.c.x);
-  outlinerhighprecisionreal ylow = outlinermin3(triangle.a.y,triangle.b.y,triangle.c.y);
-  outlinerhighprecisionreal yhigh = outlinermax3(triangle.a.y,triangle.b.y,triangle.c.y);
-  outlinerhighprecisionreal zlow = outlinermin3(triangle.a.z,triangle.b.z,triangle.c.z);
-  outlinerhighprecisionreal zhigh = outlinermax3(triangle.a.z,triangle.b.z,triangle.c.z);
+  outlinerreal xlow = outlinermin3(triangle.a.x,triangle.b.x,triangle.c.x);
+  outlinerreal xhigh = outlinermax3(triangle.a.x,triangle.b.x,triangle.c.x);
+  outlinerreal ylow = outlinermin3(triangle.a.y,triangle.b.y,triangle.c.y);
+  outlinerreal yhigh = outlinermax3(triangle.a.y,triangle.b.y,triangle.c.y);
+  outlinerreal zlow = outlinermin3(triangle.a.z,triangle.b.z,triangle.c.z);
+  outlinerreal zhigh = outlinermax3(triangle.a.z,triangle.b.z,triangle.c.z);
   if (triangle.a.z == triangle.b.z && triangle.a.z == triangle.c.z) {
     snprintf(buf,bufSize-1,"horizontal z %.2f", zlow);
   } else if (triangle.a.x == triangle.b.x && triangle.a.x == triangle.c.x) {
@@ -100,10 +100,10 @@ OutlinerMath::triangleBoundingBox2D(const HighPrecisionTriangle2D& triangle,
   const HighPrecisionVector2D* nth1;
   const HighPrecisionVector2D* nth2;
   const HighPrecisionVector2D* nth3;
-  outlinerhighprecisionreal xStart;
-  outlinerhighprecisionreal xEnd;
-  outlinerhighprecisionreal yStart;
-  outlinerhighprecisionreal yEnd;
+  outlinerreal xStart;
+  outlinerreal xEnd;
+  outlinerreal yStart;
+  outlinerreal yEnd;
   
   // Order the points a,b,c so that the one with smallest x comes first
   sortVectorsX2D(&triangle.a,&triangle.b,&triangle.c,&nth1,&nth2,&nth3);
@@ -134,12 +134,12 @@ OutlinerMath::triangleBoundingBox3D(const HighPrecisionTriangle3D& triangle,
   const HighPrecisionVector3D* nth1;
   const HighPrecisionVector3D* nth2;
   const HighPrecisionVector3D* nth3;
-  outlinerhighprecisionreal xStart;
-  outlinerhighprecisionreal xEnd;
-  outlinerhighprecisionreal yStart;
-  outlinerhighprecisionreal yEnd;
-  outlinerhighprecisionreal zStart;
-  outlinerhighprecisionreal zEnd;
+  outlinerreal xStart;
+  outlinerreal xEnd;
+  outlinerreal yStart;
+  outlinerreal yEnd;
+  outlinerreal zStart;
+  outlinerreal zEnd;
   
   // Order the points a,b,c so that the one with smallest x comes first
   sortVectorsX3D(&triangle.a,&triangle.b,&triangle.c,&nth1,&nth2,&nth3);
@@ -258,8 +258,8 @@ OutlinerMath::pointInsideTriangle2D(const HighPrecisionTriangle2D& triangle,
   //deepdeepdebugf("pit2 triangle v0 = (%.2f,%.2f)", v0.x, v0.y);
   //deepdeepdebugf("pit2 triangle v1 = (%.2f,%.2f)", v1.x, v1.y);
   //deepdeepdebugf("pit2 triangle v2 = (%.2f,%.2f)", v2.x, v2.y);
-  outlinerhighprecisionreal a = (determinant2x2(v,v2) - determinant2x2(v0,v2)) / determinant2x2(v1,v2);
-  outlinerhighprecisionreal b = -((determinant2x2(v,v1) - determinant2x2(v0,v1)) / determinant2x2(v1,v2));
+  outlinerreal a = (determinant2x2(v,v2) - determinant2x2(v0,v2)) / determinant2x2(v1,v2);
+  outlinerreal b = -((determinant2x2(v,v1) - determinant2x2(v0,v1)) / determinant2x2(v1,v2));
   debugreturn("        pit2","regular",a >= 0 && b >= 0 && a+b <= 1);
 }
 
@@ -334,8 +334,8 @@ OutlinerMath::boundingBoxIntersectsTriangle3D(const HighPrecisionTriangle3D& tri
   
   // If there was a match, check if the range of the triangle in
   // z axis overlaps with the given bounding box
-  outlinerhighprecisionreal zlow = outlinermin3(triangle.a.z,triangle.b.z,triangle.c.z);
-  outlinerhighprecisionreal zhigh = outlinermax3(triangle.a.z,triangle.b.z,triangle.c.z);
+  outlinerreal zlow = outlinermin3(triangle.a.z,triangle.b.z,triangle.c.z);
+  outlinerreal zhigh = outlinermax3(triangle.a.z,triangle.b.z,triangle.c.z);
   deepdeepdebugf("        bbit3 z overlap check %.2f..%.2f", zlow, zhigh);
   debugreturn("        bbit3","final",outlineroverlap(zlow,zhigh,boxStart.z,boxEnd.z));
 }
@@ -374,15 +374,15 @@ OutlinerMath::lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
   assert(verticalLineStart.x == verticalLineEnd.x);
 
   // Fetch basic values
-  outlinerhighprecisionreal verticalStartY = outlinermin(verticalLineStart.y,verticalLineEnd.y);
-  outlinerhighprecisionreal verticalEndY = outlinermax(verticalLineStart.y,verticalLineEnd.y);
-  outlinerhighprecisionreal verticalX = verticalLineStart.x;
+  outlinerreal verticalStartY = outlinermin(verticalLineStart.y,verticalLineEnd.y);
+  outlinerreal verticalEndY = outlinermax(verticalLineStart.y,verticalLineEnd.y);
+  outlinerreal verticalX = verticalLineStart.x;
   
   // Order line points such that X grows from start to end
-  outlinerhighprecisionreal lineStartX;
-  outlinerhighprecisionreal lineStartY;
-  outlinerhighprecisionreal lineEndX;
-  outlinerhighprecisionreal lineEndY;
+  outlinerreal lineStartX;
+  outlinerreal lineStartY;
+  outlinerreal lineEndX;
+  outlinerreal lineEndY;
   if (lineStart.x <= lineEnd.x) {
     lineStartX = lineStart.x;
     lineStartY = lineStart.y;
@@ -399,9 +399,9 @@ OutlinerMath::lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
   //
   //    y(x) = lineStartY + (x - lineStartX) * (equationTotalDifferenceY / equationTotalDifferenceX)
   //
-  outlinerhighprecisionreal equationBaseY = lineStartY;
-  outlinerhighprecisionreal equationTotalDifferenceY = lineEndY - lineStartY; // positive or negative
-  outlinerhighprecisionreal equationTotalDifferenceX = lineEndX - lineStartX; // positive
+  outlinerreal equationBaseY = lineStartY;
+  outlinerreal equationTotalDifferenceY = lineEndY - lineStartY; // positive or negative
+  outlinerreal equationTotalDifferenceX = lineEndX - lineStartX; // positive
 
   // Check for the case of parallel lines
   if (equationTotalDifferenceX == 0) {
@@ -417,14 +417,14 @@ OutlinerMath::lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
   }
 
   // Continue calculating the line equation
-  outlinerhighprecisionreal equationFactor = equationTotalDifferenceY / equationTotalDifferenceX; // positive or negative
-  outlinerhighprecisionreal verticalLineDifferenceX = verticalX - lineStartX; // positive or negative
+  outlinerreal equationFactor = equationTotalDifferenceY / equationTotalDifferenceX; // positive or negative
+  outlinerreal verticalLineDifferenceX = verticalX - lineStartX; // positive or negative
 
   // Check if vertical line is in the range on X
   if (!outlinerbetween(lineStartX,verticalX,lineEndX)) return(0);
 
   // Calculate resulting Y at vertical line position
-  outlinerhighprecisionreal lineY = equationBaseY + verticalLineDifferenceX * equationFactor;
+  outlinerreal lineY = equationBaseY + verticalLineDifferenceX * equationFactor;
 
   // Check if the resulting position is within the vertical line Y range
   if (!outlinerbetween(verticalStartY,lineY,verticalEndY)) return(0);
@@ -444,15 +444,15 @@ OutlinerMath::lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
   assert(horizontalLineStart.y == horizontalLineEnd.y);
   
   // Fetch basic values
-  outlinerhighprecisionreal horizontalStartX = outlinermin(horizontalLineStart.x,horizontalLineEnd.x);
-  outlinerhighprecisionreal horizontalEndX = outlinermax(horizontalLineStart.x,horizontalLineEnd.x);
-  outlinerhighprecisionreal horizontalY = horizontalLineStart.y;
+  outlinerreal horizontalStartX = outlinermin(horizontalLineStart.x,horizontalLineEnd.x);
+  outlinerreal horizontalEndX = outlinermax(horizontalLineStart.x,horizontalLineEnd.x);
+  outlinerreal horizontalY = horizontalLineStart.y;
   
   // Order line points such that Y grows from start to end
-  outlinerhighprecisionreal lineStartX;
-  outlinerhighprecisionreal lineStartY;
-  outlinerhighprecisionreal lineEndX;
-  outlinerhighprecisionreal lineEndY;
+  outlinerreal lineStartX;
+  outlinerreal lineStartY;
+  outlinerreal lineEndX;
+  outlinerreal lineEndY;
   if (lineStart.y <= lineEnd.y) {
     lineStartX = lineStart.x;
     lineStartY = lineStart.y;
@@ -469,9 +469,9 @@ OutlinerMath::lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
   //
   //    x(y) = lineStartX + (y - lineStartY) * (equationTotalDifferenceX / equationTotalDifferenceY)
   //
-  outlinerhighprecisionreal equationBaseX = lineStartX;
-  outlinerhighprecisionreal equationTotalDifferenceX = lineEndX - lineStartX; // positive or negative
-  outlinerhighprecisionreal equationTotalDifferenceY = lineEndY - lineStartY; // positive
+  outlinerreal equationBaseX = lineStartX;
+  outlinerreal equationTotalDifferenceX = lineEndX - lineStartX; // positive or negative
+  outlinerreal equationTotalDifferenceY = lineEndY - lineStartY; // positive
 
   // Check for the case of parallel lines
   if (equationTotalDifferenceY == 0) {
@@ -487,14 +487,14 @@ OutlinerMath::lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
   }
 
   // Continue calculating the line equation
-  outlinerhighprecisionreal equationFactor = equationTotalDifferenceX / equationTotalDifferenceY; // positive or negative
-  outlinerhighprecisionreal horizontalLineDifferenceY = horizontalY - lineStartY; // positive or negative
+  outlinerreal equationFactor = equationTotalDifferenceX / equationTotalDifferenceY; // positive or negative
+  outlinerreal horizontalLineDifferenceY = horizontalY - lineStartY; // positive or negative
 
   // Check if horizontal line is in the range on Y
   if (!outlinerbetween(lineStartY,horizontalY,lineEndY)) return(0);
 
   // Calculate resulting X at horizontal line position
-  outlinerhighprecisionreal lineX = equationBaseX + horizontalLineDifferenceY * equationFactor;
+  outlinerreal lineX = equationBaseX + horizontalLineDifferenceY * equationFactor;
 
   // Check if the resulting position is within the horizontal line X range
   if (!outlinerbetween(horizontalStartX,lineX,horizontalEndX)) return(0);
@@ -526,7 +526,7 @@ OutlinerMath::vectorTo(const HighPrecisionVector2D& from,
   result.y -= from.y;
 }
 
-outlinerhighprecisionreal
+outlinerreal
 OutlinerMath::determinant2x2(const HighPrecisionVector2D& u,
                              const HighPrecisionVector2D& v) {
   return(u.x * v.y - u.y * v.x);
@@ -808,7 +808,7 @@ OutlinerMath::detTests(void) {
   debugf("det tests...");
   HighPrecisionVector2D C1(4,2);
   HighPrecisionVector2D C2(1,3);
-  outlinerhighprecisionreal result = determinant2x2(C1,C2);
+  outlinerreal result = determinant2x2(C1,C2);
   deepdebugf("determinant result = %.2f", result);
   assert(result == 10);
 }

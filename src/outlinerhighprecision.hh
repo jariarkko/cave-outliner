@@ -12,26 +12,26 @@
 
 class HighPrecisionVector2D {
 public:
-  outlinerhighprecisionreal x;
-  outlinerhighprecisionreal y;
+  outlinerreal x;
+  outlinerreal y;
   HighPrecisionVector2D() { x = y = 0; }
   HighPrecisionVector2D(const aiVector2D& in) : x(in.x), y(in.y) {}
   HighPrecisionVector2D(const HighPrecisionVector2D& in) : x(in.x), y(in.y) {}
-  HighPrecisionVector2D(const outlinerhighprecisionreal xIn,
-                        const outlinerhighprecisionreal yIn) : x(xIn), y(yIn) {}
+  HighPrecisionVector2D(const outlinerreal xIn,
+                        const outlinerreal yIn) : x(xIn), y(yIn) {}
 };
 
 class HighPrecisionVector3D {
 public:
-  outlinerhighprecisionreal x;
-  outlinerhighprecisionreal y;
-  outlinerhighprecisionreal z;
+  outlinerreal x;
+  outlinerreal y;
+  outlinerreal z;
   HighPrecisionVector3D() { x = y = 0; z = 0; }
   HighPrecisionVector3D(const aiVector3D& in) : x(in.x), y(in.y), z(in.z) {}
   HighPrecisionVector3D(const HighPrecisionVector3D& in) : x(in.x), y(in.y), z(in.z) {}
-  HighPrecisionVector3D(const outlinerhighprecisionreal xIn,
-                        const outlinerhighprecisionreal yIn,
-                        const outlinerhighprecisionreal zIn) : x(xIn), y(yIn), z(zIn) {}
+  HighPrecisionVector3D(const outlinerreal xIn,
+                        const outlinerreal yIn,
+                        const outlinerreal zIn) : x(xIn), y(yIn), z(zIn) {}
 };
 
 class HighPrecisionTriangle2D {

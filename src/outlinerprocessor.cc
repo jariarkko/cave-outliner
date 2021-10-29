@@ -27,9 +27,9 @@ Processor::Processor(const char* fileNameIn,
                      float linewidthIn,
                      HighPrecisionVector3D boundingBoxStartIn,
                      HighPrecisionVector3D boundingBoxEndIn,
-                     outlinerhighprecisionreal stepxIn,
-                     outlinerhighprecisionreal stepyIn,
-                     outlinerhighprecisionreal stepzIn,
+                     outlinerreal stepxIn,
+                     outlinerreal stepyIn,
+                     outlinerreal stepzIn,
                      enum outlinerdirection directionIn,
                      enum outlineralgorithm algorithmIn,
                      unsigned int holethresholdIn,
@@ -112,7 +112,7 @@ Processor::processScene(const aiScene* scene,
   unsigned int xIndex = 0;
 
   infof("computing material matrix...");
-  for (outlinerhighprecisionreal x = DirectionOperations::outputx(direction,boundingBoxStart);
+  for (outlinerreal x = DirectionOperations::outputx(direction,boundingBoxStart);
        x <= DirectionOperations::outputx(direction,boundingBoxEnd);
        x += stepx) {
 
@@ -125,7 +125,7 @@ Processor::processScene(const aiScene* scene,
     }
     assert(xIndex < matrix.xIndexSize);
     
-    for (outlinerhighprecisionreal y = DirectionOperations::outputy(direction,boundingBoxStart);
+    for (outlinerreal y = DirectionOperations::outputy(direction,boundingBoxStart);
          y <= DirectionOperations::outputy(direction,boundingBoxEnd);
          y += stepy) {
       
@@ -212,10 +212,10 @@ Processor::processScene(const aiScene* scene,
 void
 Processor::matrixToSvg(MaterialMatrix* theMatrix,
                        SvgCreator* theSvg,
-                       outlinerhighprecisionreal xStart,
-                       outlinerhighprecisionreal yStart,
-                       outlinerhighprecisionreal xStep,
-                       outlinerhighprecisionreal yStep) {
+                       outlinerreal xStart,
+                       outlinerreal yStart,
+                       outlinerreal xStep,
+                       outlinerreal yStep) {
   infof("constructing output core of %ux%u pixels...",
         theMatrix->xIndexSize, theMatrix->yIndexSize);
   deepdebugf("algorithm %u", algorithm);
@@ -230,8 +230,8 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
   for (unsigned int xIndex = 0; xIndex < theMatrix->xIndexSize; xIndex++) {
     for (unsigned int yIndex = 0; yIndex < theMatrix->yIndexSize; yIndex++) {
       if (theMatrix->getMaterialMatrix(xIndex,yIndex)) {
-        outlinerhighprecisionreal x = xStart + xIndex * xStep;
-        outlinerhighprecisionreal y = yStart + yIndex * yStep;
+        outlinerreal x = xStart + xIndex * xStep;
+        outlinerreal y = yStart + yIndex * yStep;
         debugf("algorithm %u", algorithm);
         switch (algorithm) {
         case alg_pixel:
@@ -254,8 +254,8 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
                 assert(outlinersaneindex(borderTableX[b]));
                 assert(outlinersaneindex(borderTableY[b]));
                 if (borderTablePrev[b]) {
-                  outlinerhighprecisionreal otherX = indexToCoordinateX(borderTableX[b]);
-                  outlinerhighprecisionreal otherY = indexToCoordinateY(borderTableY[b]);
+                  outlinerreal otherX = indexToCoordinateX(borderTableX[b]);
+                  outlinerreal otherY = indexToCoordinateY(borderTableY[b]);
                   deepdeepdebugf("calling theSvg->line");
                   theSvg->line(otherX,otherY,x,y);
                 }
@@ -278,8 +278,8 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
 bool
 Processor::sceneHasMaterial(const aiScene* scene,
                             IndexedMesh& indexed,
-                            outlinerhighprecisionreal x,
-                            outlinerhighprecisionreal y) {
+                            outlinerreal x,
+                            outlinerreal y) {
   assert(scene != 0);
   deepdeepdebugf("checking for material at (%.2f,%.2f)", x, y);
   return(nodeHasMaterial(scene,scene->mRootNode,indexed,x,y));
@@ -289,8 +289,8 @@ bool
 Processor::nodeHasMaterial(const aiScene* scene,
                            const aiNode* node,
                            IndexedMesh& indexed,
-                           outlinerhighprecisionreal x,
-                           outlinerhighprecisionreal y) {
+                           outlinerreal x,
+                           outlinerreal y) {
   assert(scene != 0);
   assert(node != 0);
   if (!node->mTransformation.IsIdentity()) {
@@ -314,8 +314,8 @@ bool
 Processor::meshHasMaterial(const aiScene* scene,
                            const aiMesh* mesh,
                            IndexedMesh& indexed,
-                           outlinerhighprecisionreal x,
-                           outlinerhighprecisionreal y) {
+                           outlinerreal x,
+                           outlinerreal y) {
   assert(scene != 0);
   assert(mesh != 0);
   unsigned int nFaces = 0;
@@ -378,8 +378,8 @@ bool
 Processor::faceHasMaterial(const aiScene* scene,
                            const aiMesh* mesh,
                            const aiFace* face,
-                           outlinerhighprecisionreal x,
-                           outlinerhighprecisionreal y) {
+                           outlinerreal x,
+                           outlinerreal y) {
   assert(scene != 0);
   assert(mesh != 0);
   HighPrecisionTriangle2D t;
@@ -580,32 +580,32 @@ Processor::isBorder(unsigned int xIndex,
 }
 
 unsigned int
-Processor::coordinateXToIndex(outlinerhighprecisionreal x) {
-  outlinerhighprecisionreal xStart = DirectionOperations::outputx(direction,boundingBoxStart);
-  outlinerhighprecisionreal xEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
+Processor::coordinateXToIndex(outlinerreal x) {
+  outlinerreal xStart = DirectionOperations::outputx(direction,boundingBoxStart);
+  outlinerreal xEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
   assert(x >= xStart);
   assert(x <= xEnd);
   return((x - xStart)/stepx);
 }
 
 unsigned int
-Processor::coordinateYToIndex(outlinerhighprecisionreal y) {
-  outlinerhighprecisionreal yStart = DirectionOperations::outputy(direction,boundingBoxStart);
-  outlinerhighprecisionreal yEnd = DirectionOperations::outputy(direction,boundingBoxEnd);
+Processor::coordinateYToIndex(outlinerreal y) {
+  outlinerreal yStart = DirectionOperations::outputy(direction,boundingBoxStart);
+  outlinerreal yEnd = DirectionOperations::outputy(direction,boundingBoxEnd);
   assert(y >= yStart);
   assert(y <= yEnd);
   return((y - yStart)/stepy);
 }
 
-outlinerhighprecisionreal
+outlinerreal
 Processor::indexToCoordinateX(unsigned int xIndex) {
-  outlinerhighprecisionreal xStart = DirectionOperations::outputx(direction,boundingBoxStart);
+  outlinerreal xStart = DirectionOperations::outputx(direction,boundingBoxStart);
   return(xStart + stepx * xIndex);
 }
 
-outlinerhighprecisionreal
+outlinerreal
 Processor::indexToCoordinateY(unsigned int yIndex) {
-  outlinerhighprecisionreal yStart = DirectionOperations::outputy(direction,boundingBoxStart);
+  outlinerreal yStart = DirectionOperations::outputy(direction,boundingBoxStart);
   return(yStart + stepy * yIndex);
 }
 
@@ -620,16 +620,16 @@ Processor::createSvg(const char* svgFileName,
                      enum outlinerdirection svgDirection) {
   
   // Calculate sizes
-  outlinerhighprecisionreal xOutputStart;
-  outlinerhighprecisionreal xOutputEnd;
-  outlinerhighprecisionreal yOutputStart;
-  outlinerhighprecisionreal yOutputEnd;
-  outlinerhighprecisionreal xSize;
-  outlinerhighprecisionreal ySize;
+  outlinerreal xOutputStart;
+  outlinerreal xOutputEnd;
+  outlinerreal yOutputStart;
+  outlinerreal yOutputEnd;
+  outlinerreal xSize;
+  outlinerreal ySize;
   unsigned int xSizeInt;
   unsigned int ySizeInt;
-  outlinerhighprecisionreal xFactor;
-  outlinerhighprecisionreal yFactor;
+  outlinerreal xFactor;
+  outlinerreal yFactor;
   createSvgCalculateSizes(svgBoundingBoxStart,svgBoundingBoxEnd,
                           stepx,stepy,
                           svgDirection,
@@ -678,19 +678,19 @@ Processor::createSvg(const char* svgFileName,
 void
 Processor::createSvgCalculateSizes(const HighPrecisionVector2D& svgBoundingBoxStart,
                                    const HighPrecisionVector2D& svgBoundingBoxEnd,
-                                   const outlinerhighprecisionreal stepx,
-                                   const outlinerhighprecisionreal stepy,
+                                   const outlinerreal stepx,
+                                   const outlinerreal stepy,
                                    const enum outlinerdirection svgDirection,
-                                   outlinerhighprecisionreal& xOutputStart,
-                                   outlinerhighprecisionreal& xOutputEnd,
-                                   outlinerhighprecisionreal& yOutputStart,
-                                   outlinerhighprecisionreal& yOutputEnd,
-                                   outlinerhighprecisionreal& xSize,
-                                   outlinerhighprecisionreal& ySize,
+                                   outlinerreal& xOutputStart,
+                                   outlinerreal& xOutputEnd,
+                                   outlinerreal& yOutputStart,
+                                   outlinerreal& yOutputEnd,
+                                   outlinerreal& xSize,
+                                   outlinerreal& ySize,
                                    unsigned int& xSizeInt,
                                    unsigned int& ySizeInt,
-                                   outlinerhighprecisionreal& xFactor,
-                                   outlinerhighprecisionreal& yFactor) {
+                                   outlinerreal& xFactor,
+                                   outlinerreal& yFactor) {
   
   xOutputStart = svgBoundingBoxStart.x;
   xOutputEnd = svgBoundingBoxEnd.x;

@@ -34,8 +34,8 @@ IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
   assert(maxMeshesIn >= 1);
   assert(subdivisionsIn >= 1);
   debugf("%u x %u tiles, or %u tiles", subdivisions, subdivisions, subdivisions * subdivisions);
-  outlinerhighprecisionreal viewX = viewBoundingBoxEnd.x - viewBoundingBoxStart.x;
-  outlinerhighprecisionreal viewY = viewBoundingBoxEnd.y - viewBoundingBoxStart.y;
+  outlinerreal viewX = viewBoundingBoxEnd.x - viewBoundingBoxStart.x;
+  outlinerreal viewY = viewBoundingBoxEnd.y - viewBoundingBoxStart.y;
   tileSizeX = viewX / subdivisions;
   tileSizeY = viewY / subdivisions;
   debugf("view bounding box %f x %f", viewX, viewY);
@@ -329,15 +329,15 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
 
   // Calculate which tiles this belongs to (for big faces, may be more
   // than one)
-  outlinerhighprecisionreal xStart = outlinermax(viewBoundingBoxStart.x,elementFlatBoundingBoxStart.x);
-  outlinerhighprecisionreal xEnd = outlinermin(elementFlatBoundingBoxEnd.x,viewBoundingBoxEnd.x);
-  outlinerhighprecisionreal yStart = outlinermax(viewBoundingBoxStart.y,elementFlatBoundingBoxStart.y);
-  outlinerhighprecisionreal yEnd = outlinermin(elementFlatBoundingBoxEnd.y,viewBoundingBoxEnd.y);
+  outlinerreal xStart = outlinermax(viewBoundingBoxStart.x,elementFlatBoundingBoxStart.x);
+  outlinerreal xEnd = outlinermin(elementFlatBoundingBoxEnd.x,viewBoundingBoxEnd.x);
+  outlinerreal yStart = outlinermax(viewBoundingBoxStart.y,elementFlatBoundingBoxStart.y);
+  outlinerreal yEnd = outlinermin(elementFlatBoundingBoxEnd.y,viewBoundingBoxEnd.y);
   debugf("placing a face bounding box (%f..%f) x (%f..%f) to tiles",
          xStart, xEnd,
          yStart, yEnd);
-  for (outlinerhighprecisionreal x = xStart; x <= xEnd; x += tileSizeX * 0.5) {
-    for (outlinerhighprecisionreal y = yStart; y <= yEnd; y += tileSizeY * 0.5) {
+  for (outlinerreal x = xStart; x <= xEnd; x += tileSizeX * 0.5) {
+    for (outlinerreal y = yStart; y <= yEnd; y += tileSizeY * 0.5) {
       unsigned int tileX;
       unsigned int tileY;
       coordsToTile(x,y,tileX,tileY);
@@ -432,8 +432,8 @@ IndexedMesh::getShadow(const aiMesh* mesh,
 
 void
 IndexedMesh::getFaces(const aiMesh* mesh,
-                      outlinerhighprecisionreal x,
-                      outlinerhighprecisionreal y,
+                      outlinerreal x,
+                      outlinerreal y,
                       unsigned int* p_nFaces,
                       const aiFace*** p_faces) {
   unsigned int tileX;
@@ -496,15 +496,15 @@ IndexedMesh::getFacesTile(struct IndexedMeshOneMesh& shadow,
 }
 
 void
-IndexedMesh::coordsToTile(outlinerhighprecisionreal x,
-                          outlinerhighprecisionreal y,
+IndexedMesh::coordsToTile(outlinerreal x,
+                          outlinerreal y,
                           unsigned int& tileX,
                           unsigned int& tileY) {
-  outlinerhighprecisionreal xInView = x - viewBoundingBoxStart.x;
+  outlinerreal xInView = x - viewBoundingBoxStart.x;
   tileX = xInView / tileSizeX;
   assert(tileX <= subdivisions);
   if (tileX == subdivisions) tileX = subdivisions - 1;
-  outlinerhighprecisionreal yInView = y - viewBoundingBoxStart.y;
+  outlinerreal yInView = y - viewBoundingBoxStart.y;
   tileY = yInView / tileSizeY;
   assert(tileY <= subdivisions);
   if (tileY == subdivisions) tileY = subdivisions - 1;

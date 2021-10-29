@@ -43,9 +43,9 @@ public:
             float linewidthIn,
             HighPrecisionVector3D boundingBoxStartIn,
             HighPrecisionVector3D boundingBoxEndIn,
-            outlinerhighprecisionreal stepxIn,
-            outlinerhighprecisionreal stepyIn,
-            outlinerhighprecisionreal stepzIn,
+            outlinerreal stepxIn,
+            outlinerreal stepyIn,
+            outlinerreal stepzIn,
             enum outlinerdirection directionIn,
             enum outlineralgorithm algorithmIn,
             unsigned int holethresholdIn,
@@ -71,9 +71,9 @@ private:
   HighPrecisionVector3D boundingBoxEnd;
   HighPrecisionVector2D boundingBoxStart2D;
   HighPrecisionVector2D boundingBoxEnd2D;
-  outlinerhighprecisionreal stepx;
-  outlinerhighprecisionreal stepy;
-  outlinerhighprecisionreal stepz;
+  outlinerreal stepx;
+  outlinerreal stepy;
+  outlinerreal stepz;
   enum outlinerdirection direction;
   enum outlineralgorithm algorithm;
   unsigned int holethreshold;
@@ -132,23 +132,23 @@ private:
   
   bool sceneHasMaterial(const aiScene* scene,
                         IndexedMesh& indexed,
-                        outlinerhighprecisionreal x,
-                        outlinerhighprecisionreal y);
+                        outlinerreal x,
+                        outlinerreal y);
   bool nodeHasMaterial(const aiScene* scene,
                        const aiNode* node,
                        IndexedMesh& indexed,
-                       outlinerhighprecisionreal x,
-                       outlinerhighprecisionreal y);
+                       outlinerreal x,
+                       outlinerreal y);
   bool meshHasMaterial(const aiScene* scene,
                        const aiMesh* mesh,
                        IndexedMesh& indexed,
-                       outlinerhighprecisionreal x,
-                       outlinerhighprecisionreal y);
+                       outlinerreal x,
+                       outlinerreal y);
   bool faceHasMaterial(const aiScene* scene,
                        const aiMesh* mesh,
                        const aiFace* face,
-                       outlinerhighprecisionreal x,
-                       outlinerhighprecisionreal y);
+                       outlinerreal x,
+                       outlinerreal y);
   void faceGetVertices2D(const aiMesh* mesh,
                          const aiFace* face,
                          enum outlinerdirection thisDirection,
@@ -161,10 +161,10 @@ private:
   // Coordinate management
   //
   
-  unsigned int coordinateXToIndex(outlinerhighprecisionreal x);
-  unsigned int coordinateYToIndex(outlinerhighprecisionreal y);
-  outlinerhighprecisionreal indexToCoordinateX(unsigned int xIndex);
-  outlinerhighprecisionreal indexToCoordinateY(unsigned int yIndex);
+  unsigned int coordinateXToIndex(outlinerreal x);
+  unsigned int coordinateYToIndex(outlinerreal y);
+  outlinerreal indexToCoordinateX(unsigned int xIndex);
+  outlinerreal indexToCoordinateY(unsigned int yIndex);
 
   //
   // Cross sections
@@ -186,10 +186,10 @@ private:
   
   void matrixToSvg(MaterialMatrix* theMatrix,
                    SvgCreator* theSvg,
-                   outlinerhighprecisionreal xStart,
-                   outlinerhighprecisionreal yStart,
-                   outlinerhighprecisionreal xStep,
-                   outlinerhighprecisionreal yStep);
+                   outlinerreal xStart,
+                   outlinerreal yStart,
+                   outlinerreal xStep,
+                   outlinerreal yStep);
   
   //
   // SVG image management
@@ -202,19 +202,19 @@ private:
   void svgDone();
   void createSvgCalculateSizes(const HighPrecisionVector2D& svgBoundingBoxStart,
                                const HighPrecisionVector2D& svgBoundingBoxEnd,
-                               const outlinerhighprecisionreal stepx,
-                               const outlinerhighprecisionreal stepy,
+                               const outlinerreal stepx,
+                               const outlinerreal stepy,
                                const enum outlinerdirection svgDirection,
-                               outlinerhighprecisionreal& xOutputStart,
-                               outlinerhighprecisionreal& xOutputEnd,
-                               outlinerhighprecisionreal& yOutputStart,
-                               outlinerhighprecisionreal& yOutputEnd,
-                               outlinerhighprecisionreal& xSize,
-                               outlinerhighprecisionreal& ySize,
+                               outlinerreal& xOutputStart,
+                               outlinerreal& xOutputEnd,
+                               outlinerreal& yOutputStart,
+                               outlinerreal& yOutputEnd,
+                               outlinerreal& xSize,
+                               outlinerreal& ySize,
                                unsigned int& xSizeInt,
                                unsigned int& ySizeInt,
-                               outlinerhighprecisionreal& xFactor,
-                               outlinerhighprecisionreal& yFactor);
+                               outlinerreal& xFactor,
+                               outlinerreal& yFactor);
 };
 
 #endif // PROCESSOR_HH

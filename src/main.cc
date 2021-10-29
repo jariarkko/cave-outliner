@@ -288,10 +288,10 @@ main(int argc, char** argv) {
   }
 
   // Derive some size information
-  outlinerhighprecisionreal xOutputStart = DirectionOperations::outputx(direction,boundingBoxStart);
-  outlinerhighprecisionreal xOutputEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
-  outlinerhighprecisionreal yOutputStart = DirectionOperations::outputy(direction,boundingBoxStart);
-  outlinerhighprecisionreal yOutputEnd = DirectionOperations::outputy(direction,boundingBoxEnd);
+  outlinerreal xOutputStart = DirectionOperations::outputx(direction,boundingBoxStart);
+  outlinerreal xOutputEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
+  outlinerreal yOutputStart = DirectionOperations::outputy(direction,boundingBoxStart);
+  outlinerreal yOutputEnd = DirectionOperations::outputy(direction,boundingBoxEnd);
   
   // Check if we need to make cross sections
   if (automaticCrossSections) {
@@ -299,13 +299,13 @@ main(int argc, char** argv) {
       errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
       return(1);
     }
-    outlinerhighprecisionreal crossSectionStep = (xOutputEnd - xOutputStart) / (1.0*nAutomaticCrossSections);
+    outlinerreal crossSectionStep = (xOutputEnd - xOutputStart) / (1.0*nAutomaticCrossSections);
     for (unsigned int c = 0; c < nAutomaticCrossSections; c++) {
       assert(nCrossSections < outlinermaxcrosssections);
       char* newFilename = makeFilenameFromPattern(automaticCrossSectionFilenamePattern,c);
       crossSections[nCrossSections].start.x =
         crossSections[nCrossSections].end.x =
-          xOutputStart + crossSectionStep * (((outlinerhighprecisionreal)c)+0.5);
+          xOutputStart + crossSectionStep * (((outlinerreal)c)+0.5);
       crossSections[nCrossSections].start.y = yOutputStart;
       crossSections[nCrossSections].end.y = yOutputEnd;
       crossSections[nCrossSections].filename = newFilename;

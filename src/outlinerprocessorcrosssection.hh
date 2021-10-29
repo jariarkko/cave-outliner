@@ -38,13 +38,13 @@ public:
                         enum outlinerdirection sliceDirectionIn,
                         const HighPrecisionVector2D& lineStartIn,
                         const HighPrecisionVector2D& lineEndIn,
-                        outlinerhighprecisionreal stepzIn,
+                        outlinerreal stepzIn,
                         Processor& procIn);
   ~ProcessorCrossSection();
   bool processSceneCrossSection(const aiScene* scene);
   void getLineActualEndPoints(HighPrecisionVector2D& actualLineStart,
                               HighPrecisionVector2D& actualLineEnd,
-                              outlinerhighprecisionreal extralineatends);
+                              outlinerreal extralineatends);
   
 private:
 
@@ -54,14 +54,14 @@ private:
   const enum outlinerdirection sliceDirection;
   const HighPrecisionVector2D lineStart;
   const HighPrecisionVector2D lineEnd;
-  outlinerhighprecisionreal stepz;
-  outlinerhighprecisionreal xDifference;
-  outlinerhighprecisionreal yDifference;
-  outlinerhighprecisionreal lineLength;
-  outlinerhighprecisionreal lineStep;
-  outlinerhighprecisionreal lineSteps;
-  outlinerhighprecisionreal lineStepX;
-  outlinerhighprecisionreal lineStepY;
+  outlinerreal stepz;
+  outlinerreal xDifference;
+  outlinerreal yDifference;
+  outlinerreal lineLength;
+  outlinerreal lineStep;
+  outlinerreal lineSteps;
+  outlinerreal lineStepX;
+  outlinerreal lineStepY;
   HighPrecisionVector2D sliceVerticalBoundingBoxStart;
   HighPrecisionVector2D sliceVerticalBoundingBoxEnd;
   MaterialMatrix* matrix;
@@ -95,8 +95,8 @@ private:
   void sliceVerticalBoundingBoxFace(const aiScene* scene,
                                     const aiMesh* mesh,
                                     const aiFace* face,
-                                    outlinerhighprecisionreal x,
-                                    outlinerhighprecisionreal y,
+                                    outlinerreal x,
+                                    outlinerreal y,
                                     bool& set,
                                     HighPrecisionVector2D& sliceVerticalBoundingBoxStart,
                                     HighPrecisionVector2D& sliceVerticalBoundingBoxEnd);
@@ -115,9 +115,9 @@ private:
                             const aiFace* face,
                             unsigned int firstStepInBoundingBox,
                             unsigned int currentStep,
-                            outlinerhighprecisionreal x,
-                            outlinerhighprecisionreal y,
-                            outlinerhighprecisionreal z);
+                            outlinerreal x,
+                            outlinerreal y,
+                            outlinerreal z);
 
   //
   // Coordinate operations
@@ -125,14 +125,14 @@ private:
 
   unsigned int coordinateLineStepToImageXIndex(unsigned int firstStepInBoundingBox,
                                                unsigned int currentStep);
-  unsigned int coordinateZToImageYIndex(outlinerhighprecisionreal z);
+  unsigned int coordinateZToImageYIndex(outlinerreal z);
   
   //
   // Line operations
   //
   
   void calculateLineEquation(void);
-  outlinerhighprecisionreal calculateLineXBasedOnY(outlinerhighprecisionreal y);
+  outlinerreal calculateLineXBasedOnY(outlinerreal y);
   void lineIteratorInit(struct ProcessorCrossSectionLineIterator& iter);
   bool lineIteratorDone(struct ProcessorCrossSectionLineIterator& iter);
   void lineIteratorNext(struct ProcessorCrossSectionLineIterator& iter);

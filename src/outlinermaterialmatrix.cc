@@ -20,8 +20,8 @@
 
 MaterialMatrix::MaterialMatrix(HighPrecisionVector2D boundingboxstart,
                                HighPrecisionVector2D boundingboxend,
-                               outlinerhighprecisionreal stepx,
-                               outlinerhighprecisionreal stepy) {
+                               outlinerreal stepx,
+                               outlinerreal stepy) {
   xIndexSize = ((unsigned int)ceil(((boundingboxend.x - boundingboxstart.x) / stepx))) + 2;
   yIndexSize = ((unsigned int)ceil(((boundingboxend.y - boundingboxstart.y) / stepy))) + 2;
   debugf("yIndexSize %u from %.8f - %.8f / %.8f + 2",
