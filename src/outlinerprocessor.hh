@@ -152,14 +152,10 @@ private:
   void faceGetVertices2D(const aiMesh* mesh,
                          const aiFace* face,
                          enum outlinerdirection thisDirection,
-                         aiVector2D& a,
-                         aiVector2D& b,
-                         aiVector2D& c);
+                         HighPrecisionTriangle2D& t);
   void faceGetVertices3D(const aiMesh* mesh,
                          const aiFace* face,
-                         aiVector3D& a,
-                         aiVector3D& b,
-                         aiVector3D& c);
+                         HighPrecisionTriangle3D& t);
   
   //
   // Coordinate management

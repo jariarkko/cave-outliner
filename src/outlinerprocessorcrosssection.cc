@@ -403,16 +403,14 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
   assert(mesh != 0);
   assert(face != 0);
   assert(matrix != 0);
-  aiVector3D a3;
-  aiVector3D b3;
-  aiVector3D c3;
-  proc.faceGetVertices3D(mesh,face,a3,b3,c3);
+  HighPrecisionTriangle3D t;
+  proc.faceGetVertices3D(mesh,face,t);
   HighPrecisionVector3D point(x,y,z);
   HighPrecisionVector3D stepboundingbox(x+lineStepX,y+lineStepY,z+stepz);
   char buf[80];
-  OutlinerMath::triangleDescribe(a3,b3,c3,buf,sizeof(buf));
+  OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
   deepdeepdebugf("describe done, result = %s", buf);
-  if (OutlinerMath::boundingBoxIntersectsTriangle3D(a3,b3,c3,point,stepboundingbox)) {
+  if (OutlinerMath::boundingBoxIntersectsTriangle3D(t,point,stepboundingbox)) {
     unsigned int xIndex = coordinateLineStepToImageXIndex(firstStepInBoundingBox,currentStep);
     unsigned int yIndex = coordinateZToImageYIndex(z);
     deepdebugf("    cross section draw face xyz match     at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) steps %u (%u) triangle %s => matrix %u,%u",
@@ -426,9 +424,9 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
     deepdebugf("    cross section draw face xyz non-match at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) "
                "face (%5.2f,%5.2f,%5.2f) x (%5.2f,%5.2f,%5.2f) x (%5.2f,%5.2f,%5.2f) triangle %s",
                x, stepboundingbox.x, y, stepboundingbox.y, z, stepboundingbox.z,
-               a3.x, a3.y, a3.z,
-               b3.x, b3.y, b3.z,
-               c3.x, c3.y, c3.z,
+               t.a.x, t.a.y, t.a.z,
+               t.b.x, t.b.y, t.b.z,
+               t.c.x, t.c.y, t.c.z,
                buf);
   }
 }
@@ -542,16 +540,15 @@ ProcessorCrossSection::sliceVerticalBoundingBoxFace(const aiScene* scene,
                                                     bool& set,
                                                     HighPrecisionVector2D& sliceVerticalBoundingBoxStart,
                                                     HighPrecisionVector2D& sliceVerticalBoundingBoxEnd) {
-  aiVector3D a3;
-  aiVector3D b3;
-  aiVector3D c3;
-  proc.faceGetVertices3D(mesh,face,a3,b3,c3);
-  aiVector2D a(DirectionOperations::outputx(proc.direction,a3),DirectionOperations::outputy(proc.direction,a3));
-  aiVector2D b(DirectionOperations::outputx(proc.direction,b3),DirectionOperations::outputy(proc.direction,b3));
-  aiVector2D c(DirectionOperations::outputx(proc.direction,c3),DirectionOperations::outputy(proc.direction,c3));
+  HighPrecisionTriangle3D t3;
+  proc.faceGetVertices3D(mesh,face,t3);
+  HighPrecisionVector2D a(DirectionOperations::outputx(proc.direction,t3.a),DirectionOperations::outputy(proc.direction,t3.a));
+  HighPrecisionVector2D b(DirectionOperations::outputx(proc.direction,t3.b),DirectionOperations::outputy(proc.direction,t3.b));
+  HighPrecisionVector2D c(DirectionOperations::outputx(proc.direction,t3.c),DirectionOperations::outputy(proc.direction,t3.c));
+  HighPrecisionTriangle2D t2(a,b,c);
   HighPrecisionVector2D point(x,y);
   HighPrecisionVector2D stepboundingbox(x+lineStepX,y+lineStepY);
-  if (OutlinerMath::boundingBoxIntersectsTriangle2D(a,b,c,point,stepboundingbox)) {
+  if (OutlinerMath::boundingBoxIntersectsTriangle2D(t2,point,stepboundingbox)) {
     deepdeepdebugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) hits step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
                    mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
                    mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
@@ -562,12 +559,13 @@ ProcessorCrossSection::sliceVerticalBoundingBoxFace(const aiScene* scene,
     deepdeepdebugf("cross section direction %s and %s",
                    DirectionOperations::toString(proc.direction),
                    DirectionOperations::toString(sliceDirection));
-    aiVector2D aSlice(DirectionOperations::outputy(proc.direction,a3),DirectionOperations::outputz(proc.direction,a3));
-    aiVector2D bSlice(DirectionOperations::outputy(proc.direction,b3),DirectionOperations::outputz(proc.direction,b3));
-    aiVector2D cSlice(DirectionOperations::outputy(proc.direction,c3),DirectionOperations::outputz(proc.direction,c3));
+    HighPrecisionVector2D aSlice(DirectionOperations::outputy(proc.direction,t3.a),DirectionOperations::outputz(proc.direction,t3.a));
+    HighPrecisionVector2D bSlice(DirectionOperations::outputy(proc.direction,t3.b),DirectionOperations::outputz(proc.direction,t3.b));
+    HighPrecisionVector2D cSlice(DirectionOperations::outputy(proc.direction,t3.c),DirectionOperations::outputz(proc.direction,t3.c));
     HighPrecisionVector2D faceBoundingBoxStart;
     HighPrecisionVector2D faceBoundingBoxEnd;
-    OutlinerMath::triangleBoundingBox2D(aSlice,bSlice,cSlice,
+    HighPrecisionTriangle2D tSlice(aSlice,bSlice,cSlice);
+    OutlinerMath::triangleBoundingBox2D(tSlice,
                                         faceBoundingBoxStart,
                                         faceBoundingBoxEnd);
     deepdebugf("    adding a face to cross section bounding box, triangle box (%.2f,%.2f) - (%.2f,%.2f)",
@@ -625,7 +623,7 @@ ProcessorCrossSection::sliceVerticalBoundingBoxFace(const aiScene* scene,
                    mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
                    mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
                    DirectionOperations::toString(proc.direction),
-                   a.x, a.y, b.x, b.y, c.x, c.y,
+                   t2.a.x, t2.a.y, t2.b.x, t2.b.y, t2.c.x, t2.c.y,
                    point.x, point.y,
                    stepboundingbox.x,
                    stepboundingbox.y);

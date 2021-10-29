@@ -37,24 +37,16 @@ public:
                                const HighPrecisionVector2D& box2End,
                                HighPrecisionVector2D& resultBoxStart,
                                HighPrecisionVector2D& resultBoxEnd);
-  static void triangleDescribe(const aiVector3D& a,
-                               const aiVector3D& b,
-                               const aiVector3D& c,
+  static void triangleDescribe(const HighPrecisionTriangle3D& triangle,
                                char* buf,
                                unsigned int bufSize);
-  static void triangleBoundingBox2D(const aiVector2D& a,
-                                    const aiVector2D& b,
-                                    const aiVector2D& c,
+  static void triangleBoundingBox2D(const HighPrecisionTriangle2D& triangle,
                                     HighPrecisionVector2D& boundingBoxStart,
                                     HighPrecisionVector2D& boundingBoxEnd);
-  static void triangleBoundingBox3D(const aiVector3D& a,
-                                    const aiVector3D& b,
-                                    const aiVector3D& c,
+  static void triangleBoundingBox3D(const HighPrecisionTriangle3D& triangle,
                                     HighPrecisionVector3D& boundingBoxStart,
                                     HighPrecisionVector3D& boundingBoxEnd);
-  static bool pointInsideTriangle2D(const aiVector2D& a,
-                                    const aiVector2D& b,
-                                    const aiVector2D& c,
+  static bool pointInsideTriangle2D(const HighPrecisionTriangle2D& triangle,
                                     const HighPrecisionVector2D& point);
   static bool pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
                                        const HighPrecisionVector2D& boxEnd,
@@ -62,14 +54,10 @@ public:
   static bool pointInsideBoundingBox2D(const HighPrecisionVector2D& boxStart,
                                        const HighPrecisionVector2D& boxEnd,
                                        const HighPrecisionVector2D& point);
-  static bool boundingBoxIntersectsTriangle2D(const aiVector2D& a,
-                                              const aiVector2D& b,
-                                              const aiVector2D& c,
+  static bool boundingBoxIntersectsTriangle2D(const HighPrecisionTriangle2D& triangle,
                                               const HighPrecisionVector2D& boxStart,
                                               const HighPrecisionVector2D& boxEnd);
-  static bool boundingBoxIntersectsTriangle3D(const aiVector3D& a,
-                                              const aiVector3D& b,
-                                              const aiVector3D& c,
+  static bool boundingBoxIntersectsTriangle3D(const HighPrecisionTriangle3D& triangle,
                                               const HighPrecisionVector3D& boxStart,
                                               const HighPrecisionVector3D& boxEnd);
   static bool boundingBoxesIntersect3D(HighPrecisionVector3D& boundingBox1Start,
@@ -79,8 +67,8 @@ public:
   static bool pointOnLine2D(const aiVector2D& a,
                             const aiVector2D& b,
                             const aiVector2D& point);
-  static bool pointOnLine2D(const aiVector2D& a,
-                            const aiVector2D& b,
+  static bool pointOnLine2D(const HighPrecisionVector2D& a,
+                            const HighPrecisionVector2D& b,
                             const HighPrecisionVector2D& point);
   static bool lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
                                            const aiVector2D& lineEnd,
@@ -94,10 +82,10 @@ public:
                                              aiVector2D& intersectionPoint);
   static bool vectorEqual(const aiVector2D& a,
                           const aiVector2D& b);
-  static bool vectorEqual(const aiVector2D& a,
+  static bool vectorEqual(const HighPrecisionVector2D& a,
                           const HighPrecisionVector2D& b);
-  static void vectorTo(const aiVector2D& from,
-                       const aiVector2D& to,
+  static void vectorTo(const HighPrecisionVector2D& from,
+                       const HighPrecisionVector2D& to,
                        HighPrecisionVector2D& result);
   static outlinerhighprecisionreal determinant2x2(const HighPrecisionVector2D& u,
                                                   const HighPrecisionVector2D& v);
@@ -117,36 +105,36 @@ private:
   static void lineTests(void);
   static void lineIntersectionTests(void);
   static void triangleTests(void);
-  static void sortVectorsX2D(const aiVector2D* a,
-                             const aiVector2D* b,
-                             const aiVector2D* c,
-                             const aiVector2D** nth0,
-                             const aiVector2D** nth1,
-                             const aiVector2D** nth2);
-  static void sortVectorsY2D(const aiVector2D* a,
-                             const aiVector2D* b,
-                             const aiVector2D* c,
-                             const aiVector2D** nth0,
-                             const aiVector2D** nth1,
-                             const aiVector2D** nth2);
-  static void sortVectorsX3D(const aiVector3D* a,
-                             const aiVector3D* b,
-                             const aiVector3D* c,
-                             const aiVector3D** nth0,
-                             const aiVector3D** nth1,
-                             const aiVector3D** nth2);
-  static void sortVectorsY3D(const aiVector3D* a,
-                             const aiVector3D* b,
-                             const aiVector3D* c,
-                             const aiVector3D** nth0,
-                             const aiVector3D** nth1,
-                             const aiVector3D** nth2);
-  static void sortVectorsZ3D(const aiVector3D* a,
-                             const aiVector3D* b,
-                             const aiVector3D* c,
-                             const aiVector3D** nth0,
-                             const aiVector3D** nth1,
-                             const aiVector3D** nth2);
+  static void sortVectorsX2D(const HighPrecisionVector2D* a,
+                             const HighPrecisionVector2D* b,
+                             const HighPrecisionVector2D* c,
+                             const HighPrecisionVector2D** nth0,
+                             const HighPrecisionVector2D** nth1,
+                             const HighPrecisionVector2D** nth2);
+  static void sortVectorsY2D(const HighPrecisionVector2D* a,
+                             const HighPrecisionVector2D* b,
+                             const HighPrecisionVector2D* c,
+                             const HighPrecisionVector2D** nth0,
+                             const HighPrecisionVector2D** nth1,
+                             const HighPrecisionVector2D** nth2);
+  static void sortVectorsX3D(const HighPrecisionVector3D* a,
+                             const HighPrecisionVector3D* b,
+                             const HighPrecisionVector3D* c,
+                             const HighPrecisionVector3D** nth0,
+                             const HighPrecisionVector3D** nth1,
+                             const HighPrecisionVector3D** nth2);
+  static void sortVectorsY3D(const HighPrecisionVector3D* a,
+                             const HighPrecisionVector3D* b,
+                             const HighPrecisionVector3D* c,
+                             const HighPrecisionVector3D** nth0,
+                             const HighPrecisionVector3D** nth1,
+                             const HighPrecisionVector3D** nth2);
+  static void sortVectorsZ3D(const HighPrecisionVector3D* a,
+                             const HighPrecisionVector3D* b,
+                             const HighPrecisionVector3D* c,
+                             const HighPrecisionVector3D** nth0,
+                             const HighPrecisionVector3D** nth1,
+                             const HighPrecisionVector3D** nth2);
   
 };
 

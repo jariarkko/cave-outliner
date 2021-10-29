@@ -305,7 +305,8 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
   aiVector3D* vertexC = &mesh->mVertices[face->mIndices[2]];
   HighPrecisionVector3D elementBoundingBoxStart;
   HighPrecisionVector3D elementBoundingBoxEnd;
-  OutlinerMath::triangleBoundingBox3D(*vertexA,*vertexB,*vertexC,
+  HighPrecisionTriangle3D t3(*vertexA,*vertexB,*vertexC);
+  OutlinerMath::triangleBoundingBox3D(t3,
                                       elementBoundingBoxStart,elementBoundingBoxEnd);
   if (!OutlinerMath::boundingBoxesIntersect3D(modelBoundingBoxStart,
                                               modelBoundingBoxEnd,
@@ -316,12 +317,13 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
   }
   
   // Calculate 2D bounding box
-  aiVector2D a(DirectionOperations::outputx(direction,*vertexA),DirectionOperations::outputy(direction,*vertexA));
-  aiVector2D b(DirectionOperations::outputx(direction,*vertexB),DirectionOperations::outputy(direction,*vertexB));
-  aiVector2D c(DirectionOperations::outputx(direction,*vertexC),DirectionOperations::outputy(direction,*vertexC));
+  HighPrecisionVector2D a(DirectionOperations::outputx(direction,*vertexA),DirectionOperations::outputy(direction,*vertexA));
+  HighPrecisionVector2D b(DirectionOperations::outputx(direction,*vertexB),DirectionOperations::outputy(direction,*vertexB));
+  HighPrecisionVector2D c(DirectionOperations::outputx(direction,*vertexC),DirectionOperations::outputy(direction,*vertexC));
   HighPrecisionVector2D elementFlatBoundingBoxStart;
   HighPrecisionVector2D elementFlatBoundingBoxEnd;
-  OutlinerMath::triangleBoundingBox2D(a,b,c,
+  HighPrecisionTriangle2D t2(a,b,c);
+  OutlinerMath::triangleBoundingBox2D(t2,
                                       elementFlatBoundingBoxStart,
                                       elementFlatBoundingBoxEnd);
 

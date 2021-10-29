@@ -103,7 +103,8 @@ BoundingBoxer::boundingFace(const aiMesh* mesh,
   const aiVector3D& vertexC = mesh->mVertices[face->mIndices[2]];
   HighPrecisionVector3D elementBoundingBoxStart;
   HighPrecisionVector3D elementBoundingBoxEnd;
-  OutlinerMath::triangleBoundingBox3D(vertexA,vertexB,vertexC,
+  HighPrecisionTriangle3D triangle3(vertexA,vertexB,vertexC);
+  OutlinerMath::triangleBoundingBox3D(triangle3,
                                       elementBoundingBoxStart,
                                       elementBoundingBoxEnd);
 
