@@ -172,15 +172,6 @@ OutlinerMath::triangleBoundingBox3D(const OutlinerTriangle3D& triangle,
 }
 
 bool
-OutlinerMath::pointOnLine2D(const aiVector2D& a,
-                            const aiVector2D& b,
-                            const aiVector2D& point) {
-  deepdeepdebugf("pointOnLine2D aiVector");
-  OutlinerVector2D tmp(point);
-  return(pointOnLine2D(a,b,tmp));
-}
-
-bool
 OutlinerMath::pointOnLine2D(const OutlinerVector2D& a,
                             const OutlinerVector2D& b,
                             const OutlinerVector2D& point) {
@@ -261,14 +252,6 @@ OutlinerMath::pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
   outlinerreal a = (determinant2x2(v,v2) - determinant2x2(v0,v2)) / determinant2x2(v1,v2);
   outlinerreal b = -((determinant2x2(v,v1) - determinant2x2(v0,v1)) / determinant2x2(v1,v2));
   debugreturn("        pit2","regular",a >= 0 && b >= 0 && a+b <= 1);
-}
-
-bool
-OutlinerMath::pointInsideBoundingBox2D(const OutlinerVector2D& boxStart,
-                                       const OutlinerVector2D& boxEnd,
-                                       const aiVector2D& point) {
-  return(point.x >= boxStart.x && point.x <= boxEnd.x &&
-         point.y >= boxStart.y && point.y <= boxEnd.y);
 }
 
 bool
@@ -366,11 +349,11 @@ OutlinerMath::boundingBoxesIntersect3D(OutlinerVector3D& boundingBox1Start,
 }
 
 bool
-OutlinerMath::lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
-                                           const aiVector2D& lineEnd,
-                                           const aiVector2D& verticalLineStart,
-                                           const aiVector2D& verticalLineEnd,
-                                           aiVector2D& intersectionPoint) {
+OutlinerMath::lineIntersectsVerticalLine2D(const OutlinerVector2D& lineStart,
+                                           const OutlinerVector2D& lineEnd,
+                                           const OutlinerVector2D& verticalLineStart,
+                                           const OutlinerVector2D& verticalLineEnd,
+                                           OutlinerVector2D& intersectionPoint) {
   assert(verticalLineStart.x == verticalLineEnd.x);
 
   // Fetch basic values
@@ -436,11 +419,11 @@ OutlinerMath::lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
 }
 
 bool
-OutlinerMath::lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
-                                             const aiVector2D& lineEnd,
-                                             const aiVector2D& horizontalLineStart,
-                                             const aiVector2D& horizontalLineEnd,
-                                             aiVector2D& intersectionPoint) {
+OutlinerMath::lineIntersectsHorizontalLine2D(const OutlinerVector2D& lineStart,
+                                             const OutlinerVector2D& lineEnd,
+                                             const OutlinerVector2D& horizontalLineStart,
+                                             const OutlinerVector2D& horizontalLineEnd,
+                                             OutlinerVector2D& intersectionPoint) {
   assert(horizontalLineStart.y == horizontalLineEnd.y);
   
   // Fetch basic values
@@ -503,12 +486,6 @@ OutlinerMath::lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
   intersectionPoint.x = lineX;
   intersectionPoint.y = horizontalY;
   return(1);
-}
-
-bool
-OutlinerMath::vectorEqual(const aiVector2D& a,
-                          const aiVector2D& b) {
-  return(a.x == b.x && a.y == b.y);
 }
 
 bool
@@ -816,9 +793,9 @@ OutlinerMath::detTests(void) {
 void
 OutlinerMath::boundingBoxTests(void) {
   debugf("bounding box tests...");
-  aiVector2D a(0,0);
-  aiVector2D b(0,3);
-  aiVector2D c(2,0);
+  OutlinerVector2D a(0,0);
+  OutlinerVector2D b(0,3);
+  OutlinerVector2D c(2,0);
   OutlinerVector2D boundingBoxStart;
   OutlinerVector2D boundingBoxEnd;
   debugf("bounding box tests");
@@ -840,9 +817,9 @@ OutlinerMath::boundingBoxTests(void) {
          boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
   assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
   assert(boundingBoxEnd.x == 2 && boundingBoxEnd.y == 3);
-  aiVector2D x(-10,-10);
-  aiVector2D y(10,10);
-  aiVector2D z(30,9);
+  OutlinerVector2D x(-10,-10);
+  OutlinerVector2D y(10,10);
+  OutlinerVector2D z(30,9);
   OutlinerTriangle2D trevx(z,y,x);
   triangleBoundingBox2D(trevx,boundingBoxStart,boundingBoxEnd);
   debugf("z,y,x bounding box [%.2f,%.2f] to [%.2f,%.2f]",
@@ -999,9 +976,9 @@ OutlinerMath::boundingBoxUnionTests(void) {
 void
 OutlinerMath::pointTests(void) {
   debugf("point tests...");
-  aiVector2D a(1,1);
-  aiVector2D b(1,2);
-  aiVector2D c(1,1);
+  OutlinerVector2D a(1,1);
+  OutlinerVector2D b(1,2);
+  OutlinerVector2D c(1,1);
   assert(vectorEqual(a,b) == 0);
   assert(vectorEqual(b,c) == 0);
   assert(vectorEqual(a,c) == 1);
@@ -1014,9 +991,9 @@ OutlinerMath::lineTests(void) {
   
   // Horizontal
   {
-    aiVector2D a(0,0);
-    aiVector2D b(1,0);
-    aiVector2D c(2,0);
+    OutlinerVector2D a(0,0);
+    OutlinerVector2D b(1,0);
+    OutlinerVector2D c(2,0);
     OutlinerVector2D d(0.5,2);
     bool ans = pointOnLine2D(a,c,d);
     assert(ans == 0);
@@ -1028,9 +1005,9 @@ OutlinerMath::lineTests(void) {
   
   // Vertical
   {
-    aiVector2D a(0,0);
-    aiVector2D b(0,1);
-    aiVector2D c(0,2);
+    OutlinerVector2D a(0,0);
+    OutlinerVector2D b(0,1);
+    OutlinerVector2D c(0,2);
     OutlinerVector2D d(0.5,1);
     bool ans = pointOnLine2D(a,c,d);
     assert(ans == 0);
@@ -1042,10 +1019,10 @@ OutlinerMath::lineTests(void) {
   
   // Sloping line
   {
-    aiVector2D a(0,0);
-    aiVector2D b(1,1);
-    aiVector2D c(2,2);
-    aiVector2D d(1,2);
+    OutlinerVector2D a(0,0);
+    OutlinerVector2D b(1,1);
+    OutlinerVector2D c(2,2);
+    OutlinerVector2D d(1,2);
     bool ans = pointOnLine2D(a,c,d);
     assert(ans == 0);
     ans = pointOnLine2D(a,b,c);
@@ -1063,14 +1040,14 @@ OutlinerMath::lineIntersectionTests(void) {
   
   // Vertical line intersection 1
   {
-    aiVector2D a(10,10);
-    aiVector2D b1(20,20);
-    aiVector2D b2(20,15);
-    aiVector2D vl1start(1,0);
-    aiVector2D vl1end(1,40);
-    aiVector2D vl2start(11,0);
-    aiVector2D vl2end(11,40);
-    aiVector2D inter;
+    OutlinerVector2D a(10,10);
+    OutlinerVector2D b1(20,20);
+    OutlinerVector2D b2(20,15);
+    OutlinerVector2D vl1start(1,0);
+    OutlinerVector2D vl1end(1,40);
+    OutlinerVector2D vl2start(11,0);
+    OutlinerVector2D vl2end(11,40);
+    OutlinerVector2D inter;
     bool ans;
     ans = lineIntersectsVerticalLine2D(a,b1,vl1start,vl1end,inter);
     assert(!ans);
@@ -1088,17 +1065,17 @@ OutlinerMath::lineIntersectionTests(void) {
   
   // Vertical line intersection 2
   {
-    aiVector2D a(10,10);
-    aiVector2D b(12,20);
-    aiVector2D vl1start(11,0);
-    aiVector2D vl1end(11,9);
-    aiVector2D vl2start(11,0);
-    aiVector2D vl2end(11,14);
-    aiVector2D vl3start(11,10);
-    aiVector2D vl3end(11,15);
-    aiVector2D vl4start(11,10);
-    aiVector2D vl4end(11,16);
-    aiVector2D inter;
+    OutlinerVector2D a(10,10);
+    OutlinerVector2D b(12,20);
+    OutlinerVector2D vl1start(11,0);
+    OutlinerVector2D vl1end(11,9);
+    OutlinerVector2D vl2start(11,0);
+    OutlinerVector2D vl2end(11,14);
+    OutlinerVector2D vl3start(11,10);
+    OutlinerVector2D vl3end(11,15);
+    OutlinerVector2D vl4start(11,10);
+    OutlinerVector2D vl4end(11,16);
+    OutlinerVector2D inter;
     bool ans;
     ans = lineIntersectsVerticalLine2D(a,b,vl1start,vl1end,inter);
     assert(!ans);
@@ -1118,15 +1095,15 @@ OutlinerMath::lineIntersectionTests(void) {
   
   // Vertical line intersection 3 (parallel lines)
   {
-    aiVector2D a(10,10);
-    aiVector2D b(10,20);
-    aiVector2D vl1start(9,15);
-    aiVector2D vl1end(9,16);
-    aiVector2D vl2start(10,5);
-    aiVector2D vl2end(10,9);
-    aiVector2D vl3start(10,15);
-    aiVector2D vl3end(10,16);
-    aiVector2D inter;
+    OutlinerVector2D a(10,10);
+    OutlinerVector2D b(10,20);
+    OutlinerVector2D vl1start(9,15);
+    OutlinerVector2D vl1end(9,16);
+    OutlinerVector2D vl2start(10,5);
+    OutlinerVector2D vl2end(10,9);
+    OutlinerVector2D vl3start(10,15);
+    OutlinerVector2D vl3end(10,16);
+    OutlinerVector2D inter;
     bool ans;
     ans = lineIntersectsVerticalLine2D(a,b,vl1start,vl1end,inter);
     assert(!ans);
@@ -1141,15 +1118,15 @@ OutlinerMath::lineIntersectionTests(void) {
   
   // Horizontal line intersection 1
   {
-    aiVector2D a(10,10);
-    aiVector2D b(20,20);
-    aiVector2D hl1start(0,10);
-    aiVector2D hl1end(10,10);
-    aiVector2D hl2start(0,15);
-    aiVector2D hl2end(20,15);
-    aiVector2D hl3start(0,21);
-    aiVector2D hl3end(20,21);
-    aiVector2D inter;
+    OutlinerVector2D a(10,10);
+    OutlinerVector2D b(20,20);
+    OutlinerVector2D hl1start(0,10);
+    OutlinerVector2D hl1end(10,10);
+    OutlinerVector2D hl2start(0,15);
+    OutlinerVector2D hl2end(20,15);
+    OutlinerVector2D hl3start(0,21);
+    OutlinerVector2D hl3end(20,21);
+    OutlinerVector2D inter;
     bool ans;
     ans = lineIntersectsHorizontalLine2D(a,b,hl1start,hl1end,inter);
     assert(ans);
@@ -1167,15 +1144,15 @@ OutlinerMath::lineIntersectionTests(void) {
   
   // Vertical line intersection 2 (parallel lines)
   {
-    aiVector2D a(10,10);
-    aiVector2D b(20,10);
-    aiVector2D hl1start(15,9);
-    aiVector2D hl1end(16,9);
-    aiVector2D hl2start(5,10);
-    aiVector2D hl2end(9,10);
-    aiVector2D hl3start(15,10);
-    aiVector2D hl3end(16,10);
-    aiVector2D inter;
+    OutlinerVector2D a(10,10);
+    OutlinerVector2D b(20,10);
+    OutlinerVector2D hl1start(15,9);
+    OutlinerVector2D hl1end(16,9);
+    OutlinerVector2D hl2start(5,10);
+    OutlinerVector2D hl2end(9,10);
+    OutlinerVector2D hl3start(15,10);
+    OutlinerVector2D hl3end(16,10);
+    OutlinerVector2D inter;
     bool ans;
     ans = lineIntersectsHorizontalLine2D(a,b,hl1start,hl1end,inter);
     assert(!ans);
@@ -1193,9 +1170,9 @@ OutlinerMath::lineIntersectionTests(void) {
 void
 OutlinerMath::triangleTests(void) {
   debugf("triangle tests (2D)...");
-  aiVector2D a(0,0);
-  aiVector2D b(0,2);
-  aiVector2D c(2,0);
+  OutlinerVector2D a(0,0);
+  OutlinerVector2D b(0,2);
+  OutlinerVector2D c(2,0);
   OutlinerVector2D pointfar(2,2);
   OutlinerVector2D pointnear(0.5,0.5);
   OutlinerVector2D pointverynear(0.1,0.2);
@@ -1242,9 +1219,9 @@ OutlinerMath::triangleTests(void) {
 
   // 3D triangle tests
   debugf("triangle tests (3D)...");
-  aiVector3D a3(0,0,10);
-  aiVector3D b3(0,2,10);
-  aiVector3D c3(2,0,10);
+  OutlinerVector3D a3(0,0,10);
+  OutlinerVector3D b3(0,2,10);
+  OutlinerVector3D c3(2,0,10);
   OutlinerVector3D boundingStart3a(0,0,0);
   OutlinerVector3D boundingEnd3a(5,5,5);
   OutlinerVector3D boundingStart3b(0,0,0);
@@ -1259,9 +1236,9 @@ OutlinerMath::triangleTests(void) {
   debugf("triangle tests (3D bug)...");
   OutlinerVector3D bugBoxStart(0.00,-1.00,0.00);
   OutlinerVector3D bugBoxEnd(0.00,-0.50,0.50);
-  aiVector3D buga(1.00, -1.00, -1.00);
-  aiVector3D bugb(-1.00,-1.00, 1.00);
-  aiVector3D bugc(-1.00,-1.00,-1.00);
+  OutlinerVector3D buga(1.00, -1.00, -1.00);
+  OutlinerVector3D bugb(-1.00,-1.00, 1.00);
+  OutlinerVector3D bugc(-1.00,-1.00,-1.00);
   OutlinerTriangle3D bugt(buga,bugb,bugc);
   bool ansbug = boundingBoxIntersectsTriangle3D(bugt,bugBoxStart,bugBoxEnd);
   assert(ansbug);
@@ -1271,15 +1248,15 @@ void
 OutlinerMath::triangleBoundingBoxTests(void) {
   infof("triangle bounding box tests..");
   
-  aiVector2D a(0,0);
-  aiVector2D b(0,10);
-  aiVector2D c(20,0);
-  aiVector2D degenerate1a(1,1);
-  aiVector2D degenerate1b(1,1);
-  aiVector2D degenerate1c(-1,1);
-  aiVector2D degenerate2a(1,1);
-  aiVector2D degenerate2b(1,1);
-  aiVector2D degenerate2c(-1,-1);
+  OutlinerVector2D a(0,0);
+  OutlinerVector2D b(0,10);
+  OutlinerVector2D c(20,0);
+  OutlinerVector2D degenerate1a(1,1);
+  OutlinerVector2D degenerate1b(1,1);
+  OutlinerVector2D degenerate1c(-1,1);
+  OutlinerVector2D degenerate2a(1,1);
+  OutlinerVector2D degenerate2b(1,1);
+  OutlinerVector2D degenerate2c(-1,-1);
   OutlinerVector2D box1Start(-10,-10);
   OutlinerVector2D box1End(-1,-1);
   OutlinerVector2D box2Start(-10,-10);

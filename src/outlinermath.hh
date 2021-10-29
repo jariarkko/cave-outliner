@@ -50,9 +50,6 @@ public:
                                     const OutlinerVector2D& point);
   static bool pointInsideBoundingBox2D(const OutlinerVector2D& boxStart,
                                        const OutlinerVector2D& boxEnd,
-                                       const aiVector2D& point);
-  static bool pointInsideBoundingBox2D(const OutlinerVector2D& boxStart,
-                                       const OutlinerVector2D& boxEnd,
                                        const OutlinerVector2D& point);
   static bool boundingBoxIntersectsTriangle2D(const OutlinerTriangle2D& triangle,
                                               const OutlinerVector2D& boxStart,
@@ -64,24 +61,19 @@ public:
                                        OutlinerVector3D& boundingBox1End,
                                        OutlinerVector3D& boundingBox2Start,
                                        OutlinerVector3D& boundingBox2End);
-  static bool pointOnLine2D(const aiVector2D& a,
-                            const aiVector2D& b,
-                            const aiVector2D& point);
   static bool pointOnLine2D(const OutlinerVector2D& a,
                             const OutlinerVector2D& b,
                             const OutlinerVector2D& point);
-  static bool lineIntersectsVerticalLine2D(const aiVector2D& lineStart,
-                                           const aiVector2D& lineEnd,
-                                           const aiVector2D& verticalLineStart,
-                                           const aiVector2D& verticalLineEnd,
-                                           aiVector2D& intersectionPoint);
-  static bool lineIntersectsHorizontalLine2D(const aiVector2D& lineStart,
-                                             const aiVector2D& lineEnd,
-                                             const aiVector2D& horizontalLineStart,
-                                             const aiVector2D& horizontalLineEnd,
-                                             aiVector2D& intersectionPoint);
-  static bool vectorEqual(const aiVector2D& a,
-                          const aiVector2D& b);
+  static bool lineIntersectsVerticalLine2D(const OutlinerVector2D& lineStart,
+                                           const OutlinerVector2D& lineEnd,
+                                           const OutlinerVector2D& verticalLineStart,
+                                           const OutlinerVector2D& verticalLineEnd,
+                                           OutlinerVector2D& intersectionPoint);
+  static bool lineIntersectsHorizontalLine2D(const OutlinerVector2D& lineStart,
+                                             const OutlinerVector2D& lineEnd,
+                                             const OutlinerVector2D& horizontalLineStart,
+                                             const OutlinerVector2D& horizontalLineEnd,
+                                             OutlinerVector2D& intersectionPoint);
   static bool vectorEqual(const OutlinerVector2D& a,
                           const OutlinerVector2D& b);
   static void vectorTo(const OutlinerVector2D& from,
