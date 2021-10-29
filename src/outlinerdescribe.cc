@@ -34,12 +34,18 @@
 // Functions //////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+Describer::Describer(bool transforms,
+                     bool recurse,
+                     bool vertexes,
+                     bool faces) :
+  transforms(transforms),
+  recurse(recurse),
+  vertexes(vertexes),
+  faces(faces) {
+}
+
 void
-describeScene(const aiScene* scene,
-              bool transforms,
-              bool recurse,
-              bool vertexes,
-              bool faces) {
+Describer::describeScene(const aiScene* scene) {
   assert(scene != 0);
   deepdebugf("scene:");
   deepdebugf("  mFlags = 0x%x", scene->mFlags);
@@ -49,16 +55,16 @@ describeScene(const aiScene* scene,
   deepdebugf("  mNumTextures = %u", scene->mNumTextures);
   deepdebugf("  mNumLights = %u", scene->mNumLights);
   deepdebugf("  mNumCameras = %u", scene->mNumCameras);
-  describeNode(scene,scene->mRootNode,transforms,recurse);
+  describeNode(scene,scene->mRootNode);
   for (unsigned int m = 0; m < scene->mNumMeshes; m++) {
-    describeMesh(scene,m,scene->mMeshes[m],vertexes,faces);
+    describeMesh(scene,m,scene->mMeshes[m]);
   }
 }
 
 void
-describeVector3D(const aiVector3D& x,
-                 char* buf,
-                 unsigned bufsiz) {
+Describer::describeVector3D(const aiVector3D& x,
+                            char* buf,
+                            unsigned bufsiz) {
   memset(buf,0,bufsiz);
   snprintf(buf,bufsiz-1,"<%f,%f,%f>",
            x.x,
@@ -67,9 +73,9 @@ describeVector3D(const aiVector3D& x,
 }
 
 void
-describeTransformation(const aiMatrix4x4& x,
-                       char* buf,
-                       unsigned bufsiz) {
+Describer::describeTransformation(const aiMatrix4x4& x,
+                                  char* buf,
+                                  unsigned bufsiz) {
   memset(buf,0,bufsiz);
   if (x.IsIdentity()) {
     strncpy(buf,"identity",bufsiz-1);
@@ -91,10 +97,8 @@ describeTransformation(const aiMatrix4x4& x,
 }
 
 void
-describeNode(const aiScene* scene,
-             const aiNode* node,
-             bool transforms,
-             bool recurse) {
+Describer::describeNode(const aiScene* scene,
+                        const aiNode* node) {
   assert(scene != 0);
   assert(node != 0);
   deepdebugf("  node %s", node->mName.C_Str());
@@ -110,17 +114,15 @@ describeNode(const aiScene* scene,
   }
   if (recurse) {
     for (unsigned int i = 0; i < node->mNumChildren; i++) {
-      describeNode(scene,node->mChildren[i],transforms,recurse);
+      describeNode(scene,node->mChildren[i]);
     }
   }
 }
 
 void
-describeMesh(const aiScene* scene,
-             unsigned int no,
-             const aiMesh* mesh,
-             bool vertexes,
-             bool faces) {
+Describer::describeMesh(const aiScene* scene,
+                        unsigned int no,
+                        const aiMesh* mesh) {
   assert(scene != 0);
   assert(mesh != 0);
   deepdebugf("  mesh %u", no);
@@ -140,9 +142,9 @@ describeMesh(const aiScene* scene,
 }
 
 void
-describeFace(const aiScene* scene,
-             const aiMesh* mesh,
-             const aiFace* face) {
+Describer::describeFace(const aiScene* scene,
+                        const aiMesh* mesh,
+                        const aiFace* face) {
   deepdebugf("      face mNumIndices = %u", face->mNumIndices);
   for (unsigned int i = 0; i < face->mNumIndices; i++) {
     unsigned int ind = face->mIndices[i];
@@ -157,9 +159,9 @@ describeFace(const aiScene* scene,
 }
 
 void
-describeVertex(const aiScene* scene,
-               const aiMesh* mesh,
-               const aiVector3D* vertex) {
+Describer::describeVertex(const aiScene* scene,
+                          const aiMesh* mesh,
+                          const aiVector3D* vertex) {
   char buf[100];
   describeVector3D(*vertex,
                    buf,

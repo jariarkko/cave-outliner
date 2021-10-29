@@ -293,12 +293,13 @@ main(int argc, char** argv) {
   Assimp::Importer importer;
   const aiScene* scene = processImport(importer,input);
   if (scene == 0) return(1);
-
+  
   // Describe the model if needed
   if (deepdebug) {
-    describeScene(scene,deepdebug,deepdeepdebug,deepdeepdebug,deepdeepdebug);
+    Describer desc(deepdebug,deepdeepdebug,deepdeepdebug,deepdeepdebug);
+    desc.describeScene(scene);
   }
-
+  
   // Determine bounding box, if not specified
   if (!boundingBoxSet) {
     BoundingBoxer boxer(scene);

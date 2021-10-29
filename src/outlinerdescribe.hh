@@ -33,32 +33,42 @@
 // Functions //////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-void describeScene(const aiScene* scene,
-                   bool transforms,
-                   bool recurse,
-                   bool vertexes,
-                   bool faces);
-void describeNode(const aiScene* scene,
-                  const aiNode* node,
-                  bool transforms,
-                  bool recurse);
-void describeFace(const aiScene* scene,
-                  const aiMesh* mesh,
-                  const aiFace* face);
-void describeVertex(const aiScene* scene,
+class Describer {
+
+public:
+  
+  Describer(bool transforms,
+            bool recurse,
+            bool vertexes,
+            bool faces);
+  void describeScene(const aiScene* scene);
+
+private:
+
+  bool transforms;
+  bool recurse;
+  bool vertexes;
+  bool faces;
+  
+  void describeNode(const aiScene* scene,
+                    const aiNode* node);
+  void describeFace(const aiScene* scene,
                     const aiMesh* mesh,
-                    const aiVector3D* vertex);
-void describeMesh(const aiScene* scene,
-                  unsigned int no,
-                  const aiMesh* mesh,
-                   bool vertexes,
-                  bool faces);
-void describeTransformation(const aiMatrix4x4& x,
-                            char* buf,
-                            unsigned bufsiz);
-void describeVector3D(const aiVector3D& x,
-                      char* buf,
-                      unsigned bufsiz);
- 
+                    const aiFace* face);
+  void describeVertex(const aiScene* scene,
+                      const aiMesh* mesh,
+                      const aiVector3D* vertex);
+  void describeMesh(const aiScene* scene,
+                    unsigned int no,
+                    const aiMesh* mesh);
+  void describeTransformation(const aiMatrix4x4& x,
+                              char* buf,
+                              unsigned bufsiz);
+  void describeVector3D(const aiVector3D& x,
+                        char* buf,
+                        unsigned bufsiz);
+
+};
+
 #endif // DESCRIBE_HH
 
