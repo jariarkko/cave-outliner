@@ -41,6 +41,7 @@
 #include "outlinermath.hh"
 #include "outlinersvg.hh"
 #include "outlinerversion.hh"
+#include "mainconfig.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Function prototypes ////////////////////////////////////////////////////////////////////////
@@ -55,37 +56,13 @@ static void processHelp(void);
 static void runTests(void);
 static char* makeFilenameFromPattern(const char* pattern,
                                      unsigned int index);
-static const char* getCrossSectionLabel(void);
+static const char* getCrossSectionLabel(const MainConfig& config);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Local variables ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-static bool test = 0;
-static bool info = 1;
-static bool debug = 0;
-static bool deepdebug = 0;
-static bool deepdeepdebug = 0;
-static float stepx = 1.0;
-static float stepy = 1.0;
-static float stepz = 1.0;
-static bool boundingBoxSet = 0;
-static OutlinerBox3D boundingBox;
-static enum outlinerdirection direction = dir_z;
-static enum outlineralgorithm algorithm = alg_pixel;
-static float linewidth =  outlinerdefaultlinewidth;
-static unsigned int multiplier = 1;
-static bool smooth = 0;
-static bool mergedLines = 1;
-static unsigned int tiles = outlinertiledivision;
-static unsigned int holethreshold = 0;
-static bool automaticCrossSections = 0;
-static unsigned int nAutomaticCrossSections = 0;
-static const char* automaticCrossSectionFilenamePattern = 0;
-static unsigned int nCrossSections = 0;
-static struct ProcessorCrossSectionInfo crossSections[outlinermaxcrosssections];
-static bool labelCrossSections = 0;
-static unsigned int crossSectionLabelCount = 0;
+static MainConfig config;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Main program and option handling ///////////////////////////////////////////////////////////
@@ -96,40 +73,40 @@ main(int argc, char** argv) {
 
   while (argc > 1 && argv[1][0] == '-') {
     if (strcmp(argv[1],"--quiet") == 0) {
-        info = 0;
-        debuginit(info,debug,deepdebug,deepdeepdebug);
+      config.info = 0;
+      debuginit(config.info,config.debug,config.deepdebug,config.deepdeepdebug);
     } else if (strcmp(argv[1],"--debug") == 0) {
-        debug = 1;
-        debuginit(info,debug,deepdebug,deepdeepdebug);
+      config.debug = 1;
+      debuginit(config.info,config.debug,config.deepdebug,config.deepdeepdebug);
     } else if (strcmp(argv[1],"--deepdebug") == 0) {
-        debug = 1;
-        deepdebug = 1;
-        debuginit(info,debug,deepdebug,deepdeepdebug);
+      config.debug = 1;
+      config.deepdebug = 1;
+      debuginit(config.info,config.debug,config.deepdebug,config.deepdeepdebug);
     } else if (strcmp(argv[1],"--deepdeepdebug") == 0) {
-        debug = 1;
-        deepdebug = 1;
-        deepdeepdebug = 1;
-        debuginit(info,debug,deepdebug,deepdeepdebug);
+      config.debug = 1;
+      config.deepdebug = 1;
+      config.deepdeepdebug = 1;
+      debuginit(config.info,config.debug,config.deepdebug,config.deepdeepdebug);
     } else if (strcmp(argv[1],"--z") == 0) {
-        direction = dir_z;
+      config.direction = dir_z;
     } else if (strcmp(argv[1],"--x") == 0) {
-        direction = dir_x;
+      config.direction = dir_x;
     } else if (strcmp(argv[1],"--y") == 0) {
-        direction = dir_y;
+      config.direction = dir_y;
     } else if (strcmp(argv[1],"--pixel") == 0) {
-        algorithm = alg_pixel;
-        debugf("algorithm now %u", algorithm);
-     } else if (strcmp(argv[1],"--borderpixel") == 0) {
-        algorithm = alg_borderpixel;
-        debugf("algorithm now %u", algorithm);
-     } else if (strcmp(argv[1],"--borderline") == 0) {
-        algorithm = alg_borderline;
-        debugf("algorithm now %u", algorithm);
-     } else if (strcmp(argv[1],"--borderactual") == 0) {
-        algorithm = alg_borderactual;
-        debugf("algorithm now %u", algorithm);
+      config.algorithm = alg_pixel;
+      debugf("algorithm now %u", config.algorithm);
+    } else if (strcmp(argv[1],"--borderpixel") == 0) {
+      config.algorithm = alg_borderpixel;
+      debugf("algorithm now %u", config.algorithm);
+    } else if (strcmp(argv[1],"--borderline") == 0) {
+      config.algorithm = alg_borderline;
+      debugf("algorithm now %u", config.algorithm);
+    } else if (strcmp(argv[1],"--borderactual") == 0) {
+      config.algorithm = alg_borderactual;
+      debugf("algorithm now %u", config.algorithm);
     } else if (strcmp(argv[1],"--crosssections") == 0 && argc > 3) {
-      if (nCrossSections == outlinermaxcrosssections) {
+      if (config.nCrossSections == outlinermaxcrosssections) {
         errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
         return(1);
       }
@@ -143,13 +120,13 @@ main(int argc, char** argv) {
         errf("File name pattern should include the %% sign, %s given", filenamePattern);
         return(1);
       }
-      automaticCrossSections = 1;
-      nAutomaticCrossSections = num;
-      automaticCrossSectionFilenamePattern = filenamePattern;
+      config.automaticCrossSections = 1;
+      config.nAutomaticCrossSections = num;
+      config.automaticCrossSectionFilenamePattern = filenamePattern;
       argc--;argv++;
       argc--;argv++;
     } else if (strcmp(argv[1],"--crosssection") == 0 && argc > 3) {
-      if (nCrossSections == outlinermaxcrosssections) {
+      if (config.nCrossSections == outlinermaxcrosssections) {
         errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
         return(1);
       }
@@ -163,24 +140,24 @@ main(int argc, char** argv) {
         errf("Cross section file name cannot be empty, %s given", file);
         return(1);
       }
-      crossSections[nCrossSections].start.x = num;
-      crossSections[nCrossSections].start.y = 0;
-      crossSections[nCrossSections].end.x = num;
-      crossSections[nCrossSections].end.y = 0;
-      crossSections[nCrossSections].filename = file;
-      crossSections[nCrossSections].label = getCrossSectionLabel();
-      nCrossSections++;
+      config.crossSections[config.nCrossSections].start.x = num;
+      config.crossSections[config.nCrossSections].start.y = 0;
+      config.crossSections[config.nCrossSections].end.x = num;
+      config.crossSections[config.nCrossSections].end.y = 0;
+      config.crossSections[config.nCrossSections].filename = file;
+      config.crossSections[config.nCrossSections].label = getCrossSectionLabel(config);
+      config.nCrossSections++;
       argc--;argv++;
       argc--;argv++;
     } else if (strcmp(argv[1],"--label") == 0) {
-      labelCrossSections = 1;
+      config.labelCrossSections = 1;
     } else if (strcmp(argv[1],"--linewidth") == 0 && argc > 2) {
       float num = atof(argv[2]);
       if (num <= 0.0) {
         errf("Line width value needs to be a positive number, %s given", argv[2]);
         return(1);
       }
-      linewidth = num;
+      config.linewidth = num;
       argc--;argv++;
     } else if (strcmp(argv[1],"--multiplier") == 0 && argc > 2) {
       int num = atoi(argv[2]);
@@ -188,23 +165,23 @@ main(int argc, char** argv) {
         errf("Multiplier must be positive, %s given", argv[2]);
         return(1);
       }
-      multiplier = num;
+      config.multiplier = num;
       argc--;argv++;
     } else if (strcmp(argv[1],"--smooth") == 0) {
-      smooth = 1;
+      config.smooth = 1;
     } else if (strcmp(argv[1],"--jagged") == 0) {
-      smooth = 0;
+      config.smooth = 0;
     } else if (strcmp(argv[1],"--holethreshold") == 0 && argc > 2) {
       int num = atoi(argv[2]);
       if (num < 0 || num > 100) {
         errf("Hole threshold value needs to be non-negative and max 100, %s given", argv[2]);
         return(1);
       }
-      holethreshold = num;
+      config.holethreshold = num;
       argc--;argv++;
     } else if (strcmp(argv[1],"--step") == 0 && argc > 2) {
-      stepz = stepx = stepy = atof(argv[2]);
-      if (stepx < 0.0001) {
+      config.stepz = config.stepx = config.stepy = atof(argv[2]);
+      if (config.stepx < 0.0001) {
         errf("Invalid step value");
         return(1);
       }
@@ -234,18 +211,18 @@ main(int argc, char** argv) {
         errf("Invalid bounding box z range");
         return(1);
       }
-      boundingBoxSet = 1;
-      boundingBox.start = OutlinerVector3D(startx,starty,startz);
-      boundingBox.end = OutlinerVector3D(endx,endy,endz);
+      config.boundingBoxSet = 1;
+      config.boundingBox.start = OutlinerVector3D(startx,starty,startz);
+      config.boundingBox.end = OutlinerVector3D(endx,endy,endz);
     } else if (strcmp(argv[1],"--tiling") == 0 && argc > 2) {
       if (atoi(argv[2]) < 1 || atoi(argv[2]) > 10000) {
         errf("Invalid tile count, must be at least one and a not too big for memory, %s given", argv[2]);
         return(1);
       }
-      tiles = atoi(argv[2]);
+      config.tiles = atoi(argv[2]);
       argc--;argv++;
     } else if (strcmp(argv[1],"--test") == 0) {
-      test = 1;
+      config.test = 1;
     } else if (strcmp(argv[1],"--version") == 0) {
       processVersion();
       return(0);
@@ -261,8 +238,8 @@ main(int argc, char** argv) {
   }
   
   // Run tests if needed
-  if (test) {
-    debuginit(info,debug,deepdebug,deepdeepdebug);
+  if (config.test) {
+    debuginit(config.info,config.debug,config.deepdebug,config.deepdeepdebug);
     runTests();
     return(0);
   }
@@ -277,7 +254,7 @@ main(int argc, char** argv) {
   }
   const char* input = argv[1];
   const char* output = argv[2];
-  if (outlineralgorithm_generatespicture(algorithm)) {
+  if (outlineralgorithm_generatespicture(config.algorithm)) {
     if (!checkFileExtension(output,"svg")) {
       errf("Output file must be an SVG file, %s given", output);
       return(1);
@@ -285,7 +262,7 @@ main(int argc, char** argv) {
   }
   
   // Initialize debug
-  debuginit(info,debug,deepdebug,deepdeepdebug);
+  debuginit(config.info,config.debug,config.deepdebug,config.deepdeepdebug);
   
   // Import the model
   infof("importing the model...");
@@ -294,54 +271,56 @@ main(int argc, char** argv) {
   if (scene == 0) return(1);
   
   // Describe the model if needed
-  if (deepdebug) {
-    Describer desc(deepdebug,deepdeepdebug,deepdeepdebug,deepdeepdebug);
+  if (config.deepdebug) {
+    Describer desc(config.deepdebug,config.deepdeepdebug,config.deepdeepdebug,config.deepdeepdebug);
     desc.describeScene(scene);
   }
   
   // Determine bounding box, if not specified
-  if (!boundingBoxSet) {
+  if (!config.boundingBoxSet) {
     BoundingBoxer boxer(scene);
-    boxer.getBoundingBox(boundingBox);
+    boxer.getBoundingBox(config.boundingBox);
   }
 
   // Derive some size information
-  outlinerreal xOutputStart = DirectionOperations::outputx(direction,boundingBox.start);
-  outlinerreal xOutputEnd = DirectionOperations::outputx(direction,boundingBox.end);
-  outlinerreal yOutputStart = DirectionOperations::outputy(direction,boundingBox.start);
-  outlinerreal yOutputEnd = DirectionOperations::outputy(direction,boundingBox.end);
+  outlinerreal xOutputStart = DirectionOperations::outputx(config.direction,config.boundingBox.start);
+  outlinerreal xOutputEnd = DirectionOperations::outputx(config.direction,config.boundingBox.end);
+  outlinerreal yOutputStart = DirectionOperations::outputy(config.direction,config.boundingBox.start);
+  outlinerreal yOutputEnd = DirectionOperations::outputy(config.direction,config.boundingBox.end);
   
   // Check if we need to make cross sections
-  if (automaticCrossSections) {
-    if (nCrossSections + nAutomaticCrossSections >= outlinermaxcrosssections) {
+  if (config.automaticCrossSections) {
+    if (config.nCrossSections + config.nAutomaticCrossSections >= outlinermaxcrosssections) {
       errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
       return(1);
     }
-    outlinerreal crossSectionStep = (xOutputEnd - xOutputStart) / (1.0*nAutomaticCrossSections);
-    for (unsigned int c = 0; c < nAutomaticCrossSections; c++) {
-      assert(nCrossSections < outlinermaxcrosssections);
-      char* newFilename = makeFilenameFromPattern(automaticCrossSectionFilenamePattern,c);
-      crossSections[nCrossSections].start.x =
-        crossSections[nCrossSections].end.x =
+    outlinerreal crossSectionStep = (xOutputEnd - xOutputStart) / (1.0*config.nAutomaticCrossSections);
+    for (unsigned int c = 0; c < config.nAutomaticCrossSections; c++) {
+      assert(config.nCrossSections < outlinermaxcrosssections);
+      char* newFilename = makeFilenameFromPattern(config.automaticCrossSectionFilenamePattern,c);
+      config.crossSections[config.nCrossSections].start.x =
+        config.crossSections[config.nCrossSections].end.x =
           xOutputStart + crossSectionStep * (((outlinerreal)c)+0.5);
-      crossSections[nCrossSections].start.y = yOutputStart;
-      crossSections[nCrossSections].end.y = yOutputEnd;
-      crossSections[nCrossSections].filename = newFilename;
-      crossSections[nCrossSections].label = getCrossSectionLabel();
+      config.crossSections[config.nCrossSections].start.y = yOutputStart;
+      config.crossSections[config.nCrossSections].end.y = yOutputEnd;
+      config.crossSections[config.nCrossSections].filename = newFilename;
+      config.crossSections[config.nCrossSections].label = getCrossSectionLabel(config);
       debugf("cross section %s file %s at x %.2f from y %.2f to %.2f, step was %.2f",
-             crossSections[nCrossSections].label == 0 ? "(none)" : crossSections[nCrossSections].label,
+             (config.crossSections[config.nCrossSections].label == 0 ?
+              "(none)" :
+              config.crossSections[config.nCrossSections].label),
              newFilename,
-             crossSections[nCrossSections].start.x,
-             crossSections[nCrossSections].start.y,
-             crossSections[nCrossSections].end.y,
+             config.crossSections[config.nCrossSections].start.x,
+             config.crossSections[config.nCrossSections].start.y,
+             config.crossSections[config.nCrossSections].end.y,
              crossSectionStep);
-      nCrossSections++;
+      config.nCrossSections++;
     }
   } else {
     // Fix the cross section endpoint on y dimension, as we now know the size of the image
-    for (unsigned int c = 0; c < nCrossSections; c++) {
-      if (crossSections[nCrossSections].end.y == 0) {
-        crossSections[nCrossSections].end.y = yOutputEnd;
+    for (unsigned int c = 0; c < config.nCrossSections; c++) {
+      if (config.crossSections[config.nCrossSections].end.y == 0) {
+        config.crossSections[config.nCrossSections].end.y = yOutputEnd;
       }
     }
   }
@@ -350,30 +329,30 @@ main(int argc, char** argv) {
   OutlinerVector2D bounding2DBoxStart(xOutputStart,yOutputStart);
   OutlinerVector2D bounding2DBoxEnd(xOutputEnd,yOutputEnd);
   OutlinerBox2D bounding2DBox(bounding2DBoxStart,bounding2DBoxEnd);
-  IndexedMesh indexed(outlinermaxmeshes,tiles,
-                      boundingBox,
+  IndexedMesh indexed(outlinermaxmeshes,config.tiles,
+                      config.boundingBox,
                       bounding2DBox,
-                      direction);
+                      config.direction);
   indexed.addScene(scene);
   
   // Process the model
   Processor processor(output,
-                      multiplier,
-                      smooth,
-                      mergedLines,
-                      linewidth,
-                      boundingBox,
-                      stepx,
-                      stepy,
-                      stepz,
-                      direction,
-                      algorithm,
-                      holethreshold,
-                      (labelCrossSections && nCrossSections > 0),
+                      config.multiplier,
+                      config.smooth,
+                      config.mergedLines,
+                      config.linewidth,
+                      config.boundingBox,
+                      config.stepx,
+                      config.stepy,
+                      config.stepz,
+                      config.direction,
+                      config.algorithm,
+                      config.holethreshold,
+                      (config.labelCrossSections && config.nCrossSections > 0),
                       indexed);
   if (!processor.processScene(scene,
-                              nCrossSections,
-                              crossSections)) {
+                              config.nCrossSections,
+                              config.crossSections)) {
     return(1);
   }
 
@@ -514,8 +493,9 @@ makeFilenameFromPattern(const char* pattern,
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 static const char*
-getCrossSectionLabel(void) {
-  if (labelCrossSections) {
+getCrossSectionLabel(const MainConfig& config) {
+  static unsigned int crossSectionLabelCount = 0;
+  if (config.labelCrossSections) {
     char buf[20];
     const unsigned int nAlphabet = 25;
     memset(buf,0,sizeof(buf));

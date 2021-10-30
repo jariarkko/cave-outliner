@@ -17,6 +17,7 @@
 ##############################################################################################/
 
 OBJS=	src/main.o \
+	src/mainconfig.o \
 	src/outlinerprocessor.o \
 	src/outlinerprocessorcrosssection.o \
 	src/outlinerindexedmesh.o \
@@ -29,7 +30,8 @@ OBJS=	src/main.o \
 	src/outlinerhighprecision.o \
 	src/outlinersvg.o \
 	src/outlinerversion.o
-HDRS=	src/outlinertypes.hh \
+HDRS=	src/mainconfig.hh \
+	src/outlinertypes.hh \
 	src/outlinerconstants.hh \
 	src/outlinerdebug.hh \
 	src/outlinerdirection.hh \
@@ -44,6 +46,7 @@ HDRS=	src/outlinertypes.hh \
 	src/outlinersvg.hh \
 	src/outlinerversion.hh
 SRCS=	src/main.cc \
+	src/mainconfig.cc \
 	src/outlinerdebug.cc \
 	src/outlinerdirection.cc \
 	src/outlinerprocessor.cc \
