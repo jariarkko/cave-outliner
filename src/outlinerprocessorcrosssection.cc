@@ -384,21 +384,25 @@ ProcessorCrossSection::drawCrossSectionMesh(const aiScene* scene,
     }
     unsigned int nFaces = 0;
     const aiFace** faces = 0;
+    infof("  cross section line iterator step %u (starting from %u)", iter.step, firstStepInBoundingBox);
     proc.indexed.getFaces(mesh,iter.point.x,iter.point.y,&nFaces,&faces);
     if (nFaces > 0) {
       deepdebugf("  drawCrossSectionMesh: got %u cross section faces from (%.2f,%.2f)",
                  nFaces, iter.point.x, iter.point.y);
+      unsigned int zStep = 0;
       for  (outlinerreal z = sliceVerticalBoundingBox.start.y;
             z <= sliceVerticalBoundingBox.end.y;
             z += stepz) {
+        infof("    z step %u (%.2f)", zStep, z);
         deepdebugf("  drawCrossSectionMesh: z iterator step (%.2f,%.2f,%.2f)",
                    iter.point.x, iter.point.y, z);
         for (unsigned int f = 0; f < nFaces; f++) {
           drawCrossSectionFace(scene,mesh,faces[f],
-                               firstStepInBoundingBox,
-                               iter.step,
+                               iter.step - firstStepInBoundingBox,
+                               zStep,
                                iter.point.x, iter.point.y, z);
         }
+        zStep++;
       }
     }
   }
@@ -408,8 +412,8 @@ void
 ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
                                             const aiMesh* mesh,
                                             const aiFace* face,
-                                            unsigned int firstStepInBoundingBox,
-                                            unsigned int currentStep,
+                                            unsigned int xyStep,
+                                            unsigned int zStep,
                                             outlinerreal x,
                                             outlinerreal y,
                                             outlinerreal z) {
@@ -424,15 +428,15 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
   OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
   deepdeepdebugf("describe done, result = %s", buf);
   if (OutlinerMath::boundingBoxIntersectsTriangle3D(t,thisBox)) {
-    unsigned int xIndex = coordinateLineStepToImageXIndex(firstStepInBoundingBox,currentStep);
-    unsigned int yIndex = coordinateZToImageYIndex(z);
-    deepdebugf("    cross section draw face xyz match     at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) steps %u (%u) triangle %s => matrix %u,%u",
+    infof("    cross section face match at %u,%u (%.2f,%.2f,%.2f)",
+          xyStep, zStep, x, y, z);
+    deepdebugf("    cross section draw face xyz match     at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) triangle %s => matrix %u,%u",
                x, thisBox.end.x, y, thisBox.end.y, z, thisBox.end.z,
-               currentStep, firstStepInBoundingBox,
-               buf,
-               xIndex, yIndex);
-    matrix->setMaterialMatrix(xIndex,yIndex);
+               buf, xyStep, zStep);
+    matrix->setMaterialMatrix(xyStep,zStep);
   } else {
+    infof("    no match to a face at %u,%u",
+          xyStep, zStep);
     deepdeepdebugf("      going to debug");
     deepdebugf("    cross section draw face xyz non-match at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) "
                "face (%5.2f,%5.2f,%5.2f) x (%5.2f,%5.2f,%5.2f) x (%5.2f,%5.2f,%5.2f) triangle %s",
@@ -442,38 +446,6 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
                t.c.x, t.c.y, t.c.z,
                buf);
   }
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-// Cross section coordinates calculation //////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-unsigned int
-ProcessorCrossSection::coordinateLineStepToImageXIndex(unsigned int firstStepInBoundingBox,
-                                                       unsigned int currentStep) {
-  assert(matrix != 0);
-  unsigned int result = (currentStep - firstStepInBoundingBox);
-  //outlinerreal thisXDifference = x - lineStart.x;
-  //outlinerreal thisYDifference = y - lineStart.y;
-  //outlinerreal thisLineLength = sqrt(thisXDifference*thisXDifference + thisYDifference*thisYDifference);
-  //unsigned int result = (unsigned int)((thisLineLength * (matrix->xIndexSize + 1)) / lineLength);
-  assert(result < matrix->xIndexSize);
-  return(result);
-}
- 
-unsigned int
-ProcessorCrossSection::coordinateZToImageYIndex(outlinerreal z) {
-  assert(matrix != 0);
-  assert(z >= sliceVerticalBoundingBox.start.y);
-  assert(z <= sliceVerticalBoundingBox.end.y);
-  outlinerreal diff =
-    (z - sliceVerticalBoundingBox.start.y) /
-    (sliceVerticalBoundingBox.end.y - sliceVerticalBoundingBox.start.y);
-  unsigned int result = (unsigned int)(diff * (matrix->yIndexSize-1));
-  deepdeepdebugf("      cross section coordinate z %.2f (diff %.4f) to %u (yIndexSize %u)",
-                 z, diff, result, matrix->yIndexSize);
-  assert(result < matrix->yIndexSize);
-  return(result);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

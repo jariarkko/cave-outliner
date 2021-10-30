@@ -16,21 +16,22 @@
 ##############################################################################################
 ##############################################################################################
 
-OBJS=	src/main.o \
-	src/mainconfig.o \
-	src/mainoptions.o \
-	src/outlinerprocessor.o \
-	src/outlinerprocessorcrosssection.o \
-	src/outlinerindexedmesh.o \
-	src/outlinermaterialmatrix.o \
-	src/outlinerdescribe.o \
-	src/outlinerboundingboxer.o \
-	src/outlinerdebug.o \
-	src/outlinerdirection.o \
-	src/outlinermath.o \
-	src/outlinerhighprecision.o \
-	src/outlinersvg.o \
-	src/outlinerversion.o
+OBJDIR=	src
+OBJS=	$(OBJDIR)/main.o \
+	$(OBJDIR)/mainconfig.o \
+	$(OBJDIR)/mainoptions.o \
+	$(OBJDIR)/outlinerprocessor.o \
+	$(OBJDIR)/outlinerprocessorcrosssection.o \
+	$(OBJDIR)/outlinerindexedmesh.o \
+	$(OBJDIR)/outlinermaterialmatrix.o \
+	$(OBJDIR)/outlinerdescribe.o \
+	$(OBJDIR)/outlinerboundingboxer.o \
+	$(OBJDIR)/outlinerdebug.o \
+	$(OBJDIR)/outlinerdirection.o \
+	$(OBJDIR)/outlinermath.o \
+	$(OBJDIR)/outlinerhighprecision.o \
+	$(OBJDIR)/outlinersvg.o \
+	$(OBJDIR)/outlinerversion.o
 HDRS=	src/main.hh \
 	src/mainconfig.hh \
 	src/mainoptions.hh \
@@ -112,8 +113,50 @@ CPPCOMPILER=g++
 
 all:	cave-outliner docs test
 
-.o.cc:
-	$(CPPCOMPILER) $(CPPFLAGS) $< -o $>
+$(OBJDIR)/main.o:	src/main.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/main.o
+
+$(OBJDIR)/mainconfig.o:	src/mainconfig.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/mainconfig.o
+
+$(OBJDIR)/mainoptions.o:	src/mainoptions.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/mainoptions.o
+
+$(OBJDIR)/outlinerprocessor.o:	src/outlinerprocessor.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerprocessor.o
+
+$(OBJDIR)/outlinerprocessorcrosssection.o:	src/outlinerprocessorcrosssection.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerprocessorcrosssection.o
+
+$(OBJDIR)/outlinerindexedmesh.o:	src/outlinerindexedmesh.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerindexedmesh.o
+
+$(OBJDIR)/outlinermaterialmatrix.o:	src/outlinermaterialmatrix.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinermaterialmatrix.o
+
+$(OBJDIR)/outlinerdescribe.o:	src/outlinerdescribe.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerdescribe.o
+
+$(OBJDIR)/outlinerboundingboxer.o:	src/outlinerboundingboxer.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerboundingboxer.o
+
+$(OBJDIR)/outlinerdebug.o:	src/outlinerdebug.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerdebug.o
+
+$(OBJDIR)/outlinerdirection.o:	src/outlinerdirection.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerdirection.o
+
+$(OBJDIR)/outlinermath.o:	src/outlinermath.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinermath.o
+
+$(OBJDIR)/outlinerhighprecision.o:	src/outlinerhighprecision.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerhighprecision.o
+
+$(OBJDIR)/outlinersvg.o:	src/outlinersvg.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinersvg.o
+
+$(OBJDIR)/outlinerversion.o:	src/outlinerversion.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerversion.o
 
 $(OBJS): $(HDRS)
 
@@ -272,7 +315,7 @@ updateversion:
 	cp -i /tmp/ver.cc src/outlinerversion.cc
 
 clean:
-	rm -f cave-outliner */*.o test/*.svg
+	rm -f cave-outliner *.o */*.o test/*.svg
 	rm -rf doc/xml doc/search.json doc/latex doc/html
 
 wc:

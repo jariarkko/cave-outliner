@@ -145,19 +145,11 @@ private:
   void drawCrossSectionFace(const aiScene* scene,
                             const aiMesh* mesh,
                             const aiFace* face,
-                            unsigned int firstStepInBoundingBox,
-                            unsigned int currentStep,
+                            unsigned int xyStep,
+                            unsigned int zStep,
                             outlinerreal x,
                             outlinerreal y,
                             outlinerreal z);
-
-  //
-  // Coordinate operations
-  //
-
-  unsigned int coordinateLineStepToImageXIndex(unsigned int firstStepInBoundingBox,
-                                               unsigned int currentStep);
-  unsigned int coordinateZToImageYIndex(outlinerreal z);
   
   //
   // Line operations
