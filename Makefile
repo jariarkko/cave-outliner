@@ -30,7 +30,8 @@ OBJS=	src/main.o \
 	src/outlinerhighprecision.o \
 	src/outlinersvg.o \
 	src/outlinerversion.o
-HDRS=	src/mainconfig.hh \
+HDRS=	src/main.hh \
+	src/mainconfig.hh \
 	src/outlinertypes.hh \
 	src/outlinerconstants.hh \
 	src/outlinerdebug.hh \
