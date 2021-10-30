@@ -34,18 +34,17 @@
 // Class definition ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+///
+/// The OutlinerMath class is a geometry and mathematics module. I
+/// hosts a number of static methods that can be used to calculate
+/// bounding boxes for triangles, whether points are inside a
+/// triangle, etc.
+///
+
 class OutlinerMath {
 
 public:
   
-  static bool boundingBoxEqual(const OutlinerBox2D& box1,
-                               const OutlinerBox2D& box2);
-  static void boundingBoxIntersection(const OutlinerBox2D& box1,
-                                      const OutlinerBox2D& box2,
-                                      OutlinerBox2D& resultBox);
-  static void boundingBoxUnion(const OutlinerBox2D& box1,
-                               const OutlinerBox2D& box2,
-                               OutlinerBox2D& resultBox );
   static void triangleDescribe(const OutlinerTriangle3D& triangle,
                                char* buf,
                                unsigned int bufSize);
@@ -76,20 +75,18 @@ public:
   static void vectorTo(const OutlinerVector2D& from,
                        const OutlinerVector2D& to,
                        OutlinerVector2D& result);
-  static outlinerreal determinant2x2(const OutlinerVector2D& u,
-                                     const OutlinerVector2D& v);
   static void mathTests(void);
 
 private:
 
+  static outlinerreal determinant2x2(const OutlinerVector2D& u,
+                                     const OutlinerVector2D& v);
   static void utilityTests(void);
   static void vectorTests(void);
   static void detTests(void);
   static void boundingBoxTests(void);
-  static void boundingBoxEqualTests(void);
-  static void triangleBoundingBoxTests(void);
   static void boundingBoxIntersectionTests(void);
-  static void boundingBoxUnionTests(void);
+  static void triangleBoundingBoxTests(void);
   static void pointTests(void);
   static void lineTests(void);
   static void lineIntersectionTests(void);

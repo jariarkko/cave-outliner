@@ -40,6 +40,7 @@ public:
   OutlinerVector2D(const OutlinerVector2D& in) : x(in.x), y(in.y) {}
   OutlinerVector2D(const outlinerreal xIn,
                    const outlinerreal yIn) : x(xIn), y(yIn) {}
+  static void test(void);
 };
 
 class OutlinerVector3D {
@@ -53,6 +54,7 @@ public:
   OutlinerVector3D(const outlinerreal xIn,
                    const outlinerreal yIn,
                    const outlinerreal zIn) : x(xIn), y(yIn), z(zIn) {}
+  static void test(void);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,6 +69,7 @@ public:
   OutlinerLine2D(const OutlinerLine2D& in) : start(in.start), end(in.end) {}
   OutlinerLine2D(const OutlinerVector2D& startIn,
                  const OutlinerVector2D& endIn) : start(startIn), end(endIn) {}
+  static void test(void);
 };
 
 class OutlinerLine3D {
@@ -77,6 +80,7 @@ public:
   OutlinerLine3D(const OutlinerLine3D& in) : start(in.start), end(in.end) {}
   OutlinerLine3D(const OutlinerVector3D& startIn,
                  const OutlinerVector3D& endIn) : start(startIn), end(endIn) {}
+  static void test(void);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +95,15 @@ public:
   OutlinerBox2D(const OutlinerLine2D& in) : start(in.start), end(in.end) {}
   OutlinerBox2D(const OutlinerVector2D& startIn,
                 const OutlinerVector2D& endIn) : start(startIn), end(endIn) {}
+  bool equal(const OutlinerBox2D& box2) const;
+  void intersection(const OutlinerBox2D& box2,
+                    OutlinerBox2D& resultBox) const;
+  void boxUnion(const OutlinerBox2D& box2,
+                OutlinerBox2D& resultBox) const;
+  static void test(void);
+  static void testEqual(void);
+  static void testUnion(void);
+  static void testIntersection(void);
 };
 
 class OutlinerBox3D {
@@ -101,6 +114,7 @@ public:
   OutlinerBox3D(const OutlinerBox3D& in) : start(in.start), end(in.end) {}
   OutlinerBox3D(const OutlinerVector3D& startIn,
                 const OutlinerVector3D& endIn) : start(startIn), end(endIn) {}
+  static void test(void);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,6 +131,7 @@ public:
   OutlinerTriangle2D(const OutlinerVector2D& aIn,
                      const OutlinerVector2D& bIn,
                      const OutlinerVector2D& cIn) : a(aIn), b(bIn), c(cIn) {}
+  static void test(void);
 };
 
 class OutlinerTriangle3D {
@@ -129,6 +144,7 @@ public:
   OutlinerTriangle3D(const OutlinerVector3D& aIn,
                      const OutlinerVector3D& bIn,
                      const OutlinerVector3D& cIn) : a(aIn), b(bIn), c(cIn) {}
+  static void test(void);
 };
 
 #endif // OUTLINERHIGHPRECISION_HH

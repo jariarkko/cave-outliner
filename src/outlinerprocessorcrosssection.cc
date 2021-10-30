@@ -588,9 +588,7 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
       set = 1;
     } else {
       OutlinerBox2D newBoundingBox;
-      OutlinerMath::boundingBoxUnion(faceBoundingBox,
-                                     sliceVerticalBoundingBox,
-                                     newBoundingBox);
+      faceBoundingBox.boxUnion(sliceVerticalBoundingBox,newBoundingBox);
       deepdebugf("testing new cross section bounding box "
                  "for face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) "
                  "at (%.2f,%.2f) as (%.2f,%.2f)-(%.2f,%.2f)",
@@ -600,7 +598,7 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
                  x, y,
                  newBoundingBox.start.x, newBoundingBox.start.y,
                  newBoundingBox.end.x, newBoundingBox.end.y);
-      if (!OutlinerMath::boundingBoxEqual(sliceVerticalBoundingBox,newBoundingBox)) {
+      if (!sliceVerticalBoundingBox.equal(newBoundingBox)) {
         sliceVerticalBoundingBox = newBoundingBox;
         deepdebugf("setting new cross section bounding box to (%.2f,%.2f)-(%.2f,%.2f)",
                    sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,

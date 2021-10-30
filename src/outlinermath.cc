@@ -44,38 +44,6 @@
 // Math functions /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-bool
-OutlinerMath::boundingBoxEqual(const OutlinerBox2D& box1,
-                               const OutlinerBox2D& box2) {
-  return(box1.start.x == box2.start.x &&
-         box1.start.y == box2.start.y &&
-         box1.end.x == box2.end.x &&
-         box1.end.y == box2.end.y);
-}
-
-void
-OutlinerMath::boundingBoxIntersection(const OutlinerBox2D& box1,
-                                      const OutlinerBox2D& box2,
-                                      OutlinerBox2D& resultBox) {
-  resultBox.start = box1.start;
-  resultBox.end = box1.end;
-  if (box2.start.x > resultBox.start.x) resultBox.start.x = box2.start.x;
-  if (box2.start.y > resultBox.start.y) resultBox.start.y = box2.start.y;
-  if (box2.end.x < resultBox.end.x) resultBox.end.x = box2.end.x;
-  if (box2.end.y < resultBox.end.y) resultBox.end.y = box2.end.y;
-}
-
-void
-OutlinerMath::boundingBoxUnion(const OutlinerBox2D& box1,
-                               const OutlinerBox2D& box2,
-                               OutlinerBox2D& resultBox) {
-  resultBox = box1;
-  if (box2.start.x < resultBox.start.x) resultBox.start.x = box2.start.x;
-  if (box2.start.y < resultBox.start.y) resultBox.start.y = box2.start.y;
-  if (box2.end.x > resultBox.end.x) resultBox.end.x = box2.end.x;
-  if (box2.end.y > resultBox.end.y) resultBox.end.y = box2.end.y;
-}
-
 void
 OutlinerMath::triangleDescribe(const OutlinerTriangle3D& triangle,
                                char* buf,
@@ -328,7 +296,7 @@ bool
 OutlinerMath::boundingBoxesIntersect3D(OutlinerBox3D& boundingBox1,
                                        OutlinerBox3D& boundingBox2) {
   // Following the algorithm from https://math.stackexchange.com/questions/2651710/simplest-way-to-determine-if-two-3d-boxes-intersect
-
+  
   bool xOverlap = (outlinerbetween(boundingBox1.start.x,boundingBox2.start.x,boundingBox1.end.x) ||
                    outlinerbetween(boundingBox1.start.x,boundingBox2.end.x,boundingBox1.end.x) ||
                    outlinerbetween(boundingBox2.start.x,boundingBox1.start.x,boundingBox2.end.x) ||
@@ -720,10 +688,8 @@ OutlinerMath::mathTests(void) {
   lineIntersectionTests();
   triangleTests();
   boundingBoxTests();
-  boundingBoxEqualTests();
-  triangleBoundingBoxTests();
   boundingBoxIntersectionTests();
-  boundingBoxUnionTests();
+  triangleBoundingBoxTests();
   infof("math tests ok");
 }
 
@@ -881,87 +847,7 @@ OutlinerMath::boundingBoxIntersectionTests(void) {
                                  test3boundingBox2);
   assert(!ans);
 
-  const OutlinerVector2D box1aStart(0,0);
-  const OutlinerVector2D box1aEnd(10,10);
-  const OutlinerVector2D box1bStart(3,0);
-  const OutlinerVector2D box1bEnd(7,6);
-  const OutlinerVector2D box2Start(2,2);
-  const OutlinerVector2D box2End(8,8);
-  const OutlinerBox2D box1a(box1aStart,box1aEnd);
-  const OutlinerBox2D box1b(box1bStart,box1bEnd);
-  const OutlinerBox2D box2(box2Start,box2End);
-  OutlinerBox2D resultBox;
-  boundingBoxIntersection(box1a,
-                          box2,
-                          resultBox);
-  assert(resultBox.start.x == 2 && resultBox.start.y == 2);
-  assert(resultBox.end.x == 8 && resultBox.end.y == 8);
-  boundingBoxIntersection(box1b,
-                          box2,
-                          resultBox);
-  assert(resultBox.start.x == 3 && resultBox.start.y == 2);
-  assert(resultBox.end.x == 7 && resultBox.end.y == 6);
-  
   infof("bounding box intersection tests ok");
-}
-
-void
-OutlinerMath::boundingBoxEqualTests(void) {
-  debugf("bounding box equal  tests...");
-  const OutlinerVector2D box1Start(0,0);
-  const OutlinerVector2D box1End(10,10);
-  const OutlinerBox2D box1(box1Start,box1End);
-  const OutlinerVector2D box2Start(3,0);
-  const OutlinerVector2D box2End(7,6);
-  const OutlinerBox2D box2(box2Start,box2End);
-  const OutlinerVector2D box3Start(0,0);
-  const OutlinerVector2D box3End(10,10);
-  const OutlinerBox2D box3(box3Start,box3End);
-  const OutlinerVector2D box4Start(0,-1);
-  const OutlinerVector2D box4End(10,10);
-  const OutlinerBox2D box4(box4Start,box4End);
-  bool ans;
-  ans = boundingBoxEqual(box1,box2);
-  assert(!ans);
-  ans = boundingBoxEqual(box1,box3);
-  assert(ans);
-  ans = boundingBoxEqual(box1,box4);
-  assert(!ans);
-  debugf("bounding box equal tests ok");
-}
-
-void
-OutlinerMath::boundingBoxUnionTests(void) {
-  infof("bounding box union tests...");
-  
-  const OutlinerVector2D box1aStart(0,0);
-  const OutlinerVector2D box1aEnd(10,10);
-  const OutlinerBox2D box1a(box1aStart,box1aEnd);
-  const OutlinerVector2D box1bStart(-3,0);
-  const OutlinerVector2D box1bEnd(7,16);
-  const OutlinerBox2D box1b(box1bStart,box1bEnd);
-  const OutlinerVector2D box2Start(2,2);
-  const OutlinerVector2D box2End(8,8);
-  const OutlinerBox2D box2(box2Start,box2End);
-  OutlinerBox2D resultBox;
-  boundingBoxUnion(box1a,
-                   box2,
-                   resultBox);
-  deepdebugf("union result (%.2f,%.2f)-(%.2f,%.2f)",
-             resultBox.start.x, resultBox.start.y,
-             resultBox.end.x, resultBox.end.y);
-  assert(resultBox.start.x == 0 && resultBox.start.y == 0);
-  assert(resultBox.end.x == 10 && resultBox.end.y == 10);
-  boundingBoxUnion(box1b,
-                   box2,
-                   resultBox);
-  deepdebugf("union result (%.2f,%.2f)-(%.2f,%.2f)",
-             resultBox.start.x, resultBox.start.y,
-             resultBox.end.x, resultBox.end.y);
-  assert(resultBox.start.x == -3 && resultBox.start.y == 0);
-  assert(resultBox.end.x == 8 && resultBox.end.y == 16);
-  
-  infof("bounding box union tests ok");
 }
 
 void
@@ -1031,8 +917,8 @@ OutlinerMath::lineTests(void) {
 }
 
 void
-OutlinerMath::lineIntersectionTests(void) {
-
+OutlinerMath::lineIntersectionTests() {
+  
   debugf("line intersection tests...");
   
   // Vertical line intersection 1
@@ -1182,7 +1068,6 @@ OutlinerMath::lineIntersectionTests(void) {
     assert(inter.y == 10);
     assert(inter.x == 15);
   }
-  
 }
 
 void

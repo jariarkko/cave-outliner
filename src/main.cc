@@ -547,6 +547,14 @@ getCrossSectionLabel(void) {
 static void
 runTests(void) {
   infof("running tests");
+  OutlinerVector2D::test();
+  OutlinerVector3D::test();
+  OutlinerLine2D::test();
+  OutlinerLine3D::test();
+  OutlinerBox2D::test();
+  OutlinerBox3D::test();
+  OutlinerTriangle2D::test();
+  OutlinerTriangle3D::test();
   OutlinerMath::mathTests();
   MaterialMatrix::test();
   infof("tests ok");
