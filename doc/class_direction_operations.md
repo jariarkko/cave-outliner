@@ -11,7 +11,7 @@ Cave Outliner
 </tbody>
 </table>
 
-[Static Public Member Functions](#pub-static-methods) | [List of all
+[Static Public Member Functions](#pub-static-methods) | 
 members](class_direction_operations-members.html)
 
 DirectionOperations Class Reference

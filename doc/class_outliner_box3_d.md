@@ -13,7 +13,7 @@ Cave Outliner
 
 [Public Member Functions](#pub-methods) | [Static Public Member
 Functions](#pub-static-methods) | [Public Attributes](#pub-attribs) |
-[List of all members](class_outliner_box3_d-members.html)
+ members](class_outliner_box3_d-members.html)
 
 OutlinerBox3D Class Reference
 

@@ -11,7 +11,7 @@ Cave Outliner
 </tbody>
 </table>
 
-[Public Member Functions](#pub-methods) | [List of all
+[Public Member Functions](#pub-methods) | 
 members](class_processor_cross_section-members.html)
 
 ProcessorCrossSection Class Reference

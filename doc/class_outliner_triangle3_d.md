@@ -13,7 +13,7 @@ Cave Outliner
 
 [Public Member Functions](#pub-methods) | [Static Public Member
 Functions](#pub-static-methods) | [Public Attributes](#pub-attribs) |
-[List of all members](class_outliner_triangle3_d-members.html)
+ members](class_outliner_triangle3_d-members.html)
 
 OutlinerTriangle3D Class Reference
 
@@ -28,7 +28,7 @@ OutlinerTriangle3D Class Reference
 </tr>
 <tr class="even memitem:a99ea6215fd363debed2977ac4d12c95e">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a99ea6215fd363debed2977ac4d12c95e"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>OutlinerTriangle3D</strong> (const <a href="class_outliner_triangle3_d.html" class="el">OutlinerTriangle3D</a> &amp;in)</td>
+<td class="memItemRight" data-valign="bottom"><strong>OutlinerTriangle3D</strong> (const [OutlinerTriangle3D](https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle3_d.md) &amp;in)</td>
 </tr>
 <tr class="odd separator:a99ea6215fd363debed2977ac4d12c95e">
 <td colspan="2" class="memSeparator"> </td>

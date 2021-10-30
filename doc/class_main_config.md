@@ -11,7 +11,7 @@ Cave Outliner
 </tbody>
 </table>
 
-[Public Attributes](#pub-attribs) | [List of all
+[Public Attributes](#pub-attribs) | 
 members](class_main_config-members.html)
 
 MainConfig Class Reference

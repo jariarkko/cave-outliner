@@ -11,8 +11,8 @@ Cave Outliner
 </tbody>
 </table>
 
-[Static Public Member Functions](#pub-static-methods) | [List of all
-members](class_outliner_math-members.html)
+[Static Public Member Functions](#pub-static-methods) | 
+
 
 OutlinerMath Class Reference
 
@@ -29,7 +29,7 @@ OutlinerMath Class Reference
 </tr>
 <tr class="even memitem:ad3416480394fa1ae3cbe4ad6f72aab0e">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ad3416480394fa1ae3cbe4ad6f72aab0e"></span> static void </td>
-<td class="memItemRight" data-valign="bottom"><strong>triangleDescribe</strong> (const <a href="class_outliner_triangle3_d.html" class="el">OutlinerTriangle3D</a> &amp;triangle, char *buf, unsigned int bufSize)</td>
+<td class="memItemRight" data-valign="bottom"><strong>triangleDescribe</strong> (const [OutlinerTriangle3D](https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle3_d.md) &amp;triangle, char *buf, unsigned int bufSize)</td>
 </tr>
 <tr class="odd memdesc:ad3416480394fa1ae3cbe4ad6f72aab0e">
 <td class="mdescLeft"> </td>
@@ -53,7 +53,7 @@ OutlinerMath Class Reference
 </tr>
 <tr class="even memitem:ab6b2bb0be2acdc2b9fcbdfe8a9cc6bdf">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ab6b2bb0be2acdc2b9fcbdfe8a9cc6bdf"></span> static void </td>
-<td class="memItemRight" data-valign="bottom"><strong>triangleBoundingBox3D</strong> (const <a href="class_outliner_triangle3_d.html" class="el">OutlinerTriangle3D</a> &amp;triangle, <a href="class_outliner_box3_d.html" class="el">OutlinerBox3D</a> &amp;boundingBox)</td>
+<td class="memItemRight" data-valign="bottom"><strong>triangleBoundingBox3D</strong> (const [OutlinerTriangle3D](https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle3_d.md) &amp;triangle, <a href="class_outliner_box3_d.html" class="el">OutlinerBox3D</a> &amp;boundingBox)</td>
 </tr>
 <tr class="odd memdesc:ab6b2bb0be2acdc2b9fcbdfe8a9cc6bdf">
 <td class="mdescLeft"> </td>
@@ -101,7 +101,7 @@ OutlinerMath Class Reference
 </tr>
 <tr class="even memitem:aca5779b5b445e27c65887622d3629988">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aca5779b5b445e27c65887622d3629988"></span> static bool </td>
-<td class="memItemRight" data-valign="bottom"><strong>boundingBoxIntersectsTriangle3D</strong> (const <a href="class_outliner_triangle3_d.html" class="el">OutlinerTriangle3D</a> &amp;triangle, const <a href="class_outliner_box3_d.html" class="el">OutlinerBox3D</a> &amp;box)</td>
+<td class="memItemRight" data-valign="bottom"><strong>boundingBoxIntersectsTriangle3D</strong> (const [OutlinerTriangle3D](https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle3_d.md) &amp;triangle, const <a href="class_outliner_box3_d.html" class="el">OutlinerBox3D</a> &amp;box)</td>
 </tr>
 <tr class="odd memdesc:aca5779b5b445e27c65887622d3629988">
 <td class="mdescLeft"> </td>

@@ -11,7 +11,7 @@ Cave Outliner
 </tbody>
 </table>
 
-[Public Member Functions](#pub-methods) | [List of all
+[Public Member Functions](#pub-methods) | 
 members](class_describer-members.html)
 
 Describer Class Reference
