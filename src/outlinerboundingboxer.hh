@@ -31,11 +31,22 @@
 // Class definition ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+///
+/// This class enables the calculation to determine the size of a given
+/// model, i.e., the bounding box the 3D model fits in.
+///
+
 class BoundingBoxer {
 
 public:
+
+  /// Construct an object can calculate the bounding box.
   BoundingBoxer(const aiScene* scene);
+
+  /// Calculate the bounding box.
   void getBoundingBox(OutlinerBox3D& boundingBoxOut);
+
+  /// Release all resources associated with the bounding box calculation.
   ~BoundingBoxer();
 
 private:

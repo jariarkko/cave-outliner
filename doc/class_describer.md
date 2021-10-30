@@ -16,6 +16,8 @@ members](class_describer-members.md)
 
 Describer Class Reference
 
+`#include <outlinerdescribe.hh>`
+
 <table class="memberdecls">
 <colgroup>
 <col style="width: 50%" />
@@ -29,18 +31,47 @@ Describer Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a54a7d2be5e7e2c7272d5193c933d6f7e"></span>  </td>
 <td class="memItemRight" data-valign="bottom"><strong>Describer</strong> (bool transforms, bool recurse, bool vertexes, bool faces)</td>
 </tr>
-<tr class="odd separator:a54a7d2be5e7e2c7272d5193c933d6f7e">
+<tr class="odd memdesc:a54a7d2be5e7e2c7272d5193c933d6f7e">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Create a description-generation object.<br />
+</td>
+</tr>
+<tr class="even separator:a54a7d2be5e7e2c7272d5193c933d6f7e">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:a76530b5d374572e9e75b2637b49d7e0a">
+<tr class="odd memitem:a76530b5d374572e9e75b2637b49d7e0a">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a76530b5d374572e9e75b2637b49d7e0a"></span> void </td>
 <td class="memItemRight" data-valign="bottom"><strong>describeScene</strong> (const aiScene *scene)</td>
+</tr>
+<tr class="even memdesc:a76530b5d374572e9e75b2637b49d7e0a">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Describe a given scene.<br />
+</td>
 </tr>
 <tr class="odd separator:a76530b5d374572e9e75b2637b49d7e0a">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
+<tr class="even memitem:aff9200eb95e18ae11e297860f6c85fba">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aff9200eb95e18ae11e297860f6c85fba"></span>  </td>
+<td class="memItemRight" data-valign="bottom"><strong>~Describer</strong> ()</td>
+</tr>
+<tr class="odd memdesc:aff9200eb95e18ae11e297860f6c85fba">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Destruct the object.<br />
+</td>
+</tr>
+<tr class="even separator:aff9200eb95e18ae11e297860f6c85fba">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
 </tbody>
 </table>
+
+<span id="details"></span>
+
+## Detailed Description
+
+This module outputs information about a 3D model read into the memory.
+It is only used for debugging.
 
 ------------------------------------------------------------------------
 

@@ -72,6 +72,12 @@ This module outputs information about a 3D model read into the memory. It is onl
 
 See the detailed description of the [Class Describer API](class_describer.md). 
 
+### Outlinerboundingboxer
+
+This module determines the size of the model, i.e., the bounding box the 3D model fits in.
+
+See the detailed description of the [Class BoundingBoxer API](class_bounding_boxer.md). 
+
 ### Utilities
 
 This module is a collection of small submodules that provide utility functions for math, debugging, etc. to the rest of the software.
@@ -96,7 +102,7 @@ See the detailed description of the triangle objects [Class OutlinerTriangle2D A
 
 #### Outlinerdirection
 
-This module defines a direction enumerated type, which is used to represent the direction of view for the desired plan view.
+This module defines a direction enumerated type, which is used to represent the direction of view for the desired plan view. There's also an associated class that helps perform mappings between coordinates from a given direction.
 
 See the detailed description of the [Class DirectionOperations API](class_direction_operations.md). 
 

@@ -17,6 +17,8 @@ Functions](#pub-static-methods) | [Public Attributes](#pub-attribs) |
 
 OutlinerLine2D Class Reference
 
+`#include <outlinerhighprecision.hh>`
+
 <table class="memberdecls">
 <colgroup>
 <col style="width: 50%" />
@@ -26,9 +28,26 @@ OutlinerLine2D Class Reference
 <tr class="odd heading">
 <td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
 </tr>
-<tr class="even memitem:aa2886e8daba122e03bec8c2c04389806">
+<tr class="even memitem:acadf780ece6cf8fccdedf7eac09fdb26">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="acadf780ece6cf8fccdedf7eac09fdb26"></span>  </td>
+<td class="memItemRight" data-valign="bottom"><strong>OutlinerLine2D</strong> ()</td>
+</tr>
+<tr class="odd memdesc:acadf780ece6cf8fccdedf7eac09fdb26">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Create an empty object, all values initialized to zero.<br />
+</td>
+</tr>
+<tr class="even separator:acadf780ece6cf8fccdedf7eac09fdb26">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:aa2886e8daba122e03bec8c2c04389806">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aa2886e8daba122e03bec8c2c04389806"></span>  </td>
 <td class="memItemRight" data-valign="bottom"><strong>OutlinerLine2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp;in)</td>
+</tr>
+<tr class="even memdesc:aa2886e8daba122e03bec8c2c04389806">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Make an exact copy of another similar object.<br />
+</td>
 </tr>
 <tr class="odd separator:aa2886e8daba122e03bec8c2c04389806">
 <td colspan="2" class="memSeparator"> </td>
@@ -37,7 +56,12 @@ OutlinerLine2D Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a876e4750cceb53a711ef2bed556fac53"></span>  </td>
 <td class="memItemRight" data-valign="bottom"><strong>OutlinerLine2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;startIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;endIn)</td>
 </tr>
-<tr class="odd separator:a876e4750cceb53a711ef2bed556fac53">
+<tr class="odd memdesc:a876e4750cceb53a711ef2bed556fac53">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Make a line based on given two points.<br />
+</td>
+</tr>
+<tr class="even separator:a876e4750cceb53a711ef2bed556fac53">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
@@ -56,7 +80,12 @@ OutlinerLine2D Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a5d3a780be0ce7401febc27ca1363cb9e"></span> static void </td>
 <td class="memItemRight" data-valign="bottom"><strong>test</strong> (void)</td>
 </tr>
-<tr class="odd separator:a5d3a780be0ce7401febc27ca1363cb9e">
+<tr class="odd memdesc:a5d3a780be0ce7401febc27ca1363cb9e">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Run unit tests associated with this class.<br />
+</td>
+</tr>
+<tr class="even separator:a5d3a780be0ce7401febc27ca1363cb9e">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
@@ -75,18 +104,34 @@ OutlinerLine2D Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a72aecb0077d120778998c86102e28097"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> </td>
 <td class="memItemRight" data-valign="bottom"><strong>start</strong></td>
 </tr>
-<tr class="odd separator:a72aecb0077d120778998c86102e28097">
+<tr class="odd memdesc:a72aecb0077d120778998c86102e28097">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">One end of the line.<br />
+</td>
+</tr>
+<tr class="even separator:a72aecb0077d120778998c86102e28097">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:a10b728829cc0754b7f9c95458c6da75d">
+<tr class="odd memitem:a10b728829cc0754b7f9c95458c6da75d">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a10b728829cc0754b7f9c95458c6da75d"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> </td>
 <td class="memItemRight" data-valign="bottom"><strong>end</strong></td>
+</tr>
+<tr class="even memdesc:a10b728829cc0754b7f9c95458c6da75d">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Another end of the line.<br />
+</td>
 </tr>
 <tr class="odd separator:a10b728829cc0754b7f9c95458c6da75d">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
 </table>
+
+<span id="details"></span>
+
+## Detailed Description
+
+This object represents a "line" between two points in 2D space.
 
 ------------------------------------------------------------------------
 

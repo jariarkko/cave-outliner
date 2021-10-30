@@ -50,9 +50,17 @@ struct ProcessorCrossSectionInfo {
 // Class interface ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+///
+/// This is the main program of the Core module, it performs the
+/// actual mapping from a given model and indexed mesh to an SVG
+/// image. It creates a material matrix as part of the process.
+///
+
 class Processor {
 
 public:
+
+  /// Create a Processor.
   Processor(const char* fileNameIn,
             unsigned int multiplierIn,
             bool smoothIn,
@@ -67,8 +75,12 @@ public:
             unsigned int holethresholdIn,
             bool labelsIn,
             IndexedMesh& indexedIn);
+
+  /// Destruct a Processor.
   ~Processor();
-  
+
+  /// Process a plan fiew fora given scene in the processor, with a
+  /// given set of (optional) cross sections.
   bool processScene(const aiScene* scene,
                     unsigned int nCrossSections,
                     struct ProcessorCrossSectionInfo* crossSections);

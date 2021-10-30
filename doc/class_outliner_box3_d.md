@@ -17,6 +17,8 @@ Functions](#pub-static-methods) | [Public Attributes](#pub-attribs) |
 
 OutlinerBox3D Class Reference
 
+`#include <outlinerhighprecision.hh>`
+
 <table class="memberdecls">
 <colgroup>
 <col style="width: 50%" />
@@ -26,9 +28,26 @@ OutlinerBox3D Class Reference
 <tr class="odd heading">
 <td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
 </tr>
-<tr class="even memitem:ab3e293681156968ffffda3e136195642">
+<tr class="even memitem:a12eecf060552c563a0bc03b81914c380">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a12eecf060552c563a0bc03b81914c380"></span>  </td>
+<td class="memItemRight" data-valign="bottom"><strong>OutlinerBox3D</strong> ()</td>
+</tr>
+<tr class="odd memdesc:a12eecf060552c563a0bc03b81914c380">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Create an empty object, all values initialized to zero.<br />
+</td>
+</tr>
+<tr class="even separator:a12eecf060552c563a0bc03b81914c380">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:ab3e293681156968ffffda3e136195642">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ab3e293681156968ffffda3e136195642"></span>  </td>
 <td class="memItemRight" data-valign="bottom"><strong>OutlinerBox3D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;in)</td>
+</tr>
+<tr class="even memdesc:ab3e293681156968ffffda3e136195642">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Make an exact copy of another similar object.<br />
+</td>
 </tr>
 <tr class="odd separator:ab3e293681156968ffffda3e136195642">
 <td colspan="2" class="memSeparator"> </td>
@@ -37,7 +56,12 @@ OutlinerBox3D Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a08a3d66d927236353b74be92f04242e5"></span>  </td>
 <td class="memItemRight" data-valign="bottom"><strong>OutlinerBox3D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector3_d.md" class="el">OutlinerVector3D</a> &amp;startIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector3_d.md" class="el">OutlinerVector3D</a> &amp;endIn)</td>
 </tr>
-<tr class="odd separator:a08a3d66d927236353b74be92f04242e5">
+<tr class="odd memdesc:a08a3d66d927236353b74be92f04242e5">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Make a bounding box based on given two points.<br />
+</td>
+</tr>
+<tr class="even separator:a08a3d66d927236353b74be92f04242e5">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
@@ -56,7 +80,12 @@ OutlinerBox3D Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a0279055d0cb166b0a495b25ace5084a3"></span> static void </td>
 <td class="memItemRight" data-valign="bottom"><strong>test</strong> (void)</td>
 </tr>
-<tr class="odd separator:a0279055d0cb166b0a495b25ace5084a3">
+<tr class="odd memdesc:a0279055d0cb166b0a495b25ace5084a3">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Run unit tests associated with this class.<br />
+</td>
+</tr>
+<tr class="even separator:a0279055d0cb166b0a495b25ace5084a3">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
@@ -75,18 +104,35 @@ OutlinerBox3D Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a14c9f2a61a054a8a875268025a59ecc2"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector3_d.md" class="el">OutlinerVector3D</a> </td>
 <td class="memItemRight" data-valign="bottom"><strong>start</strong></td>
 </tr>
-<tr class="odd separator:a14c9f2a61a054a8a875268025a59ecc2">
+<tr class="odd memdesc:a14c9f2a61a054a8a875268025a59ecc2">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Lower left corner of the bounding box/cube.<br />
+</td>
+</tr>
+<tr class="even separator:a14c9f2a61a054a8a875268025a59ecc2">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:adb9b4fcadca176fb9963e8e3ff7ae695">
+<tr class="odd memitem:adb9b4fcadca176fb9963e8e3ff7ae695">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="adb9b4fcadca176fb9963e8e3ff7ae695"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector3_d.md" class="el">OutlinerVector3D</a> </td>
 <td class="memItemRight" data-valign="bottom"><strong>end</strong></td>
+</tr>
+<tr class="even memdesc:adb9b4fcadca176fb9963e8e3ff7ae695">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Upper right corner of the bounding box/cube.<br />
+</td>
 </tr>
 <tr class="odd separator:adb9b4fcadca176fb9963e8e3ff7ae695">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
 </table>
+
+<span id="details"></span>
+
+## Detailed Description
+
+This object represents a "bounding box", a cubic/rectangular area in 3D
+space.
 
 ------------------------------------------------------------------------
 

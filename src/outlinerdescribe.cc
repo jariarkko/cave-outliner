@@ -44,6 +44,9 @@ Describer::Describer(bool transforms,
   faces(faces) {
 }
 
+Describer::~Describer() {
+}
+
 void
 Describer::describeScene(const aiScene* scene) {
   assert(scene != 0);

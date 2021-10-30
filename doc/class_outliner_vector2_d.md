@@ -17,6 +17,8 @@ Functions](#pub-static-methods) | [Public Attributes](#pub-attribs) |
 
 OutlinerVector2D Class Reference
 
+`#include <outlinerhighprecision.hh>`
+
 <table class="memberdecls">
 <colgroup>
 <col style="width: 50%" />
@@ -26,9 +28,26 @@ OutlinerVector2D Class Reference
 <tr class="odd heading">
 <td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
 </tr>
-<tr class="even memitem:a7bbea017cfe65831322f22d8709c7e17">
+<tr class="even memitem:a46400e63d11411fbf9aca32c9a95643b">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a46400e63d11411fbf9aca32c9a95643b"></span>  </td>
+<td class="memItemRight" data-valign="bottom"><strong>OutlinerVector2D</strong> ()</td>
+</tr>
+<tr class="odd memdesc:a46400e63d11411fbf9aca32c9a95643b">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Create an empty object, all values initialized to zero.<br />
+</td>
+</tr>
+<tr class="even separator:a46400e63d11411fbf9aca32c9a95643b">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:a7bbea017cfe65831322f22d8709c7e17">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a7bbea017cfe65831322f22d8709c7e17"></span>  </td>
 <td class="memItemRight" data-valign="bottom"><strong>OutlinerVector2D</strong> (const aiVector2D &amp;in)</td>
+</tr>
+<tr class="even memdesc:a7bbea017cfe65831322f22d8709c7e17">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Make an exact copy of another similar object. (But with lower precision.)<br />
+</td>
 </tr>
 <tr class="odd separator:a7bbea017cfe65831322f22d8709c7e17">
 <td colspan="2" class="memSeparator"> </td>
@@ -37,12 +56,22 @@ OutlinerVector2D Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aefd197feb0e736f53488e2f06e0394f9"></span>  </td>
 <td class="memItemRight" data-valign="bottom"><strong>OutlinerVector2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;in)</td>
 </tr>
-<tr class="odd separator:aefd197feb0e736f53488e2f06e0394f9">
+<tr class="odd memdesc:aefd197feb0e736f53488e2f06e0394f9">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Make an exact copy of another similar object.<br />
+</td>
+</tr>
+<tr class="even separator:aefd197feb0e736f53488e2f06e0394f9">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:a17a0d7512dcf1da4cef420a21716c211">
+<tr class="odd memitem:a17a0d7512dcf1da4cef420a21716c211">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a17a0d7512dcf1da4cef420a21716c211"></span>  </td>
 <td class="memItemRight" data-valign="bottom"><strong>OutlinerVector2D</strong> (const outlinerreal xIn, const outlinerreal yIn)</td>
+</tr>
+<tr class="even memdesc:a17a0d7512dcf1da4cef420a21716c211">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Make a vector based on the x,y coordinates.<br />
+</td>
 </tr>
 <tr class="odd separator:a17a0d7512dcf1da4cef420a21716c211">
 <td colspan="2" class="memSeparator"> </td>
@@ -51,7 +80,12 @@ OutlinerVector2D Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aa21f5f0786ba884bda75223d4f8099cc"></span> bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>equal</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;b) const</td>
 </tr>
-<tr class="odd separator:aa21f5f0786ba884bda75223d4f8099cc">
+<tr class="odd memdesc:aa21f5f0786ba884bda75223d4f8099cc">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Test for equality.<br />
+</td>
+</tr>
+<tr class="even separator:aa21f5f0786ba884bda75223d4f8099cc">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
@@ -70,7 +104,12 @@ OutlinerVector2D Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a37be3f76ed2e583ba72f0c8c405cb0e9"></span> static void </td>
 <td class="memItemRight" data-valign="bottom"><strong>test</strong> (void)</td>
 </tr>
-<tr class="odd separator:a37be3f76ed2e583ba72f0c8c405cb0e9">
+<tr class="odd memdesc:a37be3f76ed2e583ba72f0c8c405cb0e9">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Run unit tests associated with this class.<br />
+</td>
+</tr>
+<tr class="even separator:a37be3f76ed2e583ba72f0c8c405cb0e9">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
@@ -89,18 +128,34 @@ OutlinerVector2D Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a3947a056922d4ff8046f38ec366c57de"></span> outlinerreal </td>
 <td class="memItemRight" data-valign="bottom"><strong>x</strong></td>
 </tr>
-<tr class="odd separator:a3947a056922d4ff8046f38ec366c57de">
+<tr class="odd memdesc:a3947a056922d4ff8046f38ec366c57de">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">The x coordinate of the point.<br />
+</td>
+</tr>
+<tr class="even separator:a3947a056922d4ff8046f38ec366c57de">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:a786083ebecf5558b495239745816eac4">
+<tr class="odd memitem:a786083ebecf5558b495239745816eac4">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a786083ebecf5558b495239745816eac4"></span> outlinerreal </td>
 <td class="memItemRight" data-valign="bottom"><strong>y</strong></td>
+</tr>
+<tr class="even memdesc:a786083ebecf5558b495239745816eac4">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">The y coordinate of the point.<br />
+</td>
 </tr>
 <tr class="odd separator:a786083ebecf5558b495239745816eac4">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
 </table>
+
+<span id="details"></span>
+
+## Detailed Description
+
+This object represents a "vector" to a point in 2D space.
 
 ------------------------------------------------------------------------
 

@@ -33,16 +33,27 @@
 // Functions //////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+///
+/// This module outputs information about a 3D model read into the
+/// memory. It is only used for debugging.
+///
+
 class Describer {
 
 public:
   
+  /// Create a description-generation object.
   Describer(bool transforms,
             bool recurse,
             bool vertexes,
             bool faces);
+
+  /// Describe a given scene.
   void describeScene(const aiScene* scene);
 
+  /// Destruct the object.
+  ~Describer();
+  
 private:
 
   bool transforms;
