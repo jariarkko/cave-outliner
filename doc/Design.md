@@ -38,7 +38,7 @@ This object represents an optimized index to the mesh faces contained in an impo
 
 The number of tiles is configurable with the --tiling option of the cave-outliner program.
 
-See the detailed description of the (Class IndexedMesh API)[class_indexed_mesh.md]. 
+See the detailed description of the [Class IndexedMesh API](class_indexed_mesh.md). 
 
 #### Outlinermaterialmatrix
 
@@ -46,31 +46,31 @@ This object represents a 2D view into a 3D cave model. Given a desired resolutio
 
 Note that the material matrix resolution is not the same as tile resolution in the indexed mesh object. Typically, the indexed mesh has low resolution, just sufficient for fast searches, while the material matrix needs to support the desired high resolution of the output.
 
-See the detailed description of the (Class MaterialMatrix API)[class_material_matrix.md]. 
+See the detailed description of the [Class MaterialMatrix API](class_material_matrix.md). 
 
 #### Outlinerprocessor
 
 This is the main program of the Core module, it performs the actual mapping from a given model and indexed mesh to an SVG image. It creates a material matrix as part of the process.
 
-See the detailed description of the (Class Processor API)[class_processor.md]. 
+See the detailed description of the [Class Processor API](class_processor.md). 
 
 #### Outlinerprocessorcrosssection
 
 This is the module inside of the Core module that performs the the drawing of cross sections.
 
-See the detailed description of the (Class ProcessorCrossSection API)[class_processor_cross_section.md]. 
+See the detailed description of the [Class ProcessorCrossSection API](class_processor_cross_section.md). 
 
 ### Outlinersvg
 
 This module can be used to output SVG images to a file. For a description of what an SVG image format is, see https://www.w3schools.com/graphics/svg_intro.asp. 
 
-See the detailed description of the (Class SvgCreator API)[class_svg_creator.md]. 
+See the detailed description of the [Class SvgCreator API](class_svg_creator.md). 
 
 ### Outlinerdesribe
 
 This module outputs information about a 3D model read into the memory. It is only used for debugging.
 
-See the detailed description of the (Class Describer API)[class_describer.md]. 
+See the detailed description of the [Class Describer API](class_describer.md). 
 
 ### Utilities
 
@@ -80,25 +80,25 @@ This module is a collection of small submodules that provide utility functions f
 
 This module provides a number of math routines that the Core parts of the software need, such as a function for calculating when a point is inside a triangle.
 
-See the detailed description of the (Class OutlinerMath API)[class_outliner_math.md]. 
+See the detailed description of the [Class OutlinerMath API](class_outliner_math.md). 
 
 #### Outlinerhighprecision
 
 This module defines high-precision 2D and 3D vector types.
 
-See the detailed description of the vector objects (Class OutlinerVector2D API)[class_outliner_vector2_d.md] and (Class OutlinerVector3D API)[class_outliner_vector3_d.md]. 
+See the detailed description of the vector objects [Class OutlinerVector2D API](class_outliner_vector2_d.md) and [Class OutlinerVector3D API](class_outliner_vector3_d.md). 
 
-See the detailed description of the line objects (Class OutlinerLine2D API)[class_outliner_line2_d.md] and (Class OutlinerLine3D API)[class_outliner_line3_d.md]. 
+See the detailed description of the line objects [Class OutlinerLine2D API](class_outliner_line2_d.md) and [Class OutlinerLine3D API](class_outliner_line3_d.md). 
 
-See the detailed description of the bounding box objects (Class OutlinerBox2D API)[class_outliner_box2_d.md] and (Class OutlinerBox3D API)[class_outliner_box3_d.md]. 
+See the detailed description of the bounding box objects [Class OutlinerBox2D API](class_outliner_box2_d.md) and [Class OutlinerBox3D API](class_outliner_box3_d.md). 
 
-See the detailed description of the triangle objects (Class OutlinerTriangle2D API)[class_outliner_triangle2_d.md] and (Class OutlinerTriangle3D API)[class_outliner_triangle3_d.md]. 
+See the detailed description of the triangle objects [Class OutlinerTriangle2D API](class_outliner_triangle2_d.md) and [Class OutlinerTriangle3D API](class_outliner_triangle3_d.md). 
 
 #### Outlinerdirection
 
 This module defines a direction enumerated type, which is used to represent the direction of view for the desired plan view.
 
-See the detailed description of the (Class DirectionOperations API)[class_direction_operations.md]. 
+See the detailed description of the [Class DirectionOperations API](class_direction_operations.md). 
 
 #### Outlinertypes
 
