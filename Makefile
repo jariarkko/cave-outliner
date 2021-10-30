@@ -60,22 +60,69 @@ SRCS=	src/main.cc \
 	src/outlinerhighprecision.cc \
 	src/outlinersvg.cc \
 	src/outlinerversion.cc
+CLASSES=	outliner_math \
+		main_config \
+		bounding_boxer \
+		describer \
+		direction_operations \
+		indexed_mesh \
+		material_matrix \
+		outliner_box2_d \
+		outliner_box3_d \
+		outliner_line2_d \
+		outliner_line3_d \
+		outliner_triangle2_d \
+		outliner_triangle3_d \
+		outliner_vector2_d \
+		outliner_vector3_d \
+		processor \
+		processor_cross_section \
+		svg_creator
+CLASSMARKDOWNS=	doc/class_outliner_math.md \
+		doc/class_main_config.md \
+		doc/class_bounding_boxer.md \
+		doc/class_describer.md \
+		doc/class_direction_operations.md \
+		doc/class_indexed_mesh.md \
+		doc/class_material_matrix.md \
+		doc/class_outliner_box2_d.md \
+		doc/class_outliner_box3_d.md \
+		doc/class_outliner_line2_d.md \
+		doc/class_outliner_line3_d.md \
+		doc/class_outliner_triangle2_d.md \
+		doc/class_outliner_triangle3_d.md \
+		doc/class_outliner_vector2_d.md \
+		doc/class_outliner_vector3_d.md \
+		doc/class_processor.md \
+		doc/class_processor_cross_section.md \
+		doc/class_svg_creator.md
 SUPP=Makefile
 CPPFLAGS=-O3 -Wall -std=c++11 `pkg-config --cflags assimp`
+ISYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk 
 LDFLAGS=-O3
 LDLIBS=`pkg-config --libs-only-L assimp` -lassimp
+#CPPCOMPILER=clang++
+CPPCOMPILER=g++
 
 all:	cave-outliner docs test
 
-.o.c:
-	g++ $(CPPFLAGS) $< -o $>
+.o.cc:
+	$(CPPCOMPILER) $(CPPFLAGS) $< -o $>
 
 $(OBJS): $(HDRS)
 
 cave-outliner:	$(OBJS)
-	g++ $(LDFLAGS) -o cave-outliner $(OBJS) $(LDLIBS)
+	$(CPPCOMPILER) $(LDFLAGS) -o cave-outliner $(OBJS) $(LDLIBS)
 
 docs:	doc/Design-Structure-Small.jpg
+
+docs-generation:	$(CLASSMARKDOWNS)
+
+$(CLASSMARKDOWNS):	$(HDRS) Makefile
+	-rm -rf doc/xml doc/html doc/search.json doc/index.html doc/latex
+	doxygen doc/doxygen.cfg
+	for x in $(CLASSES); do pandoc doc/html/class_$$x.html -f html -t markdown_strict -o doc/class_$$x.md; done
+	-rm -rf doc/xml doc/html doc/search.json doc/index.html doc/latex
 
 doc/Design-Structure-Small.jpg:	doc/Design-Structure.jpg
 	convert -quality 0.97 -resize 1400x doc/Design-Structure.jpg doc/Design-Structure-Small.jpg
@@ -213,6 +260,7 @@ updateversion:
 
 clean:
 	rm -f cave-outliner */*.o test/*.svg
+	rm -rf doc/xml doc/search.json doc/latex doc/html
 
 wc:
 	wc $(HDRS) $(SRCS) $(SUPP)
