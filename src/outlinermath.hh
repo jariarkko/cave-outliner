@@ -35,7 +35,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ///
-/// The OutlinerMath class is a geometry and mathematics module. I
+/// The OutlinerMath class is a geometry and mathematics module. It
 /// hosts a number of static methods that can be used to calculate
 /// bounding boxes for triangles, whether points are inside a
 /// triangle, etc.
@@ -44,37 +44,60 @@
 class OutlinerMath {
 
 public:
-  
+
+  /// Produce a string that describes a triangle. Used in debugging.
   static void triangleDescribe(const OutlinerTriangle3D& triangle,
                                char* buf,
                                unsigned int bufSize);
+  
+  /// Calculate the smallest bounding box that holds a given triangle (in a 2-dimension model).
   static void triangleBoundingBox2D(const OutlinerTriangle2D& triangle,
                                     OutlinerBox2D& boundingBox);
+
+  /// Calculate the smallest bounding box that holds a given triangle (in a 3-dimension model).
   static void triangleBoundingBox3D(const OutlinerTriangle3D& triangle,
                                     OutlinerBox3D& boundingBox);
+
+  /// Is a given point inside a triangle (in a 2-dimension model)?
   static bool pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
                                     const OutlinerVector2D& point);
+
+  /// Is a given point inside a bounding box (in 2-dimension model)?
   static bool pointInsideBoundingBox2D(const OutlinerBox2D& box,
                                        const OutlinerVector2D& point);
+  
+  /// Does a triangle intersect a bounding box?
   static bool boundingBoxIntersectsTriangle2D(const OutlinerTriangle2D& triangle,
                                               const OutlinerBox2D& box);
+
+  /// Does a triangle intersect a bounding box?
   static bool boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle,
                                               const OutlinerBox3D& box);
+
+  /// Does a bounding box intersect another one?
   static bool boundingBoxesIntersect3D(OutlinerBox3D& boundingBox1,
                                        OutlinerBox3D& boundingBox2);
+
+  /// Is a given point on a line?
   static bool pointOnLine2D(const OutlinerLine2D& line,
                             const OutlinerVector2D& point);
+  
+  /// Does a line intersect a vertical line?
   static bool lineIntersectsVerticalLine2D(const OutlinerLine2D& line,
                                            const OutlinerLine2D& verticalLine,
                                            OutlinerVector2D& intersectionPoint);
+
+  /// Does a line intersect a horizontal line?
   static bool lineIntersectsHorizontalLine2D(const OutlinerLine2D& line,
                                              const OutlinerLine2D& horizontalLine,
                                              OutlinerVector2D& intersectionPoint);
-  static bool vectorEqual(const OutlinerVector2D& a,
-                          const OutlinerVector2D& b);
+
+  /// Create a vector from "from" to "to", placing the result in "result".
   static void vectorTo(const OutlinerVector2D& from,
                        const OutlinerVector2D& to,
                        OutlinerVector2D& result);
+
+  /// Run module tests.
   static void mathTests(void);
 
 private:
