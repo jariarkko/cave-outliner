@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+          "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+     width="24" height="5">
+<rect x="0" y="0" width="24" height="5" fill="white" stroke="white" stroke-width="0"/>
+<rect x="2" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="3" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="4" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="5" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="6" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="7" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="8" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="9" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="10" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="11" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="12" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="13" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="14" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="15" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="16" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="17" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="18" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="19" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="20" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="21" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+</svg>

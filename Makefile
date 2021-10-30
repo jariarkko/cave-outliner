@@ -154,6 +154,7 @@ basic-tests:	cave-outliner \
 		house-line-test \
 		cube-cross-section-simple-test \
 		cube-reduced-cross-section-test \
+		cube-reduced-highres-cross-section-test \
 		cube-cross-section-test \
 		cube-cross-section-label-test \
 		cube-cross-section-highres-label-test \
@@ -229,6 +230,12 @@ cube-reduced-cross-section-test:
 	@./cave-outliner --quiet --pixel --crosssections 1 test/cube-reduced-cross-section-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube-reduced.stl test/cube-reduced-cross-section.svg
 	@diff -q test/cube-reduced-cross-section.svg test/cube-reduced-cross-section.svg.expected
 	@diff -q test/cube-reduced-cross-section-0.svg test/cube-reduced-cross-section-0.svg.expected
+
+cube-reduced-highres-cross-section-test:
+	@echo 'Running test case cube-reduced-highres-cross-section-test...'
+	@./cave-outliner --quiet --pixel --crosssections 1 test/cube-reduced-highres-cross-section-%.svg --step 0.1 --bounding -2 2 -2 2 -2 2 test/cube-reduced.stl test/cube-reduced-highres-cross-section.svg
+	@diff -q test/cube-reduced-highres-cross-section.svg test/cube-reduced-highres-cross-section.svg.expected
+	@diff -q test/cube-reduced-highres-cross-section-0.svg test/cube-reduced-highres-cross-section-0.svg.expected
 
 cube-cross-section-test:
 	@echo 'Running test case cube-cross-section-test...'
