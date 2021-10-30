@@ -419,9 +419,7 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
   assert(matrix != 0);
   OutlinerTriangle3D t;
   proc.faceGetVertices3D(mesh,face,t);
-  OutlinerVector3D point(x,y,z);
-  OutlinerVector3D stepBoundingBox(x+lineStepX,y+lineStepY,z+stepz);
-  OutlinerBox3D thisBox(point,stepBoundingBox);
+  OutlinerBox3D thisBox(x,y,z,x+lineStepX,y+lineStepY,z+stepz);
   char buf[80];
   OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
   deepdeepdebugf("describe done, result = %s", buf);
