@@ -57,3 +57,15 @@ MainConfig::MainConfig() :
   nCrossSections(0),
   labelCrossSections(0) {
 }
+
+MainConfig::~MainConfig() {
+  if (automaticCrossSectionFilenamePattern != 0) free((void*)automaticCrossSectionFilenamePattern);
+  automaticCrossSectionFilenamePattern = 0;
+  for (unsigned int i = 0; i < nCrossSections; i++) {
+    struct ProcessorCrossSectionInfo& one = crossSections[i];
+    if (one.filename != 0) free((void*)one.filename);
+    one.filename = 0;
+    if (one.label != 0) free((void*)one.label);
+    one.label = 0;
+  }
+}

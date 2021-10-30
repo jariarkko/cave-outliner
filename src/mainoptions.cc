@@ -17,57 +17,31 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef MAINCONFIG_HH
-#define MAINCONFIG_HH
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Includes ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <cassert>
+#include "outlinertypes.hh"
+#include "outlinerconstants.hh"
+#include "outlinerdirection.hh"
+#include "outlinerhighprecision.hh"
+#include "outlinerprocessor.hh"
+#include "mainconfig.hh"
+#include "mainoptions.hh"
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// Class definition ///////////////////////////////////////////////////////////////////////////
+// Class functions ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-///
-/// The MainConfig class represents an object of all configuration
-/// information related to the cave-outliner program. It is
-/// initialized to default values, and the main program can read
-/// options and other command line arguments to set specific values in
-/// the configuration. Once the processing of the actual function in
-/// cave-outliner begins, the configuration data is read from this
-/// object to decide how to process.
-///
+MainOptions::MainOptions(MainConfig& configIn) :
+  config(configIn) {
+}
 
-class MainConfig {
+MainOptions::~MainOptions() {
+}
 
-public:
-  MainConfig();
-  ~MainConfig();
-  
-  bool test;
-  bool info;
-  bool debug;
-  bool deepdebug;
-  bool deepdeepdebug;
-  float stepx;
-  float stepy;
-  float stepz;
-  bool boundingBoxSet;
-  OutlinerBox3D boundingBox;
-  enum outlinerdirection direction;
-  enum outlineralgorithm algorithm;
-  float linewidth;
-  unsigned int multiplier;
-  bool smooth;
-  bool mergedLines;
-  unsigned int tiles;
-  unsigned int holethreshold;
-  bool automaticCrossSections;
-  unsigned int nAutomaticCrossSections;
-  const char* automaticCrossSectionFilenamePattern;
-  unsigned int nCrossSections;
-  struct ProcessorCrossSectionInfo crossSections[outlinermaxcrosssections];
-  bool labelCrossSections;
-};
-
-#endif // MAINCONFIG_HH
+bool
+MainOptions::processCommandLine(int argc,
+                                char** argv) {
+}

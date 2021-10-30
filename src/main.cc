@@ -123,7 +123,11 @@ main(int argc, char** argv) {
       }
       config.automaticCrossSections = 1;
       config.nAutomaticCrossSections = num;
-      config.automaticCrossSectionFilenamePattern = filenamePattern;
+      config.automaticCrossSectionFilenamePattern = strdup(filenamePattern);
+      if (config.automaticCrossSectionFilenamePattern == 0) {
+        errf("Cannot allocate file name pattern string");
+        exit(1);
+      }
       argc--;argv++;
       argc--;argv++;
     } else if (strcmp(argv[1],"--crosssection") == 0 && argc > 3) {

@@ -19,6 +19,11 @@ Overall, the system consists of six major parts:
 ## Modules
 
 ### Main
+
+This is the main program, which lives in src/main.cc. However, bulk of the functionality is in associated classes.
+
+See the detailed description of the [Class MainConfig API](class_main_config.md) and [Class MainOptions API](class_main_options.md).
+
 ### Assimp
 
 This is an external library, The Open-Asset-Importer-Lib. See https://www.assimp.org/

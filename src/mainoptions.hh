@@ -17,57 +17,40 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef MAINCONFIG_HH
-#define MAINCONFIG_HH
+#ifndef MAINOPTIONS_HH
+#define MAINOPTIONS_HH
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Includes ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+#include "mainconfig.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Class definition ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ///
-/// The MainConfig class represents an object of all configuration
-/// information related to the cave-outliner program. It is
-/// initialized to default values, and the main program can read
-/// options and other command line arguments to set specific values in
-/// the configuration. Once the processing of the actual function in
-/// cave-outliner begins, the configuration data is read from this
-/// object to decide how to process.
+/// The MainOptions class represents the functionalit to process all end-user configuration
+/// information, from the command line. It updates the MainConfig object as it processes.
 ///
 
-class MainConfig {
+class MainOptions {
 
 public:
-  MainConfig();
-  ~MainConfig();
+
+  /// Create an options processor.
+  MainOptions(MainConfig& configIn);
+
+  /// Release all resources associated with the options processor.
+  ~MainOptions();
+
+  /// Process options and arguments
+  bool processCommandLine(int argc, char** argv);
   
-  bool test;
-  bool info;
-  bool debug;
-  bool deepdebug;
-  bool deepdeepdebug;
-  float stepx;
-  float stepy;
-  float stepz;
-  bool boundingBoxSet;
-  OutlinerBox3D boundingBox;
-  enum outlinerdirection direction;
-  enum outlineralgorithm algorithm;
-  float linewidth;
-  unsigned int multiplier;
-  bool smooth;
-  bool mergedLines;
-  unsigned int tiles;
-  unsigned int holethreshold;
-  bool automaticCrossSections;
-  unsigned int nAutomaticCrossSections;
-  const char* automaticCrossSectionFilenamePattern;
-  unsigned int nCrossSections;
-  struct ProcessorCrossSectionInfo crossSections[outlinermaxcrosssections];
-  bool labelCrossSections;
+private:
+  
+  MainConfig& config;
 };
 
 #endif // MAINCONFIG_HH

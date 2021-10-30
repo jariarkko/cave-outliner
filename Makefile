@@ -1,6 +1,6 @@
-##############################################################################################/
-##############################################################################################/
-##############################################################################################/
+##############################################################################################
+##############################################################################################
+##############################################################################################
 ##
 ##      CCC    AAA   V     V EEEEE       OOO   UU   UU TTTTTT LL    II NN   NN EEEEE RRRRR
 ##    CC   CC AA  AA  V   V  EE        OO   OO UU   UU   TT   LL    II NNN  NN EE    RR  RR
@@ -12,12 +12,13 @@
 ##
 ##    Copyright (C) 2021 by Jari Arkko -- See LICENSE.txt for license information.
 ##
-##############################################################################################/
-##############################################################################################/
-##############################################################################################/
+##############################################################################################
+##############################################################################################
+##############################################################################################
 
 OBJS=	src/main.o \
 	src/mainconfig.o \
+	src/mainoptions.o \
 	src/outlinerprocessor.o \
 	src/outlinerprocessorcrosssection.o \
 	src/outlinerindexedmesh.o \
@@ -32,6 +33,7 @@ OBJS=	src/main.o \
 	src/outlinerversion.o
 HDRS=	src/main.hh \
 	src/mainconfig.hh \
+	src/mainoptions.hh \
 	src/outlinertypes.hh \
 	src/outlinerconstants.hh \
 	src/outlinerdebug.hh \
@@ -48,6 +50,7 @@ HDRS=	src/main.hh \
 	src/outlinerversion.hh
 SRCS=	src/main.cc \
 	src/mainconfig.cc \
+	src/mainoptions.cc \
 	src/outlinerdebug.cc \
 	src/outlinerdirection.cc \
 	src/outlinerprocessor.cc \
@@ -60,26 +63,28 @@ SRCS=	src/main.cc \
 	src/outlinerhighprecision.cc \
 	src/outlinersvg.cc \
 	src/outlinerversion.cc
-CLASSES=	outliner_math \
-		main_config \
-		bounding_boxer \
-		describer \
-		direction_operations \
-		indexed_mesh \
-		material_matrix \
-		outliner_box2_d \
-		outliner_box3_d \
-		outliner_line2_d \
-		outliner_line3_d \
-		outliner_triangle2_d \
-		outliner_triangle3_d \
-		outliner_vector2_d \
-		outliner_vector3_d \
-		processor \
-		processor_cross_section \
-		svg_creator
+CLASSES=outliner_math \
+	main_config \
+	main_options \
+	bounding_boxer \
+	describer \
+	direction_operations \
+	indexed_mesh \
+	material_matrix \
+	outliner_box2_d \
+	outliner_box3_d \
+	outliner_line2_d \
+	outliner_line3_d \
+	outliner_triangle2_d \
+	outliner_triangle3_d \
+	outliner_vector2_d \
+	outliner_vector3_d \
+	processor \
+	processor_cross_section \
+	svg_creator
 CLASSMARKDOWNS=	doc/class_outliner_math.md \
 		doc/class_main_config.md \
+		doc/class_main_options.md \
 		doc/class_bounding_boxer.md \
 		doc/class_describer.md \
 		doc/class_direction_operations.md \
@@ -97,9 +102,9 @@ CLASSMARKDOWNS=	doc/class_outliner_math.md \
 		doc/class_processor_cross_section.md \
 		doc/class_svg_creator.md
 TOOLS=	doc/markdowncleanup.sh
-SUPP=Makefile $(TOOLS)
+SUPP=	Makefile $(TOOLS)
 CPPFLAGS=-O3 -Wall -std=c++11 `pkg-config --cflags assimp`
-ISYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk 
+#ISYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk 
 LDFLAGS=-O3
 LDLIBS=`pkg-config --libs-only-L assimp` -lassimp
 #CPPCOMPILER=clang++
