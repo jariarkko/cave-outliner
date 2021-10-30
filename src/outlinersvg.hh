@@ -55,10 +55,17 @@ struct OutlinerSvgLineList {
 // Class interface ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+///
+/// This object can be used to output SVG images to a file. For a
+/// description of what an SVG image format is, see
+/// https://www.w3schools.com/graphics/svg_intro.asp.
+///
+
 class SvgCreator {
   
  public:
-  
+
+  /// Create an SVG file with given file name and size.
   SvgCreator(const char* fileName,
              unsigned int xSize, 
              unsigned int ySize,
@@ -70,19 +77,37 @@ class SvgCreator {
              bool smooth,
              bool mergedLines,
              outlinerreal linewidth);
+
+  /// Release all resources associated with the SVG creation object. And close the file, if still open.
   ~SvgCreator();
+
+  /// Draw a line.
   void line(outlinerreal fromX,
             outlinerreal fromY,
             outlinerreal toX,
             outlinerreal toY,
             bool dashed = 0);
+
+  /// Draw a pixel.
   void pixel(outlinerreal x,
              outlinerreal y);
+
+  /// Write text to the image.
   void text(outlinerreal x,
             outlinerreal y,
             const char* string);
+
+  /// Get the x-direction size of each individual pixel, expressed in
+  /// the 3D model coordinate system. For instance, if each pixel
+  /// represents a 1 meter by 1 meter square, then return 1.0.
   outlinerreal getPixelXSize(void);
+  
+  /// Get the y-direction size of each individual pixel, expressed in
+  /// the 3D model coordinate system. For instance, if each pixel
+  /// represents a 1 meter by 1 meter square, then return 1.0.
   outlinerreal getPixelYSize(void);
+
+  /// Verify that image creation and file write was successful.
   bool ok();
   
  private:

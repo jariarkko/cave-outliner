@@ -47,9 +47,16 @@ struct ProcessorCrossSectionLineIterator {
 // Class interface ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+///
+/// This is the module inside of the Core module that performs the the drawing of cross sections.
+///
+
 class ProcessorCrossSection {
 
 public:
+
+  /// Create an object to prepare for the drawing of a cross section
+  /// view of a cave tunnel.
   ProcessorCrossSection(const char* fileNameIn,
                         const char* labelIn, // 0 if no label desired
                         enum outlinerdirection sliceDirectionIn,
@@ -57,8 +64,22 @@ public:
                         const OutlinerVector2D& lineEndIn,
                         outlinerreal stepzIn,
                         Processor& procIn);
+
+  /// Release all resources associated with this cross section view,
+  /// close the image file, etc.
   ~ProcessorCrossSection();
+
+  /// Draw an actual cross section of the given scene. The coordinates
+  /// associated with the line representing the cross section were
+  /// specified at the time the ProcessorCrossSection object was
+  /// created.
   bool processSceneCrossSection(const aiScene* scene);
+
+  /// Once a cross section has been draw, we have information exactly
+  /// how wide/high the cross section is. On the plan view this can be
+  /// represented by a line drawn across the cave tunnel, with each
+  /// end of the line ending exactly at the tunnel walls. This
+  /// function returns the coordinates for this line.
   void getLineActualEndPoints(OutlinerLine2D& actualLine,
                               outlinerreal extralineatends);
   

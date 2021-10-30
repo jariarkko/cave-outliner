@@ -50,25 +50,50 @@ struct IndexedMeshOneMesh {
 // Class interface ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+///
+/// This object represents an optimized index to the mesh faces
+/// contained in an imported 3D model. The imported model has a large
+/// datastructure of 'faces' -- typically millions or even tens of
+/// millions of faces. There is no efficient way to search for faces
+/// at a given location in the 3D or 2D space, however. The indexed
+/// mesh object sorts the faces into a 2D matrix of 'tiles'. For
+/// instance, a large model could be split into 20x20 or 400 tiles, so
+/// that when we are looking for a face within given (x,y)
+/// coordinates, we only need to look at the tile where (x,y) falls
+/// into. The indexing is performed only once, and all searches after
+/// the indexing operation can use the more efficient search.
+///
+
 class IndexedMesh {
 
 public:
 
+  /// Create an IndexedMesh object.
   IndexedMesh(unsigned int maxMeshesIn,
               unsigned int subdivisionsIn,
               const OutlinerBox3D& modelBoundingBox,
               const OutlinerBox2D& viewBoundingBox,
               enum outlinerdirection directionIn);
+
+  /// Add a 3D scene to the optimized index.
   void addScene(const aiScene* scene);
+  
+  /// Add a 3D node to the optimized index.
   void addNode(const aiScene* scene,
                const aiNode* node);
+  
+  /// Add a 3D mesh to the optimized index.
   void addMesh(const aiScene* scene,
                const aiMesh* mesh);
+  
+  /// Quickly get faces associated with a given (x,y) point in the plan view.
   void getFaces(const aiMesh* mesh,
                 outlinerreal x,
                 outlinerreal y,
                 unsigned int* p_nFaces,
                 const aiFace*** p_faces);
+
+  /// Release all resources associated with the index.
    ~IndexedMesh();
    
 private:

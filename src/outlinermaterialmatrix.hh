@@ -21,21 +21,57 @@
 
 #include "outlinerdirection.hh"
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Class definition ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+///
+/// This object represents a 2D view into a 3D cave model. Given a
+/// desired resolution (N x M pixels), it provides a boolean
+/// matrix. Each element (x,y) in the matrix is set to 1 if there's a
+/// a face within the model in that pixel location. The resolution is
+/// configurable, so for instance for a 1 x 1 resolution all faces
+/// within the 3D model would be at the resulting single pixel.
+///
+/// Note that the material matrix resolution is not the same as tile
+/// resolution in the indexed mesh object. Typically, the indexed mesh
+/// has low resolution, just sufficient for fast searches, while the
+/// material matrix needs to support the desired high resolution of
+/// the output.
+///
+
 class MaterialMatrix {
 
 public:
+
+  /// Create a MaterialMatrix object.
   MaterialMatrix(OutlinerBox2D boundingbox,
                  outlinerreal stepx,
                  outlinerreal stepy);
+
+  /// Destruct the material matrix.
   ~MaterialMatrix();
+
+  /// Set the flag indicating that there is material in a given (x,y)
+  /// index in the matrix.
   void setMaterialMatrix(unsigned int xIndex,
                          unsigned int yIndex);
+
+  /// Get the flag indicating whether there is material in a given
+  /// (x,y) index in the matrix.
   bool getMaterialMatrix(unsigned int xIndex,
                          unsigned int yIndex);
+
+  /// Count the number of matrix elements with flags on.
   unsigned int count(void);
+
+  /// Run unit tests for this module.
   static void test(void);
-  
+
+  /// Matrix size in x-coordinate direction.
   unsigned int xIndexSize;
+  
+  /// Matrix size in y-coordinate direction.
   unsigned int yIndexSize;
 
 private:
