@@ -12,7 +12,7 @@ Cave Outliner
 </table>
 
 [Public Member Functions](#pub-methods) | 
-members](class_indexed_mesh-members.html)
+members](class_indexed_mesh-members.md)
 
 IndexedMesh Class Reference
 
@@ -27,7 +27,7 @@ IndexedMesh Class Reference
 </tr>
 <tr class="even memitem:ab8c2853a96f3f2d43949575fcb5516b2">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ab8c2853a96f3f2d43949575fcb5516b2"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>IndexedMesh</strong> (unsigned int maxMeshesIn, unsigned int subdivisionsIn, const <a href="class_outliner_box3_d.html" class="el">OutlinerBox3D</a> &amp;modelBoundingBox, const <a href="class_outliner_box2_d.html" class="el">OutlinerBox2D</a> &amp;viewBoundingBox, enum outlinerdirection directionIn)</td>
+<td class="memItemRight" data-valign="bottom"><strong>IndexedMesh</strong> (unsigned int maxMeshesIn, unsigned int subdivisionsIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;modelBoundingBox, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;viewBoundingBox, enum outlinerdirection directionIn)</td>
 </tr>
 <tr class="odd separator:ab8c2853a96f3f2d43949575fcb5516b2">
 <td colspan="2" class="memSeparator"> </td>
@@ -67,10 +67,10 @@ IndexedMesh Class Reference
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinerindexedmesh_8hh_source.html" class="el">outlinerindexedmesh.hh</a>
+-   src/<a href="outlinerindexedmesh_8hh_source.md" class="el">outlinerindexedmesh.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.md)
 1.9.2</span>

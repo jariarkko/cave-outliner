@@ -12,7 +12,7 @@ Cave Outliner
 </table>
 
 [Static Public Member Functions](#pub-static-methods) | 
-members](class_direction_operations-members.html)
+members](class_direction_operations-members.md)
 
 DirectionOperations Class Reference
 
@@ -48,7 +48,7 @@ DirectionOperations Class Reference
 </tr>
 <tr class="even memitem:a4d410dd5d7c9596ed819c5612205374d">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a4d410dd5d7c9596ed819c5612205374d"></span> static float </td>
-<td class="memItemRight" data-valign="bottom"><strong>outputx</strong> (enum outlinerdirection direction, const <a href="class_outliner_vector3_d.html" class="el">OutlinerVector3D</a> &amp;point)</td>
+<td class="memItemRight" data-valign="bottom"><strong>outputx</strong> (enum outlinerdirection direction, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector3_d.md" class="el">OutlinerVector3D</a> &amp;point)</td>
 </tr>
 <tr class="odd separator:a4d410dd5d7c9596ed819c5612205374d">
 <td colspan="2" class="memSeparator"> </td>
@@ -62,7 +62,7 @@ DirectionOperations Class Reference
 </tr>
 <tr class="even memitem:add567f55af8f0e90cffa38ed12ab5e0b">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="add567f55af8f0e90cffa38ed12ab5e0b"></span> static float </td>
-<td class="memItemRight" data-valign="bottom"><strong>outputy</strong> (enum outlinerdirection direction, const <a href="class_outliner_vector3_d.html" class="el">OutlinerVector3D</a> &amp;point)</td>
+<td class="memItemRight" data-valign="bottom"><strong>outputy</strong> (enum outlinerdirection direction, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector3_d.md" class="el">OutlinerVector3D</a> &amp;point)</td>
 </tr>
 <tr class="odd separator:add567f55af8f0e90cffa38ed12ab5e0b">
 <td colspan="2" class="memSeparator"> </td>
@@ -76,7 +76,7 @@ DirectionOperations Class Reference
 </tr>
 <tr class="even memitem:a2b1ee46be275e6e1bee374fd0acd13c4">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a2b1ee46be275e6e1bee374fd0acd13c4"></span> static float </td>
-<td class="memItemRight" data-valign="bottom"><strong>outputz</strong> (enum outlinerdirection direction, const <a href="class_outliner_vector3_d.html" class="el">OutlinerVector3D</a> &amp;point)</td>
+<td class="memItemRight" data-valign="bottom"><strong>outputz</strong> (enum outlinerdirection direction, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector3_d.md" class="el">OutlinerVector3D</a> &amp;point)</td>
 </tr>
 <tr class="odd separator:a2b1ee46be275e6e1bee374fd0acd13c4">
 <td colspan="2" class="memSeparator"> </td>
@@ -88,10 +88,10 @@ DirectionOperations Class Reference
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinerdirection_8hh_source.html" class="el">outlinerdirection.hh</a>
+-   src/<a href="outlinerdirection_8hh_source.md" class="el">outlinerdirection.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.md)
 1.9.2</span>

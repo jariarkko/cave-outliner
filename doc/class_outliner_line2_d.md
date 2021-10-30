@@ -13,7 +13,7 @@ Cave Outliner
 
 [Public Member Functions](#pub-methods) | [Static Public Member
 Functions](#pub-static-methods) | [Public Attributes](#pub-attribs) |
- members](class_outliner_line2_d-members.html)
+ members](class_outliner_line2_d-members.md)
 
 OutlinerLine2D Class Reference
 
@@ -28,14 +28,14 @@ OutlinerLine2D Class Reference
 </tr>
 <tr class="even memitem:aa2886e8daba122e03bec8c2c04389806">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aa2886e8daba122e03bec8c2c04389806"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>OutlinerLine2D</strong> (const <a href="class_outliner_line2_d.html" class="el">OutlinerLine2D</a> &amp;in)</td>
+<td class="memItemRight" data-valign="bottom"><strong>OutlinerLine2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp;in)</td>
 </tr>
 <tr class="odd separator:aa2886e8daba122e03bec8c2c04389806">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a876e4750cceb53a711ef2bed556fac53">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a876e4750cceb53a711ef2bed556fac53"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>OutlinerLine2D</strong> (const <a href="class_outliner_vector2_d.html" class="el">OutlinerVector2D</a> &amp;startIn, const <a href="class_outliner_vector2_d.html" class="el">OutlinerVector2D</a> &amp;endIn)</td>
+<td class="memItemRight" data-valign="bottom"><strong>OutlinerLine2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;startIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;endIn)</td>
 </tr>
 <tr class="odd separator:a876e4750cceb53a711ef2bed556fac53">
 <td colspan="2" class="memSeparator"> </td>
@@ -72,14 +72,14 @@ OutlinerLine2D Class Reference
 <td colspan="2"><h2 id="public-attributes" class="groupheader"><span id="pub-attribs"></span> Public Attributes</h2></td>
 </tr>
 <tr class="even memitem:a72aecb0077d120778998c86102e28097">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a72aecb0077d120778998c86102e28097"></span> <a href="class_outliner_vector2_d.html" class="el">OutlinerVector2D</a> </td>
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a72aecb0077d120778998c86102e28097"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> </td>
 <td class="memItemRight" data-valign="bottom"><strong>start</strong></td>
 </tr>
 <tr class="odd separator:a72aecb0077d120778998c86102e28097">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a10b728829cc0754b7f9c95458c6da75d">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a10b728829cc0754b7f9c95458c6da75d"></span> <a href="class_outliner_vector2_d.html" class="el">OutlinerVector2D</a> </td>
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a10b728829cc0754b7f9c95458c6da75d"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> </td>
 <td class="memItemRight" data-valign="bottom"><strong>end</strong></td>
 </tr>
 <tr class="odd separator:a10b728829cc0754b7f9c95458c6da75d">
@@ -92,10 +92,10 @@ OutlinerLine2D Class Reference
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinerhighprecision_8hh_source.html" class="el">outlinerhighprecision.hh</a>
+-   src/<a href="outlinerhighprecision_8hh_source.md" class="el">outlinerhighprecision.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.md)
 1.9.2</span>

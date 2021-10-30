@@ -12,7 +12,7 @@ Cave Outliner
 </table>
 
 [Public Member Functions](#pub-methods) | 
-members](class_processor_cross_section-members.html)
+members](class_processor_cross_section-members.md)
 
 ProcessorCrossSection Class Reference
 
@@ -27,7 +27,7 @@ ProcessorCrossSection Class Reference
 </tr>
 <tr class="even memitem:ab5b03c7067518b02e549e4051634e3c1">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ab5b03c7067518b02e549e4051634e3c1"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>ProcessorCrossSection</strong> (const char *fileNameIn, const char *labelIn, enum outlinerdirection sliceDirectionIn, const <a href="class_outliner_vector2_d.html" class="el">OutlinerVector2D</a> &amp;lineStartIn, const <a href="class_outliner_vector2_d.html" class="el">OutlinerVector2D</a> &amp;lineEndIn, outlinerreal stepzIn, <a href="class_processor.html" class="el">Processor</a> &amp;procIn)</td>
+<td class="memItemRight" data-valign="bottom"><strong>ProcessorCrossSection</strong> (const char *fileNameIn, const char *labelIn, enum outlinerdirection sliceDirectionIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;lineStartIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;lineEndIn, outlinerreal stepzIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor.md" class="el">Processor</a> &amp;procIn)</td>
 </tr>
 <tr class="odd separator:ab5b03c7067518b02e549e4051634e3c1">
 <td colspan="2" class="memSeparator"> </td>
@@ -41,7 +41,7 @@ ProcessorCrossSection Class Reference
 </tr>
 <tr class="even memitem:ae29053fb50a8ac8e7a640807697c7ccc">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ae29053fb50a8ac8e7a640807697c7ccc"></span> void </td>
-<td class="memItemRight" data-valign="bottom"><strong>getLineActualEndPoints</strong> (<a href="class_outliner_line2_d.html" class="el">OutlinerLine2D</a> &amp;actualLine, outlinerreal extralineatends)</td>
+<td class="memItemRight" data-valign="bottom"><strong>getLineActualEndPoints</strong> (<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp;actualLine, outlinerreal extralineatends)</td>
 </tr>
 <tr class="odd separator:ae29053fb50a8ac8e7a640807697c7ccc">
 <td colspan="2" class="memSeparator"> </td>
@@ -53,10 +53,10 @@ ProcessorCrossSection Class Reference
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinerprocessorcrosssection_8hh_source.html" class="el">outlinerprocessorcrosssection.hh</a>
+-   src/<a href="outlinerprocessorcrosssection_8hh_source.md" class="el">outlinerprocessorcrosssection.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.md)
 1.9.2</span>

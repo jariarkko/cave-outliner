@@ -13,7 +13,7 @@ Cave Outliner
 
 [Public Member Functions](#pub-methods) | [Static Public Member
 Functions](#pub-static-methods) | [Public Attributes](#pub-attribs) |
- members](class_outliner_vector2_d-members.html)
+ members](class_outliner_vector2_d-members.md)
 
 OutlinerVector2D Class Reference
 
@@ -35,7 +35,7 @@ OutlinerVector2D Class Reference
 </tr>
 <tr class="even memitem:aefd197feb0e736f53488e2f06e0394f9">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aefd197feb0e736f53488e2f06e0394f9"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>OutlinerVector2D</strong> (const <a href="class_outliner_vector2_d.html" class="el">OutlinerVector2D</a> &amp;in)</td>
+<td class="memItemRight" data-valign="bottom"><strong>OutlinerVector2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;in)</td>
 </tr>
 <tr class="odd separator:aefd197feb0e736f53488e2f06e0394f9">
 <td colspan="2" class="memSeparator"> </td>
@@ -49,7 +49,7 @@ OutlinerVector2D Class Reference
 </tr>
 <tr class="even memitem:aa21f5f0786ba884bda75223d4f8099cc">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aa21f5f0786ba884bda75223d4f8099cc"></span> bool </td>
-<td class="memItemRight" data-valign="bottom"><strong>equal</strong> (const <a href="class_outliner_vector2_d.html" class="el">OutlinerVector2D</a> &amp;b) const</td>
+<td class="memItemRight" data-valign="bottom"><strong>equal</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;b) const</td>
 </tr>
 <tr class="odd separator:aa21f5f0786ba884bda75223d4f8099cc">
 <td colspan="2" class="memSeparator"> </td>
@@ -106,10 +106,10 @@ OutlinerVector2D Class Reference
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinerhighprecision_8hh_source.html" class="el">outlinerhighprecision.hh</a>
+-   src/<a href="outlinerhighprecision_8hh_source.md" class="el">outlinerhighprecision.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.md)
 1.9.2</span>

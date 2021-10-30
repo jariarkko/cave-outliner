@@ -13,7 +13,7 @@ Cave Outliner
 
 [Public Member Functions](#pub-methods) | [Static Public Member
 Functions](#pub-static-methods) | [Public Attributes](#pub-attribs) |
- members](class_material_matrix-members.html)
+ members](class_material_matrix-members.md)
 
 MaterialMatrix Class Reference
 
@@ -28,7 +28,7 @@ MaterialMatrix Class Reference
 </tr>
 <tr class="even memitem:a41ea53f42d59a8bfb5f84f90d76a5e47">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a41ea53f42d59a8bfb5f84f90d76a5e47"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>MaterialMatrix</strong> (<a href="class_outliner_box2_d.html" class="el">OutlinerBox2D</a> boundingbox, outlinerreal stepx, outlinerreal stepy)</td>
+<td class="memItemRight" data-valign="bottom"><strong>MaterialMatrix</strong> (<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> boundingbox, outlinerreal stepx, outlinerreal stepy)</td>
 </tr>
 <tr class="odd separator:a41ea53f42d59a8bfb5f84f90d76a5e47">
 <td colspan="2" class="memSeparator"> </td>
@@ -106,10 +106,10 @@ MaterialMatrix Class Reference
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinermaterialmatrix_8hh_source.html" class="el">outlinermaterialmatrix.hh</a>
+-   src/<a href="outlinermaterialmatrix_8hh_source.md" class="el">outlinermaterialmatrix.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.md)
 1.9.2</span>

@@ -12,7 +12,7 @@ Cave Outliner
 </table>
 
 [Public Member Functions](#pub-methods) | 
-members](class_bounding_boxer-members.html)
+members](class_bounding_boxer-members.md)
 
 BoundingBoxer Class Reference
 
@@ -34,7 +34,7 @@ BoundingBoxer Class Reference
 </tr>
 <tr class="even memitem:ab062fdf2e2697814b08b247d4be3fc16">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ab062fdf2e2697814b08b247d4be3fc16"></span> void </td>
-<td class="memItemRight" data-valign="bottom"><strong>getBoundingBox</strong> (<a href="class_outliner_box3_d.html" class="el">OutlinerBox3D</a> &amp;boundingBoxOut)</td>
+<td class="memItemRight" data-valign="bottom"><strong>getBoundingBox</strong> (<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBoxOut)</td>
 </tr>
 <tr class="odd separator:ab062fdf2e2697814b08b247d4be3fc16">
 <td colspan="2" class="memSeparator"> </td>
@@ -46,10 +46,10 @@ BoundingBoxer Class Reference
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinerboundingboxer_8hh_source.html" class="el">outlinerboundingboxer.hh</a>
+-   src/<a href="outlinerboundingboxer_8hh_source.md" class="el">outlinerboundingboxer.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.md)
 1.9.2</span>

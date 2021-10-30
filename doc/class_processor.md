@@ -12,7 +12,7 @@ Cave Outliner
 </table>
 
 [Public Member Functions](#pub-methods) | [Friends](#friends) | [List of
-all members](class_processor-members.html)
+all members](class_processor-members.md)
 
 Processor Class Reference
 
@@ -27,14 +27,14 @@ Processor Class Reference
 </tr>
 <tr class="even memitem:a29c77668a4dd09c43c88ad02ba6cc34b">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a29c77668a4dd09c43c88ad02ba6cc34b"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>Processor</strong> (const char *fileNameIn, unsigned int multiplierIn, bool smoothIn, bool mergedLinesIn, float linewidthIn, <a href="class_outliner_box3_d.html" class="el">OutlinerBox3D</a> boundingBoxIn, outlinerreal stepxIn, outlinerreal stepyIn, outlinerreal stepzIn, enum outlinerdirection directionIn, enum outlineralgorithm algorithmIn, unsigned int holethresholdIn, bool labelsIn, <a href="class_indexed_mesh.html" class="el">IndexedMesh</a> &amp;indexedIn)</td>
+<td class="memItemRight" data-valign="bottom"><strong>Processor</strong> (const char *fileNameIn, unsigned int multiplierIn, bool smoothIn, bool mergedLinesIn, float linewidthIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> boundingBoxIn, outlinerreal stepxIn, outlinerreal stepyIn, outlinerreal stepzIn, enum outlinerdirection directionIn, enum outlineralgorithm algorithmIn, unsigned int holethresholdIn, bool labelsIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_indexed_mesh.md" class="el">IndexedMesh</a> &amp;indexedIn)</td>
 </tr>
 <tr class="odd separator:a29c77668a4dd09c43c88ad02ba6cc34b">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:ac9ea1cec3c065afad46bb6ef7c21a934">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ac9ea1cec3c065afad46bb6ef7c21a934"></span> bool </td>
-<td class="memItemRight" data-valign="bottom"><strong>processScene</strong> (const aiScene *scene, unsigned int nCrossSections, struct <a href="struct_processor_cross_section_info.html" class="el">ProcessorCrossSectionInfo</a> *crossSections)</td>
+<td class="memItemRight" data-valign="bottom"><strong>processScene</strong> (const aiScene *scene, unsigned int nCrossSections, struct <a href="struct_processor_cross_section_info.md" class="el">ProcessorCrossSectionInfo</a> *crossSections)</td>
 </tr>
 <tr class="odd separator:ac9ea1cec3c065afad46bb6ef7c21a934">
 <td colspan="2" class="memSeparator"> </td>
@@ -65,10 +65,10 @@ Processor Class Reference
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinerprocessor_8hh_source.html" class="el">outlinerprocessor.hh</a>
+-   src/<a href="outlinerprocessor_8hh_source.md" class="el">outlinerprocessor.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.md)
 1.9.2</span>

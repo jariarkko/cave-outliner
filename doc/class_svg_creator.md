@@ -12,7 +12,7 @@ Cave Outliner
 </table>
 
 [Public Member Functions](#pub-methods) | 
-members](class_svg_creator-members.html)
+members](class_svg_creator-members.md)
 
 SvgCreator Class Reference
 
@@ -81,10 +81,10 @@ SvgCreator Class Reference
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinersvg_8hh_source.html" class="el">outlinersvg.hh</a>
+-   src/<a href="outlinersvg_8hh_source.md" class="el">outlinersvg.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.md)
 1.9.2</span>

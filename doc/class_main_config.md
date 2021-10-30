@@ -12,7 +12,7 @@ Cave Outliner
 </table>
 
 [Public Attributes](#pub-attribs) | 
-members](class_main_config-members.html)
+members](class_main_config-members.md)
 
 MainConfig Class Reference
 
@@ -91,7 +91,7 @@ MainConfig Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a67db8a9dbc362254f6bbc4f4be2e6fd8">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a67db8a9dbc362254f6bbc4f4be2e6fd8"></span> <a href="class_outliner_box3_d.html" class="el">OutlinerBox3D</a> </td>
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a67db8a9dbc362254f6bbc4f4be2e6fd8"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> </td>
 <td class="memItemRight" data-valign="bottom"><strong>boundingBox</strong></td>
 </tr>
 <tr class="odd separator:a67db8a9dbc362254f6bbc4f4be2e6fd8">
@@ -182,7 +182,7 @@ MainConfig Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a943b8f45ebf2bcadb841f193e2676019">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a943b8f45ebf2bcadb841f193e2676019"></span> struct <a href="struct_processor_cross_section_info.html" class="el">ProcessorCrossSectionInfo</a> </td>
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a943b8f45ebf2bcadb841f193e2676019"></span> struct <a href="struct_processor_cross_section_info.md" class="el">ProcessorCrossSectionInfo</a> </td>
 <td class="memItemRight" data-valign="bottom"><strong>crossSections</strong> [outlinermaxcrosssections]</td>
 </tr>
 <tr class="odd separator:a943b8f45ebf2bcadb841f193e2676019">
@@ -202,7 +202,7 @@ MainConfig Class Reference
 
 ## Detailed Description
 
-The <a href="class_main_config.html" class="el">MainConfig</a> class
+The <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_main_config.md" class="el">MainConfig</a> class
 represents an object of all configuration information related to the
 cave-outliner program. It is initialized to default values, and the main
 program can read options and other command line arguments to set
@@ -214,10 +214,10 @@ this object to decide how to process.
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="mainconfig_8hh_source.html" class="el">mainconfig.hh</a>
+-   src/<a href="mainconfig_8hh_source.md" class="el">mainconfig.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.md)
 1.9.2</span>

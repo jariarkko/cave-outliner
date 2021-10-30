@@ -12,7 +12,7 @@ Cave Outliner
 </table>
 
 [Public Member Functions](#pub-methods) | 
-members](class_describer-members.html)
+members](class_describer-members.md)
 
 Describer Class Reference
 
@@ -46,10 +46,10 @@ Describer Class Reference
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinerdescribe_8hh_source.html" class="el">outlinerdescribe.hh</a>
+-   src/<a href="outlinerdescribe_8hh_source.md" class="el">outlinerdescribe.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.md)
 1.9.2</span>
