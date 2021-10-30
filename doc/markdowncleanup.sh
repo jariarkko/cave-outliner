@@ -20,7 +20,8 @@ then
 fi
 
 #
-# Process
+# Process. Adjust generated output so that it properly works in GitHub markdown
+# browsing, i.e., replacing HTML links with markdown links.
 #
 
 cat $INPUT |
@@ -29,5 +30,4 @@ cat $INPUT |
     sed 's/members..class_outliner_math-members.html.//g' |
     sed 's@href="class@href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class@g' |
     sed 's@.html@.md@g' |
-#    sed 's@<a href="class_outliner_triangle3_d.html" class="el">OutlinerTriangle3D</a>@[OutlinerTriangle3D](https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle3_d.md)@g' |
     cat  > $OUTPUT
