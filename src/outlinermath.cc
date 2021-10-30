@@ -157,8 +157,8 @@ OutlinerMath::pointOnLine2D(const OutlinerLine2D& line,
   // Check for a special case: line points are equal, resulting in
   // comparing to a point, not a line.
   
-  if (vectorEqual(line.start,line.end))  {
-    debugreturn("          pol2","line points equal",vectorEqual(line.start,point));
+  if (line.start.equal(line.end))  {
+    debugreturn("          pol2","line points equal",line.start.equal(point));
   }
 
   // Check for a special case: line is horizontal
@@ -190,20 +190,20 @@ OutlinerMath::pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
 
   // Check for a special case: all points are equal (resulting in
   // comparing to a point, not a triangle).
-  if (vectorEqual(triangle.a,triangle.b) && vectorEqual(triangle.a,triangle.c)) {
+  if (triangle.a.equal(triangle.b) && triangle.a.equal(triangle.c)) {
     //deepdeepdebugf("pit2 special case all equal");
-    debugreturn("        pit2","vectorEqual",vectorEqual(triangle.a,point));
+    debugreturn("        pit2","vectorEqual",triangle.a.equal(point));
   }
   
   // Check for a special case: triangle collapses to a line (at least
   // in 2D).
-  if (vectorEqual(triangle.a,triangle.b)) {
+  if (triangle.a.equal(triangle.b)) {
     OutlinerLine2D ac(triangle.a,triangle.c);
     debugreturn("        pit2","point on AB line",pointOnLine2D(ac,point));
-  } else if (vectorEqual(triangle.a,triangle.c)) {
+  } else if (triangle.a.equal(triangle.c)) {
     OutlinerLine2D ab(triangle.a,triangle.b);
     debugreturn("        pit2","point on AC line",pointOnLine2D(ab,point));
-  } else if (vectorEqual(triangle.b,triangle.c)) {
+  } else if (triangle.b.equal(triangle.c)) {
     OutlinerLine2D ab(triangle.a,triangle.b);
     debugreturn("        pit2","point on BC line",pointOnLine2D(ab,point));
   }
@@ -451,12 +451,6 @@ OutlinerMath::lineIntersectsHorizontalLine2D(const OutlinerLine2D& line,
   return(1);
 }
 
-bool
-OutlinerMath::vectorEqual(const OutlinerVector2D& a,
-                          const OutlinerVector2D& b) {
-  return(a.x == b.x && a.y == b.y);
-}
-
 void
 OutlinerMath::vectorTo(const OutlinerVector2D& from,
                        const OutlinerVector2D& to,
@@ -683,7 +677,6 @@ OutlinerMath::mathTests(void) {
   utilityTests();
   vectorTests();
   detTests();
-  pointTests();
   lineTests();
   lineIntersectionTests();
   triangleTests();
@@ -848,17 +841,6 @@ OutlinerMath::boundingBoxIntersectionTests(void) {
   assert(!ans);
 
   infof("bounding box intersection tests ok");
-}
-
-void
-OutlinerMath::pointTests(void) {
-  debugf("point tests...");
-  OutlinerVector2D a(1,1);
-  OutlinerVector2D b(1,2);
-  OutlinerVector2D c(1,1);
-  assert(vectorEqual(a,b) == 0);
-  assert(vectorEqual(b,c) == 0);
-  assert(vectorEqual(a,c) == 1);
 }
 
 void

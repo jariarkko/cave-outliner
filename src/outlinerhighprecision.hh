@@ -40,6 +40,7 @@ public:
   OutlinerVector2D(const OutlinerVector2D& in) : x(in.x), y(in.y) {}
   OutlinerVector2D(const outlinerreal xIn,
                    const outlinerreal yIn) : x(xIn), y(yIn) {}
+  bool equal(const OutlinerVector2D& b) const;
   static void test(void);
 };
 
@@ -54,6 +55,7 @@ public:
   OutlinerVector3D(const outlinerreal xIn,
                    const outlinerreal yIn,
                    const outlinerreal zIn) : x(xIn), y(yIn), z(zIn) {}
+  bool equal(const OutlinerVector3D& b) const;
   static void test(void);
 };
 

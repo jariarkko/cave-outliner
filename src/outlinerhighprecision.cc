@@ -28,16 +28,40 @@
 // OutlinerVector2D Functions /////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+bool
+OutlinerVector2D::equal(const OutlinerVector2D& b) const {
+  return(x == b.x && y == b.y);
+}
+
 void
 OutlinerVector2D::test(void) {
+  debugf("Vector2D tests...");
+  OutlinerVector2D a(1,1);
+  OutlinerVector2D b(1,2);
+  OutlinerVector2D c(1,1);
+  assert(a.equal(b) == 0);
+  assert(b.equal(c) == 0);
+  assert(a.equal(c) == 1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // OutlinerVector3D Functions /////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+bool
+OutlinerVector3D::equal(const OutlinerVector3D& b) const {
+  return(x == b.x && y == b.y && z == b.z);
+}
+
 void
 OutlinerVector3D::test(void) {
+  debugf("Vector3D tests...");
+  OutlinerVector3D a(1,1,0);
+  OutlinerVector3D b(1,2,0);
+  OutlinerVector3D c(1,1,0);
+  assert(a.equal(b) == 0);
+  assert(b.equal(c) == 0);
+  assert(a.equal(c) == 1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
