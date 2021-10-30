@@ -45,12 +45,22 @@ public:
   /// Release all resources associated with the options processor.
   ~MainOptions();
 
-  /// Process options and arguments
+  /// Process options and arguments. Return 1 if successful, 0 upon
+  /// error.
   bool processCommandLine(int argc, char** argv);
   
 private:
   
   MainConfig& config;
+  
+  bool processCommandLineOptions(int& argc,
+                                 char**& argv);
+  bool processCommandLineArguments(int& argc,
+                                   char**& argv);
+  void processVersion(void);
+  void processHelp(void);
+  bool checkFileExtension(const char* filename,
+                          const char* extension);
 };
 
 #endif // MAINCONFIG_HH

@@ -27,6 +27,7 @@
 #include "outlinerdirection.hh"
 #include "outlinerhighprecision.hh"
 #include "outlinerprocessor.hh"
+#include "outlinerdebug.hh"
 #include "mainconfig.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,6 +35,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 MainConfig::MainConfig() :
+  inputFile(0),
+  outputFile(0),
   test(0),
   info(1),
   debug(0),
@@ -55,10 +58,15 @@ MainConfig::MainConfig() :
   nAutomaticCrossSections(0),
   automaticCrossSectionFilenamePattern(0),
   nCrossSections(0),
-  labelCrossSections(0) {
+  labelCrossSections(0),
+  crossSectionLabelCount(0) {
 }
 
 MainConfig::~MainConfig() {
+  if (inputFile != 0) free((void*)inputFile);
+  inputFile = 0;
+  if (outputFile != 0) free((void*)outputFile);
+  outputFile = 0;
   if (automaticCrossSectionFilenamePattern != 0) free((void*)automaticCrossSectionFilenamePattern);
   automaticCrossSectionFilenamePattern = 0;
   for (unsigned int i = 0; i < nCrossSections; i++) {
@@ -69,3 +77,35 @@ MainConfig::~MainConfig() {
     one.label = 0;
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Cross section labels ///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+const char*
+ MainConfig::getCrossSectionLabel(void) {
+  
+  if (labelCrossSections) {
+    char buf[20];
+    const unsigned int nAlphabet = 25;
+    memset(buf,0,sizeof(buf));
+    if (crossSectionLabelCount <= nAlphabet) {
+      snprintf(buf,sizeof(buf)-1,"%c",
+               ('A' + crossSectionLabelCount));
+    } else {
+      snprintf(buf,sizeof(buf)-1,"%c%u",
+               ('A' + (crossSectionLabelCount % nAlphabet)),
+               1 + (crossSectionLabelCount / nAlphabet));
+    }
+    crossSectionLabelCount++;
+    const char* result = strdup(buf);
+    if (result == 0) {
+      errf("Cannot allocate a string of %u bytes", strlen(buf));
+      exit(1);
+    }
+    return(result);
+  } else {
+    return(0);
+  }
+}
+                
