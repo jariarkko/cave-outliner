@@ -249,7 +249,7 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
         debugf("algorithm %u", algorithm);
         switch (algorithm) {
         case alg_pixel:
-          debugf("pixel alg %u,%u", xIndex, yIndex);
+          infof("pixel alg %u,%u", xIndex, yIndex);
           theSvg->pixel(x,y);
           break;
         case alg_borderpixel:

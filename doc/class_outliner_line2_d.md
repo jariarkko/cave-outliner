@@ -64,6 +64,13 @@ OutlinerLine2D Class Reference
 <tr class="even separator:a876e4750cceb53a711ef2bed556fac53">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
+<tr class="odd memitem:ad14a163eaa3cfc23f6fc2593f97e5691">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"> </td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_line2_d.md#ad14a163eaa3cfc23f6fc2593f97e5691" class="el">OutlinerLine2D</a> (const outlinerreal startX, const outlinerreal startY, const outlinerreal endX, const outlinerreal endY)</td>
+</tr>
+<tr class="even separator:ad14a163eaa3cfc23f6fc2593f97e5691">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
 </tbody>
 </table>
 
@@ -132,6 +139,61 @@ OutlinerLine2D Class Reference
 ## Detailed Description
 
 This object represents a "line" between two points in 2D space.
+
+## Constructor & Destructor Documentation
+
+<span id="ad14a163eaa3cfc23f6fc2593f97e5691"></span>
+
+## <span class="permalink">[◆ ](#ad14a163eaa3cfc23f6fc2593f97e5691)</span>OutlinerLine2D()
+
+<table class="mlabels">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td class="mlabels-left"><table class="memname">
+<tbody>
+<tr class="odd">
+<td class="memname">OutlinerLine2D::OutlinerLine2D</td>
+<td>(</td>
+<td class="paramtype">const outlinerreal </td>
+<td class="paramname"><em>startX</em>,</td>
+</tr>
+<tr class="even">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype">const outlinerreal </td>
+<td class="paramname"><em>startY</em>,</td>
+</tr>
+<tr class="odd">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype">const outlinerreal </td>
+<td class="paramname"><em>endX</em>,</td>
+</tr>
+<tr class="even">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype">const outlinerreal </td>
+<td class="paramname"><em>endY</em> </td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>)</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></td>
+<td class="mlabels-right"><span class="mlabels"><span class="mlabel">inline</span></span></td>
+</tr>
+</tbody>
+</table>
+
+Make a line based on given two points, both given as x,y coordinates,
+four arguments in total.
 
 ------------------------------------------------------------------------
 

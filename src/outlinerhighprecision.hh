@@ -128,6 +128,13 @@ public:
   OutlinerLine2D(const OutlinerVector2D& startIn,
                  const OutlinerVector2D& endIn) : start(startIn), end(endIn) {}
 
+  /// Make a line based on given two points, both given as x,y
+  /// coordinates, four arguments in total.
+  OutlinerLine2D(const outlinerreal startX,
+                 const outlinerreal startY,
+                 const outlinerreal endX,
+                 const outlinerreal endY) : start(startX,startY), end(endX,endY) {}
+  
   /// Run unit tests associated with this class.
   static void test(void);
 };
@@ -156,6 +163,15 @@ public:
   OutlinerLine3D(const OutlinerVector3D& startIn,
                  const OutlinerVector3D& endIn) : start(startIn), end(endIn) {}
 
+  /// Make a line based on given two points, both given as x,y,z
+  /// coordinates, six arguments in total.
+  OutlinerLine3D(const outlinerreal startX,
+                 const outlinerreal startY,
+                 const outlinerreal startZ,
+                 const outlinerreal endX,
+                 const outlinerreal endY,
+                 const outlinerreal endZ) : start(startX,startY,startZ), end(endX,endY,endZ) {}
+  
   /// Run unit tests associated with this class.
   static void test(void);
 };
@@ -188,6 +204,13 @@ public:
   OutlinerBox2D(const OutlinerVector2D& startIn,
                 const OutlinerVector2D& endIn) : start(startIn), end(endIn) {}
 
+  /// Make a line based on given two points, both given as x,y
+  /// coordinates, four arguments in total.
+  OutlinerBox2D(const outlinerreal startX,
+                const outlinerreal startY,
+                const outlinerreal endX,
+                const outlinerreal endY) : start(startX,startY), end(endX,endY) {}
+  
   /// Test for equality.
   bool equal(const OutlinerBox2D& box2) const;
 
@@ -240,6 +263,15 @@ public:
   OutlinerBox3D(const OutlinerVector3D& startIn,
                 const OutlinerVector3D& endIn) : start(startIn), end(endIn) {}
 
+  /// Make a line based on given two points, both given as x,y,z
+  /// coordinates, six arguments in total.
+  OutlinerBox3D(const outlinerreal startX,
+                const outlinerreal startY,
+                const outlinerreal startZ,
+                const outlinerreal endX,
+                const outlinerreal endY,
+                const outlinerreal endZ) : start(startX,startY,startZ), end(endX,endY,endZ) {}
+  
   /// Run unit tests associated with this class.
   static void test(void);
 };

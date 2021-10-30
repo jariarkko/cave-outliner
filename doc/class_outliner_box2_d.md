@@ -64,6 +64,13 @@ OutlinerBox2D Class Reference
 <tr class="even separator:acbb553458d1bae36f7a920d4bacd0a16">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
+<tr class="odd memitem:ac5df1a466dedeb376a8eeb724288eb84">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"> </td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md#ac5df1a466dedeb376a8eeb724288eb84" class="el">OutlinerBox2D</a> (const outlinerreal startX, const outlinerreal startY, const outlinerreal endX, const outlinerreal endY)</td>
+</tr>
+<tr class="even separator:ac5df1a466dedeb376a8eeb724288eb84">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
 <tr class="odd memitem:ae7909e320812130d353ad424607e12a7">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ae7909e320812130d353ad424607e12a7"></span> bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>equal</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;box2) const</td>
@@ -158,6 +165,61 @@ OutlinerBox2D Class Reference
 ## Detailed Description
 
 This object represents a "bounding box", a rectangular area in 2D space.
+
+## Constructor & Destructor Documentation
+
+<span id="ac5df1a466dedeb376a8eeb724288eb84"></span>
+
+## <span class="permalink">[◆ ](#ac5df1a466dedeb376a8eeb724288eb84)</span>OutlinerBox2D()
+
+<table class="mlabels">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td class="mlabels-left"><table class="memname">
+<tbody>
+<tr class="odd">
+<td class="memname">OutlinerBox2D::OutlinerBox2D</td>
+<td>(</td>
+<td class="paramtype">const outlinerreal </td>
+<td class="paramname"><em>startX</em>,</td>
+</tr>
+<tr class="even">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype">const outlinerreal </td>
+<td class="paramname"><em>startY</em>,</td>
+</tr>
+<tr class="odd">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype">const outlinerreal </td>
+<td class="paramname"><em>endX</em>,</td>
+</tr>
+<tr class="even">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype">const outlinerreal </td>
+<td class="paramname"><em>endY</em> </td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>)</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></td>
+<td class="mlabels-right"><span class="mlabels"><span class="mlabel">inline</span></span></td>
+</tr>
+</tbody>
+</table>
+
+Make a line based on given two points, both given as x,y coordinates,
+four arguments in total.
 
 ## Member Function Documentation
 

@@ -555,17 +555,14 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
   OutlinerVector2D b(DirectionOperations::outputx(proc.direction,t3.b),DirectionOperations::outputy(proc.direction,t3.b));
   OutlinerVector2D c(DirectionOperations::outputx(proc.direction,t3.c),DirectionOperations::outputy(proc.direction,t3.c));
   OutlinerTriangle2D t2(a,b,c);
-  OutlinerVector2D point(x,y);
-  OutlinerVector2D stepBoundingBox(x+lineStepX,y+lineStepY);
-  OutlinerBox2D thisBox(point,stepBoundingBox);
+  OutlinerBox2D thisBox(x,y,x+lineStepX,y+lineStepY);
   if (OutlinerMath::boundingBoxIntersectsTriangle2D(t2,thisBox)) {
     deepdeepdebugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) hits step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
                    mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
                    mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
                    mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
-                   point.x, point.y,
-                   thisBox.end.x,
-                   thisBox.end.y);
+                   thisBox.start.x, thisBox.start.y,
+                   thisBox.end.x, thisBox.end.y);
     deepdeepdebugf("cross section direction %s and %s",
                    DirectionOperations::toString(proc.direction),
                    DirectionOperations::toString(sliceDirection));
