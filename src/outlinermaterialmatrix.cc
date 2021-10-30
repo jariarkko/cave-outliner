@@ -36,21 +36,20 @@
 // Material matrix maintenance ////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-MaterialMatrix::MaterialMatrix(OutlinerVector2D boundingboxstart,
-                               OutlinerVector2D boundingboxend,
+MaterialMatrix::MaterialMatrix(OutlinerBox2D boundingbox,
                                outlinerreal stepx,
                                outlinerreal stepy) {
-  xIndexSize = ((unsigned int)ceil(((boundingboxend.x - boundingboxstart.x) / stepx))) + 2;
-  yIndexSize = ((unsigned int)ceil(((boundingboxend.y - boundingboxstart.y) / stepy))) + 2;
+  xIndexSize = ((unsigned int)ceil(((boundingbox.end.x - boundingbox.start.x) / stepx))) + 2;
+  yIndexSize = ((unsigned int)ceil(((boundingbox.end.y - boundingbox.start.y) / stepy))) + 2;
   debugf("yIndexSize %u from %.8f - %.8f / %.8f + 2",
-        yIndexSize, boundingboxstart.y, boundingboxend.y, stepy);
+        yIndexSize, boundingbox.start.y, boundingbox.end.y, stepy);
   debugf("sub %.8f div %.8f",
-        (boundingboxend.y - boundingboxstart.y),
-        ((boundingboxend.y - boundingboxstart.y) / stepy));
+        (boundingbox.end.y - boundingbox.start.y),
+        ((boundingbox.end.y - boundingbox.start.y) / stepy));
   debugf("material matrix %ux%u from %.2f..%.2f and %.2f..%.2f",
         xIndexSize, yIndexSize,
-        boundingboxstart.x, boundingboxend.x,
-        boundingboxstart.y, boundingboxend.y);
+        boundingbox.start.x, boundingbox.end.x,
+        boundingbox.start.y, boundingbox.end.y);
   nBits = xIndexSize * yIndexSize;
   nChars = (nBits / 8) + 1;
   bitMatrix = new unsigned char [nChars];
@@ -134,11 +133,12 @@ MaterialMatrix::test(void) {
   
   // Simple test
   {
-    OutlinerVector2D boundingboxstart(0,0);
-    OutlinerVector2D boundingboxend(10,10);
+    OutlinerVector2D boundingBoxStart(0,0);
+    OutlinerVector2D boundingBoxEnd(10,10);
+    OutlinerBox2D boundingBox(boundingBoxStart,boundingBoxEnd);
     float stepx = 1.0;
     float stepy = 1.0;
-    MaterialMatrix test1(boundingboxstart,boundingboxend,stepx,stepy);
+    MaterialMatrix test1(boundingBox,stepx,stepy);
     unsigned int xSize = test1.xIndexSize;
     unsigned int ySize = test1.yIndexSize;
     debugf("test1 sizes %u and %u", xSize, ySize);
@@ -157,8 +157,8 @@ MaterialMatrix::test(void) {
     test1.setMaterialMatrix(7,10);
     n = test1.count();
     assert(n == 4);
-    for (unsigned int x = boundingboxstart.x; x <= boundingboxend.x; x++) {
-      for (unsigned int y = boundingboxstart.y; y <= boundingboxend.y; y++) {
+    for (unsigned int x = boundingBox.start.x; x <= boundingBox.end.x; x++) {
+      for (unsigned int y = boundingBox.start.y; y <= boundingBox.end.y; y++) {
         bool ans =  test1.getMaterialMatrix(x,y);
         if (ans) {
           debugf("found bit in %u,%u", x, y);
@@ -173,11 +173,12 @@ MaterialMatrix::test(void) {
   
   // Large test
   {
-    OutlinerVector2D boundingboxstart(0,0);
-    OutlinerVector2D boundingboxend(1000,1000);
+    OutlinerVector2D boundingBoxStart(0,0);
+    OutlinerVector2D boundingBoxEnd(1000,1000);
+    OutlinerBox2D boundingBox(boundingBoxStart,boundingBoxEnd);
     float stepx = 0.1;
     float stepy = 0.1;
-    MaterialMatrix test2(boundingboxstart,boundingboxend,stepx,stepy);
+    MaterialMatrix test2(boundingBox,stepx,stepy);
     unsigned int xSize = test2.xIndexSize;
     unsigned int ySize = test2.yIndexSize;
     debugf("test2 sizes %u and %u", xSize, ySize);

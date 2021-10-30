@@ -58,8 +58,7 @@ public:
             bool smoothIn,
             bool mergedLinesIn,
             float linewidthIn,
-            OutlinerVector3D boundingBoxStartIn,
-            OutlinerVector3D boundingBoxEndIn,
+            OutlinerBox3D boundingBoxIn,
             outlinerreal stepxIn,
             outlinerreal stepyIn,
             outlinerreal stepzIn,
@@ -84,10 +83,8 @@ private:
   float linewidth;
   SvgCreator* svg;
   const unsigned int maxNeighbors = 8;
-  OutlinerVector3D boundingBoxStart;
-  OutlinerVector3D boundingBoxEnd;
-  OutlinerVector2D boundingBoxStart2D;
-  OutlinerVector2D boundingBoxEnd2D;
+  OutlinerBox3D boundingBox;
+  OutlinerBox2D boundingBox2D;
   outlinerreal stepx;
   outlinerreal stepy;
   outlinerreal stepz;
@@ -97,6 +94,7 @@ private:
   bool labels;
   OutlinerVector2D planviewBoundingBoxStart;
   OutlinerVector2D planviewBoundingBoxEnd;
+  OutlinerBox2D planviewBoundingBox;
   MaterialMatrix matrix;
   IndexedMesh& indexed;
 
@@ -194,8 +192,7 @@ private:
                                 unsigned int c,
                                 const struct ProcessorCrossSectionInfo* crossSection);
   void addCrossSectionLine(const char* label,
-                           OutlinerVector2D& actualLineStart,
-                           OutlinerVector2D& actualLineEnd);
+                           OutlinerLine2D& actualLine);
   
   //
   // Image drawing
@@ -213,12 +210,10 @@ private:
   //
   
   SvgCreator* createSvg(const char* svgFileName,
-                        const OutlinerVector2D& svgBoundingBoxStart,
-                        const OutlinerVector2D& svgBoundingBoxEnd,
+                        const OutlinerBox2D& svgBoundingBox,
                         enum outlinerdirection svgDirection);
   void svgDone();
-  void createSvgCalculateSizes(const OutlinerVector2D& svgBoundingBoxStart,
-                               const OutlinerVector2D& svgBoundingBoxEnd,
+  void createSvgCalculateSizes(const OutlinerBox2D& svgBoundingBox,
                                const outlinerreal stepx,
                                const outlinerreal stepy,
                                const enum outlinerdirection svgDirection,

@@ -56,10 +56,8 @@ public:
 
   IndexedMesh(unsigned int maxMeshesIn,
               unsigned int subdivisionsIn,
-              const OutlinerVector3D& modelBoundingBoxStartIn,
-              const OutlinerVector3D& modelBoundingBoxEndIn,
-              const OutlinerVector2D& viewBoundingBoxStartIn,
-              const OutlinerVector2D& viewBoundingBoxEndIn,
+              const OutlinerBox3D& modelBoundingBox,
+              const OutlinerBox2D& viewBoundingBox,
               enum outlinerdirection directionIn);
   void addScene(const aiScene* scene);
   void addNode(const aiScene* scene,
@@ -78,10 +76,8 @@ private:
   unsigned int nMeshes;
   unsigned int maxMeshes;
   unsigned int subdivisions;
-  OutlinerVector3D modelBoundingBoxStart;
-  OutlinerVector3D modelBoundingBoxEnd;
-  OutlinerVector2D viewBoundingBoxStart;
-  OutlinerVector2D viewBoundingBoxEnd;
+  OutlinerBox3D modelBoundingBox;
+  OutlinerBox2D viewBoundingBox;
   enum outlinerdirection direction;
   outlinerreal tileSizeX;
   outlinerreal tileSizeY;

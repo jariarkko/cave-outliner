@@ -35,24 +35,20 @@
 
 IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
                          unsigned int subdivisionsIn,
-                         const OutlinerVector3D& modelBoundingBoxStartIn,
-                         const OutlinerVector3D& modelBoundingBoxEndIn,
-                         const OutlinerVector2D& viewBoundingBoxStartIn,
-                         const OutlinerVector2D& viewBoundingBoxEndIn,
+                         const OutlinerBox3D& modelBoundingBoxIn,
+                         const OutlinerBox2D& viewBoundingBoxIn,
                          enum outlinerdirection directionIn)
   : nMeshes(0),
     maxMeshes(maxMeshesIn),
     subdivisions(subdivisionsIn),
-    modelBoundingBoxStart(modelBoundingBoxStartIn),
-    modelBoundingBoxEnd(modelBoundingBoxEndIn),
-    viewBoundingBoxStart(viewBoundingBoxStartIn),
-    viewBoundingBoxEnd(viewBoundingBoxEndIn),
+    modelBoundingBox(modelBoundingBoxIn),
+    viewBoundingBox(viewBoundingBoxIn),
     direction (directionIn) {
   assert(maxMeshesIn >= 1);
   assert(subdivisionsIn >= 1);
   debugf("%u x %u tiles, or %u tiles", subdivisions, subdivisions, subdivisions * subdivisions);
-  outlinerreal viewX = viewBoundingBoxEnd.x - viewBoundingBoxStart.x;
-  outlinerreal viewY = viewBoundingBoxEnd.y - viewBoundingBoxStart.y;
+  outlinerreal viewX = viewBoundingBox.end.x - viewBoundingBox.start.x;
+  outlinerreal viewY = viewBoundingBox.end.y - viewBoundingBox.start.y;
   tileSizeX = viewX / subdivisions;
   tileSizeY = viewY / subdivisions;
   debugf("view bounding box %f x %f", viewX, viewY);
@@ -320,13 +316,9 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
   aiVector3D* vertexA = &mesh->mVertices[face->mIndices[0]];
   aiVector3D* vertexB = &mesh->mVertices[face->mIndices[1]];
   aiVector3D* vertexC = &mesh->mVertices[face->mIndices[2]];
-  OutlinerVector3D elementBoundingBoxStart;
-  OutlinerVector3D elementBoundingBoxEnd;
+  OutlinerBox3D elementBoundingBox;
   OutlinerTriangle3D t3(*vertexA,*vertexB,*vertexC);
-  OutlinerMath::triangleBoundingBox3D(t3,
-                                      elementBoundingBoxStart,elementBoundingBoxEnd);
-  OutlinerBox3D modelBoundingBox(modelBoundingBoxStart,modelBoundingBoxEnd);
-  OutlinerBox3D elementBoundingBox(elementBoundingBoxStart,elementBoundingBoxEnd);
+  OutlinerMath::triangleBoundingBox3D(t3,elementBoundingBox);
   if (!OutlinerMath::boundingBoxesIntersect3D(modelBoundingBox,elementBoundingBox)) {
     deepdebugf("not including face due to not being inside model bounding box");
     shadow.nOutsideModelBoundingBox++;
@@ -337,19 +329,16 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
   OutlinerVector2D a(DirectionOperations::outputx(direction,*vertexA),DirectionOperations::outputy(direction,*vertexA));
   OutlinerVector2D b(DirectionOperations::outputx(direction,*vertexB),DirectionOperations::outputy(direction,*vertexB));
   OutlinerVector2D c(DirectionOperations::outputx(direction,*vertexC),DirectionOperations::outputy(direction,*vertexC));
-  OutlinerVector2D elementFlatBoundingBoxStart;
-  OutlinerVector2D elementFlatBoundingBoxEnd;
+  OutlinerBox2D elementFlatBoundingBox;
   OutlinerTriangle2D t2(a,b,c);
-  OutlinerMath::triangleBoundingBox2D(t2,
-                                      elementFlatBoundingBoxStart,
-                                      elementFlatBoundingBoxEnd);
+  OutlinerMath::triangleBoundingBox2D(t2,elementFlatBoundingBox);
 
   // Calculate which tiles this belongs to (for big faces, may be more
   // than one)
-  outlinerreal xStart = outlinermax(viewBoundingBoxStart.x,elementFlatBoundingBoxStart.x);
-  outlinerreal xEnd = outlinermin(elementFlatBoundingBoxEnd.x,viewBoundingBoxEnd.x);
-  outlinerreal yStart = outlinermax(viewBoundingBoxStart.y,elementFlatBoundingBoxStart.y);
-  outlinerreal yEnd = outlinermin(elementFlatBoundingBoxEnd.y,viewBoundingBoxEnd.y);
+  outlinerreal xStart = outlinermax(viewBoundingBox.start.x,elementFlatBoundingBox.start.x);
+  outlinerreal xEnd = outlinermin(elementFlatBoundingBox.end.x,viewBoundingBox.end.x);
+  outlinerreal yStart = outlinermax(viewBoundingBox.start.y,elementFlatBoundingBox.start.y);
+  outlinerreal yEnd = outlinermin(elementFlatBoundingBox.end.y,viewBoundingBox.end.y);
   debugf("placing a face bounding box (%f..%f) x (%f..%f) to tiles",
          xStart, xEnd,
          yStart, yEnd);
@@ -517,11 +506,11 @@ IndexedMesh::coordsToTile(outlinerreal x,
                           outlinerreal y,
                           unsigned int& tileX,
                           unsigned int& tileY) {
-  outlinerreal xInView = x - viewBoundingBoxStart.x;
+  outlinerreal xInView = x - viewBoundingBox.start.x;
   tileX = xInView / tileSizeX;
   assert(tileX <= subdivisions);
   if (tileX == subdivisions) tileX = subdivisions - 1;
-  outlinerreal yInView = y - viewBoundingBoxStart.y;
+  outlinerreal yInView = y - viewBoundingBox.start.y;
   tileY = yInView / tileSizeY;
   assert(tileY <= subdivisions);
   if (tileY == subdivisions) tileY = subdivisions - 1;

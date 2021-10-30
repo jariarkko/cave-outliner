@@ -35,14 +35,12 @@ class BoundingBoxer {
 
 public:
   BoundingBoxer(const aiScene* scene);
-  void getBoundingBox(OutlinerVector3D& boundingBoxStartOut,
-                      OutlinerVector3D& boundingBoxEndOut);
+  void getBoundingBox(OutlinerBox3D& boundingBoxOut);
   ~BoundingBoxer();
 
 private:
   bool boundingBoxSet;
-  OutlinerVector3D boundingBoxStart;
-  OutlinerVector3D boundingBoxEnd;
+  OutlinerBox3D boundingBox;
 
   void boundingScene(const aiScene* scene);
   void boundingNode(const aiScene* scene,

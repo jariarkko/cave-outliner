@@ -70,8 +70,7 @@ static float stepx = 1.0;
 static float stepy = 1.0;
 static float stepz = 1.0;
 static bool boundingBoxSet = 0;
-static OutlinerVector3D boundingBoxStart = {0,0,0};
-static OutlinerVector3D boundingBoxEnd = {0,0,0};
+static OutlinerBox3D boundingBox;
 static enum outlinerdirection direction = dir_z;
 static enum outlineralgorithm algorithm = alg_pixel;
 static float linewidth =  outlinerdefaultlinewidth;
@@ -236,8 +235,8 @@ main(int argc, char** argv) {
         return(1);
       }
       boundingBoxSet = 1;
-      boundingBoxStart = OutlinerVector3D(startx,starty,startz);
-      boundingBoxEnd = OutlinerVector3D(endx,endy,endz);
+      boundingBox.start = OutlinerVector3D(startx,starty,startz);
+      boundingBox.end = OutlinerVector3D(endx,endy,endz);
     } else if (strcmp(argv[1],"--tiling") == 0 && argc > 2) {
       if (atoi(argv[2]) < 1 || atoi(argv[2]) > 10000) {
         errf("Invalid tile count, must be at least one and a not too big for memory, %s given", argv[2]);
@@ -303,14 +302,14 @@ main(int argc, char** argv) {
   // Determine bounding box, if not specified
   if (!boundingBoxSet) {
     BoundingBoxer boxer(scene);
-    boxer.getBoundingBox(boundingBoxStart,boundingBoxEnd);
+    boxer.getBoundingBox(boundingBox);
   }
 
   // Derive some size information
-  outlinerreal xOutputStart = DirectionOperations::outputx(direction,boundingBoxStart);
-  outlinerreal xOutputEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
-  outlinerreal yOutputStart = DirectionOperations::outputy(direction,boundingBoxStart);
-  outlinerreal yOutputEnd = DirectionOperations::outputy(direction,boundingBoxEnd);
+  outlinerreal xOutputStart = DirectionOperations::outputx(direction,boundingBox.start);
+  outlinerreal xOutputEnd = DirectionOperations::outputx(direction,boundingBox.end);
+  outlinerreal yOutputStart = DirectionOperations::outputy(direction,boundingBox.start);
+  outlinerreal yOutputEnd = DirectionOperations::outputy(direction,boundingBox.end);
   
   // Check if we need to make cross sections
   if (automaticCrossSections) {
@@ -350,9 +349,10 @@ main(int argc, char** argv) {
   // Build our own data structure
   OutlinerVector2D bounding2DBoxStart(xOutputStart,yOutputStart);
   OutlinerVector2D bounding2DBoxEnd(xOutputEnd,yOutputEnd);
+  OutlinerBox2D bounding2DBox(bounding2DBoxStart,bounding2DBoxEnd);
   IndexedMesh indexed(outlinermaxmeshes,tiles,
-                      boundingBoxStart,boundingBoxEnd,
-                      bounding2DBoxStart,bounding2DBoxEnd,
+                      boundingBox,
+                      bounding2DBox,
                       direction);
   indexed.addScene(scene);
   
@@ -362,8 +362,7 @@ main(int argc, char** argv) {
                       smooth,
                       mergedLines,
                       linewidth,
-                      boundingBoxStart,
-                      boundingBoxEnd,
+                      boundingBox,
                       stepx,
                       stepy,
                       stepz,

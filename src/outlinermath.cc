@@ -66,18 +66,14 @@ OutlinerMath::boundingBoxIntersection(const OutlinerBox2D& box1,
 }
 
 void
-OutlinerMath::boundingBoxUnion(const OutlinerVector2D& box1Start,
-                               const OutlinerVector2D& box1End,
-                               const OutlinerVector2D& box2Start,
-                               const OutlinerVector2D& box2End,
-                               OutlinerVector2D& resultBoxStart,
-                               OutlinerVector2D& resultBoxEnd) {
-  resultBoxStart = box1Start;
-  resultBoxEnd = box1End;
-  if (box2Start.x < resultBoxStart.x) resultBoxStart.x = box2Start.x;
-  if (box2Start.y < resultBoxStart.y) resultBoxStart.y = box2Start.y;
-  if (box2End.x > resultBoxEnd.x) resultBoxEnd.x = box2End.x;
-  if (box2End.y > resultBoxEnd.y) resultBoxEnd.y = box2End.y;
+OutlinerMath::boundingBoxUnion(const OutlinerBox2D& box1,
+                               const OutlinerBox2D& box2,
+                               OutlinerBox2D& resultBox) {
+  resultBox = box1;
+  if (box2.start.x < resultBox.start.x) resultBox.start.x = box2.start.x;
+  if (box2.start.y < resultBox.start.y) resultBox.start.y = box2.start.y;
+  if (box2.end.x > resultBox.end.x) resultBox.end.x = box2.end.x;
+  if (box2.end.y > resultBox.end.y) resultBox.end.y = box2.end.y;
 }
 
 void
@@ -106,8 +102,7 @@ OutlinerMath::triangleDescribe(const OutlinerTriangle3D& triangle,
 
 void
 OutlinerMath::triangleBoundingBox2D(const OutlinerTriangle2D& triangle,
-                                    OutlinerVector2D& boundingBoxStart,
-                                    OutlinerVector2D& boundingBoxEnd) {
+                                    OutlinerBox2D& boundingBox) {
   
   const OutlinerVector2D* nth1;
   const OutlinerVector2D* nth2;
@@ -132,16 +127,15 @@ OutlinerMath::triangleBoundingBox2D(const OutlinerTriangle2D& triangle,
   yEnd = nth3->y;
 
   // Construct the result
-  boundingBoxStart.x = xStart;
-  boundingBoxStart.y = yStart;
-  boundingBoxEnd.x = xEnd;
-  boundingBoxEnd.y = yEnd;
+  boundingBox.start.x = xStart;
+  boundingBox.start.y = yStart;
+  boundingBox.end.x = xEnd;
+  boundingBox.end.y = yEnd;
 }
 
 void
 OutlinerMath::triangleBoundingBox3D(const OutlinerTriangle3D& triangle,
-                                    OutlinerVector3D& boundingBoxStart,
-                                    OutlinerVector3D& boundingBoxEnd) {
+                                    OutlinerBox3D& boundingBox) {
 
   const OutlinerVector3D* nth1;
   const OutlinerVector3D* nth2;
@@ -175,12 +169,12 @@ OutlinerMath::triangleBoundingBox3D(const OutlinerTriangle3D& triangle,
   zEnd = nth3->z;
 
   // Construct the result
-  boundingBoxStart.x = xStart;
-  boundingBoxStart.y = yStart;
-  boundingBoxStart.z = zStart;
-  boundingBoxEnd.x = xEnd;
-  boundingBoxEnd.y = yEnd;
-  boundingBoxEnd.z = zEnd;
+  boundingBox.start.x = xStart;
+  boundingBox.start.y = yStart;
+  boundingBox.start.z = zStart;
+  boundingBox.end.x = xEnd;
+  boundingBox.end.y = yEnd;
+  boundingBox.end.z = zEnd;
 }
 
 bool
@@ -264,35 +258,33 @@ OutlinerMath::pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
 }
 
 bool
-OutlinerMath::pointInsideBoundingBox2D(const OutlinerVector2D& boxStart,
-                                       const OutlinerVector2D& boxEnd,
+OutlinerMath::pointInsideBoundingBox2D(const OutlinerBox2D& box,
                                        const OutlinerVector2D& point) {
-  return(point.x >= boxStart.x && point.x <= boxEnd.x &&
-         point.y >= boxStart.y && point.y <= boxEnd.y);
+  return(point.x >= box.start.x && point.x <= box.end.x &&
+         point.y >= box.start.y && point.y <= box.end.y);
 }
 
 bool
 OutlinerMath::boundingBoxIntersectsTriangle2D(const OutlinerTriangle2D& triangle,
-                                              const OutlinerVector2D& boxStart,
-                                              const OutlinerVector2D& boxEnd) {
+                                              const OutlinerBox2D& box) {
   
   // Debugs
   deepdeepdebugf("        boundingBoxIntersectsTriangle2D (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) and (%.2f,%.2f)-(%.2f,%.2f)",
                  triangle.a.x, triangle.a.y, triangle.b.x, triangle.b.y, triangle.c.x, triangle.c.y,
-                 boxStart.x, boxStart.y,
-                 boxEnd.x, boxEnd.y);
+                 box.start.x, box.start.y,
+                 box.end.x, box.end.y);
   
   // First, if triangle corners are in the box, they intersect
-  if (pointInsideBoundingBox2D(boxStart,boxEnd,triangle.a)) debugreturn("        bbit2","corner a",1);
-  if (pointInsideBoundingBox2D(boxStart,boxEnd,triangle.b)) debugreturn("        bbit2","corner b",1);
-  if (pointInsideBoundingBox2D(boxStart,boxEnd,triangle.c)) debugreturn("        bbit2","corner c",1);
+  if (pointInsideBoundingBox2D(box,triangle.a)) debugreturn("        bbit2","corner a",1);
+  if (pointInsideBoundingBox2D(box,triangle.b)) debugreturn("        bbit2","corner b",1);
+  if (pointInsideBoundingBox2D(box,triangle.c)) debugreturn("        bbit2","corner c",1);
 
   // Otherwise, (for now just an approximation) check if the box corners or middle are in the triangle
-  OutlinerVector2D boxUpperRight(boxEnd.x,boxStart.y);
-  OutlinerVector2D boxLowerLeft(boxStart.x,boxEnd.y);
-  OutlinerVector2D boxMiddle((boxStart.x + boxEnd.x) / 2,(boxStart.y + boxEnd.y) / 2);
-  if (pointInsideTriangle2D(triangle,boxStart)) debugreturn("        bbit2","start",1);
-  if (pointInsideTriangle2D(triangle,boxEnd)) debugreturn("        bbit2","end",1);
+  OutlinerVector2D boxUpperRight(box.end.x,box.start.y);
+  OutlinerVector2D boxLowerLeft(box.start.x,box.end.y);
+  OutlinerVector2D boxMiddle((box.start.x + box.end.x) / 2,(box.start.y + box.end.y) / 2);
+  if (pointInsideTriangle2D(triangle,box.start)) debugreturn("        bbit2","start",1);
+  if (pointInsideTriangle2D(triangle,box.end)) debugreturn("        bbit2","end",1);
   if (pointInsideTriangle2D(triangle,boxUpperRight)) debugreturn("        bbit2","upper",1);
   if (pointInsideTriangle2D(triangle,boxLowerLeft)) debugreturn("        bbit2","lower",1);
   if (pointInsideTriangle2D(triangle,boxMiddle)) debugreturn("        bbit2","middle",1);
@@ -303,13 +295,12 @@ OutlinerMath::boundingBoxIntersectsTriangle2D(const OutlinerTriangle2D& triangle
 
 bool
 OutlinerMath::boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle,
-                                              const OutlinerVector3D& boxStart,
-                                              const OutlinerVector3D& boxEnd) {
+                                              const OutlinerBox3D& box) {
   // Sanity checks
   deepdeepdebugf("        bbit3 starts");
-  assert(boxStart.x <= boxEnd.x);
-  assert(boxStart.y <= boxEnd.y);
-  assert(boxStart.z <= boxEnd.z);
+  assert(box.start.x <= box.end.x);
+  assert(box.start.y <= box.end.y);
+  assert(box.start.z <= box.end.z);
   
   // Heuristic algorithm, first check if there's an xy-plane match
   deepdeepdebugf("        bbit3 2d");
@@ -317,11 +308,12 @@ OutlinerMath::boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle
   OutlinerVector2D b2(triangle.b.x,triangle.b.y);
   OutlinerVector2D c2(triangle.c.x,triangle.c.y);
   deepdeepdebugf("        bbit3 boxes");
-  OutlinerVector2D boxStart2(boxStart.x,boxStart.y);
-  OutlinerVector2D boxEnd2(boxEnd.x,boxEnd.y);
+  OutlinerVector2D box2Start(box.start.x,box.start.y);
+  OutlinerVector2D box2End(box.end.x,box.end.y);
+  OutlinerBox2D box2(box2Start,box2End);
   deepdeepdebugf("        bbit3 xy plane check");
   OutlinerTriangle2D t2(a2,b2,c2);
-  if (!boundingBoxIntersectsTriangle2D(t2,boxStart2,boxEnd2)) return(0);
+  if (!boundingBoxIntersectsTriangle2D(t2,box2)) return(0);
   deepdeepdebugf("        bbit2 call returned");
   
   // If there was a match, check if the range of the triangle in
@@ -329,7 +321,7 @@ OutlinerMath::boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle
   outlinerreal zlow = outlinermin3(triangle.a.z,triangle.b.z,triangle.c.z);
   outlinerreal zhigh = outlinermax3(triangle.a.z,triangle.b.z,triangle.c.z);
   deepdeepdebugf("        bbit3 z overlap check %.2f..%.2f", zlow, zhigh);
-  debugreturn("        bbit3","final",outlineroverlap(zlow,zhigh,boxStart.z,boxEnd.z));
+  debugreturn("        bbit3","final",outlineroverlap(zlow,zhigh,box.start.z,box.end.z));
 }
 
 bool
@@ -799,59 +791,59 @@ OutlinerMath::boundingBoxTests(void) {
   OutlinerVector2D a(0,0);
   OutlinerVector2D b(0,3);
   OutlinerVector2D c(2,0);
-  OutlinerVector2D boundingBoxStart;
-  OutlinerVector2D boundingBoxEnd;
+  OutlinerBox2D boundingBox;
   debugf("bounding box tests");
   OutlinerTriangle2D tone(a,a,a);
-  triangleBoundingBox2D(tone,boundingBoxStart,boundingBoxEnd);
+  triangleBoundingBox2D(tone,boundingBox);
   debugf("a,a,a bounding box [%.2f,%.2f] to [%.2f,%.2f]",
-         boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
-  assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
-  assert(boundingBoxEnd.x == 0 && boundingBoxEnd.y == 0);
+         boundingBox.start.x, boundingBox.start.y, boundingBox.end.x, boundingBox.end.y);
+  assert(boundingBox.start.x == 0 && boundingBox.start.y == 0);
+  assert(boundingBox.end.x == 0 && boundingBox.end.y == 0);
   OutlinerTriangle2D t(a,b,c);
-  triangleBoundingBox2D(t,boundingBoxStart,boundingBoxEnd);
+  triangleBoundingBox2D(t,boundingBox);
   debugf("a,b,c bounding box [%.2f,%.2f] to [%.2f,%.2f]",
-         boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
-  assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
-  assert(boundingBoxEnd.x == 2 && boundingBoxEnd.y == 3);
+         boundingBox.start.x, boundingBox.start.y, boundingBox.end.x, boundingBox.end.y);
+  assert(boundingBox.start.x == 0 && boundingBox.start.y == 0);
+  assert(boundingBox.end.x == 2 && boundingBox.end.y == 3);
   OutlinerTriangle2D trev(c,b,a);
-  triangleBoundingBox2D(trev,boundingBoxStart,boundingBoxEnd);
+  triangleBoundingBox2D(trev,boundingBox);
   debugf("c,b,a bounding box [%.2f,%.2f] to [%.2f,%.2f]",
-         boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
-  assert(boundingBoxStart.x == 0 && boundingBoxStart.y == 0);
-  assert(boundingBoxEnd.x == 2 && boundingBoxEnd.y == 3);
+         boundingBox.start.x, boundingBox.start.y, boundingBox.end.x, boundingBox.end.y);
+  assert(boundingBox.start.x == 0 && boundingBox.start.y == 0);
+  assert(boundingBox.end.x == 2 && boundingBox.end.y == 3);
   OutlinerVector2D x(-10,-10);
   OutlinerVector2D y(10,10);
   OutlinerVector2D z(30,9);
   OutlinerTriangle2D trevx(z,y,x);
-  triangleBoundingBox2D(trevx,boundingBoxStart,boundingBoxEnd);
+  triangleBoundingBox2D(trevx,boundingBox);
   debugf("z,y,x bounding box [%.2f,%.2f] to [%.2f,%.2f]",
-         boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
-  assert(boundingBoxStart.x == -10 && boundingBoxStart.y == -10);
-  assert(boundingBoxEnd.x == 30 && boundingBoxEnd.y == 10);
+         boundingBox.start.x, boundingBox.start.y, boundingBox.end.x, boundingBox.end.y);
+  assert(boundingBox.start.x == -10 && boundingBox.start.y == -10);
+  assert(boundingBox.end.x == 30 && boundingBox.end.y == 10);
   OutlinerTriangle2D trevx2(y,z,x);
-  triangleBoundingBox2D(trevx2,boundingBoxStart,boundingBoxEnd);
+  triangleBoundingBox2D(trevx2,boundingBox);
   debugf("y,z,x bounding box [%.2f,%.2f] to [%.2f,%.2f]",
-         boundingBoxStart.x, boundingBoxStart.y, boundingBoxEnd.x, boundingBoxEnd.y);
-  assert(boundingBoxStart.x == -10 && boundingBoxStart.y == -10);
-  assert(boundingBoxEnd.x == 30 && boundingBoxEnd.y == 10);
+         boundingBox.start.x, boundingBox.start.y, boundingBox.end.x, boundingBox.end.y);
+  assert(boundingBox.start.x == -10 && boundingBox.start.y == -10);
+  assert(boundingBox.end.x == 30 && boundingBox.end.y == 10);
 
   OutlinerVector2D bbtest1start(10,10);
   OutlinerVector2D bbtest1end(20,30);
+  OutlinerBox2D bbtest1(bbtest1start,bbtest1end);
   OutlinerVector2D bbtest1point1(0,25);
   OutlinerVector2D bbtest1point2(10,10);
   OutlinerVector2D bbtest1point3(20,30);
   OutlinerVector2D bbtest1point4(30,30);
   OutlinerVector2D bbtest1point5(11,15);
-  bool ans = pointInsideBoundingBox2D(bbtest1start,bbtest1end,bbtest1point1);
+  bool ans = pointInsideBoundingBox2D(bbtest1,bbtest1point1);
   assert(ans == 0);
-  ans = pointInsideBoundingBox2D(bbtest1start,bbtest1end,bbtest1point2);
+  ans = pointInsideBoundingBox2D(bbtest1,bbtest1point2);
   assert(ans == 1);
-  ans = pointInsideBoundingBox2D(bbtest1start,bbtest1end,bbtest1point3);
+  ans = pointInsideBoundingBox2D(bbtest1,bbtest1point3);
   assert(ans == 1);
-  ans = pointInsideBoundingBox2D(bbtest1start,bbtest1end,bbtest1point4);
+  ans = pointInsideBoundingBox2D(bbtest1,bbtest1point4);
   assert(ans == 0);
-  ans = pointInsideBoundingBox2D(bbtest1start,bbtest1end,bbtest1point5);
+  ans = pointInsideBoundingBox2D(bbtest1,bbtest1point5);
   assert(ans == 1);
 }
 
@@ -944,34 +936,30 @@ OutlinerMath::boundingBoxUnionTests(void) {
   
   const OutlinerVector2D box1aStart(0,0);
   const OutlinerVector2D box1aEnd(10,10);
+  const OutlinerBox2D box1a(box1aStart,box1aEnd);
   const OutlinerVector2D box1bStart(-3,0);
   const OutlinerVector2D box1bEnd(7,16);
+  const OutlinerBox2D box1b(box1bStart,box1bEnd);
   const OutlinerVector2D box2Start(2,2);
   const OutlinerVector2D box2End(8,8);
-  OutlinerVector2D resultBoxStart;
-  OutlinerVector2D resultBoxEnd;
-  boundingBoxUnion(box1aStart,
-                   box1aEnd,
-                   box2Start,
-                   box2End,
-                   resultBoxStart,
-                   resultBoxEnd);
+  const OutlinerBox2D box2(box2Start,box2End);
+  OutlinerBox2D resultBox;
+  boundingBoxUnion(box1a,
+                   box2,
+                   resultBox);
   deepdebugf("union result (%.2f,%.2f)-(%.2f,%.2f)",
-             resultBoxStart.x, resultBoxStart.y,
-             resultBoxEnd.x, resultBoxEnd.y);
-  assert(resultBoxStart.x == 0 && resultBoxStart.y == 0);
-  assert(resultBoxEnd.x == 10 && resultBoxEnd.y == 10);
-  boundingBoxUnion(box1bStart,
-                   box1bEnd,
-                   box2Start,
-                   box2End,
-                   resultBoxStart,
-                   resultBoxEnd);
+             resultBox.start.x, resultBox.start.y,
+             resultBox.end.x, resultBox.end.y);
+  assert(resultBox.start.x == 0 && resultBox.start.y == 0);
+  assert(resultBox.end.x == 10 && resultBox.end.y == 10);
+  boundingBoxUnion(box1b,
+                   box2,
+                   resultBox);
   deepdebugf("union result (%.2f,%.2f)-(%.2f,%.2f)",
-             resultBoxStart.x, resultBoxStart.y,
-             resultBoxEnd.x, resultBoxEnd.y);
-  assert(resultBoxStart.x == -3 && resultBoxStart.y == 0);
-  assert(resultBoxEnd.x == 8 && resultBoxEnd.y == 16);
+             resultBox.start.x, resultBox.start.y,
+             resultBox.end.x, resultBox.end.y);
+  assert(resultBox.start.x == -3 && resultBox.start.y == 0);
+  assert(resultBox.end.x == 8 && resultBox.end.y == 16);
   
   infof("bounding box union tests ok");
 }
@@ -1254,23 +1242,26 @@ OutlinerMath::triangleTests(void) {
   OutlinerVector3D c3(2,0,10);
   OutlinerVector3D boundingStart3a(0,0,0);
   OutlinerVector3D boundingEnd3a(5,5,5);
+  OutlinerBox3D boundingBox3a(boundingStart3a,boundingEnd3a);
   OutlinerVector3D boundingStart3b(0,0,0);
   OutlinerVector3D boundingEnd3b(5,5,10);
+  OutlinerBox3D boundingBox3b(boundingStart3b,boundingEnd3b);
   OutlinerTriangle3D t3(a3,b3,c3);
-  bool ans3 = boundingBoxIntersectsTriangle3D(t3,boundingStart3a,boundingEnd3a);
+  bool ans3 = boundingBoxIntersectsTriangle3D(t3,boundingBox3a);
   assert(!ans3);
-  ans3 = boundingBoxIntersectsTriangle3D(t3,boundingStart3b,boundingEnd3b);
+  ans3 = boundingBoxIntersectsTriangle3D(t3,boundingBox3b);
   assert(ans3);
-
+  
   // Bug test for 3D triangle cases
   debugf("triangle tests (3D bug)...");
   OutlinerVector3D bugBoxStart(0.00,-1.00,0.00);
   OutlinerVector3D bugBoxEnd(0.00,-0.50,0.50);
+  OutlinerBox3D bugBox(bugBoxStart,bugBoxEnd);
   OutlinerVector3D buga(1.00, -1.00, -1.00);
   OutlinerVector3D bugb(-1.00,-1.00, 1.00);
   OutlinerVector3D bugc(-1.00,-1.00,-1.00);
   OutlinerTriangle3D bugt(buga,bugb,bugc);
-  bool ansbug = boundingBoxIntersectsTriangle3D(bugt,bugBoxStart,bugBoxEnd);
+  bool ansbug = boundingBoxIntersectsTriangle3D(bugt,bugBox);
   assert(ansbug);
 }
 
@@ -1289,28 +1280,33 @@ OutlinerMath::triangleBoundingBoxTests(void) {
   OutlinerVector2D degenerate2c(-1,-1);
   OutlinerVector2D box1Start(-10,-10);
   OutlinerVector2D box1End(-1,-1);
+  OutlinerBox2D box1(box1Start,box1End);
   OutlinerVector2D box2Start(-10,-10);
   OutlinerVector2D box2End(5,5);
+  OutlinerBox2D box2(box2Start,box2End);
   OutlinerVector2D box3Start(-1000,-1000);
   OutlinerVector2D box3End(1000,1000);
+  OutlinerBox2D box3(box3Start,box3End);
   OutlinerVector2D box4Start(-10,-10);
   OutlinerVector2D box4End(0,0);
+  OutlinerBox2D box4(box4Start,box4End);
   OutlinerVector2D box5Start(0.0,0.0);
   OutlinerVector2D box5End(0.0,0.50);
+  OutlinerBox2D box5(box5Start,box5End);
   OutlinerTriangle2D t(a,b,c);
-  bool ans = boundingBoxIntersectsTriangle2D(t,box1Start,box1End);
+  bool ans = boundingBoxIntersectsTriangle2D(t,box1);
   assert(!ans);
-  ans = boundingBoxIntersectsTriangle2D(t,box2Start,box2End);
+  ans = boundingBoxIntersectsTriangle2D(t,box2);
   assert(ans);
-  ans = boundingBoxIntersectsTriangle2D(t,box3Start,box3End);
+  ans = boundingBoxIntersectsTriangle2D(t,box3);
   assert(ans);
-  ans = boundingBoxIntersectsTriangle2D(t,box4Start,box4End);
+  ans = boundingBoxIntersectsTriangle2D(t,box4);
   assert(ans);
   OutlinerTriangle2D degenerate1t(degenerate1a,degenerate1b,degenerate1c);
-  ans = boundingBoxIntersectsTriangle2D(degenerate1t,box5Start,box5End);
+  ans = boundingBoxIntersectsTriangle2D(degenerate1t,box5);
   assert(!ans);
   OutlinerTriangle2D degenerate2t(degenerate2a,degenerate2b,degenerate2c);
-  ans = boundingBoxIntersectsTriangle2D(degenerate2t,box5Start,box5End);
+  ans = boundingBoxIntersectsTriangle2D(degenerate2t,box5);
   assert(ans);
   infof("triangle bounding box tests ok");
 }

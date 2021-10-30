@@ -40,29 +40,27 @@ BoundingBoxer::BoundingBoxer(const aiScene* scene) {
   if (!boundingBoxSet) {
     errf("Cannot determine bounding box (empty model?)");
   }
-  outlinerreal xSize = boundingBoxEnd.x - boundingBoxStart.x;
-  outlinerreal ySize = boundingBoxEnd.y - boundingBoxStart.y;
-  outlinerreal zSize = boundingBoxEnd.z - boundingBoxStart.z;
+  outlinerreal xSize = boundingBox.end.x - boundingBox.start.x;
+  outlinerreal ySize = boundingBox.end.y - boundingBox.start.y;
+  outlinerreal zSize = boundingBox.end.z - boundingBox.start.z;
   outlinerreal xIncrease = xSize * 0.05;
   outlinerreal yIncrease = ySize * 0.05;
   outlinerreal zIncrease = zSize * 0.05;
-  boundingBoxStart.x -= xIncrease;
-  boundingBoxEnd.x += xIncrease;
-  boundingBoxStart.y -= yIncrease;
-  boundingBoxEnd.y += yIncrease;
-  boundingBoxStart.z -= zIncrease;
-  boundingBoxEnd.z += zIncrease;
+  boundingBox.start.x -= xIncrease;
+  boundingBox.end.x += xIncrease;
+  boundingBox.start.y -= yIncrease;
+  boundingBox.end.y += yIncrease;
+  boundingBox.start.z -= zIncrease;
+  boundingBox.end.z += zIncrease;
   infof("  discovered bounding box (%.2f,%.2f,%.2f) to (%.2f,%.2f,%.2f)",
-        boundingBoxStart.x, boundingBoxStart.y, boundingBoxStart.z,
-        boundingBoxEnd.x, boundingBoxEnd.y, boundingBoxEnd.z);
+        boundingBox.start.x, boundingBox.start.y, boundingBox.start.z,
+        boundingBox.end.x, boundingBox.end.y, boundingBox.end.z);
 }
 
 void
-BoundingBoxer::getBoundingBox(OutlinerVector3D& boundingBoxStartOut,
-                              OutlinerVector3D& boundingBoxEndOut) {
+BoundingBoxer::getBoundingBox(OutlinerBox3D& boundingBoxOut) {
   assert(boundingBoxSet);
-  boundingBoxStartOut = boundingBoxStart;
-  boundingBoxEndOut = boundingBoxEnd;
+  boundingBoxOut = boundingBox;
 }
 
 BoundingBoxer::~BoundingBoxer() {
@@ -126,39 +124,35 @@ BoundingBoxer::boundingFace(const aiMesh* mesh,
   const aiVector3D& vertexA = mesh->mVertices[face->mIndices[0]];
   const aiVector3D& vertexB = mesh->mVertices[face->mIndices[1]];
   const aiVector3D& vertexC = mesh->mVertices[face->mIndices[2]];
-  OutlinerVector3D elementBoundingBoxStart;
-  OutlinerVector3D elementBoundingBoxEnd;
+  OutlinerBox3D elementBoundingBox;
   OutlinerTriangle3D triangle3(vertexA,vertexB,vertexC);
-  OutlinerMath::triangleBoundingBox3D(triangle3,
-                                      elementBoundingBoxStart,
-                                      elementBoundingBoxEnd);
-
+  OutlinerMath::triangleBoundingBox3D(triangle3,elementBoundingBox);
+  
   // See if this is the first bounding box we see
   if (!boundingBoxSet) {
-    boundingBoxStart = elementBoundingBoxStart;
-    boundingBoxEnd = elementBoundingBoxEnd;
+    boundingBox = elementBoundingBox;
     boundingBoxSet = 1;
     return;
   } 
 
   // See if the new element should extend the existing bounding somehow
-  if (elementBoundingBoxStart.x < boundingBoxStart.x) {
-    boundingBoxStart.x = elementBoundingBoxStart.x;
+  if (elementBoundingBox.start.x < boundingBox.start.x) {
+    boundingBox.start.x = elementBoundingBox.start.x;
   }
-  if (elementBoundingBoxEnd.x > boundingBoxEnd.x) {
-    boundingBoxEnd.x = elementBoundingBoxEnd.x;
+  if (elementBoundingBox.end.x > boundingBox.end.x) {
+    boundingBox.end.x = elementBoundingBox.end.x;
   }
-  if (elementBoundingBoxStart.y < boundingBoxStart.y) {
-    boundingBoxStart.y = elementBoundingBoxStart.y;
+  if (elementBoundingBox.start.y < boundingBox.start.y) {
+    boundingBox.start.y = elementBoundingBox.start.y;
   }
-  if (elementBoundingBoxEnd.y > boundingBoxEnd.y) {
-    boundingBoxEnd.y = elementBoundingBoxEnd.y;
+  if (elementBoundingBox.end.y > boundingBox.end.y) {
+    boundingBox.end.y = elementBoundingBox.end.y;
   }
-  if (elementBoundingBoxStart.z < boundingBoxStart.z) {
-    boundingBoxStart.z = elementBoundingBoxStart.z;
+  if (elementBoundingBox.start.z < boundingBox.start.z) {
+    boundingBox.start.z = elementBoundingBox.start.z;
   }
-  if (elementBoundingBoxEnd.z > boundingBoxEnd.z) {
-    boundingBoxEnd.z = elementBoundingBoxEnd.z;
+  if (elementBoundingBox.end.z > boundingBox.end.z) {
+    boundingBox.end.z = elementBoundingBox.end.z;
   }
 }
 

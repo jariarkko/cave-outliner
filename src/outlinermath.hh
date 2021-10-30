@@ -43,32 +43,24 @@ public:
   static void boundingBoxIntersection(const OutlinerBox2D& box1,
                                       const OutlinerBox2D& box2,
                                       OutlinerBox2D& resultBox);
-  static void boundingBoxUnion(const OutlinerVector2D& box1Start,
-                               const OutlinerVector2D& box1End,
-                               const OutlinerVector2D& box2Start,
-                               const OutlinerVector2D& box2End,
-                               OutlinerVector2D& resultBoxStart,
-                               OutlinerVector2D& resultBoxEnd);
+  static void boundingBoxUnion(const OutlinerBox2D& box1,
+                               const OutlinerBox2D& box2,
+                               OutlinerBox2D& resultBox );
   static void triangleDescribe(const OutlinerTriangle3D& triangle,
                                char* buf,
                                unsigned int bufSize);
   static void triangleBoundingBox2D(const OutlinerTriangle2D& triangle,
-                                    OutlinerVector2D& boundingBoxStart,
-                                    OutlinerVector2D& boundingBoxEnd);
+                                    OutlinerBox2D& boundingBox);
   static void triangleBoundingBox3D(const OutlinerTriangle3D& triangle,
-                                    OutlinerVector3D& boundingBoxStart,
-                                    OutlinerVector3D& boundingBoxEnd);
+                                    OutlinerBox3D& boundingBox);
   static bool pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
                                     const OutlinerVector2D& point);
-  static bool pointInsideBoundingBox2D(const OutlinerVector2D& boxStart,
-                                       const OutlinerVector2D& boxEnd,
+  static bool pointInsideBoundingBox2D(const OutlinerBox2D& box,
                                        const OutlinerVector2D& point);
   static bool boundingBoxIntersectsTriangle2D(const OutlinerTriangle2D& triangle,
-                                              const OutlinerVector2D& boxStart,
-                                              const OutlinerVector2D& boxEnd);
+                                              const OutlinerBox2D& box);
   static bool boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle,
-                                              const OutlinerVector3D& boxStart,
-                                              const OutlinerVector3D& boxEnd);
+                                              const OutlinerBox3D& box);
   static bool boundingBoxesIntersect3D(OutlinerBox3D& boundingBox1,
                                        OutlinerBox3D& boundingBox2);
   static bool pointOnLine2D(const OutlinerLine2D& line,

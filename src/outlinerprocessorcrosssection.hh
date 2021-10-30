@@ -59,8 +59,7 @@ public:
                         Processor& procIn);
   ~ProcessorCrossSection();
   bool processSceneCrossSection(const aiScene* scene);
-  void getLineActualEndPoints(OutlinerVector2D& actualLineStart,
-                              OutlinerVector2D& actualLineEnd,
+  void getLineActualEndPoints(OutlinerLine2D& actualLine,
                               outlinerreal extralineatends);
   
 private:
@@ -79,8 +78,7 @@ private:
   outlinerreal lineSteps;
   outlinerreal lineStepX;
   outlinerreal lineStepY;
-  OutlinerVector2D sliceVerticalBoundingBoxStart;
-  OutlinerVector2D sliceVerticalBoundingBoxEnd;
+  OutlinerBox2D sliceVerticalBoundingBox;
   MaterialMatrix* matrix;
   Processor& proc;
   SvgCreator* svg;
@@ -96,28 +94,24 @@ private:
   // Finding out the cross section bounding box
   //
   
-  void sliceVerticalBoundingBox(const aiScene* scene,
-                                OutlinerVector2D& sliceBoundingBoxStart,
-                                OutlinerVector2D& sliceBoundingBoxEnd);
-  void sliceVerticalBoundingBoxNode(const aiScene* scene,
-                                    const aiNode* node,
-                                    bool& set,
-                                    OutlinerVector2D& sliceVerticalBoundingBoxStart,
-                                    OutlinerVector2D& sliceVerticalBoundingBoxEnd);
-  void sliceVerticalBoundingBoxMesh(const aiScene* scene,
-                                    const aiMesh* mesh,
-                                    bool& set,
-                                    OutlinerVector2D& sliceVerticalBoundingBoxStart,
-                                    OutlinerVector2D& sliceVerticalBoundingBoxEnd);
-  void sliceVerticalBoundingBoxFace(const aiScene* scene,
-                                    const aiMesh* mesh,
-                                    const aiFace* face,
-                                    outlinerreal x,
-                                    outlinerreal y,
-                                    bool& set,
-                                    OutlinerVector2D& sliceVerticalBoundingBoxStart,
-                                    OutlinerVector2D& sliceVerticalBoundingBoxEnd);
-
+  void getSliceVerticalBoundingBox(const aiScene* scene,
+                                   OutlinerBox2D& sliceBoundingBox);
+  void getSliceVerticalBoundingBoxNode(const aiScene* scene,
+                                       const aiNode* node,
+                                       bool& set,
+                                       OutlinerBox2D& sliceVerticalBoundingBox);
+  void getSliceVerticalBoundingBoxMesh(const aiScene* scene,
+                                       const aiMesh* mesh,
+                                       bool& set,
+                                       OutlinerBox2D& sliceVerticalBoundingBox);
+  void getSliceVerticalBoundingBoxFace(const aiScene* scene,
+                                       const aiMesh* mesh,
+                                       const aiFace* face,
+                                       outlinerreal x,
+                                       outlinerreal y,
+                                       bool& set,
+                                       OutlinerBox2D& sliceVerticalBoundingBox);
+  
   //
   // Drawing cross sections
   //

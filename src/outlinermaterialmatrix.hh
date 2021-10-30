@@ -24,8 +24,7 @@
 class MaterialMatrix {
 
 public:
-  MaterialMatrix(OutlinerVector2D boundingboxstart,
-                 OutlinerVector2D boundingboxend,
+  MaterialMatrix(OutlinerBox2D boundingbox,
                  outlinerreal stepx,
                  outlinerreal stepy);
   ~MaterialMatrix();

@@ -42,8 +42,7 @@ Processor::Processor(const char* fileNameIn,
                      bool smoothIn,
                      bool mergedLinesIn,
                      float linewidthIn,
-                     OutlinerVector3D boundingBoxStartIn,
-                     OutlinerVector3D boundingBoxEndIn,
+                     OutlinerBox3D boundingBoxIn,
                      outlinerreal stepxIn,
                      outlinerreal stepyIn,
                      outlinerreal stepzIn,
@@ -58,8 +57,7 @@ Processor::Processor(const char* fileNameIn,
   mergedLines(mergedLinesIn),
   linewidth(linewidthIn),
   svg(0),
-  boundingBoxStart(boundingBoxStartIn),
-  boundingBoxEnd(boundingBoxEndIn),
+  boundingBox(boundingBoxIn),
   stepx(stepxIn),
   stepy(stepyIn),
   stepz(stepzIn),
@@ -67,12 +65,12 @@ Processor::Processor(const char* fileNameIn,
   algorithm(algorithmIn),
   holethreshold(holethresholdIn),
   labels(labelsIn),
-  planviewBoundingBoxStart(DirectionOperations::outputx(direction,boundingBoxStart),
-                           DirectionOperations::outputy(direction,boundingBoxStart)),
-  planviewBoundingBoxEnd(DirectionOperations::outputx(direction,boundingBoxEnd),
-                         DirectionOperations::outputy(direction,boundingBoxEnd)),
-  matrix(planviewBoundingBoxStart,
-         planviewBoundingBoxEnd,
+  planviewBoundingBoxStart(DirectionOperations::outputx(direction,boundingBox.start),
+                           DirectionOperations::outputy(direction,boundingBox.start)),
+  planviewBoundingBoxEnd(DirectionOperations::outputx(direction,boundingBox.end),
+                         DirectionOperations::outputy(direction,boundingBox.end)),
+  planviewBoundingBox(planviewBoundingBoxStart,planviewBoundingBoxEnd),
+  matrix(planviewBoundingBox,
          stepxIn,
          stepyIn),
   indexed(indexedIn) {
@@ -80,17 +78,16 @@ Processor::Processor(const char* fileNameIn,
   if (holethreshold > outlinermaxholethreshold) {
     errf("Cannot compute hole thresholds larger than %u (%u given)", outlinermaxholethreshold, holethreshold);
   }
-  boundingBoxStart2D.x = DirectionOperations::outputx(direction,boundingBoxStart);
-  boundingBoxStart2D.y = DirectionOperations::outputy(direction,boundingBoxStart);
-  boundingBoxEnd2D.x = DirectionOperations::outputx(direction,boundingBoxEnd);
-  boundingBoxEnd2D.y = DirectionOperations::outputy(direction,boundingBoxEnd);
-  OutlinerVector2D boundingBoxStart2DExtended(boundingBoxStart2D);
-  OutlinerVector2D boundingBoxEnd2DExtended(boundingBoxEnd2D);
+  boundingBox2D.start.x = DirectionOperations::outputx(direction,boundingBox.start);
+  boundingBox2D.start.y = DirectionOperations::outputy(direction,boundingBox.start);
+  boundingBox2D.end.x = DirectionOperations::outputx(direction,boundingBox.end);
+  boundingBox2D.end.y = DirectionOperations::outputy(direction,boundingBox.end);
+  OutlinerBox2D boundingBox2DExtended(boundingBox2D);
   if (labels) {
-    boundingBoxStart2DExtended.y -= ((outlinertitlespacey * stepy) / multiplier);
-    boundingBoxEnd2DExtended.y += ((outlinertitlespacey * stepy) / multiplier);
+    boundingBox2DExtended.start.y -= ((outlinertitlespacey * stepy) / multiplier);
+    boundingBox2DExtended.end.y += ((outlinertitlespacey * stepy) / multiplier);
   }
-  svg = createSvg(fileName,boundingBoxStart2DExtended,boundingBoxEnd2DExtended,direction);
+  svg = createSvg(fileName,boundingBox2DExtended,direction);
 }
 
 Processor::~Processor() {
@@ -129,27 +126,27 @@ Processor::processScene(const aiScene* scene,
   unsigned int xIndex = 0;
 
   infof("computing material matrix...");
-  for (outlinerreal x = DirectionOperations::outputx(direction,boundingBoxStart);
-       x <= DirectionOperations::outputx(direction,boundingBoxEnd);
+  for (outlinerreal x = DirectionOperations::outputx(direction,boundingBox.start);
+       x <= DirectionOperations::outputx(direction,boundingBox.end);
        x += stepx) {
 
     debugf("main loop x = %.2f (%u)", x, xIndex);
-    assert(x >= DirectionOperations::outputx(direction,boundingBoxStart));
-    assert(x <= DirectionOperations::outputx(direction,boundingBoxEnd));
+    assert(x >= DirectionOperations::outputx(direction,boundingBox.start));
+    assert(x <= DirectionOperations::outputx(direction,boundingBox.end));
     unsigned int yIndex = 0;
     if (xIndex >= matrix.xIndexSize) {
       debugf("processScene %u/%u", xIndex, matrix.xIndexSize);
     }
     assert(xIndex < matrix.xIndexSize);
     
-    for (outlinerreal y = DirectionOperations::outputy(direction,boundingBoxStart);
-         y <= DirectionOperations::outputy(direction,boundingBoxEnd);
+    for (outlinerreal y = DirectionOperations::outputy(direction,boundingBox.start);
+         y <= DirectionOperations::outputy(direction,boundingBox.end);
          y += stepy) {
       
-      assert(x >= DirectionOperations::outputx(direction,boundingBoxStart));
-      assert(x <= DirectionOperations::outputx(direction,boundingBoxEnd));
-      assert(y >= DirectionOperations::outputy(direction,boundingBoxStart));
-      assert(y <= DirectionOperations::outputy(direction,boundingBoxEnd));
+      assert(x >= DirectionOperations::outputx(direction,boundingBox.start));
+      assert(x <= DirectionOperations::outputx(direction,boundingBox.end));
+      assert(y >= DirectionOperations::outputy(direction,boundingBox.start));
+      assert(y <= DirectionOperations::outputy(direction,boundingBox.end));
       if (yIndex >= matrix.yIndexSize) {
         debugf("processScene %u,%u/%u,%u", xIndex, yIndex, matrix.xIndexSize, matrix.yIndexSize);
       }
@@ -209,8 +206,8 @@ Processor::processScene(const aiScene* scene,
   // whether there was material or not. And small holes have been filled per above.
   // Draw the output based on all this.
   matrixToSvg(&matrix,svg,
-              DirectionOperations::outputx(direction,boundingBoxStart),
-              DirectionOperations::outputy(direction,boundingBoxStart),
+              DirectionOperations::outputx(direction,boundingBox.start),
+              DirectionOperations::outputy(direction,boundingBox.start),
               stepx,
               stepy);
 
@@ -402,8 +399,9 @@ Processor::faceHasMaterial(const aiScene* scene,
   OutlinerTriangle2D t;
   faceGetVertices2D(mesh,face,direction,t);
   OutlinerVector2D point(x,y);
-  OutlinerVector2D stepboundingbox(x+stepx,y+stepy);
-  if (OutlinerMath::boundingBoxIntersectsTriangle2D(t,point,stepboundingbox)) {
+  OutlinerVector2D stepBoundingBox(x+stepx,y+stepy);
+  OutlinerBox2D thisBox(point,stepBoundingBox);
+  if (OutlinerMath::boundingBoxIntersectsTriangle2D(t,thisBox)) {
     deepdebugf("found out that (%.2f,%.2f) is hitting a face",x,y);
     return(1);
   }
@@ -598,8 +596,8 @@ Processor::isBorder(unsigned int xIndex,
 
 unsigned int
 Processor::coordinateXToIndex(outlinerreal x) {
-  outlinerreal xStart = DirectionOperations::outputx(direction,boundingBoxStart);
-  outlinerreal xEnd = DirectionOperations::outputx(direction,boundingBoxEnd);
+  outlinerreal xStart = DirectionOperations::outputx(direction,boundingBox.start);
+  outlinerreal xEnd = DirectionOperations::outputx(direction,boundingBox.end);
   assert(x >= xStart);
   assert(x <= xEnd);
   return((x - xStart)/stepx);
@@ -607,8 +605,8 @@ Processor::coordinateXToIndex(outlinerreal x) {
 
 unsigned int
 Processor::coordinateYToIndex(outlinerreal y) {
-  outlinerreal yStart = DirectionOperations::outputy(direction,boundingBoxStart);
-  outlinerreal yEnd = DirectionOperations::outputy(direction,boundingBoxEnd);
+  outlinerreal yStart = DirectionOperations::outputy(direction,boundingBox.start);
+  outlinerreal yEnd = DirectionOperations::outputy(direction,boundingBox.end);
   assert(y >= yStart);
   assert(y <= yEnd);
   return((y - yStart)/stepy);
@@ -616,13 +614,13 @@ Processor::coordinateYToIndex(outlinerreal y) {
 
 outlinerreal
 Processor::indexToCoordinateX(unsigned int xIndex) {
-  outlinerreal xStart = DirectionOperations::outputx(direction,boundingBoxStart);
+  outlinerreal xStart = DirectionOperations::outputx(direction,boundingBox.start);
   return(xStart + stepx * xIndex);
 }
 
 outlinerreal
 Processor::indexToCoordinateY(unsigned int yIndex) {
-  outlinerreal yStart = DirectionOperations::outputy(direction,boundingBoxStart);
+  outlinerreal yStart = DirectionOperations::outputy(direction,boundingBox.start);
   return(yStart + stepy * yIndex);
 }
 
@@ -632,8 +630,7 @@ Processor::indexToCoordinateY(unsigned int yIndex) {
 
 SvgCreator*
 Processor::createSvg(const char* svgFileName,
-                     const OutlinerVector2D& svgBoundingBoxStart,
-                     const OutlinerVector2D& svgBoundingBoxEnd,
+                     const OutlinerBox2D& svgBoundingBox,
                      enum outlinerdirection svgDirection) {
   
   // Calculate sizes
@@ -647,7 +644,7 @@ Processor::createSvg(const char* svgFileName,
   unsigned int ySizeInt;
   outlinerreal xFactor;
   outlinerreal yFactor;
-  createSvgCalculateSizes(svgBoundingBoxStart,svgBoundingBoxEnd,
+  createSvgCalculateSizes(svgBoundingBox,
                           stepx,stepy,
                           svgDirection,
                           xOutputStart,xOutputEnd,
@@ -693,8 +690,7 @@ Processor::createSvg(const char* svgFileName,
 }
 
 void
-Processor::createSvgCalculateSizes(const OutlinerVector2D& svgBoundingBoxStart,
-                                   const OutlinerVector2D& svgBoundingBoxEnd,
+Processor::createSvgCalculateSizes(const OutlinerBox2D& svgBoundingBox,
                                    const outlinerreal stepx,
                                    const outlinerreal stepy,
                                    const enum outlinerdirection svgDirection,
@@ -709,10 +705,10 @@ Processor::createSvgCalculateSizes(const OutlinerVector2D& svgBoundingBoxStart,
                                    outlinerreal& xFactor,
                                    outlinerreal& yFactor) {
   
-  xOutputStart = svgBoundingBoxStart.x;
-  xOutputEnd = svgBoundingBoxEnd.x;
-  yOutputStart = svgBoundingBoxStart.y;
-  yOutputEnd = svgBoundingBoxEnd.y;
+  xOutputStart = svgBoundingBox.start.x;
+  xOutputEnd = svgBoundingBox.end.x;
+  yOutputStart = svgBoundingBox.start.y;
+  yOutputEnd = svgBoundingBox.end.y;
   xSize = (xOutputEnd - xOutputStart) / stepx;
   ySize = (yOutputEnd - yOutputStart) / stepy;
   xSizeInt = xSize;
@@ -758,33 +754,30 @@ Processor::processSceneCrossSection(const aiScene* scene,
                                *this);
   csproc.processSceneCrossSection(scene);
   if (crossSection->label != 0) {
-    OutlinerVector2D actualLineStart;
-    OutlinerVector2D actualLineEnd;
-    csproc.getLineActualEndPoints(actualLineStart,actualLineEnd,
+    OutlinerLine2D actualLine;
+    csproc.getLineActualEndPoints(actualLine,
                                   outlinercrosssectionextraline * stepy);
-    addCrossSectionLine(crossSection->label,
-                        actualLineStart,actualLineEnd);
+    addCrossSectionLine(crossSection->label,actualLine);
   }
   return(1);
 }
 
 void
 Processor::addCrossSectionLine(const char* label,
-                               OutlinerVector2D& actualLineStart,
-                               OutlinerVector2D& actualLineEnd) {
+                               OutlinerLine2D& actualLine) {
   assert(svg != 0);
   assert(label != 0);
   infof("addCrossSectionLine (%.2f,%.2f) to (%.2f,%.2f)",
-        actualLineStart.x,actualLineStart.y,
-        actualLineEnd.x,actualLineEnd.y);
-  svg->line(actualLineStart.x,actualLineStart.y,
-            actualLineEnd.x,actualLineEnd.y,
+        actualLine.start.x,actualLine.start.y,
+        actualLine.end.x,actualLine.end.y);
+  svg->line(actualLine.start.x,actualLine.start.y,
+            actualLine.end.x,actualLine.end.y,
             1);
   infof("    process cross-section line text %.2f - font %u * 0.5 * pixelXSize %.2f = %.2f",
-        actualLineEnd.x, outlinerdefaultfontxsize, svg->getPixelXSize(),
-        actualLineEnd.x - outlinerdefaultfontxsize * 0.5 * svg->getPixelXSize());
-  svg->text(actualLineEnd.x - outlinerdefaultfontxsize * 0.5 * svg->getPixelXSize(),
-            actualLineEnd.y + outlinerdefaultfontysize * 0.1 * svg->getPixelYSize(),
+        actualLine.end.x, outlinerdefaultfontxsize, svg->getPixelXSize(),
+        actualLine.end.x - outlinerdefaultfontxsize * 0.5 * svg->getPixelXSize());
+  svg->text(actualLine.end.x - outlinerdefaultfontxsize * 0.5 * svg->getPixelXSize(),
+            actualLine.end.y + outlinerdefaultfontysize * 0.1 * svg->getPixelYSize(),
             label);
 }
 
