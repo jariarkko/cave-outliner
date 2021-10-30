@@ -96,7 +96,8 @@ CLASSMARKDOWNS=	doc/class_outliner_math.md \
 		doc/class_processor.md \
 		doc/class_processor_cross_section.md \
 		doc/class_svg_creator.md
-SUPP=Makefile
+TOOLS=	doc/markdowncleanup.sh
+SUPP=Makefile $(TOOLS)
 CPPFLAGS=-O3 -Wall -std=c++11 `pkg-config --cflags assimp`
 ISYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk 
 LDFLAGS=-O3
@@ -118,10 +119,10 @@ docs:	doc/Design-Structure-Small.jpg
 
 docs-generation:	$(CLASSMARKDOWNS)
 
-$(CLASSMARKDOWNS):	$(HDRS) Makefile
+$(CLASSMARKDOWNS):	$(HDRS) Makefile $(TOOLS)
 	-rm -rf doc/xml doc/html doc/search.json doc/index.html doc/latex
 	doxygen doc/doxygen.cfg
-	for x in $(CLASSES); do pandoc doc/html/class_$$x.html -f html -t markdown_strict -o doc/class_$$x.md; done
+	for x in $(CLASSES); do pandoc doc/html/class_$$x.html -f html -t markdown_strict -o /tmp/gen.md; sh doc/markdowncleanup.sh /tmp/gen.md doc/class_$$x.md; done
 	-rm -rf doc/xml doc/html doc/search.json doc/index.html doc/latex
 
 doc/Design-Structure-Small.jpg:	doc/Design-Structure.jpg

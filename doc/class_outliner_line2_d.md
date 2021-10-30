@@ -97,5 +97,5 @@ The documentation for this class was generated from the following file:
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [<img src="doxygen.svg" class="footer" width="104" height="31" alt="doxygen" />](https://www.doxygen.org/index.html)
+by [Doxygen](https://www.doxygen.org/index.html)
 1.9.2</span>
