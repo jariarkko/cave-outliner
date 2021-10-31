@@ -194,6 +194,8 @@ basic-tests:	cave-outliner \
 		cube-angled-line-linewidth-test  \
 		cube-angled-line-multiplier-test \
 		house-pixel-test \
+		house-pixel-side-test \
+		house-pixel-another-side-test \
 		house-line-test \
 		cube-cross-section-simple-test \
 		cube-reduced-cross-section-test \
@@ -249,8 +251,18 @@ cube-angled-line-multiplier-test:
 
 house-pixel-test:
 	@echo 'Running test case house-pixel-test...'
-	@./cave-outliner --quiet --pixel --step 0.2 --y --bounding -5 5 -5 5 -5 5 test/house.stl test/house-pixel.svg
+	@./cave-outliner --quiet --pixel --step 0.2 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-pixel.svg
 	@diff -q test/house-pixel.svg test/house-pixel.svg.expected
+
+house-pixel-side-test:
+	@echo 'Running test case house-pixel-side-test...'
+	@./cave-outliner --quiet --pixel --step 0.2 --y --bounding -5 5 -5 5 -5 5 test/house.stl test/house-pixel-side.svg
+	@diff -q test/house-pixel-side.svg test/house-pixel-side.svg.expected
+
+house-pixel-another-side-test:
+	@echo 'Running test case house-pixel-another-side-test...'
+	@./cave-outliner --quiet --pixel --step 0.2 --x --bounding -5 5 -5 5 -5 5 test/house.stl test/house-pixel-another-side.svg
+	@diff -q test/house-pixel-another-side.svg test/house-pixel-another-side.svg.expected
 
 house-line-test:
 	@echo 'Running test case house-line-test...'
