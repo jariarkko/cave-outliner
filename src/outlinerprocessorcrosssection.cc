@@ -426,7 +426,6 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
   OutlinerBox3D thisBox(x,y,z,x+lineStepX,y+lineStepY,z+stepz);
   char buf[80];
   OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
-  deepdeepdebugf("describe done, result = %s", buf);
   if (OutlinerMath::boundingBoxIntersectsTriangle3D(t,thisBox)) {
     infof("    cross section face match at %u,%u (%.2f,%.2f,%.2f)",
           xyStep, zStep, x, y, z);
