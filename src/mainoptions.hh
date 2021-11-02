@@ -61,6 +61,8 @@ private:
   void processHelp(void);
   bool checkFileExtension(const char* filename,
                           const char* extension);
+  bool parseDirection(const char* string,
+                      enum outlinerdirection& direction);
 };
 
 #endif // MAINCONFIG_HH

@@ -342,8 +342,8 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
   debugf("placing a face bounding box (%f..%f) x (%f..%f) to tiles",
          xStart, xEnd,
          yStart, yEnd);
-  for (outlinerreal x = xStart; x <= xEnd; x += tileSizeX * 0.5) {
-    for (outlinerreal y = yStart; y <= yEnd; y += tileSizeY * 0.5) {
+  for (outlinerreal x = xStart; outlinerleepsilon(x,xEnd); x += tileSizeX * 0.5) {
+    for (outlinerreal y = yStart; outlinerleepsilon(y,yEnd); y += tileSizeY * 0.5) {
       unsigned int tileX;
       unsigned int tileY;
       coordsToTile(x,y,tileX,tileY);

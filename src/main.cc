@@ -118,35 +118,71 @@ main(int argc, char** argv) {
       errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
       return(1);
     }
-    outlinerreal crossSectionStep = (xOutputEnd - xOutputStart) / (1.0*config.nAutomaticCrossSections);
+    outlinerreal crossSectionStep;
+    outlinerreal crossSectionStart;
+    switch (config.automaticCrossSectionsDirection) {
+    case dir_x:
+      crossSectionStep = (xOutputEnd - xOutputStart) / (1.0*config.nAutomaticCrossSections);
+      crossSectionStart = xOutputStart;
+      break;
+    case dir_y:
+      crossSectionStep = (yOutputEnd - yOutputStart) / (1.0*config.nAutomaticCrossSections);
+      crossSectionStart = yOutputStart;
+      break;
+    case dir_z:
+      errf("Not supported cross section type");
+      return(1);
+    default:
+      errf("Invalid direction");
+      return(1);
+    }
     for (unsigned int c = 0; c < config.nAutomaticCrossSections; c++) {
       assert(config.nCrossSections < outlinermaxcrosssections);
-      char* newFilename = makeFilenameFromPattern(config.automaticCrossSectionFilenamePattern,c);
-      config.crossSections[config.nCrossSections].start.x =
-        config.crossSections[config.nCrossSections].end.x =
-          xOutputStart + crossSectionStep * (((outlinerreal)c)+0.5);
-      config.crossSections[config.nCrossSections].start.y = yOutputStart;
-      config.crossSections[config.nCrossSections].end.y = yOutputEnd;
-      config.crossSections[config.nCrossSections].filename = newFilename;
-      config.crossSections[config.nCrossSections].label = config.getCrossSectionLabel();
-      debugf("cross section %s file %s at x %.2f from y %.2f to %.2f, step was %.2f",
-             (config.crossSections[config.nCrossSections].label == 0 ?
-              "(none)" :
-              config.crossSections[config.nCrossSections].label),
-             newFilename,
-             config.crossSections[config.nCrossSections].start.x,
-             config.crossSections[config.nCrossSections].start.y,
-             config.crossSections[config.nCrossSections].end.y,
-             crossSectionStep);
+      struct ProcessorCrossSectionInfo* newOne = &config.crossSections[config.nCrossSections];
+      config.crossSectionPoints[config.nCrossSections] =
+        crossSectionStart + crossSectionStep * (((outlinerreal)c)+0.5);
+      config.crossSectionDirections[config.nCrossSections] = config.automaticCrossSectionsDirection;
+      newOne->start.x = 0;
+      newOne->start.y = 0;
+      newOne->end.x = 0;
+      newOne->end.y = 0;
+      newOne->filename = makeFilenameFromPattern(config.automaticCrossSectionFilenamePattern,c);
+      newOne->label = config.getCrossSectionLabel();
+      debugf("cross section %s file %s at %.2f",
+             (newOne->label == 0 ? "(none)" : newOne->label),
+             newOne->filename,
+             config.crossSectionPoints[config.nCrossSections]);
       config.nCrossSections++;
     }
-  } else {
-    // Fix the cross section endpoint on y dimension, as we now know the size of the image
-    for (unsigned int c = 0; c < config.nCrossSections; c++) {
-      if (config.crossSections[config.nCrossSections].end.y == 0) {
-        config.crossSections[config.nCrossSections].end.y = yOutputEnd;
-      }
+  }
+  
+  // Assign the cross section line endpoints, as we now know the size
+  // of the image
+  for (unsigned int c = 0; c < config.nCrossSections; c++) {
+    struct ProcessorCrossSectionInfo* thisOne = &config.crossSections[c];
+    switch (config.crossSectionDirections[c]) {
+    case dir_x:
+      thisOne->start.x = config.crossSectionPoints[c];
+      thisOne->start.y = yOutputStart;
+      thisOne->end.x = thisOne->start.x;
+      thisOne->end.y = yOutputEnd;
+      break;
+    case dir_y:
+      thisOne->start.x = xOutputStart;
+      thisOne->start.y = config.crossSectionPoints[c];
+      thisOne->end.x = xOutputEnd;
+      thisOne->end.y = thisOne->start.y;
+      break;
+    case dir_z:
+      errf("Not supported cross section type");
+      return(1);
+    default:
+      errf("Invalid type");
+      return(1);
     }
+    infof("configured a cross section from (%.2f,%.2f) to (%.2f,%.2f)",
+          thisOne->start.x, thisOne->start.y,
+          thisOne->end.x, thisOne->end.y);
   }
 
   // Build our own data structure

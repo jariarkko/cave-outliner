@@ -223,6 +223,8 @@ private:
   
   SvgCreator* createSvg(const char* svgFileName,
                         const OutlinerBox2D& svgBoundingBox,
+                        outlinerreal svgStepX,
+                        outlinerreal svgStepY,
                         enum outlinerdirection svgDirection);
   void svgDone();
   void createSvgCalculateSizes(const OutlinerBox2D& svgBoundingBox,

@@ -260,10 +260,10 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
 void
 SvgCreator::pixel(outlinerreal x,
                   outlinerreal y) {
-  deepdebugf("SvgCreator::pixel");
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
+  infof("SvgCreator::pixel %.2f,%.2f to %u,%u", x, y, xInt, yInt);
   file << "<rect x=\"" << xInt << "\" y=\"" << yInt << "\"";
   file << " width=\"" << multiplier << "\" height=\"" << multiplier << "\"";
   file << " fill=\"black\"";

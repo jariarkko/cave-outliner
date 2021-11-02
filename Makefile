@@ -201,6 +201,7 @@ basic-tests:	cave-outliner \
 		cube-reduced-cross-section-test \
 		cube-reduced-highres-cross-section-test \
 		cube-cross-section-test \
+		cube-cross-section-highres-test \
 		cube-cross-section-label-test \
 		cube-cross-section-highres-label-test \
 		cube-cross-section-multiplier-label-test \
@@ -273,67 +274,73 @@ house-line-test:
 
 house-cross-section-test:
 	@echo 'Running test case house-cross-section-test...'
-	@./cave-outliner --quiet --pixel --crosssections 1 test/house-cross-section-%.svg --step 0.5 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section.svg
+	@./cave-outliner --quiet --pixel --crosssections y 1 test/house-cross-section-%.svg --step 1 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section.svg
 	@diff -q test/house-cross-section.svg test/house-cross-section.svg.expected
 	@diff -q test/house-cross-section-0.svg test/house-cross-section-0.svg.expected
 
 house-cross-section-side-test:
 	@echo 'Running test case house-cross-section-side-test...'
-	@./cave-outliner --quiet --pixel --y --crosssections 1 test/house-cross-section-side-%.svg --step 0.5 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section-side.svg
+	@./cave-outliner --quiet --pixel --crosssections x 1 test/house-cross-section-side-%.svg --step 0.5 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section-side.svg
 	@diff -q test/house-cross-section-side.svg test/house-cross-section-side.svg.expected
 	@diff -q test/house-cross-section-side-0.svg test/house-cross-section-side-0.svg.expected
 
 house-cross-section-another-side-test:
 	@echo 'Running test case house-cross-section-another-side-test...'
-	@./cave-outliner --quiet --pixel --x --crosssections 1 test/house-cross-section-another-side-%.svg --step 0.5 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section-another-side.svg
+	@./cave-outliner --quiet --pixel --y --crosssections x 1 test/house-cross-section-another-side-%.svg --step 0.5 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section-another-side.svg
 	@diff -q test/house-cross-section-another-side.svg test/house-cross-section-another-side.svg.expected
 	@diff -q test/house-cross-section-another-side-0.svg test/house-cross-section-another-side-0.svg.expected
 
 house-cross-section-highres-test:
 	@echo 'Running test case house-cross-section-highres-test...'
-	@./cave-outliner --quiet --pixel --crosssections 1 test/house-cross-section-highres-%.svg --step 0.05 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section-highres.svg
+	@./cave-outliner --quiet --pixel --crosssections y 1 test/house-cross-section-highres-%.svg --step 0.05 --bounding -5 5 -5 5 -5 5 test/house.stl test/house-cross-section-highres.svg
 	@diff -q test/house-cross-section-highres.svg test/house-cross-section-highres.svg.expected
 	@diff -q test/house-cross-section-highres-0.svg test/house-cross-section-highres-0.svg.expected
 
 cube-cross-section-simple-test:
 	@echo 'Running test case cube-cross-section-simple-test...'
-	@./cave-outliner --quiet --pixel --crosssections 1 test/cube-cross-section-simple-%.svg --step 1 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-simple.svg
+	@./cave-outliner --quiet --pixel --crosssections x 1 test/cube-cross-section-simple-%.svg --step 1 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-simple.svg
 	@diff -q test/cube-cross-section-simple.svg test/cube-cross-section-simple.svg.expected
 	@diff -q test/cube-cross-section-simple-0.svg test/cube-cross-section-simple-0.svg.expected
 
 cube-reduced-cross-section-test:
 	@echo 'Running test case cube-reduced-cross-section-test...'
-	@./cave-outliner --quiet --pixel --crosssections 1 test/cube-reduced-cross-section-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube-reduced.stl test/cube-reduced-cross-section.svg
+	@./cave-outliner --quiet --pixel --crosssections x 1 test/cube-reduced-cross-section-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube-reduced.stl test/cube-reduced-cross-section.svg
 	@diff -q test/cube-reduced-cross-section.svg test/cube-reduced-cross-section.svg.expected
 	@diff -q test/cube-reduced-cross-section-0.svg test/cube-reduced-cross-section-0.svg.expected
 
 cube-reduced-highres-cross-section-test:
 	@echo 'Running test case cube-reduced-highres-cross-section-test...'
-	@./cave-outliner --quiet --pixel --crosssections 1 test/cube-reduced-highres-cross-section-%.svg --step 0.1 --bounding -2 2 -2 2 -2 2 test/cube-reduced.stl test/cube-reduced-highres-cross-section.svg
+	@./cave-outliner --quiet --pixel --crosssections x 1 test/cube-reduced-highres-cross-section-%.svg --step 0.1 --bounding -2 2 -2 2 -2 2 test/cube-reduced.stl test/cube-reduced-highres-cross-section.svg
 	@diff -q test/cube-reduced-highres-cross-section.svg test/cube-reduced-highres-cross-section.svg.expected
 	@diff -q test/cube-reduced-highres-cross-section-0.svg test/cube-reduced-highres-cross-section-0.svg.expected
 
 cube-cross-section-test:
 	@echo 'Running test case cube-cross-section-test...'
-	@./cave-outliner --quiet --pixel --crosssections 1 test/cube-cross-section-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section.svg
+	@./cave-outliner --quiet --pixel --crosssections x 1 test/cube-cross-section-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section.svg
 	@diff -q test/cube-cross-section.svg test/cube-cross-section.svg.expected
 	@diff -q test/cube-cross-section-0.svg test/cube-cross-section-0.svg.expected
 
+cube-cross-section-highres-test:
+	@echo 'Running test case cube-cross-section-highres-test...'
+	@./cave-outliner --quiet --pixel --crosssections x 1 test/cube-cross-section-highres-%.svg --step 0.1 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-highres.svg
+	@diff -q test/cube-cross-section-highres.svg test/cube-cross-section-highres.svg.expected
+	@diff -q test/cube-cross-section-highres-0.svg test/cube-cross-section-highres-0.svg.expected
+
 cube-cross-section-label-test:
 	@echo 'Running test case cube-cross-section-label-test...'
-	@./cave-outliner --quiet --pixel --label --crosssections 1 test/cube-cross-section-label-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-label.svg
+	@./cave-outliner --quiet --pixel --label --crosssections x 1 test/cube-cross-section-label-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-label.svg
 	@diff -q test/cube-cross-section-label.svg test/cube-cross-section-label.svg.expected
 	@diff -q test/cube-cross-section-label-0.svg test/cube-cross-section-label-0.svg.expected
 
 cube-cross-section-highres-label-test:
 	@echo 'Running test case cube-cross-section-highres-label-test...'
-	@./cave-outliner --quiet --pixel --label --crosssections 1 test/cube-cross-section-highres-label-%.svg --step 0.05 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-highres-label.svg
+	@./cave-outliner --quiet --pixel --label --crosssections x 1 test/cube-cross-section-highres-label-%.svg --step 0.05 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-highres-label.svg
 	@diff -q test/cube-cross-section-highres-label.svg test/cube-cross-section-highres-label.svg.expected
 	@diff -q test/cube-cross-section-highres-label-0.svg test/cube-cross-section-highres-label-0.svg.expected
 
 cube-cross-section-multiplier-label-test:
 	@echo 'Running test case cube-cross-section-multiplier-label-test...'
-	@./cave-outliner --quiet --pixel --label --crosssections 1 test/cube-cross-section-multiplier-label-%.svg --multiplier 10 --step 0.05 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-multiplier-label.svg
+	@./cave-outliner --quiet --pixel --label --crosssections x 1 test/cube-cross-section-multiplier-label-%.svg --multiplier 10 --step 0.05 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-multiplier-label.svg
 	@diff -q test/cube-cross-section-multiplier-label.svg test/cube-cross-section-multiplier-label.svg.expected
 	@diff -q test/cube-cross-section-multiplier-label-0.svg test/cube-cross-section-multiplier-label-0.svg.expected
 

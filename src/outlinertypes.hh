@@ -62,14 +62,21 @@ enum outlineralgorithm {
 // Math common utilities //////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-#define outlinerbetweenanyorder(a,b,c)    ((a) < (c) ? outlinerbetween(a,b,c) :                           \
-                                                       outlinerbetween(c,b,a))
-#define outlinerbetween(a,b,c)            ((a) <= (b) && (b) <= (c))
-#define outlineroverlapanyorder(a,b,c,d)  (((a) <= (b) && (c) <= (d)) ? outlineroverlap(a,b,c,d) :         \
-                                           (((b) <= (a) && (c) <= (d)) ? outlineroverlap(b,a,c,d) :        \
-                                            (((b) <= (a) && (d) <= (c)) ? outlineroverlap(b,a,d,c) :       \
-                                             outlineroverlap(a,b,d,c))))
-#define outlineroverlap(a,b,c,d)          ((((a) <= (c)) && ((c) <= (b))) ||                               \
-                                           (((c) <= (a)) && ((a) <= (d))))
+#define outlinerleepsilon(a,b)                  ((a) <= ((b)+outlinerepsilon))
+#define outlinergeepsilon(a,b)                  (((a)+outlinerepsilon) >= (b))
+#define outlinerbetweenanyorder(a,b,c)          ((a) < (c) ? outlinerbetween(a,b,c) :                               \
+                                                             outlinerbetween(c,b,a))
+#define outlinerbetweenanyorderepsilon(a,b,c)   ((a) < (c) ? outlinerbetweenepsilon(a,b,c) :                        \
+                                                             outlinerbetweenepsilon(c,b,a))
+#define outlinerbetween(a,b,c)                  ((a) <= (b) && (b) <= (c))
+#define outlinerbetweenepsilon(a,b,c)           ((a) <= ((b)+outlinerepsilon) && (b) <= ((c)+outlinerepsilon))
+#define outlineroverlapanyorder(a,b,c,d)        (((a) <= (b) && (c) <= (d)) ? outlineroverlap(a,b,c,d) :            \
+                                                 (((b) <= (a) && (c) <= (d)) ? outlineroverlap(b,a,c,d) :           \
+                                                 (((b) <= (a) && (d) <= (c)) ? outlineroverlap(b,a,d,c) :           \
+                                                                               outlineroverlap(a,b,d,c))))
+#define outlineroverlap(a,b,c,d)                ((((a) <= (c)) && ((c) <= (b))) ||                                  \
+                                                 (((c) <= (a)) && ((a) <= (d))))
+#define outlineroverlapepsilon(a,b,c,d)         ((((a) <= (c)+outlinerepsilon) && ((c) <= (b)+outlinerepsilon)) ||  \
+                                                 (((c) <= (a)+outlinerepsilon) && ((a) <= (d)+outlinerepsilon)))
 
 #endif // OUTLINERTYPES_HH

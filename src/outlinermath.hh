@@ -48,8 +48,27 @@ public:
   /// Produce a string that describes a triangle. Used in debugging.
   static void triangleDescribe(const OutlinerTriangle3D& triangle,
                                char* buf,
-                               unsigned int bufSize);
-  
+                               unsigned int bufSize,
+                               bool full = 0); 
+ 
+  /// Produce a string that describes a triangle. Used in debugging.
+  static void triangleDescribe(const OutlinerTriangle2D& triangle,
+                               char* buf,
+                               unsigned int bufSize,
+                               bool full = 0);
+
+  /// Produce a string that describes a bounding box. Used in debugging.
+  static void boxDescribe(const OutlinerBox3D& box,
+                          char* buf,
+                          unsigned int bufSize,
+                          bool full = 0);
+   
+  /// Produce a string that describes a bounding box. Used in debugging.
+  static void boxDescribe(const OutlinerBox2D& box,
+                          char* buf,
+                          unsigned int bufSize,
+                          bool full = 0);
+   
   /// Calculate the smallest bounding box that holds a given triangle (in a 2-dimension model).
   static void triangleBoundingBox2D(const OutlinerTriangle2D& triangle,
                                     OutlinerBox2D& boundingBox);
@@ -75,8 +94,12 @@ public:
                                               const OutlinerBox3D& box);
 
   /// Does a bounding box intersect another one?
-  static bool boundingBoxesIntersect3D(OutlinerBox3D& boundingBox1,
-                                       OutlinerBox3D& boundingBox2);
+  static bool boundingBoxesIntersect2D(const OutlinerBox2D& boundingBox1,
+                                       const OutlinerBox2D& boundingBox2);
+
+  /// Does a bounding box intersect another one?
+  static bool boundingBoxesIntersect3D(const OutlinerBox3D& boundingBox1,
+                                       const OutlinerBox3D& boundingBox2);
 
   /// Is a given point on a line?
   static bool pointOnLine2D(const OutlinerLine2D& line,

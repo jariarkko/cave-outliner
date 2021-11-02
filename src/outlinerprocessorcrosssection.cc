@@ -135,8 +135,11 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
         sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y);
   
   // Create a material matrix
+  outlinerreal lineStepFactor = lineLength/lineSteps;
+  infof ("  lineStepFactor for material matrix %.2f (from %.2f and %f steps)",
+         lineStepFactor, lineLength, lineSteps);
   matrix = new MaterialMatrix(sliceVerticalBoundingBox,
-                              proc.stepy,
+                              lineStepFactor,
                               stepz);
   infof("  slice bounding box after matrix creation (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
          sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
@@ -149,7 +152,7 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
         proc.stepy, stepz);
   
   // Create an image base of the bounding size
-  svg = proc.createSvg(fileName,sliceVerticalBoundingBoxExtended,sliceDirection);
+  svg = proc.createSvg(fileName,sliceVerticalBoundingBoxExtended,lineStepFactor,stepz,sliceDirection);
 
   debugf("  slice bounding box after svg creation (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
          sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
@@ -243,7 +246,7 @@ ProcessorCrossSection::calculateLineEquation(void) {
   lineSteps = lineLength/lineStep;
   lineStepX = xDifference / lineSteps;
   lineStepY = yDifference / lineSteps;
-  debugf("cross section line equation length %.2f steps %.2f stepX %.2f stepY %.2f",
+  infof("    cross section line equation length %.2f steps %.2f stepX %.2f stepY %.2f",
          lineLength,
          lineSteps,
          lineStepX,
@@ -391,9 +394,13 @@ ProcessorCrossSection::drawCrossSectionMesh(const aiScene* scene,
                  nFaces, iter.point.x, iter.point.y);
       unsigned int zStep = 0;
       for  (outlinerreal z = sliceVerticalBoundingBox.start.y;
-            z <= sliceVerticalBoundingBox.end.y;
+            outlinerleepsilon(z,sliceVerticalBoundingBox.end.y);
             z += stepz) {
-        infof("    z step %u (%.2f)", zStep, z);
+        infof("    z step %u (%.2f..%.2f) while x (%.2f..%.2f) and y (%.2f..%.2f)",
+              zStep,
+              z, z+ stepz,
+              iter.point.x, iter.point.x+lineStepY,
+              iter.point.y, iter.point.y+lineStepY);
         deepdebugf("  drawCrossSectionMesh: z iterator step (%.2f,%.2f,%.2f)",
                    iter.point.x, iter.point.y, z);
         for (unsigned int f = 0; f < nFaces; f++) {
@@ -424,18 +431,33 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
   OutlinerTriangle3D t;
   proc.faceGetVertices3D(mesh,face,t);
   OutlinerBox3D thisBox(x,y,z,x+lineStepX,y+lineStepY,z+stepz);
-  char buf[80];
+  char buf[120];
   OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
+  extern bool debugbbit3;
+  if (xyStep == 0 && zStep == 10) {
+    debugbbit3 = 1;
+    infof("    dcf t ys %.2f, %.2f, %.2f",
+          t.a.y, t.b.y, t.c.y);
+    infof("    dcf t zs %.2f, %.2f, %.2f",
+          t.a.z, t.b.z, t.c.z);
+  }
   if (OutlinerMath::boundingBoxIntersectsTriangle3D(t,thisBox)) {
-    infof("    cross section face match at %u,%u (%.2f,%.2f,%.2f)",
-          xyStep, zStep, x, y, z);
-    deepdebugf("    cross section draw face xyz match     at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) triangle %s => matrix %u,%u",
+    infof("    face match at %u,%u (%.2f,%.2f,%.2f) for face %s",
+          xyStep, zStep, x, y, z, buf);
+    deepdebugf("    face xyz match at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) triangle %s => matrix %u,%u",
                x, thisBox.end.x, y, thisBox.end.y, z, thisBox.end.z,
                buf, xyStep, zStep);
     matrix->setMaterialMatrix(xyStep,zStep);
   } else {
-    infof("    no match to a face at %u,%u",
-          xyStep, zStep);
+    infof("     no   match at %u,%u (%.2f,%.2f,%.2f) for face %s",
+          xyStep, zStep, x, y, z, buf);
+    if (xyStep == 0 && zStep == 10) {
+      OutlinerMath::triangleDescribe(t,buf,sizeof(buf),1);
+      infof("      full triangle %s", buf);
+      OutlinerMath::boxDescribe(thisBox,buf,sizeof(buf),1);
+      infof("      full box %s", buf);
+      debugbbit3 = 0;
+    }
     deepdeepdebugf("      going to debug");
     deepdebugf("    cross section draw face xyz non-match at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) "
                "face (%5.2f,%5.2f,%5.2f) x (%5.2f,%5.2f,%5.2f) x (%5.2f,%5.2f,%5.2f) triangle %s",

@@ -24,6 +24,8 @@
 // Includes ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+#include "outlinerdirection.hh"
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Class definition ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,6 +118,9 @@ public:
   /// Should we create a number of automatic cross sections?
   bool automaticCrossSections;
 
+  /// Direction of the automatic cross sections
+  enum outlinerdirection automaticCrossSectionsDirection;
+  
   /// How many automatic cross sections do we wish?
   unsigned int nAutomaticCrossSections;
 
@@ -130,7 +135,9 @@ public:
   /// Specification of where the cross sections should be drawn, what
   /// file names and labels they should use, etc.
   struct ProcessorCrossSectionInfo crossSections[outlinermaxcrosssections];
-
+  enum outlinerdirection crossSectionDirections[outlinermaxcrosssections];
+  outlinerreal crossSectionPoints[outlinermaxcrosssections];
+  
   /// Should we label cross sections in the images?
   bool labelCrossSections;
 

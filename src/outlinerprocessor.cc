@@ -87,7 +87,7 @@ Processor::Processor(const char* fileNameIn,
     boundingBox2DExtended.start.y -= ((outlinertitlespacey * stepy) / multiplier);
     boundingBox2DExtended.end.y += ((outlinertitlespacey * stepy) / multiplier);
   }
-  svg = createSvg(fileName,boundingBox2DExtended,direction);
+  svg = createSvg(fileName,boundingBox2DExtended,stepx,stepy,direction);
 }
 
 Processor::~Processor() {
@@ -127,12 +127,12 @@ Processor::processScene(const aiScene* scene,
 
   infof("computing material matrix...");
   for (outlinerreal x = DirectionOperations::outputx(direction,boundingBox.start);
-       x <= DirectionOperations::outputx(direction,boundingBox.end);
+       outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end));
        x += stepx) {
 
     debugf("main loop x = %.2f (%u)", x, xIndex);
-    assert(x >= DirectionOperations::outputx(direction,boundingBox.start));
-    assert(x <= DirectionOperations::outputx(direction,boundingBox.end));
+    assert(outlinergeepsilon(x,DirectionOperations::outputx(direction,boundingBox.start)));
+    assert(outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end)));
     unsigned int yIndex = 0;
     if (xIndex >= matrix.xIndexSize) {
       debugf("processScene %u/%u", xIndex, matrix.xIndexSize);
@@ -140,13 +140,13 @@ Processor::processScene(const aiScene* scene,
     assert(xIndex < matrix.xIndexSize);
     
     for (outlinerreal y = DirectionOperations::outputy(direction,boundingBox.start);
-         y <= DirectionOperations::outputy(direction,boundingBox.end);
+         outlinerleepsilon(y,DirectionOperations::outputy(direction,boundingBox.end));
          y += stepy) {
       
-      assert(x >= DirectionOperations::outputx(direction,boundingBox.start));
-      assert(x <= DirectionOperations::outputx(direction,boundingBox.end));
-      assert(y >= DirectionOperations::outputy(direction,boundingBox.start));
-      assert(y <= DirectionOperations::outputy(direction,boundingBox.end));
+      assert(outlinergeepsilon(x,DirectionOperations::outputx(direction,boundingBox.start)));
+      assert(outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end)));
+      assert(outlinergeepsilon(y,DirectionOperations::outputy(direction,boundingBox.start)));
+      assert(outlinerleepsilon(y,DirectionOperations::outputy(direction,boundingBox.end)));
       if (yIndex >= matrix.yIndexSize) {
         debugf("processScene %u,%u/%u,%u", xIndex, yIndex, matrix.xIndexSize, matrix.yIndexSize);
       }
@@ -249,7 +249,7 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
         debugf("algorithm %u", algorithm);
         switch (algorithm) {
         case alg_pixel:
-          infof("pixel alg %u,%u", xIndex, yIndex);
+          infof("pixel alg %u,%u from %.2f,%.2f", xIndex, yIndex, x, y);
           theSvg->pixel(x,y);
           break;
         case alg_borderpixel:
@@ -598,8 +598,8 @@ unsigned int
 Processor::coordinateXToIndex(outlinerreal x) {
   outlinerreal xStart = DirectionOperations::outputx(direction,boundingBox.start);
   outlinerreal xEnd = DirectionOperations::outputx(direction,boundingBox.end);
-  assert(x >= xStart);
-  assert(x <= xEnd);
+  assert(outlinergeepsilon(x,xStart));
+  assert(outlinerleepsilon(x,xEnd));
   return((x - xStart)/stepx);
 }
 
@@ -607,8 +607,8 @@ unsigned int
 Processor::coordinateYToIndex(outlinerreal y) {
   outlinerreal yStart = DirectionOperations::outputy(direction,boundingBox.start);
   outlinerreal yEnd = DirectionOperations::outputy(direction,boundingBox.end);
-  assert(y >= yStart);
-  assert(y <= yEnd);
+  assert(outlinergeepsilon(y,yStart));
+  assert(outlinerleepsilon(y,yEnd));
   return((y - yStart)/stepy);
 }
 
@@ -631,6 +631,8 @@ Processor::indexToCoordinateY(unsigned int yIndex) {
 SvgCreator*
 Processor::createSvg(const char* svgFileName,
                      const OutlinerBox2D& svgBoundingBox,
+                     outlinerreal svgStepX,
+                     outlinerreal svgStepY,
                      enum outlinerdirection svgDirection) {
   
   // Calculate sizes
@@ -645,7 +647,7 @@ Processor::createSvg(const char* svgFileName,
   outlinerreal xFactor;
   outlinerreal yFactor;
   createSvgCalculateSizes(svgBoundingBox,
-                          stepx,stepy,
+                          svgStepX,svgStepY,
                           svgDirection,
                           xOutputStart,xOutputEnd,
                           yOutputStart,yOutputEnd,
@@ -654,9 +656,9 @@ Processor::createSvg(const char* svgFileName,
                           xFactor,yFactor);
   infof("SVG %s size x %.2f..%.2f step %.2f xsize %.2f xsizeint %u",
         svgFileName,
-        xOutputStart, xOutputEnd, stepx, xSize, xSizeInt);
+        xOutputStart, xOutputEnd, svgStepX, xSize, xSizeInt);
   infof("  size y %.2f..%.2f step %.2f ysize %.2f ysizeint %u",
-        yOutputStart, yOutputEnd, stepy, ySize, ySizeInt);
+        yOutputStart, yOutputEnd, svgStepY, ySize, ySizeInt);
   infof("SVG size will be %u x %u (%u x %u multiplied)",
         xSizeInt, ySizeInt,
         xSizeInt*multiplier, ySizeInt*multiplier);
@@ -691,8 +693,8 @@ Processor::createSvg(const char* svgFileName,
 
 void
 Processor::createSvgCalculateSizes(const OutlinerBox2D& svgBoundingBox,
-                                   const outlinerreal stepx,
-                                   const outlinerreal stepy,
+                                   const outlinerreal svgStepX,
+                                   const outlinerreal svgStepY,
                                    const enum outlinerdirection svgDirection,
                                    outlinerreal& xOutputStart,
                                    outlinerreal& xOutputEnd,
@@ -709,8 +711,8 @@ Processor::createSvgCalculateSizes(const OutlinerBox2D& svgBoundingBox,
   xOutputEnd = svgBoundingBox.end.x;
   yOutputStart = svgBoundingBox.start.y;
   yOutputEnd = svgBoundingBox.end.y;
-  xSize = (xOutputEnd - xOutputStart) / stepx;
-  ySize = (yOutputEnd - yOutputStart) / stepy;
+  xSize = (xOutputEnd - xOutputStart) / svgStepX;
+  ySize = (yOutputEnd - yOutputStart) / svgStepY;
   xSizeInt = xSize;
   ySizeInt = ySize;
   xFactor = 1 / stepx;

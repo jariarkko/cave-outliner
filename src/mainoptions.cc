@@ -88,22 +88,27 @@ MainOptions::processCommandLineOptions(int& argc,
     } else if (strcmp(argv[1],"--borderactual") == 0) {
       config.algorithm = alg_borderactual;
       debugf("algorithm now %u", config.algorithm);
-    } else if (strcmp(argv[1],"--crosssections") == 0 && argc > 3) {
+    } else if (strcmp(argv[1],"--crosssections") == 0 && argc > 4) {
       if (config.nCrossSections == outlinermaxcrosssections) {
         errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
         return(0);
       }
-      int num = atoi(argv[2]);
-      if (num < 1) {
-        errf("A number of cross sections must be 1 or greater, %s given", argv[2]);
+      enum outlinerdirection linedirection = dir_x;
+      if (!parseDirection(argv[2],linedirection))  {
         return(0);
       }
-      const char* filenamePattern = argv[3];
+      int num = atoi(argv[3]);
+      if (num < 1) {
+        errf("A number of cross sections must be 1 or greater, %s given", argv[3]);
+        return(0);
+      }
+      const char* filenamePattern = argv[4];
       if (strchr(filenamePattern,'%') == 0) {
         errf("File name pattern should include the %% sign, %s given", filenamePattern);
         return(0);
       }
       config.automaticCrossSections = 1;
+      config.automaticCrossSectionsDirection = linedirection;
       config.nAutomaticCrossSections = num;
       config.automaticCrossSectionFilenamePattern = strdup(filenamePattern);
       if (config.automaticCrossSectionFilenamePattern == 0) {
@@ -112,28 +117,36 @@ MainOptions::processCommandLineOptions(int& argc,
       }
       argc--;argv++;
       argc--;argv++;
-    } else if (strcmp(argv[1],"--crosssection") == 0 && argc > 3) {
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--crosssection") == 0 && argc > 4) {
       if (config.nCrossSections == outlinermaxcrosssections) {
         errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
         return(0);
       }
-      float num = atof(argv[2]);
-      if (num <= 0.0) {
-        errf("Cross section coordinate value needs to be a positive number, %s given", argv[2]);
+      enum outlinerdirection linedirection = dir_x;
+      if (!parseDirection(argv[2],linedirection))  {
         return(0);
       }
-      const char* file = argv[3];
+      float num = atof(argv[3]);
+      if (num <= 0.0) {
+        errf("Cross section coordinate value needs to be a positive number, %s given", argv[3]);
+        return(0);
+      }
+      const char* file = argv[4];
       if (strlen(file) < 1) {
         errf("Cross section file name cannot be empty, %s given", file);
         return(0);
       }
-      config.crossSections[config.nCrossSections].start.x = num;
+      config.crossSectionDirections[config.nCrossSections] = linedirection;
+      config.crossSectionPoints[config.nCrossSections] = num;
+      config.crossSections[config.nCrossSections].start.x = 0;
       config.crossSections[config.nCrossSections].start.y = 0;
-      config.crossSections[config.nCrossSections].end.x = num;
+      config.crossSections[config.nCrossSections].end.x = 0;
       config.crossSections[config.nCrossSections].end.y = 0;
       config.crossSections[config.nCrossSections].filename = file;
       config.crossSections[config.nCrossSections].label = config.getCrossSectionLabel();
       config.nCrossSections++;
+      argc--;argv++;
       argc--;argv++;
       argc--;argv++;
     } else if (strcmp(argv[1],"--label") == 0) {
@@ -293,9 +306,11 @@ MainOptions::processHelp(void) {
   std::cout << "                           with lines.\n";
   std::cout << "  --borderactual           Use the border-only drawing algorithm, draws the cave walls using\n";
   std::cout << "                           model triangle sides.\n";
-  std::cout << "  --crosssection x file    Produce also a cross section at a given x position, output to file.\n";
-  std::cout << "  --crosssections n pat    Produce n cross sections at different x positions, output to files (percent\n";
-  std::cout << "                           sign denotes the cross section number in the file name pattern).\n";
+  std::cout << "  --crosssection d p file  Produce also a cross section at a given direction (d = x or y) position p,\n";
+  std::cout << "                           output to file.\n";
+  std::cout << "  --crosssections d n pat  Produce n cross sections at different direction (d = x or y) positions,\n";
+  std::cout << "                           output to files (percent sign denotes the cross section number in the\n";
+  std::cout << "                           file name pattern).\n";
   std::cout << "  --label                  Label cross sections.\n";
   std::cout << "  --multiplier n           Multiply image size by n (default 1).\n";
   std::cout << "  --linewidth n            Set the width of the lines in output picture. The value can be a\n";
@@ -330,3 +345,23 @@ MainOptions::checkFileExtension(const char* filename,
   if (strcasecmp(foundExtension,extension) != 0) return(0);
   else return(1);
 }
+
+bool
+MainOptions::parseDirection(const char* string,
+                            enum outlinerdirection& direction) {
+  if (strcmp(string,"x") == 0) {
+    direction = dir_x;
+    return(1);
+  } else if (strcmp(string,"y") == 0) {
+    direction = dir_y;
+    return(1);
+  } else if (strcmp(string,"z") == 0) {
+    direction = dir_z;
+    return(1);
+  } else {
+    direction = dir_x;
+    errf("Unrecognised line direction %s, expecting x, y, or z", string);
+    return(0);
+  }
+}
+

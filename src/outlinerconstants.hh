@@ -34,6 +34,7 @@
 #define outlinertitlespacey           (outlinerdefaultfontysize+outlinertitlespaceempty)
 #define outlinertitlespacex                                (outlinerdefaultfontxsize*15)
 #define outlinercrosssectionextraline                                                  5
+#define outlinerepsilon                                                         0.000001 // ppm
 
 #define OUTLINER_PROG                                                    "cave-outliner"
 #define OUTLINER_ERRPREFIX                                     OUTLINER_PROG ": Error: "
