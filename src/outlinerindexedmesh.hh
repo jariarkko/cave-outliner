@@ -92,7 +92,10 @@ public:
                 outlinerreal y,
                 unsigned int* p_nFaces,
                 const aiFace*** p_faces);
-
+  
+  /// Print information about the contents of the mesh
+  void describe(std::ostream& stream);
+  
   /// Release all resources associated with the index.
    ~IndexedMesh();
    

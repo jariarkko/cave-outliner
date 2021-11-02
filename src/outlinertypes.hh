@@ -62,7 +62,9 @@ enum outlineralgorithm {
 // Math common utilities //////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+#define outlinerle(a,b)                         ((a) <= (b))
 #define outlinerleepsilon(a,b)                  ((a) <= ((b)+outlinerepsilon))
+#define outlinerge(a,b)                         (((a)+outlinerepsilon) >= (b))
 #define outlinergeepsilon(a,b)                  (((a)+outlinerepsilon) >= (b))
 #define outlinerbetweenanyorder(a,b,c)          ((a) < (c) ? outlinerbetween(a,b,c) :                               \
                                                              outlinerbetween(c,b,a))

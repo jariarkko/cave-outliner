@@ -394,7 +394,7 @@ ProcessorCrossSection::drawCrossSectionMesh(const aiScene* scene,
                  nFaces, iter.point.x, iter.point.y);
       unsigned int zStep = 0;
       for  (outlinerreal z = sliceVerticalBoundingBox.start.y;
-            outlinerleepsilon(z,sliceVerticalBoundingBox.end.y);
+            outlinerle(z,sliceVerticalBoundingBox.end.y);
             z += stepz) {
         infof("    z step %u (%.2f..%.2f) while x (%.2f..%.2f) and y (%.2f..%.2f)",
               zStep,
@@ -434,7 +434,7 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
   char buf[120];
   OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
   extern bool debugbbit3;
-  if (xyStep == 0 && zStep == 10) {
+  if (xyStep == 19 && zStep == 10) {
     debugbbit3 = 1;
     infof("    dcf t ys %.2f, %.2f, %.2f",
           t.a.y, t.b.y, t.c.y);

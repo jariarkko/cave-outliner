@@ -22,6 +22,7 @@
 
 #include <cassert>
 #include <stdlib.h>
+#include <iostream>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h> 
@@ -324,6 +325,11 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
     shadow.nOutsideModelBoundingBox++;
     return;
   }
+
+  // Setup some constantts
+  const outlinerreal half = 0.5;
+  const outlinerreal halfTileSizeX = tileSizeX * half;
+  const outlinerreal halfTileSizeY = tileSizeY * half;
   
   // Calculate 2D bounding box
   OutlinerVector2D a(DirectionOperations::outputx(direction,*vertexA),DirectionOperations::outputy(direction,*vertexA));
@@ -335,15 +341,15 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
 
   // Calculate which tiles this belongs to (for big faces, may be more
   // than one)
-  outlinerreal xStart = outlinermax(viewBoundingBox.start.x,elementFlatBoundingBox.start.x);
+  outlinerreal xStart = outlinermax(viewBoundingBox.start.x,elementFlatBoundingBox.start.x) ;
   outlinerreal xEnd = outlinermin(elementFlatBoundingBox.end.x,viewBoundingBox.end.x);
   outlinerreal yStart = outlinermax(viewBoundingBox.start.y,elementFlatBoundingBox.start.y);
   outlinerreal yEnd = outlinermin(elementFlatBoundingBox.end.y,viewBoundingBox.end.y);
   debugf("placing a face bounding box (%f..%f) x (%f..%f) to tiles",
          xStart, xEnd,
          yStart, yEnd);
-  for (outlinerreal x = xStart; outlinerleepsilon(x,xEnd); x += tileSizeX * 0.5) {
-    for (outlinerreal y = yStart; outlinerleepsilon(y,yEnd); y += tileSizeY * 0.5) {
+  for (outlinerreal x = xStart; outlinerleepsilon(x,xEnd); x += halfTileSizeX) {
+    for (outlinerreal y = yStart; outlinerleepsilon(y,yEnd); y += halfTileSizeY) {
       unsigned int tileX;
       unsigned int tileY;
       coordsToTile(x,y,tileX,tileY);
@@ -512,7 +518,7 @@ IndexedMesh::coordsToTile(outlinerreal x,
   if (tileX == subdivisions) tileX = subdivisions - 1;
   outlinerreal yInView = y - viewBoundingBox.start.y;
   tileY = yInView / tileSizeY;
-  assert(tileY <= subdivisions);
+   assert(tileY <= subdivisions);
   if (tileY == subdivisions) tileY = subdivisions - 1;
   debugf("      coordinate (%f,%f) tile is (%u,%u)",
          x, y,
@@ -541,5 +547,30 @@ IndexedMesh::~IndexedMesh() {
   
   maxMeshes = 0;
   subdivisions = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Debugs /////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+IndexedMesh::describe(std::ostream& stream) {
+  for (unsigned int m = 0; m < maxMeshes; m++) {
+    stream << "\n";
+    stream << "Indexed " << m << "th mesh of " << subdivisions << " x " << subdivisions << " tiles\n";
+    stream << "\n";
+    for (unsigned int i = 0; i < subdivisions; i++) {
+      char buf[10];
+      snprintf(buf,sizeof(buf)-1,"%03u:", i);
+      stream << buf;
+      for (unsigned int j = 0; j < subdivisions; j++) {
+        unsigned int n = meshes[m].tileMatrix[i][j].nFaces;
+        snprintf(buf,sizeof(buf)-1,"%4u", n);
+        stream << buf;
+      }
+      stream << "\n";
+    }
+    stream << "\n";
+  }
 }
 

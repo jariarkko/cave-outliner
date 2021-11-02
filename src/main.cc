@@ -189,11 +189,34 @@ main(int argc, char** argv) {
   OutlinerVector2D bounding2DBoxStart(xOutputStart,yOutputStart);
   OutlinerVector2D bounding2DBoxEnd(xOutputEnd,yOutputEnd);
   OutlinerBox2D bounding2DBox(bounding2DBoxStart,bounding2DBoxEnd);
+  const outlinerreal minStepsPerTile = 3.0;
+  const outlinerreal xSteps = (xOutputEnd - xOutputStart) / config.stepx;
+  const outlinerreal ySteps = (yOutputEnd - yOutputStart) / config.stepy;
+  const outlinerreal xStepsPerTile = xSteps / ((outlinerreal)config.tiles);
+  const outlinerreal yStepsPerTile = ySteps / ((outlinerreal)config.tiles);
+  bool tilesChanged = 0;
+  infof("tiles check %f %f %u", xStepsPerTile, yStepsPerTile, minStepsPerTile);
+  if (xStepsPerTile < minStepsPerTile) {
+    config.tiles = ((unsigned int)(xSteps / minStepsPerTile));
+    if (config.tiles < 1) config.tiles = 1;
+    tilesChanged = 1;
+  }
+  if (yStepsPerTile < minStepsPerTile) {
+    config.tiles = ((unsigned int)(ySteps / minStepsPerTile));
+    if (config.tiles < 1) config.tiles = 1;
+    tilesChanged = 1;
+  }
+  if (tilesChanged) {
+    infof("Adjusted number of tiles to %u to ensure enough pixels within a tile", config.tiles);
+  }
   IndexedMesh indexed(outlinermaxmeshes,config.tiles,
                       config.boundingBox,
                       bounding2DBox,
                       config.direction);
   indexed.addScene(scene);
+  if (config.debug) {
+    indexed.describe(std::cout);
+  }
   
   // Process the model
   Processor processor(config.outputFile,
