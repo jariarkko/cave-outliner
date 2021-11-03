@@ -71,8 +71,8 @@ void
 MaterialMatrix::setMaterialMatrix(unsigned int xIndex,
                                   unsigned int yIndex) {
   if (xIndex >= xIndexSize || yIndex >= yIndexSize)
-    infof("  setMaterialMatrix(%u/%u,%u/%u)",
-          xIndex, xIndexSize, yIndex, yIndexSize);
+    debugf("  setMaterialMatrix(%u/%u,%u/%u)",
+           xIndex, xIndexSize, yIndex, yIndexSize);
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
   unsigned int index = xIndex * yIndexSize + yIndex;

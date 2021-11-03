@@ -263,7 +263,7 @@ SvgCreator::pixel(outlinerreal x,
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
-  infof("SvgCreator::pixel %.2f,%.2f to %u,%u", x, y, xInt, yInt);
+  debugf("SvgCreator::pixel %.2f,%.2f to %u,%u", x, y, xInt, yInt);
   file << "<rect x=\"" << xInt << "\" y=\"" << yInt << "\"";
   file << " width=\"" << multiplier << "\" height=\"" << multiplier << "\"";
   file << " fill=\"black\"";
@@ -286,7 +286,7 @@ SvgCreator::text(outlinerreal x,
   file << "</text>\n";
   strings++;
   characters += strlen(string);
-  infof("text to (%.2f,%.2f) which is (%u,%u)", x, y, xInt, yInt);
+  debugf("text to (%.2f,%.2f) which is (%u,%u)", x, y, xInt, yInt);
 }
 
 void

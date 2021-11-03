@@ -210,7 +210,7 @@ OutlinerMath::triangleBoundingBox3D(const OutlinerTriangle3D& triangle,
   // Fill in zStart and zEnd
   zStart = nth1->z;
   zEnd = nth3->z;
-  if (debugbbit3) infof("        z range %.2f...%.2f from %.2f, %.2f, %.2f", zStart, zEnd, triangle.a.z, triangle.b.z, triangle.c.z);
+  if (debugbbit3) debugf("        z range %.2f...%.2f from %.2f, %.2f, %.2f", zStart, zEnd, triangle.a.z, triangle.b.z, triangle.c.z);
   
   // Construct the result
   boundingBox.start.x = xStart;
@@ -350,23 +350,23 @@ OutlinerMath::boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle
   // Approximate algorithm, check if the triangle's bounding box intersects
   OutlinerBox3D triangleBoundingBox;
   if (debugbbit3) {
-    infof("        bbit3 triangle ys %.2f, %.2f, %.2f",
-          triangle.a.y, triangle.b.y, triangle.c.y);
-    infof("        bbit3 triangle zs %.2f, %.2f, %.2f",
-          triangle.a.z, triangle.b.z, triangle.c.z);
+    debugf("        bbit3 triangle ys %.2f, %.2f, %.2f",
+           triangle.a.y, triangle.b.y, triangle.c.y);
+    debugf("        bbit3 triangle zs %.2f, %.2f, %.2f",
+           triangle.a.z, triangle.b.z, triangle.c.z);
   }
   triangleBoundingBox3D(triangle,triangleBoundingBox);
   bool ans = boundingBoxesIntersect3D(triangleBoundingBox,box);
   if (debugbbit3) {
     char buf[150];
     triangleDescribe(triangle,buf,sizeof(buf),1);
-    infof("      triangle = %s", buf);
+    debugf("      triangle = %s", buf);
     boxDescribe(triangleBoundingBox,buf,sizeof(buf),1);
-    infof("      triangle box = %s", buf);
+    debugf("      triangle box = %s", buf);
     boxDescribe(box,buf,sizeof(buf),1);
-    infof("      box = %s", buf);
-    infof("      bbit3 return %u", ans);
-    }
+    debugf("      box = %s", buf);
+    debugf("      bbit3 return %u", ans);
+  }
   return(ans);
 
   // OLD:
@@ -385,10 +385,10 @@ OutlinerMath::boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle
     if (debugbbit3) {
       char buf[120];
       triangleDescribe(t2,buf,sizeof(buf),1);
-      infof("      t2 = %s", buf);
+      debugf("      t2 = %s", buf);
       boxDescribe(box2,buf,sizeof(buf),1);
-      infof("      box2 = %s", buf);
-      infof("      bbit3 2d zero return");
+      debugf("      box2 = %s", buf);
+      debugf("      bbit3 2d zero return");
     }
     return(0);
   }
@@ -400,7 +400,7 @@ OutlinerMath::boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle
   outlinerreal zhigh = outlinermax3(triangle.a.z,triangle.b.z,triangle.c.z);
   deepdeepdebugf("        bbit3 z overlap check %.2f..%.2f", zlow, zhigh);
   bool overlapval = outlineroverlapepsilon(zlow,zhigh,box.start.z,box.end.z);
-  if (debugbbit3) infof("      bbit3 z check returns %u", overlapval);
+  if (debugbbit3) debugf("      bbit3 z check returns %u", overlapval);
   debugreturn("        bbit3","final",overlapval);
 }
 
@@ -431,35 +431,35 @@ OutlinerMath::boundingBoxesIntersect3D(const OutlinerBox3D& boundingBox1,
                    outlinerbetweenepsilon(boundingBox1.start.x, boundingBox2.end.x,  boundingBox1.end.x) ||
                    outlinerbetweenepsilon(boundingBox2.start.x, boundingBox1.start.x,boundingBox2.end.x) ||
                    outlinerbetweenepsilon(boundingBox2.start.x, boundingBox1.end.x,  boundingBox2.end.x));
-  if (debugbbit3) infof("        bbi3 xOverlap %u", xOverlap);
+  if (debugbbit3) debugf("        bbi3 xOverlap %u", xOverlap);
   if (!xOverlap) return(0);
   bool yOverlap = (outlinerbetweenepsilon(boundingBox1.start.y, boundingBox2.start.y,boundingBox1.end.y) ||
                    outlinerbetweenepsilon(boundingBox1.start.y, boundingBox2.end.y,  boundingBox1.end.y) ||
                    outlinerbetweenepsilon(boundingBox2.start.y, boundingBox1.start.y,boundingBox2.end.y) ||
                    outlinerbetweenepsilon(boundingBox2.start.y, boundingBox1.end.y,  boundingBox2.end.y));
-  if (debugbbit3) infof("        bbi3 yOverlap %u    %.2f..%.2f and %.2f...%.2f",
-                        yOverlap,
-                        boundingBox1.start.y, boundingBox1.end.y,
-                        boundingBox2.start.y, boundingBox2.end.y);
-  if (debugbbit3) infof("        bbi3 yOverlap components %u, %u, %u, %u",
-                        outlinerbetweenepsilon(boundingBox1.start.y, boundingBox2.start.y,boundingBox1.end.y),
-                        outlinerbetweenepsilon(boundingBox1.start.y, boundingBox2.end.y,  boundingBox1.end.y),
-                        outlinerbetweenepsilon(boundingBox2.start.y, boundingBox1.start.y,boundingBox2.end.y),
-                        outlinerbetweenepsilon(boundingBox2.start.y, boundingBox1.end.y,  boundingBox2.end.y));
-  if (debugbbit3) infof("        bbi3 yOverlap tests %u %u box1 ydiff %f box12 diff %f",
-                        boundingBox1.start.y <= boundingBox2.start.y,
-                        boundingBox2.start.y <= boundingBox1.end.y,
-                        boundingBox1.end.y - boundingBox1.start.y,
-                        boundingBox1.end.y - boundingBox2.start.y);
+  if (debugbbit3) debugf("        bbi3 yOverlap %u    %.2f..%.2f and %.2f...%.2f",
+                         yOverlap,
+                         boundingBox1.start.y, boundingBox1.end.y,
+                         boundingBox2.start.y, boundingBox2.end.y);
+  if (debugbbit3) debugf("        bbi3 yOverlap components %u, %u, %u, %u",
+                         outlinerbetweenepsilon(boundingBox1.start.y, boundingBox2.start.y,boundingBox1.end.y),
+                         outlinerbetweenepsilon(boundingBox1.start.y, boundingBox2.end.y,  boundingBox1.end.y),
+                         outlinerbetweenepsilon(boundingBox2.start.y, boundingBox1.start.y,boundingBox2.end.y),
+                         outlinerbetweenepsilon(boundingBox2.start.y, boundingBox1.end.y,  boundingBox2.end.y));
+  if (debugbbit3) debugf("        bbi3 yOverlap tests %u %u box1 ydiff %f box12 diff %f",
+                         boundingBox1.start.y <= boundingBox2.start.y,
+                         boundingBox2.start.y <= boundingBox1.end.y,
+                         boundingBox1.end.y - boundingBox1.start.y,
+                         boundingBox1.end.y - boundingBox2.start.y);
   if (!yOverlap) return(0);
   bool zOverlap = (outlinerbetweenepsilon(boundingBox1.start.z, boundingBox2.start.z,boundingBox1.end.z) ||
                    outlinerbetweenepsilon(boundingBox1.start.z, boundingBox2.end.z,  boundingBox1.end.z) ||
                    outlinerbetweenepsilon(boundingBox2.start.z, boundingBox1.start.z,boundingBox2.end.z) ||
                    outlinerbetweenepsilon(boundingBox2.start.z, boundingBox1.end.z,  boundingBox2.end.z));
-  if (debugbbit3) infof("        bbi3 zOverlap %u    %.2f..%2.f and %.2f...%.2f",
-                        zOverlap,
-                        boundingBox1.start.z, boundingBox1.end.z,
-                        boundingBox2.start.z, boundingBox2.end.z);
+  if (debugbbit3) debugf("        bbi3 zOverlap %u    %.2f..%2.f and %.2f...%.2f",
+                         zOverlap,
+                         boundingBox1.start.z, boundingBox1.end.z,
+                         boundingBox2.start.z, boundingBox2.end.z);
   if (!zOverlap) return(0);
   return(1);
 }
@@ -815,7 +815,7 @@ OutlinerMath::sortVectorsZ3D(const OutlinerVector3D* a,
   assert(a != b && a != c && b != c);
   assert(nth0 != 0 && nth1 != 0 && nth2 != 0);
   *nth0 = *nth1 = *nth2 = 0;
-  if (debugbbit3) infof("        z input range in svz3 %.2f, %.2f, %.2f", a->z, b->z, c->z);
+  if (debugbbit3) debugf("        z input range in svz3 %.2f, %.2f, %.2f", a->z, b->z, c->z);
   
   // There are 6 permutations of three numbers. Simply test for each condition.
   if (a->z < b->z) {

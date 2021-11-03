@@ -130,7 +130,7 @@ Processor::processScene(const aiScene* scene,
        outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end));
        x += stepx) {
 
-    infof("processor main loop x = %.2f (%u)", x, xIndex);
+    debugf("processor main loop x = %.2f (%u)", x, xIndex);
     assert(outlinergeepsilon(x,DirectionOperations::outputx(direction,boundingBox.start)));
     assert(outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end)));
     unsigned int yIndex = 0;
@@ -157,7 +157,7 @@ Processor::processScene(const aiScene* scene,
         deepdebugf("checking (%.2f,%.2f)",x,y);
       }
       if (sceneHasMaterial(scene,indexed,x,y)) {
-        infof("  material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
+        debugf("  material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
         matrix.setMaterialMatrix(xIndex,yIndex);
       }
       
@@ -258,7 +258,7 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
         debugf("algorithm %u", algorithm);
         switch (algorithm) {
         case alg_pixel:
-          infof("pixel alg %u,%u from %.2f,%.2f", xIndex, yIndex, x, y);
+          debugf("pixel alg %u,%u from %.2f,%.2f", xIndex, yIndex, x, y);
           theSvg->pixel(x,y);
           break;
         case alg_borderpixel:
@@ -413,8 +413,8 @@ Processor::faceHasMaterial(const aiScene* scene,
   if (OutlinerMath::boundingBoxIntersectsTriangle2D(t,thisBox)) {
     char buf[150];
     OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
-    infof("    found out that (%.2f..%.2f,%.2f..%.2f) is hitting a face %s",
-          thisBox.start.x,thisBox.end.x,thisBox.start.y,thisBox.end.y,buf);
+    debugf("    found out that (%.2f..%.2f,%.2f..%.2f) is hitting a face %s",
+           thisBox.start.x,thisBox.end.x,thisBox.start.y,thisBox.end.y,buf);
     return(1);
   }
   return(0);
@@ -781,9 +781,9 @@ Processor::addCrossSectionLine(const char* label,
                                OutlinerLine2D& actualLine) {
   assert(svg != 0);
   assert(label != 0);
-  infof("addCrossSectionLine (%.2f,%.2f) to (%.2f,%.2f)",
-        actualLine.start.x,actualLine.start.y,
-        actualLine.end.x,actualLine.end.y);
+  debugf("addCrossSectionLine (%.2f,%.2f) to (%.2f,%.2f)",
+         actualLine.start.x,actualLine.start.y,
+         actualLine.end.x,actualLine.end.y);
   svg->line(actualLine.start.x,actualLine.start.y,
             actualLine.end.x,actualLine.end.y,
             1);
