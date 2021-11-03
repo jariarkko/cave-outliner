@@ -41,7 +41,10 @@ class BoundingBoxer {
 public:
 
   /// Construct an object can calculate the bounding box.
-  BoundingBoxer(const aiScene* scene);
+  BoundingBoxer(const aiScene* scene,
+                outlinerreal xIncrease,
+                outlinerreal yIncrease,
+                outlinerreal zIncrease);
 
   /// Calculate the bounding box.
   void getBoundingBox(OutlinerBox3D& boundingBoxOut);

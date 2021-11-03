@@ -33,7 +33,10 @@
 // Functions //////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-BoundingBoxer::BoundingBoxer(const aiScene* scene) {
+BoundingBoxer::BoundingBoxer(const aiScene* scene,
+                             outlinerreal xIncrease,
+                             outlinerreal yIncrease,
+                             outlinerreal zIncrease) {
   infof("calculating bounding box...");
   boundingBoxSet = 0;
   boundingScene(scene);
@@ -43,9 +46,6 @@ BoundingBoxer::BoundingBoxer(const aiScene* scene) {
   outlinerreal xSize = boundingBox.end.x - boundingBox.start.x;
   outlinerreal ySize = boundingBox.end.y - boundingBox.start.y;
   outlinerreal zSize = boundingBox.end.z - boundingBox.start.z;
-  outlinerreal xIncrease = xSize * 0.05;
-  outlinerreal yIncrease = ySize * 0.05;
-  outlinerreal zIncrease = zSize * 0.05;
   boundingBox.start.x -= xIncrease;
   boundingBox.end.x += xIncrease;
   boundingBox.start.y -= yIncrease;

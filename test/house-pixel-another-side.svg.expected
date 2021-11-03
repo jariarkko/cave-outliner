@@ -4,6 +4,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
      width="50" height="50">
 <rect x="0" y="0" width="50" height="50" fill="white" stroke="white" stroke-width="0"/>
+<rect x="18" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="18" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="18" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="18" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="19" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="19" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="19" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="19" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -17,6 +22,7 @@
 <rect x="19" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="19" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="19" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="20" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="20" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="20" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="20" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -39,6 +45,7 @@
 <rect x="20" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="20" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="20" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="21" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="21" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="21" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="21" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -61,6 +68,7 @@
 <rect x="21" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="21" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="21" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="22" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="22" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="22" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="22" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -83,6 +91,7 @@
 <rect x="22" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="22" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="22" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="23" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="23" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="23" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="23" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -105,6 +114,7 @@
 <rect x="23" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="23" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="23" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="24" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="24" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="24" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="24" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -127,6 +137,7 @@
 <rect x="24" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="24" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="24" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="25" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="25" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="25" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="25" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -149,6 +160,7 @@
 <rect x="25" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="25" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="25" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="26" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="26" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="26" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="26" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -171,6 +183,7 @@
 <rect x="26" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="26" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="26" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="27" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="27" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="27" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="27" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -193,6 +206,7 @@
 <rect x="27" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="27" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="27" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="28" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="28" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="28" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="28" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -215,6 +229,7 @@
 <rect x="28" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="28" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="28" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="29" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="29" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="29" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="29" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -237,6 +252,7 @@
 <rect x="29" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="29" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="29" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="30" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="30" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="30" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="30" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -258,6 +274,7 @@
 <rect x="30" y="12" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="30" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="30" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="31" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="31" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="31" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="31" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -265,7 +282,6 @@
 <rect x="31" y="18" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="31" y="17" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="31" y="16" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
-<rect x="32" y="30" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
-<rect x="32" y="29" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="32" y="31" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="32" y="28" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 </svg>

@@ -102,7 +102,10 @@ main(int argc, char** argv) {
   
   // Determine bounding box, if not specified
   if (!config.boundingBoxSet) {
-    BoundingBoxer boxer(scene);
+    BoundingBoxer boxer(scene,
+                        config.stepx,
+                        config.stepy,
+                        config.stepz);
     boxer.getBoundingBox(config.boundingBox);
   }
 
@@ -195,7 +198,7 @@ main(int argc, char** argv) {
   const outlinerreal xStepsPerTile = xSteps / ((outlinerreal)config.tiles);
   const outlinerreal yStepsPerTile = ySteps / ((outlinerreal)config.tiles);
   bool tilesChanged = 0;
-  infof("tiles check %f %f %u", xStepsPerTile, yStepsPerTile, minStepsPerTile);
+  infof("tiles check %f %f %f", xStepsPerTile, yStepsPerTile, minStepsPerTile);
   if (xStepsPerTile < minStepsPerTile) {
     config.tiles = ((unsigned int)(xSteps / minStepsPerTile));
     if (config.tiles < 1) config.tiles = 1;

@@ -4,48 +4,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
      width="800" height="840">
 <rect x="0" y="0" width="800" height="840" fill="white" stroke="white" stroke-width="0"/>
-<rect x="190" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="583" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="573" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="563" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="553" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="543" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="533" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="523" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="513" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="503" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="493" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="483" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="473" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="463" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="453" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="443" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="433" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="423" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="413" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="403" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="393" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="383" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="373" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="363" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="353" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="343" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="333" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="323" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="313" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="303" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="293" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="283" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="273" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="263" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="253" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="190" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="200" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="200" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="200" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="200" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -86,7 +44,6 @@
 <rect x="200" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="200" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="200" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="210" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="210" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="210" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="210" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -127,7 +84,6 @@
 <rect x="210" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="210" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="210" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="220" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="220" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="220" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="220" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -168,7 +124,6 @@
 <rect x="220" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="220" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="220" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="230" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="230" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="230" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="230" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -209,7 +164,6 @@
 <rect x="230" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="230" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="230" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="240" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="240" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="240" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="240" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -250,7 +204,6 @@
 <rect x="240" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="240" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="240" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="250" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="250" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="250" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="250" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -291,7 +244,6 @@
 <rect x="250" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="250" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="250" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="260" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="260" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="260" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="260" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -332,7 +284,6 @@
 <rect x="260" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="260" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="260" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="270" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="270" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="270" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="270" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -373,7 +324,6 @@
 <rect x="270" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="270" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="270" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="280" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="280" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="280" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="280" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -414,7 +364,6 @@
 <rect x="280" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="280" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="280" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="290" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="290" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="290" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="290" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -455,7 +404,6 @@
 <rect x="290" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="290" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="290" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="300" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="300" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="300" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="300" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -496,7 +444,6 @@
 <rect x="300" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="300" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="300" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="310" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="310" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="310" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="310" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -537,7 +484,6 @@
 <rect x="310" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="310" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="310" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="320" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="320" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="320" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="320" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -578,7 +524,6 @@
 <rect x="320" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="320" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="320" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="330" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="330" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="330" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="330" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -619,7 +564,6 @@
 <rect x="330" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="330" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="330" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="340" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="340" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="340" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="340" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -660,7 +604,6 @@
 <rect x="340" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="340" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="340" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="350" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="350" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="350" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="350" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -701,7 +644,6 @@
 <rect x="350" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="350" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="350" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="360" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="360" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="360" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="360" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -742,7 +684,6 @@
 <rect x="360" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="360" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="360" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="370" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="370" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="370" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="370" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -783,7 +724,6 @@
 <rect x="370" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="370" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="370" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="380" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="380" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="380" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="380" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -824,7 +764,6 @@
 <rect x="380" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="380" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="380" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="390" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="390" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="390" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="390" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -865,7 +804,6 @@
 <rect x="390" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="390" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="390" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="400" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="400" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="400" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="400" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -906,7 +844,6 @@
 <rect x="400" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="400" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="400" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="410" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="410" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="410" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="410" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -947,7 +884,6 @@
 <rect x="410" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="410" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="410" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="420" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="420" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="420" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="420" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -988,7 +924,6 @@
 <rect x="420" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="420" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="420" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="430" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="430" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="430" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="430" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1029,7 +964,6 @@
 <rect x="430" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="430" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="430" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="440" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="440" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="440" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="440" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1070,7 +1004,6 @@
 <rect x="440" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="440" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="440" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="450" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="450" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="450" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="450" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1111,7 +1044,6 @@
 <rect x="450" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="450" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="450" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="460" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="460" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="460" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="460" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1152,7 +1084,6 @@
 <rect x="460" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="460" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="460" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="470" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="470" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="470" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="470" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1193,7 +1124,6 @@
 <rect x="470" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="470" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="470" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="480" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="480" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="480" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="480" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1234,7 +1164,6 @@
 <rect x="480" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="480" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="480" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="490" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="490" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="490" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="490" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1275,7 +1204,6 @@
 <rect x="490" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="490" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="490" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="500" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="500" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="500" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="500" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1316,7 +1244,6 @@
 <rect x="500" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="500" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="500" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="510" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="510" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="510" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="510" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1357,7 +1284,6 @@
 <rect x="510" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="510" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="510" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="520" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="520" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="520" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="520" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1398,7 +1324,6 @@
 <rect x="520" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="520" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="520" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="530" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="530" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="530" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="530" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1439,7 +1364,6 @@
 <rect x="530" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="530" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="530" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="540" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="540" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="540" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="540" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1480,7 +1404,6 @@
 <rect x="540" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="540" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="540" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="550" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="550" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="550" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="550" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1521,7 +1444,6 @@
 <rect x="550" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="550" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="550" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="560" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="560" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="560" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="560" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1562,7 +1484,6 @@
 <rect x="560" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="560" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="560" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="570" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="570" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="570" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="570" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1603,7 +1524,6 @@
 <rect x="570" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="570" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="570" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="580" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="580" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="580" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="580" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
@@ -1644,7 +1564,6 @@
 <rect x="580" y="243" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="580" y="233" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="580" y="223" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
-<rect x="590" y="623" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="590" y="613" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="590" y="603" width="10" height="10" fill="black" stroke-width="0" stroke="black" />
 <rect x="590" y="593" width="10" height="10" fill="black" stroke-width="0" stroke="black" />

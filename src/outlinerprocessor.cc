@@ -130,7 +130,7 @@ Processor::processScene(const aiScene* scene,
        outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end));
        x += stepx) {
 
-    debugf("main loop x = %.2f (%u)", x, xIndex);
+    infof("processor main loop x = %.2f (%u)", x, xIndex);
     assert(outlinergeepsilon(x,DirectionOperations::outputx(direction,boundingBox.start)));
     assert(outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end)));
     unsigned int yIndex = 0;
@@ -157,7 +157,7 @@ Processor::processScene(const aiScene* scene,
         deepdebugf("checking (%.2f,%.2f)",x,y);
       }
       if (sceneHasMaterial(scene,indexed,x,y)) {
-        debugf("material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
+        infof("  material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
         matrix.setMaterialMatrix(xIndex,yIndex);
       }
       
@@ -172,32 +172,9 @@ Processor::processScene(const aiScene* scene,
   // Now there's a matrix filled with a flag for each coordinate,
   // whether there was material or not. Determine if we want to fill
   // small imperfections, removing small holes.
-  unsigned int holes = 0;
-  unsigned int holeMinSize = 9999;
-  unsigned int holeMaxSize = 0;
-  if (holethreshold > 0) {
-    infof("filtering holes...");
-    for (xIndex = 1; xIndex < matrix.xIndexSize; xIndex++) {
-      for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
-        if (!matrix.getMaterialMatrix(xIndex-1,yIndex)) continue;
-        if (!matrix.getMaterialMatrix(xIndex,yIndex)) {
-          unsigned int n;
-          unsigned int holeXtable[outlinermaxholethreshold];
-          unsigned int holeYtable[outlinermaxholethreshold];
-          if (holeIsEqualOrSmallerThan(xIndex,yIndex,holethreshold,n,outlinermaxholethreshold,holeXtable,holeYtable)) {
-            debugf("  correcting a hole of %u pixels at (%u,%u)", n, xIndex, yIndex);
-            holes++;
-            if (holeMinSize > n) holeMinSize = n;
-            if (holeMaxSize < n) holeMaxSize = n;
-            for (unsigned int i = 0; i < n; i++) {
-              matrix.setMaterialMatrix(holeXtable[i],holeYtable[i]);
-            }
-          }
-        }
-      }
-    }
-  }
-
+  unsigned int holeMinSize;
+  unsigned int holeMaxSize;
+  unsigned int holes = holeRemoval(holeMinSize,holeMaxSize);
   if (holes > 0) {
     infof("  removed %u holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
   }
@@ -221,6 +198,38 @@ Processor::processScene(const aiScene* scene,
   
   // Done, all good
   return(1);
+}
+
+unsigned int
+Processor::holeRemoval(unsigned int& holeMinSize,
+                       unsigned int& holeMaxSize) {
+  unsigned int holes = 0;
+  holeMinSize = 9999;
+  holeMaxSize = 0;
+  if (holethreshold > 0) {
+    infof("filtering holes...");
+     for (unsigned int xIndex = 1; xIndex < matrix.xIndexSize; xIndex++) {
+      for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
+        if (!matrix.getMaterialMatrix(xIndex-1,yIndex)) continue;
+        if (!matrix.getMaterialMatrix(xIndex,yIndex)) {
+          unsigned int n;
+          unsigned int holeXtable[outlinermaxholethreshold];
+          unsigned int holeYtable[outlinermaxholethreshold];
+          if (holeIsEqualOrSmallerThan(xIndex,yIndex,holethreshold,n,outlinermaxholethreshold,holeXtable,holeYtable)) {
+            debugf("  correcting a hole of %u pixels at (%u,%u)", n, xIndex, yIndex);
+            holes++;
+            if (holeMinSize > n) holeMinSize = n;
+            if (holeMaxSize < n) holeMaxSize = n;
+            for (unsigned int i = 0; i < n; i++) {
+              matrix.setMaterialMatrix(holeXtable[i],holeYtable[i]);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  return(holes);
 }
 
 void
@@ -399,10 +408,13 @@ Processor::faceHasMaterial(const aiScene* scene,
   OutlinerTriangle2D t;
   faceGetVertices2D(mesh,face,direction,t);
   OutlinerVector2D point(x,y);
-  OutlinerVector2D stepBoundingBox(x+stepx,y+stepy);
+  OutlinerVector2D stepBoundingBox(x+stepx-2*outlinerepsilon,y+stepy-2*outlinerepsilon);
   OutlinerBox2D thisBox(point,stepBoundingBox);
   if (OutlinerMath::boundingBoxIntersectsTriangle2D(t,thisBox)) {
-    deepdebugf("found out that (%.2f,%.2f) is hitting a face",x,y);
+    char buf[150];
+    OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
+    infof("    found out that (%.2f..%.2f,%.2f..%.2f) is hitting a face %s",
+          thisBox.start.x,thisBox.end.x,thisBox.start.y,thisBox.end.y,buf);
     return(1);
   }
   return(0);

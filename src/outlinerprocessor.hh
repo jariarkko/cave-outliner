@@ -145,6 +145,13 @@ private:
                 bool* borderTablePrev,
                 unsigned int* boderTableX,
                 unsigned int* borderTableY);
+
+  //
+  // Hole removal
+  //
+
+  unsigned int holeRemoval(unsigned int& holeMinSize,
+                           unsigned int& holeMaxSize);
   bool holeIsEqualOrSmallerThan(unsigned int xIndex,
                                 unsigned int yIndex,
                                 unsigned int holethreshold,

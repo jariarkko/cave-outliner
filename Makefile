@@ -187,6 +187,7 @@ unit-tests:	cave-outliner
 basic-tests:	cave-outliner \
 		cube-pixel-test \
 		cube-line-test \
+		cube-pixel-defaultbounding-test \
 		cube-line-defaultbounding-test \
 		cube-line-bounding-test \
 		cube-angled-pixel-test \
@@ -220,10 +221,15 @@ cube-line-test:
 	@./cave-outliner --quiet --borderline --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-line.svg
 	@diff -q test/cube-line.svg test/cube-line.svg.expected
 
+cube-pixel-defaultbounding-test:
+	@echo 'Running test case cube-pixel-defaultbounding-test...'
+	@./cave-outliner --quiet --pixel --step 0.5 test/cube.stl test/cube-pixel-defaultbounding.svg
+	@diff -q test/cube-pixel-defaultbounding.svg test/cube-pixel-defaultbounding.svg.expected
+
 cube-line-defaultbounding-test:
 	@echo 'Running test case cube-line-defaultbounding-test...'
 	@./cave-outliner --quiet --borderline --step 0.5 test/cube.stl test/cube-line-defaultbounding.svg
-	@diff -q test/cube-line-defaultbounding.svg test/cube-line-defaltbounding.svg.expected
+	@diff -q test/cube-line-defaultbounding.svg test/cube-line-defaultbounding.svg.expected
 
 cube-line-bounding-test:
 	@echo 'Running test case cube-line-bounding-test...'
