@@ -26,6 +26,7 @@
 #define outlinermaxmeshes                                                              1
 #define outlinertiledivision                                                          30
 #define outlinermaxholethreshold                                                      50
+#define outlinermaxlineholethreshold                                                  20
 #define outlinermaxcrosssections                                                     100
 #define outlinerdefaultlinewidth                                                     1.0
 #define outlinerdefaultfontxsize                                                       8

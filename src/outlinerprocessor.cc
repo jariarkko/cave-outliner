@@ -34,7 +34,7 @@
 #include "outlinerprocessorcrosssection.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// Model processing ///////////////////////////////////////////////////////////////////////////
+// Model processing -- Constructors ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 Processor::Processor(const char* fileNameIn,
@@ -49,6 +49,7 @@ Processor::Processor(const char* fileNameIn,
                      enum outlinerdirection directionIn,
                      enum outlineralgorithm algorithmIn,
                      unsigned int holethresholdIn,
+                     unsigned int lineHolethresholdIn,
                      bool labelsIn,
                      IndexedMesh& indexedIn) :
   fileName(fileNameIn),
@@ -64,6 +65,7 @@ Processor::Processor(const char* fileNameIn,
   direction(directionIn),
   algorithm(algorithmIn),
   holethreshold(holethresholdIn),
+  lineHolethreshold(lineHolethresholdIn),
   labels(labelsIn),
   planviewBoundingBoxStart(DirectionOperations::outputx(direction,boundingBox.start),
                            DirectionOperations::outputy(direction,boundingBox.start)),
@@ -77,6 +79,9 @@ Processor::Processor(const char* fileNameIn,
   debugf("algorithm %u=%u", algorithm, algorithmIn);
   if (holethreshold > outlinermaxholethreshold) {
     errf("Cannot compute hole thresholds larger than %u (%u given)", outlinermaxholethreshold, holethreshold);
+  }
+  if (lineHolethreshold > outlinermaxlineholethreshold) {
+    errf("Cannot compute line hole thresholds larger than %u (%u given)", outlinermaxlineholethreshold, lineHolethreshold);
   }
   boundingBox2D.start.x = DirectionOperations::outputx(direction,boundingBox.start);
   boundingBox2D.start.y = DirectionOperations::outputy(direction,boundingBox.start);
@@ -111,6 +116,10 @@ Processor::svgDone() {
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Model processing -- main program ///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 bool
 Processor::processScene(const aiScene* scene,
                         unsigned int nCrossSections,
@@ -137,12 +146,22 @@ Processor::processScene(const aiScene* scene,
     // Now there's a matrix filled with a flag for each coordinate,
     // whether there was material or not. Determine if we want to fill
     // small imperfections, removing small holes.
-    {
+    if (holethreshold > 0) {
       unsigned int holeMinSize;
       unsigned int holeMaxSize;
-      unsigned int holes = holeRemoval(holeMinSize,holeMaxSize);
+      unsigned int holes = objectHoleRemoval(holeMinSize,holeMaxSize);
       if (holes > 0) {
         infof("  removed %u holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
+      }
+    }
+    
+    // Similarly, see if we can fill holes in lines
+    if (lineHolethreshold > 0) {
+      unsigned int holeMinSize;
+      unsigned int holeMaxSize;
+      unsigned int holes = lineHoleRemoval(holeMinSize,holeMaxSize);
+      if (holes > 0) {
+        infof("  removed %u line holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
       }
     }
     
@@ -242,37 +261,9 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
   return(1);
 }
 
-unsigned int
-Processor::holeRemoval(unsigned int& holeMinSize,
-                       unsigned int& holeMaxSize) {
-  unsigned int holes = 0;
-  holeMinSize = 9999;
-  holeMaxSize = 0;
-  if (holethreshold > 0) {
-    infof("filtering holes...");
-     for (unsigned int xIndex = 1; xIndex < matrix.xIndexSize; xIndex++) {
-      for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
-        if (!matrix.getMaterialMatrix(xIndex-1,yIndex)) continue;
-        if (!matrix.getMaterialMatrix(xIndex,yIndex)) {
-          unsigned int n;
-          unsigned int holeXtable[outlinermaxholethreshold];
-          unsigned int holeYtable[outlinermaxholethreshold];
-          if (holeIsEqualOrSmallerThan(xIndex,yIndex,holethreshold,n,outlinermaxholethreshold,holeXtable,holeYtable)) {
-            debugf("  correcting a hole of %u pixels at (%u,%u)", n, xIndex, yIndex);
-            holes++;
-            if (holeMinSize > n) holeMinSize = n;
-            if (holeMaxSize < n) holeMaxSize = n;
-            for (unsigned int i = 0; i < n; i++) {
-              matrix.setMaterialMatrix(holeXtable[i],holeYtable[i]);
-            }
-          }
-        }
-      }
-    }
-  }
-  
-  return(holes);
-}
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Model proecssing -- 3D model conversion to SVGs of triangles ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 bool
 Processor::sceneToTrianglesSvg(const aiScene* scene,
@@ -342,6 +333,10 @@ Processor::faceToTrianglesSvg(const aiScene* scene,
     theSvg->triangle(t);
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Drawing an SVG based on a material matrix //////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 bool
 Processor::matrixToSvg(MaterialMatrix* theMatrix,
@@ -414,6 +409,10 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
   
   return(1);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Model processing -- inspecting 3D elements /////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 bool
 Processor::sceneHasMaterial(const aiScene* scene,
@@ -537,90 +536,9 @@ Processor::faceHasMaterial(const aiScene* scene,
   return(0);
 }
 
-bool
-Processor::coordinatesInTable(const unsigned int xIndex,
-                              const unsigned int yIndex,
-                              const unsigned int n,
-                              const unsigned int* tableX,
-                              const unsigned int* tableY) {
-  assert(tableX != 0);
-  assert(tableY != 0);
-  assert(tableX != tableY);
-  for (unsigned int i = 0; i < n; i++) {
-    if (tableX[i] == xIndex && tableY[i] == yIndex) {
-      return(1);
-    }
-  }
-  return(0);
-}
-
-bool
-Processor::holeIsEqualOrSmallerThan(unsigned int xIndex,
-                                    unsigned int yIndex,
-                                    unsigned int holethreshold,
-                                    unsigned int& n,
-                                    unsigned int tableSize,
-                                    unsigned int* holeXtable,
-                                    unsigned int* holeYtable) {
-  assert(tableSize <= outlinermaxholethreshold);
-  assert(holethreshold <= outlinermaxholethreshold);
-  assert(!matrix.getMaterialMatrix(xIndex,yIndex));
-  unsigned int nInvestigate = 1;
-  const unsigned int maxInvestigate = 2 * outlinermaxholethreshold;
-  unsigned int investigateXtable[maxInvestigate];
-  unsigned int investigateYtable[maxInvestigate];
-  investigateXtable[0] = xIndex;
-  investigateYtable[0] = yIndex;
-  n = 0;
-  while (nInvestigate > 0) {
-
-    // Take the first entry from the investigation table
-    xIndex = investigateXtable[0];
-    yIndex = investigateYtable[0];
-    for (unsigned int m = 1; m < nInvestigate; m++) {
-      investigateXtable[m-1] = investigateXtable[m];
-      investigateYtable[m-1] = investigateYtable[m];
-    }
-    nInvestigate--;
-    
-    // Does the entry have material? If yes, we don't need to consider it further.
-    if (matrix.getMaterialMatrix(xIndex,yIndex)) continue;
-
-    // Otherwise, this entry is in the hole. But is the hole already too large?
-    if (n == holethreshold) return(0);
-    
-    // Move the entry to the list of coordinates that are in the hole
-    assert(n < outlinermaxholethreshold);
-    assert(n < tableSize);
-    holeXtable[n] = xIndex;
-    holeYtable[n] = yIndex;
-    n++;
-
-    // And then we need to investigate the neighbours of that entry as
-    // well. Find out who the neighbours are.
-    const unsigned int maxNeighbours = 8;
-    unsigned int nNeigh = 0;
-    unsigned int neighXtable[maxNeighbours];
-    unsigned int neighYtable[maxNeighbours];
-    getNeighbours(xIndex,yIndex,nNeigh,maxNeighbours,neighXtable,neighYtable);
-
-    // See if the neighbours have already seen as part of the hole or
-    // are already in the investigation table. If so, no need to
-    // consider them more. Otherwise, add the neighbours to the
-    // investigation table.
-    for (unsigned int i = 0; i < nNeigh; i++) {
-      unsigned int neighX = neighXtable[i];
-      unsigned int neighY = neighYtable[i];
-      if (coordinatesInTable(neighX,neighY,n,holeXtable,holeYtable)) continue;
-      if (coordinatesInTable(neighX,neighY,nInvestigate,investigateXtable,investigateYtable)) continue;
-      if (nInvestigate == maxInvestigate) return(0);
-      investigateXtable[nInvestigate] = neighX;
-      investigateYtable[nInvestigate] = neighY;
-      nInvestigate++;
-    }
-  }
-  return(1);
-}
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Model processing -- Neighbor pixel operations //////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 void
 Processor::getNeighbours(unsigned int xIndex,
@@ -653,6 +571,23 @@ Processor::getNeighbours(unsigned int xIndex,
   
   // Done
   assert(n <= tableSize);
+}
+
+bool
+Processor::coordinatesInTable(const unsigned int xIndex,
+                              const unsigned int yIndex,
+                              const unsigned int n,
+                              const unsigned int* tableX,
+                              const unsigned int* tableY) {
+  assert(tableX != 0);
+  assert(tableY != 0);
+  assert(tableX != tableY);
+  for (unsigned int i = 0; i < n; i++) {
+    if (tableX[i] == xIndex && tableY[i] == yIndex) {
+      return(1);
+    }
+  }
+  return(0);
 }
 
 bool
@@ -722,6 +657,10 @@ Processor::isBorder(unsigned int xIndex,
   }
   return(ans);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Model processing -- coordinate conversions /////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 unsigned int
 Processor::coordinateXToIndex(outlinerreal x) {
@@ -910,5 +849,115 @@ Processor::addCrossSectionLine(const char* label,
   svg->text(actualLine.end.x - outlinerdefaultfontxsize * 0.5 * svg->getPixelXSize(),
             actualLine.end.y + outlinerdefaultfontysize * 0.1 * svg->getPixelYSize(),
             label);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+/// Hole removal algorithms ///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+unsigned int
+Processor::objectHoleRemoval(unsigned int& holeMinSize,
+                             unsigned int& holeMaxSize) {
+  unsigned int holes = 0;
+  holeMinSize = 9999;
+  holeMaxSize = 0;
+  if (holethreshold > 0) {
+    infof("filtering holes...");
+     for (unsigned int xIndex = 1; xIndex < matrix.xIndexSize; xIndex++) {
+      for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
+        if (!matrix.getMaterialMatrix(xIndex-1,yIndex)) continue;
+        if (!matrix.getMaterialMatrix(xIndex,yIndex)) {
+          unsigned int n;
+          unsigned int holeXtable[outlinermaxholethreshold];
+          unsigned int holeYtable[outlinermaxholethreshold];
+          if (objectHoleIsEqualOrSmallerThan(xIndex,yIndex,holethreshold,n,outlinermaxholethreshold,holeXtable,holeYtable)) {
+            debugf("  correcting a hole of %u pixels at (%u,%u)", n, xIndex, yIndex);
+            holes++;
+            if (holeMinSize > n) holeMinSize = n;
+            if (holeMaxSize < n) holeMaxSize = n;
+            for (unsigned int i = 0; i < n; i++) {
+              matrix.setMaterialMatrix(holeXtable[i],holeYtable[i]);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  return(holes);
+}
+
+unsigned int
+Processor::lineHoleRemoval(unsigned int& holeMinSize,
+                           unsigned int& holeMaxSize) {
+  return(0);
+}
+
+bool
+Processor::objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
+                                          unsigned int yIndex,
+                                          unsigned int holethreshold,
+                                          unsigned int& n,
+                                          unsigned int tableSize,
+                                          unsigned int* holeXtable,
+                                          unsigned int* holeYtable) {
+  assert(tableSize <= outlinermaxholethreshold);
+  assert(holethreshold <= outlinermaxholethreshold);
+  assert(!matrix.getMaterialMatrix(xIndex,yIndex));
+  unsigned int nInvestigate = 1;
+  const unsigned int maxInvestigate = 2 * outlinermaxholethreshold;
+  unsigned int investigateXtable[maxInvestigate];
+  unsigned int investigateYtable[maxInvestigate];
+  investigateXtable[0] = xIndex;
+  investigateYtable[0] = yIndex;
+  n = 0;
+  while (nInvestigate > 0) {
+
+    // Take the first entry from the investigation table
+    xIndex = investigateXtable[0];
+    yIndex = investigateYtable[0];
+    for (unsigned int m = 1; m < nInvestigate; m++) {
+      investigateXtable[m-1] = investigateXtable[m];
+      investigateYtable[m-1] = investigateYtable[m];
+    }
+    nInvestigate--;
+    
+    // Does the entry have material? If yes, we don't need to consider it further.
+    if (matrix.getMaterialMatrix(xIndex,yIndex)) continue;
+
+    // Otherwise, this entry is in the hole. But is the hole already too large?
+    if (n == holethreshold) return(0);
+    
+    // Move the entry to the list of coordinates that are in the hole
+    assert(n < outlinermaxholethreshold);
+    assert(n < tableSize);
+    holeXtable[n] = xIndex;
+    holeYtable[n] = yIndex;
+    n++;
+
+    // And then we need to investigate the neighbours of that entry as
+    // well. Find out who the neighbours are.
+    const unsigned int maxNeighbours = 8;
+    unsigned int nNeigh = 0;
+    unsigned int neighXtable[maxNeighbours];
+    unsigned int neighYtable[maxNeighbours];
+    getNeighbours(xIndex,yIndex,nNeigh,maxNeighbours,neighXtable,neighYtable);
+
+    // See if the neighbours have already seen as part of the hole or
+    // are already in the investigation table. If so, no need to
+    // consider them more. Otherwise, add the neighbours to the
+    // investigation table.
+    for (unsigned int i = 0; i < nNeigh; i++) {
+      unsigned int neighX = neighXtable[i];
+      unsigned int neighY = neighYtable[i];
+      if (coordinatesInTable(neighX,neighY,n,holeXtable,holeYtable)) continue;
+      if (coordinatesInTable(neighX,neighY,nInvestigate,investigateXtable,investigateYtable)) continue;
+      if (nInvestigate == maxInvestigate) return(0);
+      investigateXtable[nInvestigate] = neighX;
+      investigateYtable[nInvestigate] = neighY;
+      nInvestigate++;
+    }
+  }
+  return(1);
 }
 

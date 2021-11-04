@@ -34,6 +34,7 @@ Options:
     --smooth                 Set the line drawings use smooth curves.\n";
     --jagged                 Set the line drawings use hard lines (default).\n";
     --holethreshold n        Ignore holes in the model if they are n or less pixels.
+    --lineholethreshold n    Ignore holes in cross-section  lines if they are n or less pixels.
     --tiling n               Optimize search process with n x n tiles. Default is 30,
                              and --tiling 1 implies no optimization.
     --quiet                  Turn on informative messages (default is they are on).

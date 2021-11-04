@@ -54,6 +54,7 @@ MainConfig::MainConfig() :
   mergedLines(1),
   tiles(outlinertiledivision),
   holethreshold(0),
+  lineholethreshold(0),
   automaticCrossSections(0),
   automaticCrossSectionsDirection(dir_x),
   nAutomaticCrossSections(0),

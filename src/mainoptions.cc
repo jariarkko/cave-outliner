@@ -182,6 +182,14 @@ MainOptions::processCommandLineOptions(int& argc,
       }
       config.holethreshold = num;
       argc--;argv++;
+    } else if (strcmp(argv[1],"--lineholethreshold") == 0 && argc > 2) {
+      int num = atoi(argv[2]);
+      if (num < 0 || num > 100) {
+        errf("Line hole threshold value needs to be non-negative and max 100, %s given", argv[2]);
+        return(0);
+      }
+      config.lineholethreshold = num;
+      argc--;argv++;
     } else if (strcmp(argv[1],"--step") == 0 && argc > 2) {
       config.stepz = config.stepx = config.stepy = atof(argv[2]);
       if (config.stepx < 0.0001) {
@@ -322,6 +330,7 @@ MainOptions::processHelp(void) {
   std::cout << "  --smooth                 Set the line drawings use smooth curves.\n";
   std::cout << "  --jagged                 Set the line drawings use hard lines (default).\n";
   std::cout << "  --holethreshold n        Ignore holes in the model if they are n or less pixels.\n";
+  std::cout << "  --lineholethreshold n    Ignore holes in cross-section  lines if they are n or less pixels.\n";
   std::cout << "  --tiling n               Optimize search process with n x n tiles. ";
   std::cout <<                            "Default is " << outlinertiledivision << ",\n";
   std::cout << "                           and --tiling 1 implies no optimization.\n";

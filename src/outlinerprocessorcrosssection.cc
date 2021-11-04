@@ -185,6 +185,18 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
               sliceVerticalBoundingBox.end.y + (outlinertitlespaceempty * svg->getPixelYSize()),
               labelText);
   }
+
+  // Now there's a matrix filled with a flag for each coordinate,
+  // whether there was material or not. Determine if we want to fill
+  // small imperfections, removing small holes in lines.
+  if (proc.lineHolethreshold > 0) {
+    unsigned int holeMinSize;
+    unsigned int holeMaxSize;
+    unsigned int holes = proc.lineHoleRemoval(holeMinSize,holeMaxSize);
+    if (holes > 0) {
+      infof("  removed %u cross section line holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
+    }
+  }
   
   // Now there's a matrix filled with a flag for each coordinate,
   // whether there was material or not. And small holes have been filled per above.

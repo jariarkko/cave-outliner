@@ -234,6 +234,7 @@ main(int argc, char** argv) {
                       config.direction,
                       config.algorithm,
                       config.holethreshold,
+                      config.lineholethreshold,
                       (config.labelCrossSections && config.nCrossSections > 0),
                       indexed);
   if (!processor.processScene(scene,

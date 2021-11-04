@@ -115,6 +115,9 @@ public:
   /// If the model has holes, e.g., missing faces for various reasons, should the software try to fill them? 
   unsigned int holethreshold;
 
+  /// If the cross section lines have holes, e.g., missing faces for various reasons, should the software try to fill them? 
+  unsigned int lineholethreshold;
+
   /// Should we create a number of automatic cross sections?
   bool automaticCrossSections;
 

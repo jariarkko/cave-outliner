@@ -73,6 +73,7 @@ public:
             enum outlinerdirection directionIn,
             enum outlineralgorithm algorithmIn,
             unsigned int holethresholdIn,
+            unsigned int lineHolethresholdIn,
             bool labelsIn,
             IndexedMesh& indexedIn);
 
@@ -103,6 +104,7 @@ private:
   enum outlinerdirection direction;
   enum outlineralgorithm algorithm;
   unsigned int holethreshold;
+  unsigned int lineHolethreshold;
   bool labels;
   OutlinerVector2D planviewBoundingBoxStart;
   OutlinerVector2D planviewBoundingBoxEnd;
@@ -151,15 +153,17 @@ private:
   // Hole removal
   //
 
-  unsigned int holeRemoval(unsigned int& holeMinSize,
-                           unsigned int& holeMaxSize);
-  bool holeIsEqualOrSmallerThan(unsigned int xIndex,
-                                unsigned int yIndex,
-                                unsigned int holethreshold,
-                                unsigned int& n,
-                                unsigned int tableSize,
-                                unsigned int* holeXtable,
-                                unsigned int* holeYtable);
+  unsigned int objectHoleRemoval(unsigned int& holeMinSize,
+                                 unsigned int& holeMaxSize);
+  bool objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
+                                      unsigned int yIndex,
+                                      unsigned int holethreshold,
+                                      unsigned int& n,
+                                      unsigned int tableSize,
+                                      unsigned int* holeXtable,
+                                      unsigned int* holeYtable);
+  unsigned int lineHoleRemoval(unsigned int& holeMinSize,
+                               unsigned int& holeMaxSize);
 
   //
   // 3D model queries
