@@ -79,6 +79,9 @@ MainOptions::processCommandLineOptions(int& argc,
     } else if (strcmp(argv[1],"--pixel") == 0) {
       config.algorithm = alg_pixel;
       debugf("algorithm now %u", config.algorithm);
+    } else if (strcmp(argv[1],"--triangle") == 0) {
+      config.algorithm = alg_triangle;
+      debugf("algorithm now %u", config.algorithm);
     } else if (strcmp(argv[1],"--borderpixel") == 0) {
       config.algorithm = alg_borderpixel;
       debugf("algorithm now %u", config.algorithm);
@@ -300,6 +303,7 @@ MainOptions::processHelp(void) {
   std::cout << "  --x                      Generate output as viewed from the x direction, i.e., showing z/y picture.\n";
   std::cout << "  --y                      Generate output as viewed from the y direction, i.e., showing x/z picture.\n";
   std::cout << "  --pixel                  Use the pixel output drawing algorithm (default, fills cave with pixels).\n";
+  std::cout << "  --triangle               Use the triangle output drawing algorithm (draws model faces in plan view).\n";
   std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave walls,\n";
   std::cout << "                           with pixels.\n";
   std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave walls,\n";

@@ -113,7 +113,8 @@ private:
   //
   // Matrix operations
   //
-  
+
+  bool sceneToMaterialMatrix(const aiScene* scene);
   bool coordinatesInTable(const unsigned int xIndex,
                           const unsigned int yIndex,
                           const unsigned int n,
@@ -217,12 +218,33 @@ private:
   // Image drawing
   //
   
-  void matrixToSvg(MaterialMatrix* theMatrix,
+  bool matrixToSvg(MaterialMatrix* theMatrix,
                    SvgCreator* theSvg,
                    outlinerreal xStart,
                    outlinerreal yStart,
                    outlinerreal xStep,
                    outlinerreal yStep);
+  bool sceneToTrianglesSvg(const aiScene* scene,
+                           SvgCreator* theSvg,
+                           outlinerreal xStart,
+                           outlinerreal yStart,
+                           outlinerreal xStep,
+                           outlinerreal yStep);
+  void nodeToTrianglesSvg(const aiScene* scene,
+                          const aiNode* node,
+                          SvgCreator* theSvg,
+                          IndexedMesh& indexed,
+                          OutlinerBox2D& boundingBox);
+  void meshToTrianglesSvg(const aiScene* scene,
+                          const aiMesh* mesh,
+                          SvgCreator* theSvg,
+                          IndexedMesh& indexed,
+                          OutlinerBox2D& boundingBox);
+  void faceToTrianglesSvg(const aiScene* scene,
+                          const aiMesh* mesh,
+                          const aiFace* face,
+                          SvgCreator* theSvg,
+                          OutlinerBox2D& boundingBox);
   
   //
   // SVG image management

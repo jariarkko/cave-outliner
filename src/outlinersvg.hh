@@ -25,6 +25,8 @@
 
 #include <iostream>
 #include <fstream>
+#include "outlinertypes.hh"
+#include "outlinerhighprecision.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Data types /////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +93,10 @@ class SvgCreator {
   /// Draw a pixel.
   void pixel(outlinerreal x,
              outlinerreal y);
+
+  /// Draw a triangle.
+  void triangle(OutlinerTriangle2D triangle,
+                bool dashed = 0);
 
   /// Write text to the image.
   void text(outlinerreal x,

@@ -39,6 +39,7 @@
 
 enum outlineralgorithm {
   alg_pixel,
+  alg_triangle,
   alg_borderpixel,
   alg_borderline,
   alg_borderactual

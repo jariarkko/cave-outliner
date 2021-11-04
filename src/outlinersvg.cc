@@ -272,6 +272,35 @@ SvgCreator::pixel(outlinerreal x,
 }
 
 void
+SvgCreator::triangle(OutlinerTriangle2D triangle,
+                     bool dashed) {
+
+  // Convert coordinates
+  unsigned int xIntA, yIntA;
+  unsigned int xIntB, yIntB;
+  unsigned int xIntC, yIntC;
+  coordinateNormalization(triangle.a.x,triangle.a.y,xIntA,yIntA);
+  coordinateNormalization(triangle.b.x,triangle.b.y,xIntB,yIntB);
+  coordinateNormalization(triangle.c.x,triangle.c.y,xIntC,yIntC);
+
+  // Construct a 4-segment line that draws the triangle
+  struct OutlinerSvgLine line;
+  line.nPoints = 4;
+  line.points[0].x = xIntA;
+  line.points[0].y = yIntA;
+  line.points[1].x = xIntB;
+  line.points[1].y = yIntB;
+  line.points[2].x = xIntC;
+  line.points[2].y = yIntC;
+  line.points[3].x = xIntA;
+  line.points[3].y = yIntA;
+  line.dashed = dashed;
+  
+  // Emit the SVG code to draw that line
+  emitLine(line);
+}
+
+void
 SvgCreator::text(outlinerreal x,
                  outlinerreal y,
                  const char* string) {

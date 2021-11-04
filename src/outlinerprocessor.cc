@@ -119,17 +119,87 @@ Processor::processScene(const aiScene* scene,
   debugf("processScene");
   assert(scene != 0);
 
+  // Decide what to do, based on the algorithm specified
+  switch (algorithm) {
+
+  case alg_pixel:
+  case alg_borderpixel:
+  case alg_borderline:
+  case alg_borderactual:
+    
+    // First, go through each part of the picture, and determine if
+    // there's material in it. Construct a matrix representing the
+    // results.
+    if (!sceneToMaterialMatrix(scene)) {
+      return(0);
+    }
+    
+    // Now there's a matrix filled with a flag for each coordinate,
+    // whether there was material or not. Determine if we want to fill
+    // small imperfections, removing small holes.
+    {
+      unsigned int holeMinSize;
+      unsigned int holeMaxSize;
+      unsigned int holes = holeRemoval(holeMinSize,holeMaxSize);
+      if (holes > 0) {
+        infof("  removed %u holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
+      }
+    }
+    
+    // Now there's a matrix filled with a flag for each coordinate,
+    // whether there was material or not. And small holes have been filled per above.
+    // Draw the output based on all this.
+    if (!matrixToSvg(&matrix,svg,
+                     DirectionOperations::outputx(direction,boundingBox.start),
+                     DirectionOperations::outputy(direction,boundingBox.start),
+                     stepx,
+                     stepy)) {
+      return(0);
+    }
+    break;
+
+  case alg_triangle:
+
+    if (!sceneToTrianglesSvg(scene,svg,
+                             DirectionOperations::outputx(direction,boundingBox.start),
+                             DirectionOperations::outputy(direction,boundingBox.start),
+                             stepx,
+                             stepy)) {
+      return(0);
+    }
+    break;
+    
+  default:
+    errf("Invalid algorithm");
+    return(0);
+      
+  }
+  
+  // Process cross sections
+  if (!processSceneCrossSections(scene,nCrossSections,crossSections)) {
+    return(0);
+  }
+  
+  // Main result (plan view) is also done, flush the image output
+  svgDone();
+  
+  // Done, all good
+  return(1);
+}
+
+bool
+Processor::sceneToMaterialMatrix(const aiScene* scene) {
+  
   // First, go through each part of the picture, and determine if
   // there's material in it. Construct a matrix representing the
   // results.
-  
   unsigned int xIndex = 0;
-
+  
   infof("computing material matrix...");
   for (outlinerreal x = DirectionOperations::outputx(direction,boundingBox.start);
        outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end));
        x += stepx) {
-
+    
     debugf("processor main loop x = %.2f (%u)", x, xIndex);
     assert(outlinergeepsilon(x,DirectionOperations::outputx(direction,boundingBox.start)));
     assert(outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end)));
@@ -162,41 +232,13 @@ Processor::processScene(const aiScene* scene,
       }
       
       yIndex++;
-      
+        
     }
-    
+      
     xIndex++;
-    
-  }
-
-  // Now there's a matrix filled with a flag for each coordinate,
-  // whether there was material or not. Determine if we want to fill
-  // small imperfections, removing small holes.
-  unsigned int holeMinSize;
-  unsigned int holeMaxSize;
-  unsigned int holes = holeRemoval(holeMinSize,holeMaxSize);
-  if (holes > 0) {
-    infof("  removed %u holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
+      
   }
   
-  // Now there's a matrix filled with a flag for each coordinate,
-  // whether there was material or not. And small holes have been filled per above.
-  // Draw the output based on all this.
-  matrixToSvg(&matrix,svg,
-              DirectionOperations::outputx(direction,boundingBox.start),
-              DirectionOperations::outputy(direction,boundingBox.start),
-              stepx,
-              stepy);
-
-  // Process cross sections
-  if (!processSceneCrossSections(scene,nCrossSections,crossSections)) {
-    return(0);
-  }
-  
-  // Main result (plan view) is also done, flush the image output
-  svgDone();
-  
-  // Done, all good
   return(1);
 }
 
@@ -232,7 +274,76 @@ Processor::holeRemoval(unsigned int& holeMinSize,
   return(holes);
 }
 
+bool
+Processor::sceneToTrianglesSvg(const aiScene* scene,
+                               SvgCreator* theSvg,
+                               outlinerreal xStart,
+                               outlinerreal yStart,
+                               outlinerreal xStep,
+                               outlinerreal yStep) {
+  
+  // Go through each part of the picture, and draw a triangle to the
+  // output image for each of them.
+  
+  infof("drawing triangles...");
+  OutlinerBox2D trianglesBoundingBox(DirectionOperations::outputx(direction,boundingBox.start),
+                                     DirectionOperations::outputy(direction,boundingBox.start),
+                                     DirectionOperations::outputx(direction,boundingBox.end),
+                                     DirectionOperations::outputy(direction,boundingBox.end));
+  nodeToTrianglesSvg(scene,scene->mRootNode,theSvg,indexed,trianglesBoundingBox);
+      
+  return(1);
+}
+
 void
+Processor::nodeToTrianglesSvg(const aiScene* scene,
+                              const aiNode* node,
+                              SvgCreator* theSvg,
+                              IndexedMesh& indexed,
+                              OutlinerBox2D& trianglesBoundingBox) {
+  assert(scene != 0);
+  assert(node != 0);
+  if (!node->mTransformation.IsIdentity()) {
+    errf("Cannot handle transformations yet");
+    exit(1);
+  }
+  for (unsigned int j = 0; j < node->mNumMeshes; j++) {
+    meshToTrianglesSvg(scene,scene->mMeshes[node->mMeshes[j]],theSvg,indexed,trianglesBoundingBox);
+  }
+  for (unsigned int i = 0; i < node->mNumChildren; i++) {
+    nodeToTrianglesSvg(scene,node->mChildren[i],theSvg,indexed,trianglesBoundingBox);
+  }
+}
+
+void
+Processor::meshToTrianglesSvg(const aiScene* scene,
+                              const aiMesh* mesh,
+                              SvgCreator* theSvg,
+                              IndexedMesh& indexed,
+                              OutlinerBox2D& trianglesBoundingBox) {
+  assert(scene != 0);
+  assert(mesh != 0);
+  for (unsigned int f = 0; f < mesh->mNumFaces; f++) {
+    faceToTrianglesSvg(scene,mesh,&mesh->mFaces[f],theSvg,trianglesBoundingBox);
+  }
+}
+
+void
+Processor::faceToTrianglesSvg(const aiScene* scene,
+                              const aiMesh* mesh,
+                              const aiFace* face,
+                              SvgCreator* theSvg,
+                              OutlinerBox2D& trianglesBoundingBox) {
+  assert(scene != 0);
+  assert(mesh != 0);
+  OutlinerTriangle2D t;
+  faceGetVertices2D(mesh,face,direction,t);
+  if (OutlinerMath::boundingBoxIntersectsTriangle2D(t,trianglesBoundingBox)) {
+    theSvg->triangle(t);
+  }
+}
+
+bool
 Processor::matrixToSvg(MaterialMatrix* theMatrix,
                        SvgCreator* theSvg,
                        outlinerreal xStart,
@@ -261,6 +372,10 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
           debugf("pixel alg %u,%u from %.2f,%.2f", xIndex, yIndex, x, y);
           theSvg->pixel(x,y);
           break;
+        case alg_triangle:
+          errf("Invalid algorithm for matrix-based operation");
+          exit(1);
+          break;
         case alg_borderpixel:
           debugf("borderpixel alg %u,%u", xIndex, yIndex);
           if (isBorder(xIndex,yIndex,theMatrix,nBorderTo,0,0,0,0)) {
@@ -288,14 +403,16 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
           break;
         case alg_borderactual:
           errf("Borderactual algorithm is not yet implemented");
-          exit(1);
+          return(0);
         default:
           errf("Invalid algorithm %u", algorithm);
-          exit(1);
+          return(0);
         }
       }
     }
   }
+  
+  return(1);
 }
 
 bool

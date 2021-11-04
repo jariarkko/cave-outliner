@@ -15,6 +15,7 @@ Options:
     --x                      Generate output as viewed from the x direction, i.e., showing z/y picture.
     --y                      Generate output as viewed from the y direction, i.e., showing x/z picture.
     --pixel                  Use the pixel output drawing algorithm (default, fills cave with pixels).
+    --triangle               Use the triangle output drawing algorithm (draws model faces in plan view).
     --borderpixel            Use the border-only drawing algorithm, draws only the cave walls,
                              with pixels.
     --borderline             Use the border-only drawing algorithm, draws only the cave walls,

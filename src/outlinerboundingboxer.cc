@@ -43,9 +43,6 @@ BoundingBoxer::BoundingBoxer(const aiScene* scene,
   if (!boundingBoxSet) {
     errf("Cannot determine bounding box (empty model?)");
   }
-  outlinerreal xSize = boundingBox.end.x - boundingBox.start.x;
-  outlinerreal ySize = boundingBox.end.y - boundingBox.start.y;
-  outlinerreal zSize = boundingBox.end.z - boundingBox.start.z;
   boundingBox.start.x -= xIncrease;
   boundingBox.end.x += xIncrease;
   boundingBox.start.y -= yIncrease;
