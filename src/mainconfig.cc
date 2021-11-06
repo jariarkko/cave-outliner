@@ -60,6 +60,7 @@ MainConfig::MainConfig() :
   nAutomaticCrossSections(0),
   automaticCrossSectionFilenamePattern(0),
   nCrossSections(0),
+  crossSectionWidth(1.0),
   labelCrossSections(0),
   crossSectionLabelCount(0) {
 }

@@ -63,6 +63,7 @@ public:
                         const OutlinerVector2D& lineStartIn,
                         const OutlinerVector2D& lineEndIn,
                         outlinerreal stepzIn,
+                        outlinerreal widthIn,
                         Processor& procIn);
 
   /// Release all resources associated with this cross section view,
@@ -92,6 +93,7 @@ private:
   const OutlinerVector2D lineStart;
   const OutlinerVector2D lineEnd;
   outlinerreal stepz;
+   outlinerreal width;
   outlinerreal xDifference;
   outlinerreal yDifference;
   outlinerreal lineLength;
@@ -99,6 +101,8 @@ private:
   outlinerreal lineSteps;
   outlinerreal lineStepX;
   outlinerreal lineStepY;
+  outlinerreal boxStepX;
+  outlinerreal boxStepY;
   OutlinerBox2D sliceVerticalBoundingBox;
   MaterialMatrix* matrix;
   Processor& proc;

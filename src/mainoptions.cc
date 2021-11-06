@@ -147,10 +147,19 @@ MainOptions::processCommandLineOptions(int& argc,
       config.crossSections[config.nCrossSections].end.x = 0;
       config.crossSections[config.nCrossSections].end.y = 0;
       config.crossSections[config.nCrossSections].filename = file;
+      config.crossSections[config.nCrossSections].width = config.crossSectionWidth;
       config.crossSections[config.nCrossSections].label = config.getCrossSectionLabel();
       config.nCrossSections++;
       argc--;argv++;
       argc--;argv++;
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--crosssectionwidth") == 0 && argc > 2) {
+      float num = atof(argv[2]);
+      if (num < 0.0) {
+        errf("Cross section width value needs to be a non-negative number, %s given", argv[2]);
+        return(0);
+      }
+      config.crossSectionWidth = num;
       argc--;argv++;
     } else if (strcmp(argv[1],"--label") == 0) {
       config.labelCrossSections = 1;
@@ -282,7 +291,7 @@ MainOptions::processCommandLineArguments(int& argc,
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// Help, version, etc. ////////////////////////////////////////////////////////////////////////
+// Version ////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void
@@ -291,55 +300,6 @@ MainOptions::processVersion(void) {
   std::cout << OUTLINER_PROG " version ";
   std::cout << outlinerVersion;
   std::cout << "\n";
-  std::cout << "\n";
-}
-
-void
-MainOptions::processHelp(void) {
-  std::cout << "\n";
-  std::cout << OUTLINER_PROG " [options] inputfile outputfile\n";
-  std::cout << "\n";
-  std::cout << "Processes an input 3D model in STL format to a SVG picture that\n";
-  std::cout << "represents the cave horizontal plane. This can be used to produce\n";
-  std::cout << "maps.\n";
-  std::cout << "\n";
-  std::cout << "Options:\n";
-  std::cout << "\n";
-  std::cout << "  --bounding x x y y z z   Set the bounding box area. Default is the model's bounding box.\n";
-  std::cout << "  --step i                 Set the granularity increment. Default is 1.\n";
-  std::cout << "  --z                      Generate output as viewed from the z direction, i.e., showing x/y picture.\n";
-  std::cout << "  --x                      Generate output as viewed from the x direction, i.e., showing z/y picture.\n";
-  std::cout << "  --y                      Generate output as viewed from the y direction, i.e., showing x/z picture.\n";
-  std::cout << "  --pixel                  Use the pixel output drawing algorithm (default, fills cave with pixels).\n";
-  std::cout << "  --triangle               Use the triangle output drawing algorithm (draws model faces in plan view).\n";
-  std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave walls,\n";
-  std::cout << "                           with pixels.\n";
-  std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave walls,\n";
-  std::cout << "                           with lines.\n";
-  std::cout << "  --borderactual           Use the border-only drawing algorithm, draws the cave walls using\n";
-  std::cout << "                           model triangle sides.\n";
-  std::cout << "  --crosssection d p file  Produce also a cross section at a given direction (d = x or y) position p,\n";
-  std::cout << "                           output to file.\n";
-  std::cout << "  --crosssections d n pat  Produce n cross sections at different direction (d = x or y) positions,\n";
-  std::cout << "                           output to files (percent sign denotes the cross section number in the\n";
-  std::cout << "                           file name pattern).\n";
-  std::cout << "  --label                  Label cross sections.\n";
-  std::cout << "  --multiplier n           Multiply image size by n (default 1).\n";
-  std::cout << "  --linewidth n            Set the width of the lines in output picture. The value can be a\n";
-  std::cout << "                           decimal number.\n";
-  std::cout << "  --smooth                 Set the line drawings use smooth curves.\n";
-  std::cout << "  --jagged                 Set the line drawings use hard lines (default).\n";
-  std::cout << "  --holethreshold n        Ignore holes in the model if they are n or less pixels.\n";
-  std::cout << "  --lineholethreshold n    Ignore holes in cross-section  lines if they are n or less pixels.\n";
-  std::cout << "  --tiling n               Optimize search process with n x n tiles. ";
-  std::cout <<                            "Default is " << outlinertiledivision << ",\n";
-  std::cout << "                           and --tiling 1 implies no optimization.\n";
-  std::cout << "  --quiet                  Turn on informative messages (default is they are on).\n";
-  std::cout << "  --debug                  Turn on debugging messages (level 0, least)\n";
-  std::cout << "  --deepdebug              Turn on debugging messages (level 1)\n";
-  std::cout << "  --deepdeepdebug          Turn on debugging messages (level 2, most)\n";
-  std::cout << "  --version                Output version information.\n";
-  std::cout << "  --help                   Print this message\n";
   std::cout << "\n";
 }
 

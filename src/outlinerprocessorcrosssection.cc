@@ -43,6 +43,7 @@ ProcessorCrossSection::ProcessorCrossSection(const char* fileNameIn,
                                              const OutlinerVector2D& lineStartIn,
                                              const OutlinerVector2D& lineEndIn,
                                              outlinerreal stepzIn,
+                                             outlinerreal widthIn,
                                              Processor& procIn) :
   fileName(fileNameIn),
   label(labelIn),
@@ -50,6 +51,7 @@ ProcessorCrossSection::ProcessorCrossSection(const char* fileNameIn,
   lineStart(lineStartIn),
   lineEnd(lineEndIn),
   stepz(stepzIn),
+  width(widthIn),
   matrix(0),
   proc(procIn),
   svg(0) {
@@ -246,6 +248,9 @@ ProcessorCrossSection::calculateLineEquation(void) {
   // Calculations
   xDifference = lineEnd.x - lineStart.x;
   yDifference = lineEnd.y - lineStart.y;
+  infof("    cross section line xDiff %.2f (%.2f...%.2f)", xDifference, lineStart.x, lineEnd.x);
+  infof("    cross section line yDiff %.2f (%.2f...%.2f)", yDifference, lineStart.y, lineEnd.y);
+  infof("    cross section width %.2f", width);
   if (xDifference == 0 && yDifference == 0) {
     errf("Cross-section starting and ending points cannot be same");
     exit(1);
@@ -258,11 +263,15 @@ ProcessorCrossSection::calculateLineEquation(void) {
   lineSteps = lineLength/lineStep;
   lineStepX = xDifference / lineSteps;
   lineStepY = yDifference / lineSteps;
-  infof("    cross section line equation length %.2f steps %.2f stepX %.2f stepY %.2f",
-         lineLength,
-         lineSteps,
-         lineStepX,
-         lineStepY);
+  boxStepX = lineStepX + width * (proc.stepx * yDifferenceFraction);
+  boxStepY = lineStepY + width * (proc.stepy * xDifferenceFraction);
+  infof("    cross section line equation length %.2f steps %.2f stepX %.2f stepY %.2f boxX %.2f boxY %.2f",
+        lineLength,
+        lineSteps,
+        lineStepX,
+        lineStepY,
+        boxStepX,
+        boxStepY);
 }
 
 outlinerreal
@@ -443,7 +452,7 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
   assert(matrix != 0);
   OutlinerTriangle3D t;
   proc.faceGetVertices3D(mesh,face,t);
-  OutlinerBox3D thisBox(x,y,z,x+lineStepX,y+lineStepY,z+stepz);
+  OutlinerBox3D thisBox(x,y,z,x+boxStepX,y+boxStepY,z+stepz);
   char buf[120];
   OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
   extern bool debugbbit3;
@@ -488,7 +497,7 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
 
 void
 ProcessorCrossSection::getSliceVerticalBoundingBox(const aiScene* scene,
-                                                OutlinerBox2D& sliceVerticalBoundingBox) {
+                                                   OutlinerBox2D& sliceVerticalBoundingBox) {
   assert(scene != 0);
   deepdebugf("process cross section bounding box");
   bool set = 0;
@@ -534,7 +543,7 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxMesh(const aiScene* scene,
     const aiFace** faces = 0;
     proc.indexed.getFaces(mesh,iter.point.x,iter.point.y,&nFaces,&faces);
     if (nFaces > 0) {
-      deepdebugf("got %u cross section faces from (%.2f,%.2f)", nFaces, iter.point.x, iter.point.y);
+      infof("got %u cross section faces from (%.2f,%.2f)", nFaces, iter.point.x, iter.point.y);
       for (unsigned int f = 0; f < nFaces; f++) {
         getSliceVerticalBoundingBoxFace(scene,mesh,faces[f],
                                         iter.point.x, iter.point.y,
@@ -559,9 +568,9 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
   OutlinerVector2D b(DirectionOperations::outputx(proc.direction,t3.b),DirectionOperations::outputy(proc.direction,t3.b));
   OutlinerVector2D c(DirectionOperations::outputx(proc.direction,t3.c),DirectionOperations::outputy(proc.direction,t3.c));
   OutlinerTriangle2D t2(a,b,c);
-  OutlinerBox2D thisBox(x,y,x+lineStepX,y+lineStepY);
+  OutlinerBox2D thisBox(x,y,x+boxStepX,y+boxStepY);
   if (OutlinerMath::boundingBoxIntersectsTriangle2D(t2,thisBox)) {
-    deepdeepdebugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) hits step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
+    infof("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) hits step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
                    mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
                    mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
                    mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
@@ -607,7 +616,7 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
       }
     } 
   } else {
-    deepdeepdebugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) "
+    infof("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) "
                    "for direction %s (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) does NOT hit "
                    "step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
                    mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,

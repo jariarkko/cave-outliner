@@ -43,6 +43,7 @@ struct ProcessorCrossSectionInfo {
   const char* filename;
   OutlinerVector2D start;
   OutlinerVector2D end;
+  outlinerreal width; // in units of one step
   const char* label; // 0 if no label desired
 };
 

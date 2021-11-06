@@ -20,6 +20,7 @@ OBJDIR=	src
 OBJS=	$(OBJDIR)/main.o \
 	$(OBJDIR)/mainconfig.o \
 	$(OBJDIR)/mainoptions.o \
+	$(OBJDIR)/mainoptionshelp.o \
 	$(OBJDIR)/outlinerprocessor.o \
 	$(OBJDIR)/outlinerprocessorcrosssection.o \
 	$(OBJDIR)/outlinerindexedmesh.o \
@@ -52,6 +53,7 @@ HDRS=	src/main.hh \
 SRCS=	src/main.cc \
 	src/mainconfig.cc \
 	src/mainoptions.cc \
+	src/mainoptionshelp.cc \
 	src/outlinerdebug.cc \
 	src/outlinerdirection.cc \
 	src/outlinerprocessor.cc \
@@ -331,6 +333,12 @@ cube-cross-section-test:
 	@./cave-outliner --quiet --pixel --crosssections x 1 test/cube-cross-section-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section.svg
 	@diff -q test/cube-cross-section.svg test/cube-cross-section.svg.expected
 	@diff -q test/cube-cross-section-0.svg test/cube-cross-section-0.svg.expected
+
+cube-cross-section-width-test:
+	@echo 'Running test case cube-cross-section-width-test...'
+	@./cave-outliner --quiet --pixel --crosssectionwith 2 --crosssections x 1 test/cube-cross-section-width-%.svg --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-width.svg
+	@diff -q test/cube-cross-section-width.svg test/cube-cross-section-width.svg.expected
+	@diff -q test/cube-cross-section-width-0.svg test/cube-cross-section-width-0.svg.expected
 
 cube-cross-section-highres-test:
 	@echo 'Running test case cube-cross-section-highres-test...'

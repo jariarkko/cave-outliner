@@ -815,12 +815,15 @@ Processor::processSceneCrossSection(const aiScene* scene,
         crossSection->end.x,
         crossSection->end.y,
         crossSection->filename);
+  assert(crossSection->filename != 0);
+  assert(crossSection->width >= 0.0);
   ProcessorCrossSection csproc(crossSection->filename,
                                crossSection->label,
                                DirectionOperations::screenx(direction),
                                crossSection->start,
                                crossSection->end,
                                stepz,
+                               crossSection->width,
                                *this);
   csproc.processSceneCrossSection(scene);
   if (crossSection->label != 0) {

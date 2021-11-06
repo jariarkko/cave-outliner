@@ -116,8 +116,8 @@ SvgCreator::line(outlinerreal fromX,
   unsigned int toYInt;
   coordinateNormalization(toX,toY,toXInt,toYInt);
 
-  infof("SvgCreator::line (%u,%u) to (%u,%u)",
-        fromXInt,fromYInt,toXInt,toYInt);
+  deepdebugf("SvgCreator::line (%u,%u) to (%u,%u)",
+             fromXInt,fromYInt,toXInt,toYInt);
   addLine(fromXInt,fromYInt,toXInt,toYInt,dashed);
 }
 
@@ -331,6 +331,12 @@ SvgCreator::coordinateNormalization(outlinerreal x,
              x, y,
              xInt, yInt,
              yNormalized, ySize, yStart, yFactor);
+  if (xInt > xSizeMultiplied || yInt > ySizeMultiplied) {
+    infof("xInt %u (/%.2f) from x %.2f start %.2f factor %.2f multiplier %.2f",
+          xInt, xSizeMultiplied, x, xStart, xFactor, multiplier);
+    infof("yInt %u (/%.2f) from y %.2f start %.2f factor %.2f multiplier %.2f",
+          yInt, ySizeMultiplied, y, yStart, yFactor, multiplier);
+  }
   assert(xInt <= xSizeMultiplied);
   assert(yInt <= ySizeMultiplied);
 }

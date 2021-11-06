@@ -11,22 +11,29 @@ Options:
 
     --bounding x x y y z z   Set the bounding box area. Default is the the model's bounding box.
     --step i                 Set the granularity increment. Default is 1.
-    --z                      Generate output as viewed from the z direction, i.e., showing x/y picture.
-    --x                      Generate output as viewed from the x direction, i.e., showing z/y picture.
-    --y                      Generate output as viewed from the y direction, i.e., showing x/z picture.
-    --pixel                  Use the pixel output drawing algorithm (default, fills cave with pixels).
-    --triangle               Use the triangle output drawing algorithm (draws model faces in plan view).
-    --borderpixel            Use the border-only drawing algorithm, draws only the cave walls,
-                             with pixels.
-    --borderline             Use the border-only drawing algorithm, draws only the cave walls,
-                             with lines.
+    --z                      Generate output as viewed from the z direction, i.e.,
+                             showing x/y picture.
+    --x                      Generate output as viewed from the x direction, i.e.,
+                             showing z/y picture.
+    --y                      Generate output as viewed from the y direction, i.e.,
+                             showing x/z picture.
+    --pixel                  Use the pixel output drawing algorithm (default, fills cave
+                             with pixels).
+    --triangle               Use the triangle output drawing algorithm (draws model faces
+                             in plan view).
+    --borderpixel            Use the border-only drawing algorithm, draws only the cave
+                             walls, with pixels.
+    --borderline             Use the border-only drawing algorithm, draws only the cave
+                             walls, with lines.
     --borderactual           Use the border-only drawing algorithm, draws the cave walls using
                              model triangle sides.
-    --crosssection d p file  Produce also a cross section at a given direction (d = x or y) position p,
-                             output to file.
-    --crosssections d n pat  Produce n cross sections at different direction (d = x or y) positions,
-                             output to files (percent sign denotes the cross section number in the
-                             file name pattern).
+    --crosssection d p file  Produce also a cross section at a given direction (d = x or y),
+                             position p, output to file.
+    --crosssections d n pat  Produce n cross sections at different direction (d = x or y)
+                             positions, output to files (percent sign denotes the cross
+                             section number in the file name pattern).
+    --crossectionwidth n     Width of the analysis for a cross section, by default 1.0, i.e.,
+                             one step.
     --label                  Label cross sections
     --linewidth n            Set the width of the lines in output picture. The value can be a
                              decimal number.

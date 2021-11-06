@@ -150,6 +150,8 @@ main(int argc, char** argv) {
       newOne->end.x = 0;
       newOne->end.y = 0;
       newOne->filename = makeFilenameFromPattern(config.automaticCrossSectionFilenamePattern,c);
+      newOne->width = config.crossSectionWidth;
+      infof("used cross section width %.2f", newOne->width);
       newOne->label = config.getCrossSectionLabel();
       debugf("cross section %s file %s at %.2f",
              (newOne->label == 0 ? "(none)" : newOne->label),

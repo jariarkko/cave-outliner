@@ -141,6 +141,10 @@ public:
   enum outlinerdirection crossSectionDirections[outlinermaxcrosssections];
   outlinerreal crossSectionPoints[outlinermaxcrosssections];
   
+  /// Width of cross sections (in unit of one step, e.g., 2.0 means
+  /// analysis of a cross slice looks at two steps of 3D model data).
+  outlinerreal crossSectionWidth;
+
   /// Should we label cross sections in the images?
   bool labelCrossSections;
 
