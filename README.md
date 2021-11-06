@@ -44,6 +44,10 @@ Options:
     --version                Output version information.
     --help                   Print this message.
 
+# Installation
+
+Please read the [installation guide](https://github.com/jariarkko/cave-outliner/blob/master/doc/INSTALL.md).
+
 # Algorithms
 
 Algorithms for drawing plan and other views based on a 3D are discussed in the [paper](https://github.com/jariarkko/cave-outliner/blob/master/doc/Paper.md).
