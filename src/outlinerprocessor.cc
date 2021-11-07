@@ -89,8 +89,10 @@ Processor::Processor(const char* fileNameIn,
   boundingBox2D.end.y = DirectionOperations::outputy(direction,boundingBox.end);
   OutlinerBox2D boundingBox2DExtended(boundingBox2D);
   if (labels) {
-    boundingBox2DExtended.start.y -= ((outlinertitlespacey * stepy) / multiplier);
-    boundingBox2DExtended.end.y += ((outlinertitlespacey * stepy) / multiplier);
+    boundingBox2DExtended.start.y -= (outlinercrosssectionextraline * stepy);
+    boundingBox2DExtended.end.y += (outlinercrosssectionextraline * stepy);
+    boundingBox2DExtended.end.y += (outlinertitlespaceempty * stepy);
+    boundingBox2DExtended.end.y += ((outlinerdefaultfontysize * stepy) / multiplier);
   }
   svg = createSvg(fileName,boundingBox2DExtended,stepx,stepy,direction);
 }
@@ -168,7 +170,7 @@ Processor::processScene(const aiScene* scene,
     // Now there's a matrix filled with a flag for each coordinate,
     // whether there was material or not. And small holes have been filled per above.
     // Draw the output based on all this.
-    if (!matrixToSvg(&matrix,svg,
+    if (!matrixToSvg(&matrix,svg,algorithm,
                      DirectionOperations::outputx(direction,boundingBox.start),
                      DirectionOperations::outputy(direction,boundingBox.start),
                      stepx,
@@ -341,13 +343,14 @@ Processor::faceToTrianglesSvg(const aiScene* scene,
 bool
 Processor::matrixToSvg(MaterialMatrix* theMatrix,
                        SvgCreator* theSvg,
+                       enum outlineralgorithm theAlgorithm,
                        outlinerreal xStart,
                        outlinerreal yStart,
                        outlinerreal xStep,
                        outlinerreal yStep) {
   infof("constructing output core of %ux%u pixels...",
         theMatrix->xIndexSize, theMatrix->yIndexSize);
-  deepdebugf("algorithm %u", algorithm);
+  deepdebugf("algorithm %u", theAlgorithm);
   debugf("  covering model from (%.2f,%.2,f) to (%.2f,%.2f)",
          xStart, yStart,
          xStart + theMatrix->xIndexSize * xStep,
@@ -361,8 +364,8 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
       if (theMatrix->getMaterialMatrix(xIndex,yIndex)) {
         outlinerreal x = xStart + xIndex * xStep;
         outlinerreal y = yStart + yIndex * yStep;
-        debugf("algorithm %u", algorithm);
-        switch (algorithm) {
+        debugf("algorithm %u", theAlgorithm);
+        switch (theAlgorithm) {
         case alg_pixel:
           debugf("pixel alg %u,%u from %.2f,%.2f", xIndex, yIndex, x, y);
           theSvg->pixel(x,y);
@@ -400,7 +403,7 @@ Processor::matrixToSvg(MaterialMatrix* theMatrix,
           errf("Borderactual algorithm is not yet implemented");
           return(0);
         default:
-          errf("Invalid algorithm %u", algorithm);
+          errf("Invalid algorithm %u", theAlgorithm);
           return(0);
         }
       }
@@ -846,10 +849,10 @@ Processor::addCrossSectionLine(const char* label,
   svg->line(actualLine.start.x,actualLine.start.y,
             actualLine.end.x,actualLine.end.y,
             1);
-  infof("    process cross-section line text %.2f - font %u * 0.5 * pixelXSize %.2f = %.2f",
-        actualLine.end.x, outlinerdefaultfontxsize, svg->getPixelXSize(),
-        actualLine.end.x - outlinerdefaultfontxsize * 0.5 * svg->getPixelXSize());
-  svg->text(actualLine.end.x - outlinerdefaultfontxsize * 0.5 * svg->getPixelXSize(),
+  infof("    process cross-section line text %.2f - font %.2f * 0.5 * pixelXSize %.2f = %.2f",
+        actualLine.end.x, outlinerdefaultfontxsizelarge, svg->getPixelXSize(),
+        actualLine.end.x - outlinerdefaultfontxsizelarge * 0.5 * svg->getPixelXSize());
+  svg->text(actualLine.end.x - outlinerdefaultfontxsizelarge * 0.5 * svg->getPixelXSize(),
             actualLine.end.y + outlinerdefaultfontysize * 0.1 * svg->getPixelYSize(),
             label);
 }

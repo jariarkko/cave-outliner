@@ -209,6 +209,10 @@ basic-tests:	cave-outliner \
 		cube-cross-section-label-test \
 		cube-cross-section-highres-label-test \
 		cube-cross-section-multiplier-label-test \
+		cave1-test \
+		cave1-line-test \
+		cave1-x-cross-section-test \
+		cave1-x-cross-section-width-test \
 		house-cross-section-test \
 		house-cross-section-side-test \
 		house-cross-section-another-side-test \
@@ -363,6 +367,32 @@ cube-cross-section-multiplier-label-test:
 	@./cave-outliner --quiet --pixel --label --crosssections x 1 test/cube-cross-section-multiplier-label-%.svg --multiplier 10 --step 0.05 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-multiplier-label.svg
 	@diff -q test/cube-cross-section-multiplier-label.svg test/cube-cross-section-multiplier-label.svg.expected
 	@diff -q test/cube-cross-section-multiplier-label-0.svg test/cube-cross-section-multiplier-label-0.svg.expected
+
+cave1-test:
+	@echo 'Running test case cave1-test...'
+	@./cave-outliner --quiet --pixel --step 0.05 --holethreshold 10 test/cave1.stl test/cave1.svg
+	@diff -q test/cave1.svg test/cave1.svg.expected
+
+cave1-line-test:
+	@echo 'Running test case cave1-line-test...'
+	@./cave-outliner --quiet --borderline --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-line.svg
+	@diff -q test/cave1-line.svg test/cave1-line.svg.expected
+
+cave1-x-cross-section-test:
+	@echo 'Running test case cave1-x-cross-section-test...'
+	@./cave-outliner --quiet --label --borderline --multiplier 5 --crosssections x 3 test/cave1-x-cross-section-%.svg --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-x-cross-section.svg
+	@diff -q test/cave1-x-cross-section.svg test/cave1-x-cross-section-width.svg.expected
+	@diff -q test/cave1-x-cross-section-0.svg test/cave1-x-cross-section-0.svg.expected
+	@diff -q test/cave1-x-cross-section-1.svg test/cave1-x-cross-section-1.svg.expected
+	@diff -q test/cave1-x-cross-section-2.svg test/cave1-x-cross-section-2.svg.expected
+
+cave1-x-cross-section-width-test:
+	@echo 'Running test case cave1-x-cross-section-width-test...'
+	@./cave-outliner --quiet --label --borderline --multiplier 5 --crosssectionwidth 3 --crosssections x 3 test/cave1-x-cross-section-width-%.svg --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-x-cross-section-width.svg
+	@diff -q test/cave1-x-cross-section-width.svg test/cave1-x-cross-section.svg.expected
+	@diff -q test/cave1-x-cross-section-width-0.svg test/cave1-x-cross-section-width-0.svg.expected
+	@diff -q test/cave1-x-cross-section-width-1.svg test/cave1-x-cross-section-width-1.svg.expected
+	@diff -q test/cave1-x-cross-section-width-2.svg test/cave1-x-cross-section-width-2.svg.expected
 
 updateversion:
 	@echo This makefile target updates one software source file based on tags in GitHub,

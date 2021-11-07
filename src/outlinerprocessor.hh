@@ -225,6 +225,7 @@ private:
   
   bool matrixToSvg(MaterialMatrix* theMatrix,
                    SvgCreator* theSvg,
+                   enum outlineralgorithm theAlgorithm,
                    outlinerreal xStart,
                    outlinerreal yStart,
                    outlinerreal xStep,

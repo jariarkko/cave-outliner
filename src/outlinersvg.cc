@@ -103,6 +103,7 @@ SvgCreator::line(outlinerreal fromX,
                  outlinerreal toY,
                  bool dashed) {
 
+  deepdeepdebugf("line %.2f,%.2f to %.2f,%.2f", fromX, fromY, toX, toY);
   if (originalLines == 0 && pixels == 0) {
     infof("  image size %u x %u", xSize, ySize);
   }
@@ -260,6 +261,7 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
 void
 SvgCreator::pixel(outlinerreal x,
                   outlinerreal y) {
+  deepdeepdebugf("pixel %.2f,%.2f", x, y);
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
@@ -275,6 +277,9 @@ void
 SvgCreator::triangle(OutlinerTriangle2D triangle,
                      bool dashed) {
 
+  // Debugs
+  deepdeepdebugf("triangle");
+  
   // Convert coordinates
   unsigned int xIntA, yIntA;
   unsigned int xIntB, yIntB;
@@ -304,15 +309,22 @@ void
 SvgCreator::text(outlinerreal x,
                  outlinerreal y,
                  const char* string) {
-  deepdebugf("SvgCreator::text");
+  // Debugs
   assert(string != 0);
+  deepdeepdebugf("SvgCreator::text %.2f,%.2f: %s", x, y, string);
+
+  // Coordinate conversions
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
+
+  // SVG output
   file << "<text x=\"" << xInt << "\" y=\"" << yInt << "\"";
   file << " fill=\"black\">";
   file << string;
   file << "</text>\n";
+
+  // Statistics updates
   strings++;
   characters += strlen(string);
   debugf("text to (%.2f,%.2f) which is (%u,%u)", x, y, xInt, yInt);
@@ -332,9 +344,9 @@ SvgCreator::coordinateNormalization(outlinerreal x,
              xInt, yInt,
              yNormalized, ySize, yStart, yFactor);
   if (xInt > xSizeMultiplied || yInt > ySizeMultiplied) {
-    infof("xInt %u (/%.2f) from x %.2f start %.2f factor %.2f multiplier %.2f",
+    infof("xInt %u (/%u) from x %.2f start %.2f factor %.2f multiplier %.2f",
           xInt, xSizeMultiplied, x, xStart, xFactor, multiplier);
-    infof("yInt %u (/%.2f) from y %.2f start %.2f factor %.2f multiplier %.2f",
+    infof("yInt %u (/%u) from y %.2f start %.2f factor %.2f multiplier %.2f",
           yInt, ySizeMultiplied, y, yStart, yFactor, multiplier);
   }
   assert(xInt <= xSizeMultiplied);

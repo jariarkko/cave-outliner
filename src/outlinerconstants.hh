@@ -29,10 +29,10 @@
 #define outlinermaxlineholethreshold                                                  20
 #define outlinermaxcrosssections                                                     100
 #define outlinerdefaultlinewidth                                                     1.0
-#define outlinerdefaultfontxsize                                                       8
+#define outlinerdefaultfontxsize                                                     5.6
+#define outlinerdefaultfontxsizelarge                                                8.0
 #define outlinerdefaultfontysize                                                      12
-#define outlinertitlespaceempty                                                        5
-#define outlinertitlespacey           (outlinerdefaultfontysize+outlinertitlespaceempty)
+#define outlinertitlespaceempty                                                        2
 #define outlinertitlespacex                                (outlinerdefaultfontxsize*15)
 #define outlinercrosssectionextraline                                                  5
 #define outlinerepsilon                                                         0.000001 // ppm

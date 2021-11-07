@@ -120,21 +120,33 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   sliceVerticalBoundingBoxExtended.start.y -= freespacearound*stepz;
   sliceVerticalBoundingBoxExtended.end.x += freespacearound*proc.stepy;
   sliceVerticalBoundingBoxExtended.end.y += freespacearound*stepz;
+  infof("  extended cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
+        sliceVerticalBoundingBoxExtended.start.x, sliceVerticalBoundingBoxExtended.start.y,
+        sliceVerticalBoundingBoxExtended.end.x, sliceVerticalBoundingBoxExtended.end.y);
   if (label != 0) {
-    outlinerreal incr = (outlinertitlespacey*stepz) / proc.multiplier;
-    debugf("increasing cross-section image vertical size by %.2f (%u*%.2f)/%.2f to accommodate label",
-           incr, outlinertitlespacey, stepz, proc.multiplier);
+    infof("proc.multiplier %u", proc.multiplier);
+    outlinerreal incr =
+      (outlinerdefaultfontysize*stepz) / proc.multiplier +
+      outlinertitlespaceempty*stepz;
+    infof("increasing cross-section image vertical size by %.2f (%u*%.2f)/%u+(%u*%.2f) to accommodate label",
+          incr, outlinerdefaultfontysize, stepz, proc.multiplier,
+          outlinertitlespaceempty, stepz);
     sliceVerticalBoundingBoxExtended.end.y += incr;
-    if ((sliceVerticalBoundingBoxExtended.end.x - sliceVerticalBoundingBoxExtended.start.x)/proc.stepy < outlinertitlespacex) {
-      outlinerreal incr2 = (outlinertitlespacex*proc.stepy) / proc.multiplier;
-      debugf("increasing cross-section image horizontal size by %.2f (%u*%.2f)/%.2f to accommodate label",
-             incr2, outlinertitlespacex, proc.stepy, proc.multiplier);
+    outlinerreal labelHorizontalSpaceNeeded = outlinertitlespacex / proc.multiplier;
+    outlinerreal horizontalSpaceAvailable = (sliceVerticalBoundingBoxExtended.end.x - sliceVerticalBoundingBoxExtended.start.x)/proc.stepy;
+    infof("horizontal space available %.2f, needed %.2f %.2f/%u (stepy %.2f)",
+          horizontalSpaceAvailable, labelHorizontalSpaceNeeded,
+          outlinertitlespacex, proc.multiplier, proc.stepy);
+    if (horizontalSpaceAvailable < labelHorizontalSpaceNeeded) {
+      outlinerreal incr2 = (labelHorizontalSpaceNeeded - horizontalSpaceAvailable) * proc.stepy;
+      infof("increasing cross-section image horizontal size by %.2f (%f-%2f)*%f to accommodate label",
+            incr2, labelHorizontalSpaceNeeded, horizontalSpaceAvailable, proc.stepy);
       sliceVerticalBoundingBoxExtended.end.x += incr2;
     }
   }
-  debugf("  cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
-         sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
-         sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y);
+  infof("  extended cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
+         sliceVerticalBoundingBoxExtended.start.x, sliceVerticalBoundingBoxExtended.start.y,
+        sliceVerticalBoundingBoxExtended.end.x, sliceVerticalBoundingBoxExtended.end.y);
   
   // Create a material matrix
   outlinerreal lineStepFactor = lineLength/lineSteps;
@@ -148,7 +160,7 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
          sliceVerticalBoundingBox.start.x + proc.stepy * matrix->xIndexSize,
          sliceVerticalBoundingBox.start.y + stepz * matrix->yIndexSize,
          proc.stepy, stepz);
-  debugf("  extended slice bounding box after matrix creation (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
+  infof("  extended slice bounding box after matrix creation (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
         sliceVerticalBoundingBoxExtended.start.x, sliceVerticalBoundingBoxExtended.start.y,
         sliceVerticalBoundingBoxExtended.end.x, sliceVerticalBoundingBoxExtended.end.y,
         proc.stepy, stepz);
@@ -203,7 +215,7 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   // Now there's a matrix filled with a flag for each coordinate,
   // whether there was material or not. And small holes have been filled per above.
   // Draw the output based on all this.
-  proc.matrixToSvg(matrix,svg,
+  proc.matrixToSvg(matrix,svg,alg_pixel,
                    sliceVerticalBoundingBox.start.x,
                    sliceVerticalBoundingBox.start.y,
                    proc.stepx,
