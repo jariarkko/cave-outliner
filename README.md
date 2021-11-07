@@ -15,11 +15,11 @@ With the help of the cave-outliner tool, we can read this model and convert it t
 
 This is the resulting plan view:
 
-![planview](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-model-planview.jpg)
+![planview](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-planview-small.jpg)
 
 And this is one of the three resulting cross-section views:
 
-![crosssection](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-model-crosssection.jpg)
+![crosssection](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-crosssection-small.jpg)
 
 ## Usage
 
