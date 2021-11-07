@@ -32,9 +32,13 @@
 #define outlinerdefaultfontxsize                                                     5.6
 #define outlinerdefaultfontxsizelarge                                                8.0
 #define outlinerdefaultfontysize                                                      12
+#define outlinersmallfont                                                              9
+#define outlinersmallfontxsize                                                       4.0
+#define outlinersmallfontysize                                                       6.0
 #define outlinertitlespaceempty                                                        2
 #define outlinertitlespacex                                (outlinerdefaultfontxsize*15)
 #define outlinercrosssectionextraline                                                  5
+#define outlinerdimensionlinespace                                                     5
 #define outlinerepsilon                                                         0.000001 // ppm
 
 #define OUTLINER_PROG                                                    "cave-outliner"

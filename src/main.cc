@@ -238,6 +238,7 @@ main(int argc, char** argv) {
                       config.holethreshold,
                       config.lineholethreshold,
                       (config.labelCrossSections && config.nCrossSections > 0),
+                      config.dimensions,
                       indexed);
   if (!processor.processScene(scene,
                               config.nCrossSections,

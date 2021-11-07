@@ -62,6 +62,7 @@ MainConfig::MainConfig() :
   nCrossSections(0),
   crossSectionWidth(1.0),
   labelCrossSections(0),
+  dimensions(0),
   crossSectionLabelCount(0) {
 }
 

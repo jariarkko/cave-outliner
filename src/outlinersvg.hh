@@ -35,6 +35,13 @@
 #define OutlinerSvgMaxLineSegments  511
 #define OutlinerSvgMaxLinePoints    (OutlinerSvgMaxLineSegments+1)
 
+#define OutlinerSvgStyle            uint8_t
+#define outlinersvgstyle_none       0x00
+#define outlinersvgstyle_dashed     0x01
+#define outlinersvgstyle_ends       0x02
+#define outlinersvgstyle_legal      (outlinersvgstyle_dashed+outlinersvgstyle_ends)
+#define outlinersvgstyle_illegal    (~(outlinersvgstyle_legal))
+
 struct OutlinerSvgCoord {
   unsigned int x;
   unsigned int y;
@@ -42,7 +49,7 @@ struct OutlinerSvgCoord {
 
 struct OutlinerSvgLine {
   unsigned int refCount;
-  bool dashed;
+  OutlinerSvgStyle style;
   unsigned int nPoints;
   bool printed;
   struct OutlinerSvgCoord points[OutlinerSvgMaxLinePoints];
@@ -88,7 +95,7 @@ class SvgCreator {
             outlinerreal fromY,
             outlinerreal toX,
             outlinerreal toY,
-            bool dashed = 0);
+            OutlinerSvgStyle style = outlinersvgstyle_none);
 
   /// Draw a pixel.
   void pixel(outlinerreal x,
@@ -96,7 +103,7 @@ class SvgCreator {
 
   /// Draw a triangle.
   void triangle(OutlinerTriangle2D triangle,
-                bool dashed = 0);
+                OutlinerSvgStyle style = outlinersvgstyle_none);
 
   /// Write text to the image.
   void text(outlinerreal x,
@@ -151,7 +158,7 @@ class SvgCreator {
                unsigned int y1,
                unsigned int x2,
                unsigned int y2,
-               bool dashed);
+               OutlinerSvgStyle style);
   void emitLine(const struct OutlinerSvgLine& line);
 
   void lineTableInit(void);
@@ -160,7 +167,7 @@ class SvgCreator {
                                        unsigned int y1,
                                        unsigned int x2,
                                        unsigned int y2,
-                                       bool dashed,
+                                       OutlinerSvgStyle style,
                                        unsigned int& matchIndex,
                                        bool& matchesStart,
                                        bool& reverseOriginal);
@@ -170,13 +177,13 @@ class SvgCreator {
                                            bool fromStart);
   struct OutlinerSvgLine* matchingLineAux(unsigned int x,
                                           unsigned int y,
-                                          bool dashed,
+                                          OutlinerSvgStyle style,
                                           bool lookForTailMatch,
                                           unsigned int index);
   struct OutlinerSvgLine* matchingLineAuxAvoid(struct OutlinerSvgLine* avoid,
                                                unsigned int x,
                                                unsigned int y,
-                                               bool dashed,
+                                               OutlinerSvgStyle style,
                                                bool lookForTailMatch,
                                                unsigned int index);
   void lineTableJoin(struct OutlinerSvgLine* entry,

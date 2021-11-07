@@ -148,6 +148,9 @@ public:
   /// Should we label cross sections in the images?
   bool labelCrossSections;
 
+  /// Should we show dimensions?
+  bool dimensions;
+  
 private:
   
   unsigned int crossSectionLabelCount;

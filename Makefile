@@ -381,7 +381,7 @@ cave1-line-test:
 cave1-x-cross-section-test:
 	@echo 'Running test case cave1-x-cross-section-test...'
 	@./cave-outliner --quiet --label --borderline --multiplier 5 --crosssections x 3 test/cave1-x-cross-section-%.svg --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-x-cross-section.svg
-	@diff -q test/cave1-x-cross-section.svg test/cave1-x-cross-section-width.svg.expected
+	@diff -q test/cave1-x-cross-section.svg test/cave1-x-cross-section.svg.expected
 	@diff -q test/cave1-x-cross-section-0.svg test/cave1-x-cross-section-0.svg.expected
 	@diff -q test/cave1-x-cross-section-1.svg test/cave1-x-cross-section-1.svg.expected
 	@diff -q test/cave1-x-cross-section-2.svg test/cave1-x-cross-section-2.svg.expected
@@ -389,7 +389,7 @@ cave1-x-cross-section-test:
 cave1-x-cross-section-width-test:
 	@echo 'Running test case cave1-x-cross-section-width-test...'
 	@./cave-outliner --quiet --label --borderline --multiplier 5 --crosssectionwidth 3 --crosssections x 3 test/cave1-x-cross-section-width-%.svg --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-x-cross-section-width.svg
-	@diff -q test/cave1-x-cross-section-width.svg test/cave1-x-cross-section.svg.expected
+	@diff -q test/cave1-x-cross-section-width.svg test/cave1-x-cross-section-width.svg.expected
 	@diff -q test/cave1-x-cross-section-width-0.svg test/cave1-x-cross-section-width-0.svg.expected
 	@diff -q test/cave1-x-cross-section-width-1.svg test/cave1-x-cross-section-width-1.svg.expected
 	@diff -q test/cave1-x-cross-section-width-2.svg test/cave1-x-cross-section-width-2.svg.expected

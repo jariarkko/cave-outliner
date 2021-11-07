@@ -51,6 +51,7 @@ Processor::Processor(const char* fileNameIn,
                      unsigned int holethresholdIn,
                      unsigned int lineHolethresholdIn,
                      bool labelsIn,
+                     bool dimensionsIn,
                      IndexedMesh& indexedIn) :
   fileName(fileNameIn),
   multiplier(multiplierIn),
@@ -67,6 +68,7 @@ Processor::Processor(const char* fileNameIn,
   holethreshold(holethresholdIn),
   lineHolethreshold(lineHolethresholdIn),
   labels(labelsIn),
+  dimensions(dimensionsIn),
   planviewBoundingBoxStart(DirectionOperations::outputx(direction,boundingBox.start),
                            DirectionOperations::outputy(direction,boundingBox.start)),
   planviewBoundingBoxEnd(DirectionOperations::outputx(direction,boundingBox.end),
@@ -848,7 +850,7 @@ Processor::addCrossSectionLine(const char* label,
          actualLine.end.x,actualLine.end.y);
   svg->line(actualLine.start.x,actualLine.start.y,
             actualLine.end.x,actualLine.end.y,
-            1);
+            outlinersvgstyle_dashed);
   infof("    process cross-section line text %.2f - font %.2f * 0.5 * pixelXSize %.2f = %.2f",
         actualLine.end.x, outlinerdefaultfontxsizelarge, svg->getPixelXSize(),
         actualLine.end.x - outlinerdefaultfontxsizelarge * 0.5 * svg->getPixelXSize());

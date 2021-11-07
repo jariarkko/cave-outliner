@@ -76,6 +76,7 @@ public:
             unsigned int holethresholdIn,
             unsigned int lineHolethresholdIn,
             bool labelsIn,
+            bool dimensionsIn,
             IndexedMesh& indexedIn);
 
   /// Destruct a Processor.
@@ -107,6 +108,7 @@ private:
   unsigned int holethreshold;
   unsigned int lineHolethreshold;
   bool labels;
+  bool dimensions;
   OutlinerVector2D planviewBoundingBoxStart;
   OutlinerVector2D planviewBoundingBoxEnd;
   OutlinerBox2D planviewBoundingBox;

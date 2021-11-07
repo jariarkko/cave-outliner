@@ -163,6 +163,8 @@ MainOptions::processCommandLineOptions(int& argc,
       argc--;argv++;
     } else if (strcmp(argv[1],"--label") == 0) {
       config.labelCrossSections = 1;
+    } else if (strcmp(argv[1],"--dimensions") == 0) {
+      config.dimensions = 1;
     } else if (strcmp(argv[1],"--linewidth") == 0 && argc > 2) {
       float num = atof(argv[2]);
       if (num <= 0.0) {

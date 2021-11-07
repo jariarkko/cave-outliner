@@ -73,6 +73,7 @@ MainOptions::processHelp(void) {
   std::cout << "  --crossectionwidth n     Width of the analysis for a cross section, by default 1.0, i.e.,\n";
   std::cout << "                           one step.\n";
   std::cout << "  --label                  Label cross sections.\n";
+  std::cout << "  --dimensions             Show dimensions of each cave plan view and cross section.\n";
   std::cout << "  --multiplier n           Multiply image size by n (default 1).\n";
   std::cout << "  --linewidth n            Set the width of the lines in output picture. The value can be a\n";
   std::cout << "                           decimal number.\n";
