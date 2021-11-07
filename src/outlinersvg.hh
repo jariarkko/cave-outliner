@@ -108,7 +108,9 @@ class SvgCreator {
   /// Write text to the image.
   void text(outlinerreal x,
             outlinerreal y,
-            const char* string);
+            const char* string,
+            unsigned int fontSize = outlinerdefaultfont,
+            unsigned int rotate = 0);
 
   /// Get the x-direction size of each individual pixel, expressed in
   /// the 3D model coordinate system. For instance, if each pixel

@@ -107,6 +107,8 @@ private:
   MaterialMatrix* matrix;
   Processor& proc;
   SvgCreator* svg;
+  outlinerreal dimensionBottomLabelingSpaceStartY;
+  outlinerreal dimensionRightLabelingSpaceStartX;
   
   //
   // Internal state management
@@ -165,6 +167,25 @@ private:
   bool lineIteratorDone(struct ProcessorCrossSectionLineIterator& iter);
   void lineIteratorNext(struct ProcessorCrossSectionLineIterator& iter);
 
+  //
+  // Empty space around the picture
+  //
+  
+  void addSpaceAround(OutlinerBox2D& pictureBoundingBox,
+                      outlinerreal thisStepX,
+                      outlinerreal thisStepY);
+
+  //
+  // Labels
+  //
+  
+  void addSpaceForLabel(OutlinerBox2D& pictureBoundingBox,
+                        outlinerreal thisStepX,
+                        outlinerreal thisStepY);
+  
+  //
+  // Dimension lines
+  //
 };
 
 #endif // PROCESSORCROSSECTION_HH

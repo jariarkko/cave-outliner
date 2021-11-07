@@ -29,16 +29,25 @@
 #define outlinermaxlineholethreshold                                                  20
 #define outlinermaxcrosssections                                                     100
 #define outlinerdefaultlinewidth                                                     1.0
+#define outlinerdefaultfont                                                           16
 #define outlinerdefaultfontxsize                                                     5.6
 #define outlinerdefaultfontxsizelarge                                                8.0
 #define outlinerdefaultfontysize                                                      12
 #define outlinersmallfont                                                              9
-#define outlinersmallfontxsize                                                       4.0
+#define outlinersmallfontxsize                                                       4.3
 #define outlinersmallfontysize                                                       6.0
 #define outlinertitlespaceempty                                                        2
 #define outlinertitlespacex                                (outlinerdefaultfontxsize*15)
 #define outlinercrosssectionextraline                                                  5
-#define outlinerdimensionlinespace                                                     5
+#define outlinerdimensionlinespaceempty                                                2
+#define outlinerdimensionlinespacelinestart                                            4
+#define outlinerdimensionlinespacewidth                                                3
+#define outlinerdimensionlinespaceemptymore                                            1
+#define outlinerdimensionlinespace                                                     \
+                                                    (outlinerdimensionlinespaceempty + \
+                                                 outlinerdimensionlinespaceemptymore + \
+                                                        outlinerdimensionlinespacewidth)
+#define outlinerdimensionspacex                               (outlinersmallfontxsize*5)
 #define outlinerepsilon                                                         0.000001 // ppm
 
 #define OUTLINER_PROG                                                    "cave-outliner"

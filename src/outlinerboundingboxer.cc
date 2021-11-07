@@ -43,21 +43,28 @@ BoundingBoxer::BoundingBoxer(const aiScene* scene,
   if (!boundingBoxSet) {
     errf("Cannot determine bounding box (empty model?)");
   }
-  boundingBox.start.x -= xIncrease;
-  boundingBox.end.x += xIncrease;
-  boundingBox.start.y -= yIncrease;
-  boundingBox.end.y += yIncrease;
-  boundingBox.start.z -= zIncrease;
-  boundingBox.end.z += zIncrease;
+  increasedBoundingBox = boundingBox;
+  increasedBoundingBox.start.x -= xIncrease;
+  increasedBoundingBox.end.x += xIncrease;
+  increasedBoundingBox.start.y -= yIncrease;
+  increasedBoundingBox.end.y += yIncrease;
+  increasedBoundingBox.start.z -= zIncrease;
+  increasedBoundingBox.end.z += zIncrease;
   infof("  discovered bounding box (%.2f,%.2f,%.2f) to (%.2f,%.2f,%.2f)",
         boundingBox.start.x, boundingBox.start.y, boundingBox.start.z,
         boundingBox.end.x, boundingBox.end.y, boundingBox.end.z);
 }
 
 void
-BoundingBoxer::getBoundingBox(OutlinerBox3D& boundingBoxOut) {
+BoundingBoxer::getOriginalBoundingBox(OutlinerBox3D& boundingBoxOut) {
   assert(boundingBoxSet);
   boundingBoxOut = boundingBox;
+}
+
+void
+BoundingBoxer::getIncreasedBoundingBox(OutlinerBox3D& boundingBoxOut) {
+  assert(boundingBoxSet);
+  boundingBoxOut = increasedBoundingBox;
 }
 
 BoundingBoxer::~BoundingBoxer() {

@@ -116,33 +116,19 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   
   // Increase bounding box to each side for the actual image
   OutlinerBox2D sliceVerticalBoundingBoxExtended = sliceVerticalBoundingBox;
-  sliceVerticalBoundingBoxExtended.start.x -= freespacearound*proc.stepy;
-  sliceVerticalBoundingBoxExtended.start.y -= freespacearound*stepz;
-  sliceVerticalBoundingBoxExtended.end.x += freespacearound*proc.stepy;
-  sliceVerticalBoundingBoxExtended.end.y += freespacearound*stepz;
-  infof("  extended cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
-        sliceVerticalBoundingBoxExtended.start.x, sliceVerticalBoundingBoxExtended.start.y,
-        sliceVerticalBoundingBoxExtended.end.x, sliceVerticalBoundingBoxExtended.end.y);
+  addSpaceAround(sliceVerticalBoundingBoxExtended,proc.stepy,stepz);
   if (label != 0) {
-    infof("proc.multiplier %u", proc.multiplier);
-    outlinerreal incr =
-      (outlinerdefaultfontysize*stepz) / proc.multiplier +
-      outlinertitlespaceempty*stepz;
-    infof("increasing cross-section image vertical size by %.2f (%u*%.2f)/%u+(%u*%.2f) to accommodate label",
-          incr, outlinerdefaultfontysize, stepz, proc.multiplier,
-          outlinertitlespaceempty, stepz);
-    sliceVerticalBoundingBoxExtended.end.y += incr;
-    outlinerreal labelHorizontalSpaceNeeded = outlinertitlespacex / proc.multiplier;
-    outlinerreal horizontalSpaceAvailable = (sliceVerticalBoundingBoxExtended.end.x - sliceVerticalBoundingBoxExtended.start.x)/proc.stepy;
-    infof("horizontal space available %.2f, needed %.2f %.2f/%u (stepy %.2f)",
-          horizontalSpaceAvailable, labelHorizontalSpaceNeeded,
-          outlinertitlespacex, proc.multiplier, proc.stepy);
-    if (horizontalSpaceAvailable < labelHorizontalSpaceNeeded) {
-      outlinerreal incr2 = (labelHorizontalSpaceNeeded - horizontalSpaceAvailable) * proc.stepy;
-      infof("increasing cross-section image horizontal size by %.2f (%f-%2f)*%f to accommodate label",
-            incr2, labelHorizontalSpaceNeeded, horizontalSpaceAvailable, proc.stepy);
-      sliceVerticalBoundingBoxExtended.end.x += incr2;
-    }
+    addSpaceForLabel(sliceVerticalBoundingBoxExtended,proc.stepy,stepz);
+  }
+  
+  // Add space for the line and text underneath
+  if (proc.dimensions) {
+    proc.addSpaceForDimensions(sliceVerticalBoundingBox,
+                               sliceVerticalBoundingBoxExtended,
+                               dimensionBottomLabelingSpaceStartY,
+                               dimensionRightLabelingSpaceStartX,
+                               proc.stepy,
+                               stepz);
   }
   infof("  extended cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
          sliceVerticalBoundingBoxExtended.start.x, sliceVerticalBoundingBoxExtended.start.y,
@@ -218,9 +204,19 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   proc.matrixToSvg(matrix,svg,alg_pixel,
                    sliceVerticalBoundingBox.start.x,
                    sliceVerticalBoundingBox.start.y,
-                   proc.stepx,
+                   proc.stepy,
                    stepz);
-
+  
+  // Add dimension lines, if any
+  if (proc.dimensions) {
+    proc.addDimensionLines(svg,
+                           sliceVerticalBoundingBox,
+                           dimensionBottomLabelingSpaceStartY,
+                           dimensionRightLabelingSpaceStartX,
+                           proc.stepy,
+                           stepz);
+  }
+  
   // Main result (plan view) is done, flush the image output
   deleteSvg();
 
@@ -640,3 +636,49 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
                    thisBox.end.x, thisBox.end.y);
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Labels /////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+ProcessorCrossSection::addSpaceForLabel(OutlinerBox2D& pictureBoundingBox,
+                                        outlinerreal thisStepX,
+                                        outlinerreal thisStepY) {
+  infof("proc.multiplier %u", proc.multiplier);
+  outlinerreal incr =
+    (outlinerdefaultfontysize*thisStepY) / proc.multiplier +
+    outlinertitlespaceempty*thisStepY;
+  infof("increasing cross-section image vertical size by %.2f (%u*%.2f)/%u+(%u*%.2f) to accommodate label",
+        incr, outlinerdefaultfontysize, thisStepY, proc.multiplier,
+        outlinertitlespaceempty, thisStepY);
+  pictureBoundingBox.end.y += incr;
+  outlinerreal labelHorizontalSpaceNeeded = outlinertitlespacex / proc.multiplier;
+  outlinerreal horizontalSpaceAvailable = (pictureBoundingBox.end.x - pictureBoundingBox.start.x)/proc.stepy;
+  infof("horizontal space available %.2f, needed %.2f %.2f/%u (stepy %.2f)",
+        horizontalSpaceAvailable, labelHorizontalSpaceNeeded,
+        outlinertitlespacex, proc.multiplier, proc.stepy);
+  if (horizontalSpaceAvailable < labelHorizontalSpaceNeeded) {
+    outlinerreal incr2 = (labelHorizontalSpaceNeeded - horizontalSpaceAvailable) * proc.stepy;
+    infof("increasing cross-section image horizontal size by %.2f (%f-%2f)*%f to accommodate label",
+          incr2, labelHorizontalSpaceNeeded, horizontalSpaceAvailable, proc.stepy);
+    pictureBoundingBox.end.x += incr2;
+  }
+}
+
+void
+ProcessorCrossSection::addSpaceAround(OutlinerBox2D& pictureBoundingBox,
+                                      outlinerreal thisStepX,
+                                      outlinerreal thisStepY) {
+  pictureBoundingBox.start.x -= freespacearound*thisStepX;
+  pictureBoundingBox.start.y -= freespacearound*thisStepY;
+  pictureBoundingBox.end.x += freespacearound*thisStepX;
+  pictureBoundingBox.end.y += freespacearound*thisStepY;
+  infof("  extended cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
+        pictureBoundingBox.start.x, pictureBoundingBox.start.y,
+        pictureBoundingBox.end.x, pictureBoundingBox.end.y);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Dimension lines ////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////

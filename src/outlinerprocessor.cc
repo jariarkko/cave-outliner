@@ -38,20 +38,21 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 Processor::Processor(const char* fileNameIn,
-                     unsigned int multiplierIn,
-                     bool smoothIn,
-                     bool mergedLinesIn,
-                     float linewidthIn,
-                     OutlinerBox3D boundingBoxIn,
-                     outlinerreal stepxIn,
-                     outlinerreal stepyIn,
-                     outlinerreal stepzIn,
-                     enum outlinerdirection directionIn,
-                     enum outlineralgorithm algorithmIn,
-                     unsigned int holethresholdIn,
-                     unsigned int lineHolethresholdIn,
-                     bool labelsIn,
-                     bool dimensionsIn,
+                     const unsigned int multiplierIn,
+                     const bool smoothIn,
+                     const bool mergedLinesIn,
+                     const float linewidthIn,
+                     const OutlinerBox3D& originalBoundingBoxIn,
+                     const OutlinerBox3D& boundingBoxIn,
+                     const outlinerreal stepxIn,
+                     const outlinerreal stepyIn,
+                     const outlinerreal stepzIn,
+                     const enum outlinerdirection directionIn,
+                     const enum outlineralgorithm algorithmIn,
+                     const unsigned int holethresholdIn,
+                     const unsigned int lineHolethresholdIn,
+                     const bool labelsIn,
+                     const bool dimensionsIn,
                      IndexedMesh& indexedIn) :
   fileName(fileNameIn),
   multiplier(multiplierIn),
@@ -59,6 +60,7 @@ Processor::Processor(const char* fileNameIn,
   mergedLines(mergedLinesIn),
   linewidth(linewidthIn),
   svg(0),
+  originalBoundingBox(originalBoundingBoxIn),
   boundingBox(boundingBoxIn),
   stepx(stepxIn),
   stepy(stepyIn),
@@ -69,11 +71,14 @@ Processor::Processor(const char* fileNameIn,
   lineHolethreshold(lineHolethresholdIn),
   labels(labelsIn),
   dimensions(dimensionsIn),
-  planviewBoundingBoxStart(DirectionOperations::outputx(direction,boundingBox.start),
-                           DirectionOperations::outputy(direction,boundingBox.start)),
-  planviewBoundingBoxEnd(DirectionOperations::outputx(direction,boundingBox.end),
-                         DirectionOperations::outputy(direction,boundingBox.end)),
-  planviewBoundingBox(planviewBoundingBoxStart,planviewBoundingBoxEnd),
+  originalPlanviewBoundingBox(DirectionOperations::outputx(direction,originalBoundingBox.start),
+                                DirectionOperations::outputy(direction,originalBoundingBox.start),
+                                DirectionOperations::outputx(direction,originalBoundingBox.end),
+                                DirectionOperations::outputy(direction,originalBoundingBox.end)),
+  planviewBoundingBox(DirectionOperations::outputx(direction,boundingBox.start),
+                      DirectionOperations::outputy(direction,boundingBox.start),
+                      DirectionOperations::outputx(direction,boundingBox.end),
+                      DirectionOperations::outputy(direction,boundingBox.end)),
   matrix(planviewBoundingBox,
          stepxIn,
          stepyIn),
@@ -85,17 +90,27 @@ Processor::Processor(const char* fileNameIn,
   if (lineHolethreshold > outlinermaxlineholethreshold) {
     errf("Cannot compute line hole thresholds larger than %u (%u given)", outlinermaxlineholethreshold, lineHolethreshold);
   }
-  boundingBox2D.start.x = DirectionOperations::outputx(direction,boundingBox.start);
-  boundingBox2D.start.y = DirectionOperations::outputy(direction,boundingBox.start);
-  boundingBox2D.end.x = DirectionOperations::outputx(direction,boundingBox.end);
-  boundingBox2D.end.y = DirectionOperations::outputy(direction,boundingBox.end);
+  boundingBox2D = planviewBoundingBox;
   OutlinerBox2D boundingBox2DExtended(boundingBox2D);
+
+  // Add spacce for labels
   if (labels) {
-    boundingBox2DExtended.start.y -= (outlinercrosssectionextraline * stepy);
-    boundingBox2DExtended.end.y += (outlinercrosssectionextraline * stepy);
-    boundingBox2DExtended.end.y += (outlinertitlespaceempty * stepy);
-    boundingBox2DExtended.end.y += ((outlinerdefaultfontysize * stepy) / multiplier);
+    addSpaceForLabels(boundingBox2DExtended,
+                      stepx,
+                      stepy);
   }
+  
+  // Add space for the line and text underneath
+  if (dimensions) {
+    addSpaceForDimensions(originalPlanviewBoundingBox,
+                          boundingBox2DExtended,
+                          dimensionBottomLabelingSpaceStartY,
+                          dimensionRightLabelingSpaceStartX,
+                          stepx,
+                          stepy);
+  }
+  
+  // Create the actual SVG object (but contents to be added later)
   svg = createSvg(fileName,boundingBox2DExtended,stepx,stepy,direction);
 }
 
@@ -197,7 +212,17 @@ Processor::processScene(const aiScene* scene,
     return(0);
       
   }
-  
+
+  // Add dimension lines, if any
+  if (dimensions) {
+    addDimensionLines(svg,
+                      originalPlanviewBoundingBox,
+                      dimensionBottomLabelingSpaceStartY,
+                      dimensionRightLabelingSpaceStartX,
+                      stepx,
+                      stepy);
+  }
+
   // Process cross sections
   if (!processSceneCrossSections(scene,nCrossSections,crossSections)) {
     return(0);
@@ -263,6 +288,125 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
   }
   
   return(1);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Model processing -- labels /////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Processor::addSpaceForLabels(OutlinerBox2D& pictureBoundingBox,
+                             const outlinerreal thisStepX,
+                             const outlinerreal thisStepY) {
+  pictureBoundingBox.start.y -= (outlinercrosssectionextraline * thisStepY);
+  pictureBoundingBox.end.y += (outlinercrosssectionextraline * thisStepY);
+  pictureBoundingBox.end.y += (outlinertitlespaceempty * thisStepY);
+  pictureBoundingBox.end.y += ((outlinerdefaultfontysize * thisStepY) / multiplier);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Model processing -- dimension lines ////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+Processor::addSpaceForDimensions(const OutlinerBox2D& objectBoundingBox,
+                                 OutlinerBox2D& pictureBoundingBox,
+                                 outlinerreal& bottomDimensionLabelingStartY,
+                                 outlinerreal& rightDimensionLabelingStartX,
+                                 const outlinerreal thisStepX,
+                                 const outlinerreal thisStepY) {
+
+  // Add space underneath to fit in the length line and text
+  bottomDimensionLabelingStartY =  pictureBoundingBox.start.y;
+  rightDimensionLabelingStartX = pictureBoundingBox.end.x;
+  pictureBoundingBox.start.y -= (outlinerdimensionlinespace * thisStepY);
+  pictureBoundingBox.start.y -= (outlinersmallfontysize * thisStepY) / multiplier;
+  
+  // Is the picture in general big enough to take the string length
+  // for the label underneath?
+  outlinerreal dimensionHorizontalSpaceNeeded = outlinerdimensionspacex / multiplier;
+  outlinerreal horizontalSpaceAvailable = (objectBoundingBox.end.x - objectBoundingBox.start.x)/thisStepX;
+  if (horizontalSpaceAvailable < dimensionHorizontalSpaceNeeded) {
+    outlinerreal incr = (dimensionHorizontalSpaceNeeded - horizontalSpaceAvailable) * thisStepX + 2*thisStepX;
+    infof("increasing image horizontal size by %.2f to accommodate dimension text",
+          incr);
+    pictureBoundingBox.start.x = outlinermin(pictureBoundingBox.start.x,objectBoundingBox.start.x - incr/2);
+    pictureBoundingBox.end.x = outlinermax(pictureBoundingBox.end.x,objectBoundingBox.end.x + incr/2);
+  }
+
+  // Add space to the right side to fit the length line and text
+  pictureBoundingBox.end.x += (outlinerdimensionlinespace * thisStepX);
+  pictureBoundingBox.end.x += (outlinersmallfontysize * thisStepX) / multiplier;
+  
+  // Is the picture in general big enough to take the string length
+  // for the label on the right side?
+  outlinerreal dimensionVerticalSpaceNeeded = outlinerdimensionspacex / multiplier;
+  outlinerreal verticalSpaceAvailable = (objectBoundingBox.end.y - objectBoundingBox.start.y)/thisStepY;
+  if (verticalSpaceAvailable < dimensionVerticalSpaceNeeded) {
+    outlinerreal incr = (dimensionVerticalSpaceNeeded - verticalSpaceAvailable) * thisStepY + 2*thisStepY;
+    infof("increasing image vertical size by %.2f to accommodate dimension text",
+          incr);
+    pictureBoundingBox.start.y = outlinermin(pictureBoundingBox.start.y,objectBoundingBox.start.y - incr/2);
+    pictureBoundingBox.end.y = outlinermax(pictureBoundingBox.end.y,objectBoundingBox.end.y + incr/2);
+  }
+}
+
+void
+Processor::addDimensionLines(SvgCreator* theSvg,
+                             const OutlinerBox2D& objectBoundingBox,
+                             outlinerreal bottomDimensionLabelingStartY,
+                             outlinerreal rightDimensionLabelingStartX,
+                             const outlinerreal thisStepX,
+                             const outlinerreal thisStepY) {
+
+  // Bottom line
+  outlinerreal bottomLineStart =  bottomDimensionLabelingStartY - outlinerdimensionlinespacelinestart * thisStepY;
+  theSvg->line(objectBoundingBox.start.x,
+               bottomLineStart,
+               objectBoundingBox.end.x + thisStepX,
+               bottomLineStart,
+               outlinersvgstyle_ends);
+
+  // Bottom text
+  outlinerreal bottomTextStartX =  (objectBoundingBox.end.x + objectBoundingBox.start.x) / 2.0;
+  outlinerreal bottomTextStartY =
+    bottomDimensionLabelingStartY -
+    outlinerdimensionlinespace * thisStepY -
+    (outlinersmallfontysize * thisStepY) / multiplier;
+  outlinerreal diffX = objectBoundingBox.end.x - objectBoundingBox.start.x;
+  char bufX[20];
+  memset(bufX,0,sizeof(bufX));
+  snprintf(bufX,sizeof(bufX)-1,"%.2fm",diffX);
+  bottomTextStartX -= (((strlen(bufX) / 2.0) * outlinersmallfontxsize) * thisStepX) / multiplier;
+  infof("addDimensionLines bottom text %s at %.2f %.2f", bufX, bottomTextStartX, bottomTextStartY);
+  theSvg->text(bottomTextStartX,bottomTextStartY,bufX,outlinersmallfont);
+  
+  // Right side line
+  outlinerreal rightLineStart =  rightDimensionLabelingStartX + outlinerdimensionlinespacelinestart * thisStepX;
+  theSvg->line(rightLineStart,
+               objectBoundingBox.start.y - thisStepY,
+               rightLineStart,
+               objectBoundingBox.end.y,
+               outlinersvgstyle_ends);
+  
+  // Right side text
+  outlinerreal rightTextStartX =  
+    rightDimensionLabelingStartX +
+    outlinerdimensionlinespace * thisStepX;
+  outlinerreal rightTextStartY = (objectBoundingBox.end.y + objectBoundingBox.start.y) / 2.0;
+  infof("right text y %.2f from %.2f+%.2f/2",
+        rightTextStartY,
+        objectBoundingBox.end.y, objectBoundingBox.start.y);
+  outlinerreal diffY = objectBoundingBox.end.y - objectBoundingBox.start.y;
+  char bufY[20];
+  memset(bufY,0,sizeof(bufY));
+  snprintf(bufY,sizeof(bufY)-1,"%.2fm",diffY);
+  infof("addDimensionLines right text now at %.2f %.2f", rightTextStartX, rightTextStartY);
+  rightTextStartY += (((strlen(bufY) / 2.0) * outlinersmallfontxsize) * thisStepY) / multiplier;
+  infof("addDimensionLines right text %s at %.2f %.2f (string %u fontxsize %.2f thisstepy %.2f)",
+        bufY, rightTextStartX, rightTextStartY,
+        strlen(bufY), outlinersmallfontxsize, thisStepY);
+  theSvg->text(rightTextStartX,rightTextStartY,bufY,outlinersmallfont,90);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

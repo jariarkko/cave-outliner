@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+          "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+     width="36" height="28">
+<rect x="0" y="0" width="36" height="28" fill="white" stroke="white" stroke-width="0"/>
+<rect x="9" y="13" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="9" y="12" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="9" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="9" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="9" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="10" y="13" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="10" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="10" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="11" y="13" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="11" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="11" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="12" y="13" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="12" y="12" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="12" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="12" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="12" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="13" y="13" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="13" y="12" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="13" y="11" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="13" y="10" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="13" y="9" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<text x="1" y="27" fill="black" font-size="9px">2.00m</text>
+<text x="0" y="0" fill="black" font-size="9px" transform="translate(21,0) rotate(90)">2.00m</text>
+<line x1="19" y1="14" x2="19" y2="9" fill="none" stroke="black" stroke-width="1" />
+<line x1="18" y1="14" x2="20" y2="14" fill="none" stroke="black" stroke-width="1" />
+<line x1="18" y1="9" x2="20" y2="9" fill="none" stroke="black" stroke-width="1" />
+<line x1="9" y1="19" x2="14" y2="19" fill="none" stroke="black" stroke-width="1" />
+<line x1="9" y1="18" x2="9" y2="20" fill="none" stroke="black" stroke-width="1" />
+<line x1="14" y1="18" x2="14" y2="20" fill="none" stroke="black" stroke-width="1" />
+</svg>

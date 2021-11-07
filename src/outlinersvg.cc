@@ -275,14 +275,15 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
   // Styles that add something beyond the line itself
   if ((line.style & outlinersvgstyle_ends) != 0) {
 
+    unsigned int notch = 1 + multiplier/2;
     unsigned int xDiff;
     unsigned int yDiff;
     if (line.points[0].x == line.points[line.nPoints-1].x) {
-      xDiff = 1;
+      xDiff = notch;
       yDiff = 0;
     } else if (line.points[0].y == line.points[line.nPoints-1].y) {
       xDiff = 0;
-      yDiff = 1;
+      yDiff = notch;
     } else {
       errf("Line endpoints style not supported for non-vertical/horizontal lines");
       exit(1);
@@ -292,6 +293,7 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
     end1line.refCount = 0;
     end1line.style = line.style - outlinersvgstyle_ends;
     end1line.printed = 0;
+    end1line.nPoints = 2;
     end1line.points[0].x = line.points[0].x - xDiff;
     end1line.points[0].y = line.points[0].y - yDiff;
     end1line.points[1].x = line.points[0].x + xDiff;
@@ -302,6 +304,7 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
     end2line.refCount = 0;
     end2line.style = line.style - outlinersvgstyle_ends;
     end2line.printed = 0;
+    end2line.nPoints = 2;
     end2line.points[0].x = line.points[line.nPoints-1].x - xDiff;
     end2line.points[0].y = line.points[line.nPoints-1].y - yDiff;
     end2line.points[1].x = line.points[line.nPoints-1].x + xDiff;
@@ -365,7 +368,9 @@ SvgCreator::triangle(OutlinerTriangle2D triangle,
 void
 SvgCreator::text(outlinerreal x,
                  outlinerreal y,
-                 const char* string) {
+                 const char* string,
+                 unsigned int fontSize,
+                 unsigned int rotate) {
   // Debugs
   assert(string != 0);
   deepdeepdebugf("SvgCreator::text %.2f,%.2f: %s", x, y, string);
@@ -374,17 +379,27 @@ SvgCreator::text(outlinerreal x,
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
+  unsigned int translateX = rotate != 0 ? xInt : 0;
+  unsigned int translateY = rotate != 0 ? yInt : 0;
+  if (rotate) xInt = yInt = 0;
 
   // SVG output
   file << "<text x=\"" << xInt << "\" y=\"" << yInt << "\"";
-  file << " fill=\"black\">";
+  file << " fill=\"black\"";
+  if (fontSize != outlinerdefaultfont) {
+    file << " font-size=\"" << fontSize << "px\"";
+  }
+  if (rotate != 0) {
+    file << " transform=\"translate(" << translateX << "," << translateY << ") rotate(" << rotate << ")\"";
+   }
+  file << ">";
   file << string;
   file << "</text>\n";
 
   // Statistics updates
   strings++;
   characters += strlen(string);
-  debugf("text to (%.2f,%.2f) which is (%u,%u)", x, y, xInt, yInt);
+  infof("text to (%.2f,%.2f) which is (%u,%u)", x, y, xInt, yInt);
 }
 
 void

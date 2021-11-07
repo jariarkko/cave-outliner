@@ -63,20 +63,21 @@ public:
 
   /// Create a Processor.
   Processor(const char* fileNameIn,
-            unsigned int multiplierIn,
-            bool smoothIn,
-            bool mergedLinesIn,
-            float linewidthIn,
-            OutlinerBox3D boundingBoxIn,
-            outlinerreal stepxIn,
-            outlinerreal stepyIn,
-            outlinerreal stepzIn,
-            enum outlinerdirection directionIn,
-            enum outlineralgorithm algorithmIn,
-            unsigned int holethresholdIn,
-            unsigned int lineHolethresholdIn,
-            bool labelsIn,
-            bool dimensionsIn,
+            const unsigned int multiplierIn,
+            const bool smoothIn,
+            const bool mergedLinesIn,
+            const float linewidthIn,
+            const OutlinerBox3D& originalBoundingBoxIn,
+            const OutlinerBox3D& boundingBoxIn,
+            const outlinerreal stepxIn,
+            const outlinerreal stepyIn,
+            const outlinerreal stepzIn,
+            const enum outlinerdirection directionIn,
+            const enum outlineralgorithm algorithmIn,
+            const unsigned int holethresholdIn,
+            const unsigned int lineHolethresholdIn,
+            const bool labelsIn,
+            const bool dimensionsIn,
             IndexedMesh& indexedIn);
 
   /// Destruct a Processor.
@@ -92,29 +93,31 @@ private:
 
   friend class ProcessorCrossSection;
   const char* fileName;
-  unsigned int multiplier;
-  bool smooth;
-  bool mergedLines;
-  float linewidth;
+  const unsigned int multiplier;
+  const bool smooth;
+  const bool mergedLines;
+  const float linewidth;
   SvgCreator* svg;
   const unsigned int maxNeighbors = 8;
-  OutlinerBox3D boundingBox;
+  const OutlinerBox3D originalBoundingBox;
+  const OutlinerBox3D boundingBox;
   OutlinerBox2D boundingBox2D;
-  outlinerreal stepx;
-  outlinerreal stepy;
-  outlinerreal stepz;
-  enum outlinerdirection direction;
-  enum outlineralgorithm algorithm;
-  unsigned int holethreshold;
-  unsigned int lineHolethreshold;
-  bool labels;
-  bool dimensions;
-  OutlinerVector2D planviewBoundingBoxStart;
-  OutlinerVector2D planviewBoundingBoxEnd;
-  OutlinerBox2D planviewBoundingBox;
+  const outlinerreal stepx;
+  const outlinerreal stepy;
+  const outlinerreal stepz;
+  const enum outlinerdirection direction;
+  const enum outlineralgorithm algorithm;
+  const unsigned int holethreshold;
+  const unsigned int lineHolethreshold;
+  const bool labels;
+  const bool dimensions;
+  const OutlinerBox2D originalPlanviewBoundingBox;
+  const OutlinerBox2D planviewBoundingBox;
   MaterialMatrix matrix;
   IndexedMesh& indexed;
-
+  outlinerreal dimensionBottomLabelingSpaceStartY;
+  outlinerreal dimensionRightLabelingSpaceStartX;
+  
   //
   // Matrix operations
   //
@@ -208,6 +211,31 @@ private:
   outlinerreal indexToCoordinateX(unsigned int xIndex);
   outlinerreal indexToCoordinateY(unsigned int yIndex);
 
+  //
+  // Labels
+  //
+  
+  void addSpaceForLabels(OutlinerBox2D& pictureBoundingBox,
+                         const outlinerreal thisStepX,
+                         const outlinerreal thisStepY);
+  
+  //
+  // Dimension lines
+  //
+
+  void addSpaceForDimensions(const OutlinerBox2D& objectBoundingBox,
+                             OutlinerBox2D& pictureBoundingBox,
+                             outlinerreal& bottomDimensionLabelingStartY,
+                             outlinerreal& rightDimensionLabelingStartX,
+                             const outlinerreal thisStepX,
+                             const outlinerreal thisStepY);
+  void addDimensionLines(SvgCreator* theSvg,
+                         const OutlinerBox2D& objectBoundingBox,
+                         outlinerreal bottomDimensionLabelingStartY,
+                         outlinerreal rightDimensionLabelingStartX,
+                         const outlinerreal thisStepX,
+                         const outlinerreal thisStepY);
+  
   //
   // Cross sections
   //

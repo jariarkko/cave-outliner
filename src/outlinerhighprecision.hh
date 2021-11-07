@@ -57,6 +57,9 @@ public:
   OutlinerVector2D(const outlinerreal xIn,
                    const outlinerreal yIn) : x(xIn), y(yIn) {}
 
+  /// Assignment
+  OutlinerVector2D& operator=(const OutlinerVector2D& in) { x = in.x; y = in.y; return(*this); }
+  
   /// Test for equality.
   bool equal(const OutlinerVector2D& b) const;
 
@@ -94,6 +97,11 @@ public:
   OutlinerVector3D(const outlinerreal xIn,
                    const outlinerreal yIn,
                    const outlinerreal zIn) : x(xIn), y(yIn), z(zIn) {}
+  
+  /// Assignment
+  OutlinerVector3D& operator=(const OutlinerVector3D& in) { x = in.x; y = in.y; z = in.z; return(*this); }
+  
+  /// Test for equality.
   bool equal(const OutlinerVector3D& b) const;
 
   /// Run unit tests associated with this class.
@@ -134,6 +142,9 @@ public:
                  const outlinerreal startY,
                  const outlinerreal endX,
                  const outlinerreal endY) : start(startX,startY), end(endX,endY) {}
+
+  // Assignment.
+  OutlinerLine2D& operator=(const OutlinerLine2D& in) { start = in.start; end = in.end; return(*this); }
   
   /// Run unit tests associated with this class.
   static void test(void);
@@ -171,6 +182,9 @@ public:
                  const outlinerreal endX,
                  const outlinerreal endY,
                  const outlinerreal endZ) : start(startX,startY,startZ), end(endX,endY,endZ) {}
+  
+  // Assignment.
+  OutlinerLine3D& operator=(const OutlinerLine3D& in) { start = in.start; end = in.end; return(*this); }
   
   /// Run unit tests associated with this class.
   static void test(void);
@@ -210,6 +224,9 @@ public:
                 const outlinerreal startY,
                 const outlinerreal endX,
                 const outlinerreal endY) : start(startX,startY), end(endX,endY) {}
+
+  /// Assignment
+  OutlinerBox2D& operator=(const OutlinerBox2D& in) { start = in.start; end = in.end; return(*this); }
   
   /// Test for equality.
   bool equal(const OutlinerBox2D& box2) const;
@@ -272,6 +289,9 @@ public:
                 const outlinerreal endY,
                 const outlinerreal endZ) : start(startX,startY,startZ), end(endX,endY,endZ) {}
   
+  /// Assignment
+  OutlinerBox3D& operator=(const OutlinerBox3D& in) { start = in.start; end = in.end; return(*this); }
+  
   /// Run unit tests associated with this class.
   static void test(void);
 };
@@ -309,6 +329,9 @@ public:
                      const OutlinerVector2D& bIn,
                      const OutlinerVector2D& cIn) : a(aIn), b(bIn), c(cIn) {}
 
+  /// Assignment.
+  OutlinerTriangle2D& operator=(const OutlinerTriangle2D& in) { a = in.a; b = in.b; c = in.c; return(*this); }
+  
   /// Run unit tests associated with this class.
   static void test(void);
 };
@@ -342,6 +365,9 @@ public:
                      const OutlinerVector3D& bIn,
                      const OutlinerVector3D& cIn) : a(aIn), b(bIn), c(cIn) {}
 
+  /// Assignment.
+  OutlinerTriangle3D& operator=(const OutlinerTriangle3D& in) { a = in.a; b = in.b; c = in.c; return(*this); }
+  
   /// Run unit tests associated with this class.
   static void test(void);
 };

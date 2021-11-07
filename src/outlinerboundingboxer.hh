@@ -47,7 +47,10 @@ public:
                 outlinerreal zIncrease);
 
   /// Calculate the bounding box.
-  void getBoundingBox(OutlinerBox3D& boundingBoxOut);
+  void getOriginalBoundingBox(OutlinerBox3D& boundingBoxOut);
+  
+  /// Calculate the bounding box, with a given extra space around
+  void getIncreasedBoundingBox(OutlinerBox3D& boundingBoxOut);
 
   /// Release all resources associated with the bounding box calculation.
   ~BoundingBoxer();
@@ -55,7 +58,8 @@ public:
 private:
   bool boundingBoxSet;
   OutlinerBox3D boundingBox;
-
+  OutlinerBox3D increasedBoundingBox;
+  
   void boundingScene(const aiScene* scene);
   void boundingNode(const aiScene* scene,
                     const aiNode* node);

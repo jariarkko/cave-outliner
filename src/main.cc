@@ -101,14 +101,16 @@ main(int argc, char** argv) {
   }
   
   // Determine bounding box, if not specified
+  BoundingBoxer boxer(scene,
+                      config.stepx,
+                      config.stepy,
+                      config.stepz);
+  OutlinerBox3D originalBoundingBox;
+  boxer.getOriginalBoundingBox(originalBoundingBox);
   if (!config.boundingBoxSet) {
-    BoundingBoxer boxer(scene,
-                        config.stepx,
-                        config.stepy,
-                        config.stepz);
-    boxer.getBoundingBox(config.boundingBox);
+    boxer.getIncreasedBoundingBox(config.boundingBox);
   }
-
+  
   // Derive some size information
   outlinerreal xOutputStart = DirectionOperations::outputx(config.direction,config.boundingBox.start);
   outlinerreal xOutputEnd = DirectionOperations::outputx(config.direction,config.boundingBox.end);
@@ -229,6 +231,7 @@ main(int argc, char** argv) {
                       config.smooth,
                       config.mergedLines,
                       config.linewidth,
+                      originalBoundingBox,
                       config.boundingBox,
                       config.stepx,
                       config.stepy,
