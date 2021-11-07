@@ -165,7 +165,10 @@ $(OBJS): $(HDRS)
 cave-outliner:	$(OBJS)
 	$(CPPCOMPILER) $(LDFLAGS) -o cave-outliner $(OBJS) $(LDLIBS)
 
-docs:	doc/Design-Structure-Small.jpg
+docs:	doc/Design-Structure-Small.jpg \
+	doc/example1-model-small.jpg \
+	doc/example1-planview-small.jpg \
+	doc/example1-crosssection-small.jpg
 
 docs-generation:	$(CLASSMARKDOWNS)
 
@@ -177,6 +180,15 @@ $(CLASSMARKDOWNS):	$(HDRS) Makefile $(TOOLS)
 
 doc/Design-Structure-Small.jpg:	doc/Design-Structure.jpg
 	convert -quality 0.97 -resize 1400x doc/Design-Structure.jpg doc/Design-Structure-Small.jpg
+
+doc/example1-model-small.jpg:	doc/example1-model.jpg
+	convert -quality 0.97 -resize 500x doc/example1-model.jpg doc/example1-model-small.jpg
+
+doc/example1-planview-small.jpg:	doc/example1-planview.jpg
+	convert -quality 0.97 -resize 500x doc/example1-planview.jpg doc/example1-planview-small.jpg
+
+doc/example1-crosssection-small.jpg:	doc/example1-crosssection.jpg
+	convert -quality 0.97 -resize 500x doc/example1-crosssection.jpg doc/example1-crosssection-small.jpg
 
 test:	cave-outliner \
 	unit-tests \

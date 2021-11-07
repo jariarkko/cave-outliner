@@ -311,16 +311,40 @@ MainConfig Class Reference
 <tr class="even separator:a2f778fa9720229cf2820dc9d7bfdb581">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a354d916bbd33ea81920f7328ff330a68">
+<tr class="odd memitem:a9bfc2b5e5d1c0f43ca6fb34e4e7931eb">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a9bfc2b5e5d1c0f43ca6fb34e4e7931eb"></span> unsigned int </td>
+<td class="memItemRight" data-valign="bottom"><strong>lineholethreshold</strong></td>
+</tr>
+<tr class="even memdesc:a9bfc2b5e5d1c0f43ca6fb34e4e7931eb">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">If the cross section lines have holes, e.g., missing faces for various reasons, should the software try to fill them?<br />
+</td>
+</tr>
+<tr class="odd separator:a9bfc2b5e5d1c0f43ca6fb34e4e7931eb">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:a354d916bbd33ea81920f7328ff330a68">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a354d916bbd33ea81920f7328ff330a68"></span> bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>automaticCrossSections</strong></td>
 </tr>
-<tr class="even memdesc:a354d916bbd33ea81920f7328ff330a68">
+<tr class="odd memdesc:a354d916bbd33ea81920f7328ff330a68">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Should we create a number of automatic cross sections?<br />
 </td>
 </tr>
-<tr class="odd separator:a354d916bbd33ea81920f7328ff330a68">
+<tr class="even separator:a354d916bbd33ea81920f7328ff330a68">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:a7212cc83ab0c5c9b802d11f3cddf5317">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a7212cc83ab0c5c9b802d11f3cddf5317"></span> enum outlinerdirection </td>
+<td class="memItemRight" data-valign="bottom"><strong>automaticCrossSectionsDirection</strong></td>
+</tr>
+<tr class="even memdesc:a7212cc83ab0c5c9b802d11f3cddf5317">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Direction of the automatic cross sections.<br />
+</td>
+</tr>
+<tr class="odd separator:a7212cc83ab0c5c9b802d11f3cddf5317">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a85f1c3ffeffda3f50ab8a87ad3edfb94">
@@ -361,6 +385,27 @@ MainConfig Class Reference
 <tr class="odd separator:a943b8f45ebf2bcadb841f193e2676019">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
+<tr class="even memitem:a1ea93c50a9412141972de1c57374f9b5">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a1ea93c50a9412141972de1c57374f9b5"></span> enum outlinerdirection </td>
+<td class="memItemRight" data-valign="bottom"><strong>crossSectionDirections</strong> [outlinermaxcrosssections]</td>
+</tr>
+<tr class="odd separator:a1ea93c50a9412141972de1c57374f9b5">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:ad4033173ac5c13d59617c6eb307e9839">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ad4033173ac5c13d59617c6eb307e9839"></span> outlinerreal </td>
+<td class="memItemRight" data-valign="bottom"><strong>crossSectionPoints</strong> [outlinermaxcrosssections]</td>
+</tr>
+<tr class="odd separator:ad4033173ac5c13d59617c6eb307e9839">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:add8090a6f001d2f1c954ae69f5951ae4">
+<td style="text-align: right;" class="memItemLeft" data-valign="top">outlinerreal </td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_main_config.md#add8090a6f001d2f1c954ae69f5951ae4" class="el">crossSectionWidth</a></td>
+</tr>
+<tr class="odd separator:add8090a6f001d2f1c954ae69f5951ae4">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
 <tr class="even memitem:a903dc0119ec4155627ce8bb3531f4d86">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a903dc0119ec4155627ce8bb3531f4d86"></span> bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>labelCrossSections</strong></td>
@@ -371,6 +416,18 @@ MainConfig Class Reference
 </td>
 </tr>
 <tr class="even separator:a903dc0119ec4155627ce8bb3531f4d86">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:a1525af4e5fd0a285c25bc7ca4471e8ed">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a1525af4e5fd0a285c25bc7ca4471e8ed"></span> bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>dimensions</strong></td>
+</tr>
+<tr class="even memdesc:a1525af4e5fd0a285c25bc7ca4471e8ed">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Should we show dimensions?<br />
+</td>
+</tr>
+<tr class="odd separator:a1525af4e5fd0a285c25bc7ca4471e8ed">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
@@ -419,6 +476,21 @@ cross section counter, so that each image gets a different file name.
 
 Specification of where the cross sections should be drawn, what file
 names and labels they should use, etc.
+
+<span id="add8090a6f001d2f1c954ae69f5951ae4"></span>
+
+## <span class="permalink">[◆ ](#add8090a6f001d2f1c954ae69f5951ae4)</span>crossSectionWidth
+
+<table class="memname">
+<tbody>
+<tr class="odd">
+<td class="memname">outlinerreal MainConfig::crossSectionWidth</td>
+</tr>
+</tbody>
+</table>
+
+Width of cross sections (in unit of one step, e.g., 2.0 means analysis
+of a cross slice looks at two steps of 3D model data).
 
 <span id="ab7dea6503e3065f583472dfed0b032cb"></span>
 

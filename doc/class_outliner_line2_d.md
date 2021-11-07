@@ -71,6 +71,13 @@ OutlinerLine2D Class Reference
 <tr class="even separator:ad14a163eaa3cfc23f6fc2593f97e5691">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
+<tr class="odd memitem:abb3245feea0b6f40575aaa54005dacb1">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="abb3245feea0b6f40575aaa54005dacb1"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp; </td>
+<td class="memItemRight" data-valign="bottom"><strong>operator=</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp;in)</td>
+</tr>
+<tr class="even separator:abb3245feea0b6f40575aaa54005dacb1">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
 </tbody>
 </table>
 

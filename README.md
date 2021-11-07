@@ -3,7 +3,27 @@ A small tool to draw horizontal plane outlines of caves, given an input of a 3D 
 
 The input is in the form a Standard Triangle Language (STL) file. The output is a Standard Vector Graphics (SVG) image. This is very much work in progress for now.
 
-Usage:
+Here's an example. We start from a 3D model of cave, in this case from the small Grottberget cave in Siuntio, Finland:
+
+![model](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-model-small.jpg)
+
+With the help of the cave-outliner tool, we can read this model and convert it to a plan view and some cross-section views. We use the following command:
+
+    cave-outliner --label --dimensions --borderline --multiplier 2 --step 0.05 --holethreshold 10 \
+                  --crosssectionwidth 3 --crosssections x 3 cross%.svg \
+                  test/cave1.stl planview.svg
+
+This is the resulting plan view:
+
+![planview](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-model-planview.jpg)
+
+And this is one of the three resulting cross-section views:
+
+![crosssection](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-model-crosssection.jpg)
+
+## Usage
+
+Here's a more detailed description of the command and its options:
 
     cave-outliner [options] inputfile outputfile
 

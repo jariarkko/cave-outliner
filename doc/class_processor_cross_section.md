@@ -27,11 +27,11 @@ ProcessorCrossSection Class Reference
 <tr class="odd heading">
 <td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
 </tr>
-<tr class="even memitem:ab5b03c7067518b02e549e4051634e3c1">
+<tr class="even memitem:a4be7551b67987e4edf1a3a69cf0bff2e">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"> </td>
-<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor_cross_section.md#ab5b03c7067518b02e549e4051634e3c1" class="el">ProcessorCrossSection</a> (const char *fileNameIn, const char *labelIn, enum outlinerdirection sliceDirectionIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;lineStartIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;lineEndIn, outlinerreal stepzIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor.md" class="el">Processor</a> &amp;procIn)</td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor_cross_section.md#a4be7551b67987e4edf1a3a69cf0bff2e" class="el">ProcessorCrossSection</a> (const char *fileNameIn, const char *labelIn, enum outlinerdirection sliceDirectionIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;lineStartIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;lineEndIn, outlinerreal stepzIn, outlinerreal widthIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor.md" class="el">Processor</a> &amp;procIn)</td>
 </tr>
-<tr class="odd separator:ab5b03c7067518b02e549e4051634e3c1">
+<tr class="odd separator:a4be7551b67987e4edf1a3a69cf0bff2e">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a18dee48dd788c2c74b40d88d75b0417c">
@@ -67,9 +67,9 @@ drawing of cross sections.
 
 ## Constructor & Destructor Documentation
 
-<span id="ab5b03c7067518b02e549e4051634e3c1"></span>
+<span id="a4be7551b67987e4edf1a3a69cf0bff2e"></span>
 
-## <span class="permalink">[◆ ](#ab5b03c7067518b02e549e4051634e3c1)</span>ProcessorCrossSection()
+## <span class="permalink">[◆ ](#a4be7551b67987e4edf1a3a69cf0bff2e)</span>ProcessorCrossSection()
 
 <table class="memname">
 <tbody>
@@ -112,10 +112,16 @@ drawing of cross sections.
 <tr class="odd">
 <td class="paramkey"></td>
 <td></td>
+<td class="paramtype">outlinerreal </td>
+<td class="paramname"><em>widthIn</em>,</td>
+</tr>
+<tr class="even">
+<td class="paramkey"></td>
+<td></td>
 <td class="paramtype"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor.md" class="el">Processor</a> &amp; </td>
 <td class="paramname"><em>procIn</em> </td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td></td>
 <td>)</td>
 <td></td>

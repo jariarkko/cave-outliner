@@ -64,6 +64,18 @@ OutlinerTriangle3D Class Reference
 <tr class="even separator:ad213b7d120df8783160257266d8f7bd6">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
+<tr class="odd memitem:a3d90926509697c15fe0d92e2c7c7493a">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a3d90926509697c15fe0d92e2c7c7493a"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle3_d.md" class="el">OutlinerTriangle3D</a> &amp; </td>
+<td class="memItemRight" data-valign="bottom"><strong>operator=</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle3_d.md" class="el">OutlinerTriangle3D</a> &amp;in)</td>
+</tr>
+<tr class="even memdesc:a3d90926509697c15fe0d92e2c7c7493a">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Assignment.<br />
+</td>
+</tr>
+<tr class="odd separator:a3d90926509697c15fe0d92e2c7c7493a">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
 </tbody>
 </table>
 

@@ -51,16 +51,16 @@ SvgCreator Class Reference
 <tr class="odd separator:a5287bc3ef08517a8dda80238cdbb2079">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:ae3491ce32bc9594ea3b170a4c8325ed3">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ae3491ce32bc9594ea3b170a4c8325ed3"></span> void </td>
-<td class="memItemRight" data-valign="bottom"><strong>line</strong> (outlinerreal fromX, outlinerreal fromY, outlinerreal toX, outlinerreal toY, bool dashed=0)</td>
+<tr class="even memitem:aac31dda29a528af01855654151598310">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aac31dda29a528af01855654151598310"></span> void </td>
+<td class="memItemRight" data-valign="bottom"><strong>line</strong> (outlinerreal fromX, outlinerreal fromY, outlinerreal toX, outlinerreal toY, OutlinerSvgStyle style=outlinersvgstyle_none)</td>
 </tr>
-<tr class="odd memdesc:ae3491ce32bc9594ea3b170a4c8325ed3">
+<tr class="odd memdesc:aac31dda29a528af01855654151598310">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Draw a line.<br />
 </td>
 </tr>
-<tr class="even separator:ae3491ce32bc9594ea3b170a4c8325ed3">
+<tr class="even separator:aac31dda29a528af01855654151598310">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:ad58b8ea3bb3de693b6bfd3e97a6fd3ba">
@@ -75,42 +75,54 @@ SvgCreator Class Reference
 <tr class="odd separator:ad58b8ea3bb3de693b6bfd3e97a6fd3ba">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:ae6d7398ad209735b829a3d3b6580f3eb">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ae6d7398ad209735b829a3d3b6580f3eb"></span> void </td>
-<td class="memItemRight" data-valign="bottom"><strong>text</strong> (outlinerreal x, outlinerreal y, const char *string)</td>
+<tr class="even memitem:a4b8ad311b7b09d5ec43a7c3dce0cfb79">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a4b8ad311b7b09d5ec43a7c3dce0cfb79"></span> void </td>
+<td class="memItemRight" data-valign="bottom"><strong>triangle</strong> (<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle2_d.md" class="el">OutlinerTriangle2D</a> triangle, OutlinerSvgStyle style=outlinersvgstyle_none)</td>
 </tr>
-<tr class="odd memdesc:ae6d7398ad209735b829a3d3b6580f3eb">
+<tr class="odd memdesc:a4b8ad311b7b09d5ec43a7c3dce0cfb79">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Draw a triangle.<br />
+</td>
+</tr>
+<tr class="even separator:a4b8ad311b7b09d5ec43a7c3dce0cfb79">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:af140a50441555afa6243ee2e1a64d1da">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="af140a50441555afa6243ee2e1a64d1da"></span> void </td>
+<td class="memItemRight" data-valign="bottom"><strong>text</strong> (outlinerreal x, outlinerreal y, const char *string, unsigned int fontSize=outlinerdefaultfont, unsigned int rotate=0)</td>
+</tr>
+<tr class="even memdesc:af140a50441555afa6243ee2e1a64d1da">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Write text to the image.<br />
 </td>
 </tr>
-<tr class="even separator:ae6d7398ad209735b829a3d3b6580f3eb">
+<tr class="odd separator:af140a50441555afa6243ee2e1a64d1da">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a7f0841b5c58a366f842ad4c62feafe44">
+<tr class="even memitem:a7f0841b5c58a366f842ad4c62feafe44">
 <td style="text-align: right;" class="memItemLeft" data-valign="top">outlinerreal </td>
 <td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_svg_creator.md#a7f0841b5c58a366f842ad4c62feafe44" class="el">getPixelXSize</a> (void)</td>
 </tr>
-<tr class="even separator:a7f0841b5c58a366f842ad4c62feafe44">
+<tr class="odd separator:a7f0841b5c58a366f842ad4c62feafe44">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a36c891f38cea26cb371dfa183d9724c1">
+<tr class="even memitem:a36c891f38cea26cb371dfa183d9724c1">
 <td style="text-align: right;" class="memItemLeft" data-valign="top">outlinerreal </td>
 <td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_svg_creator.md#a36c891f38cea26cb371dfa183d9724c1" class="el">getPixelYSize</a> (void)</td>
 </tr>
-<tr class="even separator:a36c891f38cea26cb371dfa183d9724c1">
+<tr class="odd separator:a36c891f38cea26cb371dfa183d9724c1">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a41d4849c73c8a2b794c0e67035c2efe3">
+<tr class="even memitem:a41d4849c73c8a2b794c0e67035c2efe3">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a41d4849c73c8a2b794c0e67035c2efe3"></span> bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>ok</strong> ()</td>
 </tr>
-<tr class="even memdesc:a41d4849c73c8a2b794c0e67035c2efe3">
+<tr class="odd memdesc:a41d4849c73c8a2b794c0e67035c2efe3">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Verify that image creation and file write was successful.<br />
 </td>
 </tr>
-<tr class="odd separator:a41d4849c73c8a2b794c0e67035c2efe3">
+<tr class="even separator:a41d4849c73c8a2b794c0e67035c2efe3">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>

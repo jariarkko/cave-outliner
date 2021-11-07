@@ -27,100 +27,148 @@ OutlinerMath Class Reference
 <tr class="odd heading">
 <td colspan="2"><h2 id="static-public-member-functions" class="groupheader"><span id="pub-static-methods"></span> Static Public Member Functions</h2></td>
 </tr>
-<tr class="even memitem:ad3416480394fa1ae3cbe4ad6f72aab0e">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ad3416480394fa1ae3cbe4ad6f72aab0e"></span> static void </td>
-<td class="memItemRight" data-valign="bottom"><strong>triangleDescribe</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle3_d.md" class="el">OutlinerTriangle3D</a> &amp;triangle, char *buf, unsigned int bufSize)</td>
+<tr class="even memitem:ae1ed222bb08479634293c3770d20e4fb">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ae1ed222bb08479634293c3770d20e4fb"></span> static void </td>
+<td class="memItemRight" data-valign="bottom"><strong>triangleDescribe</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle3_d.md" class="el">OutlinerTriangle3D</a> &amp;triangle, char *buf, unsigned int bufSize, bool full=0)</td>
 </tr>
-<tr class="odd memdesc:ad3416480394fa1ae3cbe4ad6f72aab0e">
+<tr class="odd memdesc:ae1ed222bb08479634293c3770d20e4fb">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Produce a string that describes a triangle. Used in debugging.<br />
 </td>
 </tr>
-<tr class="even separator:ad3416480394fa1ae3cbe4ad6f72aab0e">
+<tr class="even separator:ae1ed222bb08479634293c3770d20e4fb">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a8414e86cc4a4e168a5926aff75b5de4e">
+<tr class="odd memitem:a59471e97a02a85bc93ee1701b21f2ea3">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a59471e97a02a85bc93ee1701b21f2ea3"></span> static void </td>
+<td class="memItemRight" data-valign="bottom"><strong>triangleDescribe</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle2_d.md" class="el">OutlinerTriangle2D</a> &amp;triangle, char *buf, unsigned int bufSize, bool full=0)</td>
+</tr>
+<tr class="even memdesc:a59471e97a02a85bc93ee1701b21f2ea3">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Produce a string that describes a triangle. Used in debugging.<br />
+</td>
+</tr>
+<tr class="odd separator:a59471e97a02a85bc93ee1701b21f2ea3">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:a95e46380618ea58995c6282d3451e48d">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a95e46380618ea58995c6282d3451e48d"></span> static void </td>
+<td class="memItemRight" data-valign="bottom"><strong>boxDescribe</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;box, char *buf, unsigned int bufSize, bool full=0)</td>
+</tr>
+<tr class="odd memdesc:a95e46380618ea58995c6282d3451e48d">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Produce a string that describes a bounding box. Used in debugging.<br />
+</td>
+</tr>
+<tr class="even separator:a95e46380618ea58995c6282d3451e48d">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:a6eeaf8a7823a28c4b44e75956504507b">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a6eeaf8a7823a28c4b44e75956504507b"></span> static void </td>
+<td class="memItemRight" data-valign="bottom"><strong>boxDescribe</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;box, char *buf, unsigned int bufSize, bool full=0)</td>
+</tr>
+<tr class="even memdesc:a6eeaf8a7823a28c4b44e75956504507b">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Produce a string that describes a bounding box. Used in debugging.<br />
+</td>
+</tr>
+<tr class="odd separator:a6eeaf8a7823a28c4b44e75956504507b">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:a8414e86cc4a4e168a5926aff75b5de4e">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a8414e86cc4a4e168a5926aff75b5de4e"></span> static void </td>
 <td class="memItemRight" data-valign="bottom"><strong>triangleBoundingBox2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle2_d.md" class="el">OutlinerTriangle2D</a> &amp;triangle, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;boundingBox)</td>
 </tr>
-<tr class="even memdesc:a8414e86cc4a4e168a5926aff75b5de4e">
+<tr class="odd memdesc:a8414e86cc4a4e168a5926aff75b5de4e">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Calculate the smallest bounding box that holds a given triangle (in a 2-dimension model).<br />
 </td>
 </tr>
-<tr class="odd separator:a8414e86cc4a4e168a5926aff75b5de4e">
+<tr class="even separator:a8414e86cc4a4e168a5926aff75b5de4e">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:ab6b2bb0be2acdc2b9fcbdfe8a9cc6bdf">
+<tr class="odd memitem:ab6b2bb0be2acdc2b9fcbdfe8a9cc6bdf">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ab6b2bb0be2acdc2b9fcbdfe8a9cc6bdf"></span> static void </td>
 <td class="memItemRight" data-valign="bottom"><strong>triangleBoundingBox3D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle3_d.md" class="el">OutlinerTriangle3D</a> &amp;triangle, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBox)</td>
 </tr>
-<tr class="odd memdesc:ab6b2bb0be2acdc2b9fcbdfe8a9cc6bdf">
+<tr class="even memdesc:ab6b2bb0be2acdc2b9fcbdfe8a9cc6bdf">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Calculate the smallest bounding box that holds a given triangle (in a 3-dimension model).<br />
 </td>
 </tr>
-<tr class="even separator:ab6b2bb0be2acdc2b9fcbdfe8a9cc6bdf">
+<tr class="odd separator:ab6b2bb0be2acdc2b9fcbdfe8a9cc6bdf">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a6d0dca3240f2d97ad6d00f7973154e4f">
+<tr class="even memitem:a6d0dca3240f2d97ad6d00f7973154e4f">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a6d0dca3240f2d97ad6d00f7973154e4f"></span> static bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>pointInsideTriangle2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle2_d.md" class="el">OutlinerTriangle2D</a> &amp;triangle, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;point)</td>
 </tr>
-<tr class="even memdesc:a6d0dca3240f2d97ad6d00f7973154e4f">
+<tr class="odd memdesc:a6d0dca3240f2d97ad6d00f7973154e4f">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Is a given point inside a triangle (in a 2-dimension model)?<br />
 </td>
 </tr>
-<tr class="odd separator:a6d0dca3240f2d97ad6d00f7973154e4f">
+<tr class="even separator:a6d0dca3240f2d97ad6d00f7973154e4f">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:a256f7ce85590deccd7ccd9c7c0cbfeda">
+<tr class="odd memitem:a256f7ce85590deccd7ccd9c7c0cbfeda">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a256f7ce85590deccd7ccd9c7c0cbfeda"></span> static bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>pointInsideBoundingBox2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;box, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;point)</td>
 </tr>
-<tr class="odd memdesc:a256f7ce85590deccd7ccd9c7c0cbfeda">
+<tr class="even memdesc:a256f7ce85590deccd7ccd9c7c0cbfeda">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Is a given point inside a bounding box (in 2-dimension model)?<br />
 </td>
 </tr>
-<tr class="even separator:a256f7ce85590deccd7ccd9c7c0cbfeda">
+<tr class="odd separator:a256f7ce85590deccd7ccd9c7c0cbfeda">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a6492576cbe435ac0ccdfb3ae1b8a2f70">
+<tr class="even memitem:a6492576cbe435ac0ccdfb3ae1b8a2f70">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a6492576cbe435ac0ccdfb3ae1b8a2f70"></span> static bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>boundingBoxIntersectsTriangle2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle2_d.md" class="el">OutlinerTriangle2D</a> &amp;triangle, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;box)</td>
 </tr>
-<tr class="even memdesc:a6492576cbe435ac0ccdfb3ae1b8a2f70">
+<tr class="odd memdesc:a6492576cbe435ac0ccdfb3ae1b8a2f70">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Does a triangle intersect a bounding box?<br />
 </td>
 </tr>
-<tr class="odd separator:a6492576cbe435ac0ccdfb3ae1b8a2f70">
+<tr class="even separator:a6492576cbe435ac0ccdfb3ae1b8a2f70">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:aca5779b5b445e27c65887622d3629988">
+<tr class="odd memitem:aca5779b5b445e27c65887622d3629988">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aca5779b5b445e27c65887622d3629988"></span> static bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>boundingBoxIntersectsTriangle3D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_triangle3_d.md" class="el">OutlinerTriangle3D</a> &amp;triangle, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;box)</td>
 </tr>
-<tr class="odd memdesc:aca5779b5b445e27c65887622d3629988">
+<tr class="even memdesc:aca5779b5b445e27c65887622d3629988">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Does a triangle intersect a bounding box?<br />
 </td>
 </tr>
-<tr class="even separator:aca5779b5b445e27c65887622d3629988">
+<tr class="odd separator:aca5779b5b445e27c65887622d3629988">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a20c993dbecea94a9b4843f3b1c3e3f75">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a20c993dbecea94a9b4843f3b1c3e3f75"></span> static bool </td>
-<td class="memItemRight" data-valign="bottom"><strong>boundingBoxesIntersect3D</strong> (<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBox1, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBox2)</td>
+<tr class="even memitem:a11e25129ac971af303beb070c74c1bbf">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a11e25129ac971af303beb070c74c1bbf"></span> static bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>boundingBoxesIntersect2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;boundingBox1, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;boundingBox2)</td>
 </tr>
-<tr class="even memdesc:a20c993dbecea94a9b4843f3b1c3e3f75">
+<tr class="odd memdesc:a11e25129ac971af303beb070c74c1bbf">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Does a bounding box intersect another one?<br />
 </td>
 </tr>
-<tr class="odd separator:a20c993dbecea94a9b4843f3b1c3e3f75">
+<tr class="even separator:a11e25129ac971af303beb070c74c1bbf">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:a54af77072931238dd6ae18c140c3baf0">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a54af77072931238dd6ae18c140c3baf0"></span> static bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>boundingBoxesIntersect3D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBox1, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBox2)</td>
+</tr>
+<tr class="even memdesc:a54af77072931238dd6ae18c140c3baf0">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Does a bounding box intersect another one?<br />
+</td>
+</tr>
+<tr class="odd separator:a54af77072931238dd6ae18c140c3baf0">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:aa959a9730dc1dd2ce9ddd1a96ade17e6">

@@ -27,16 +27,16 @@ Processor Class Reference
 <tr class="odd heading">
 <td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
 </tr>
-<tr class="even memitem:a29c77668a4dd09c43c88ad02ba6cc34b">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a29c77668a4dd09c43c88ad02ba6cc34b"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>Processor</strong> (const char *fileNameIn, unsigned int multiplierIn, bool smoothIn, bool mergedLinesIn, float linewidthIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> boundingBoxIn, outlinerreal stepxIn, outlinerreal stepyIn, outlinerreal stepzIn, enum outlinerdirection directionIn, enum outlineralgorithm algorithmIn, unsigned int holethresholdIn, bool labelsIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_indexed_mesh.md" class="el">IndexedMesh</a> &amp;indexedIn)</td>
+<tr class="even memitem:a9fd44283c2b1ec68b17ff57e111c667a">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a9fd44283c2b1ec68b17ff57e111c667a"></span>  </td>
+<td class="memItemRight" data-valign="bottom"><strong>Processor</strong> (const char *fileNameIn, const unsigned int multiplierIn, const bool smoothIn, const bool mergedLinesIn, const float linewidthIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;originalBoundingBoxIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBoxIn, const outlinerreal stepxIn, const outlinerreal stepyIn, const outlinerreal stepzIn, const enum outlinerdirection directionIn, const enum outlineralgorithm algorithmIn, const unsigned int holethresholdIn, const unsigned int lineHolethresholdIn, const bool labelsIn, const bool dimensionsIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_indexed_mesh.md" class="el">IndexedMesh</a> &amp;indexedIn)</td>
 </tr>
-<tr class="odd memdesc:a29c77668a4dd09c43c88ad02ba6cc34b">
+<tr class="odd memdesc:a9fd44283c2b1ec68b17ff57e111c667a">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Create a <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor.md" class="el">Processor</a>.<br />
 </td>
 </tr>
-<tr class="even separator:a29c77668a4dd09c43c88ad02ba6cc34b">
+<tr class="even separator:a9fd44283c2b1ec68b17ff57e111c667a">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:acf37952c5b420d4e903a512571678692">

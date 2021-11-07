@@ -71,30 +71,42 @@ OutlinerBox2D Class Reference
 <tr class="even separator:ac5df1a466dedeb376a8eeb724288eb84">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:ae7909e320812130d353ad424607e12a7">
+<tr class="odd memitem:aeb8a3d57a4fda13948e9844ad7b36bba">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aeb8a3d57a4fda13948e9844ad7b36bba"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp; </td>
+<td class="memItemRight" data-valign="bottom"><strong>operator=</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;in)</td>
+</tr>
+<tr class="even memdesc:aeb8a3d57a4fda13948e9844ad7b36bba">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Assignment.<br />
+</td>
+</tr>
+<tr class="odd separator:aeb8a3d57a4fda13948e9844ad7b36bba">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:ae7909e320812130d353ad424607e12a7">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ae7909e320812130d353ad424607e12a7"></span> bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>equal</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;box2) const</td>
 </tr>
-<tr class="even memdesc:ae7909e320812130d353ad424607e12a7">
+<tr class="odd memdesc:ae7909e320812130d353ad424607e12a7">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Test for equality.<br />
 </td>
 </tr>
-<tr class="odd separator:ae7909e320812130d353ad424607e12a7">
+<tr class="even separator:ae7909e320812130d353ad424607e12a7">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:a3a8e08ddb95dd75a40d0607c64d70d33">
+<tr class="odd memitem:a3a8e08ddb95dd75a40d0607c64d70d33">
 <td style="text-align: right;" class="memItemLeft" data-valign="top">void </td>
 <td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md#a3a8e08ddb95dd75a40d0607c64d70d33" class="el">intersection</a> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;box2, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;resultBox) const</td>
 </tr>
-<tr class="odd separator:a3a8e08ddb95dd75a40d0607c64d70d33">
+<tr class="even separator:a3a8e08ddb95dd75a40d0607c64d70d33">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:aacd004948e4007f3f0d30370b63655bf">
+<tr class="odd memitem:aacd004948e4007f3f0d30370b63655bf">
 <td style="text-align: right;" class="memItemLeft" data-valign="top">void </td>
 <td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md#aacd004948e4007f3f0d30370b63655bf" class="el">boxUnion</a> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;box2, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;resultBox) const</td>
 </tr>
-<tr class="odd separator:aacd004948e4007f3f0d30370b63655bf">
+<tr class="even separator:aacd004948e4007f3f0d30370b63655bf">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>

@@ -87,16 +87,28 @@ IndexedMesh Class Reference
 <tr class="even separator:aea51fdc366f822252850da1f8b6036ea">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:af5f57e4b27dc9e76e7fcdcec9edb2bbc">
+<tr class="odd memitem:a7aae3815523f0b5f802250eb6acb0d95">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a7aae3815523f0b5f802250eb6acb0d95"></span> void </td>
+<td class="memItemRight" data-valign="bottom"><strong>describe</strong> (std::ostream &amp;stream)</td>
+</tr>
+<tr class="even memdesc:a7aae3815523f0b5f802250eb6acb0d95">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Print information about the contents of the mesh.<br />
+</td>
+</tr>
+<tr class="odd separator:a7aae3815523f0b5f802250eb6acb0d95">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:af5f57e4b27dc9e76e7fcdcec9edb2bbc">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="af5f57e4b27dc9e76e7fcdcec9edb2bbc"></span>  </td>
 <td class="memItemRight" data-valign="bottom"><strong>~IndexedMesh</strong> ()</td>
 </tr>
-<tr class="even memdesc:af5f57e4b27dc9e76e7fcdcec9edb2bbc">
+<tr class="odd memdesc:af5f57e4b27dc9e76e7fcdcec9edb2bbc">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Release all resources associated with the index.<br />
 </td>
 </tr>
-<tr class="odd separator:af5f57e4b27dc9e76e7fcdcec9edb2bbc">
+<tr class="even separator:af5f57e4b27dc9e76e7fcdcec9edb2bbc">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
