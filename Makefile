@@ -178,17 +178,17 @@ $(CLASSMARKDOWNS):	$(HDRS) Makefile $(TOOLS)
 	for x in $(CLASSES); do pandoc doc/html/class_$$x.html -f html -t markdown_strict -o /tmp/gen.md; sh doc/markdowncleanup.sh /tmp/gen.md doc/class_$$x.md; done
 	-rm -rf doc/xml doc/html doc/search.json doc/index.html doc/latex
 
-doc/Design-Structure-Small.jpg:	doc/Design-Structure.jpg
+doc/Design-Structure-Small.jpg:	doc/Design-Structure.jpg Makefile
 	convert -quality 0.97 -resize 1400x doc/Design-Structure.jpg doc/Design-Structure-Small.jpg
 
-doc/example1-model-small.jpg:	doc/example1-model.jpg
-	convert -quality 0.97 -resize 500x doc/example1-model.jpg doc/example1-model-small.jpg
+doc/example1-model-small.jpg:	doc/example1-model.jpg Makefile
+	convert -quality 0.97 -resize 700x doc/example1-model.jpg doc/example1-model-small.jpg
 
-doc/example1-planview-small.jpg:	doc/example1-planview.jpg
-	convert -quality 0.97 -resize 500x doc/example1-planview.jpg doc/example1-planview-small.jpg
+doc/example1-planview-small.jpg:	doc/example1-planview.jpg Makefile
+	convert -quality 0.97 -resize 700x doc/example1-planview.jpg doc/example1-planview-small.jpg
 
-doc/example1-crosssection-small.jpg:	doc/example1-crosssection.jpg
-	convert -quality 0.97 -resize 500x doc/example1-crosssection.jpg doc/example1-crosssection-small.jpg
+doc/example1-crosssection-small.jpg:	doc/example1-crosssection.jpg Makefile
+	convert -quality 0.97 -resize 400x doc/example1-crosssection.jpg doc/example1-crosssection-small.jpg
 
 test:	cave-outliner \
 	unit-tests \

@@ -23,7 +23,7 @@ And this is one of the three resulting cross-section views:
 
 ![crosssection](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-crosssection-small.jpg)
 
-## Usage
+# Usage
 
 Here's a more detailed description of the command and its options:
 
