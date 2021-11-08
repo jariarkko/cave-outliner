@@ -41,8 +41,7 @@ class IndexedMesh;
 
 struct ProcessorCrossSectionInfo {
   const char* filename;
-  OutlinerVector2D start;
-  OutlinerVector2D end;
+  OutlinerLine2D line;
   outlinerreal width; // in units of one step
   const char* label; // 0 if no label desired
 };
@@ -78,6 +77,8 @@ public:
             const unsigned int lineHolethresholdIn,
             const bool labelsIn,
             const bool dimensionsIn,
+            unsigned int nCrossSectionsIn,
+            struct ProcessorCrossSectionInfo* crossSectionsIn,
             IndexedMesh& indexedIn);
 
   /// Destruct a Processor.
@@ -85,9 +86,7 @@ public:
 
   /// Process a plan fiew fora given scene in the processor, with a
   /// given set of (optional) cross sections.
-  bool processScene(const aiScene* scene,
-                    unsigned int nCrossSections,
-                    struct ProcessorCrossSectionInfo* crossSections);
+  bool processScene(const aiScene* scene);
   
 private:
 
@@ -114,6 +113,8 @@ private:
   const OutlinerBox2D originalPlanviewBoundingBox;
   const OutlinerBox2D planviewBoundingBox;
   MaterialMatrix matrix;
+  const unsigned int nCrossSections;
+  const struct ProcessorCrossSectionInfo* crossSections;
   IndexedMesh& indexed;
   outlinerreal dimensionBottomLabelingSpaceStartY;
   outlinerreal dimensionRightLabelingSpaceStartX;
@@ -216,6 +217,8 @@ private:
   //
   
   void addSpaceForLabels(OutlinerBox2D& pictureBoundingBox,
+                         bool vertical,
+                         bool horizontal,
                          const outlinerreal thisStepX,
                          const outlinerreal thisStepY);
   
@@ -235,16 +238,18 @@ private:
                          outlinerreal rightDimensionLabelingStartX,
                          const outlinerreal thisStepX,
                          const outlinerreal thisStepY);
+  bool hasNonHorizontalCrossSections(void);
+  bool hasHorizontalCrossSections(void);
   
   //
   // Cross sections
   //
   
   bool processSceneCrossSections(const aiScene* scene,
-                                 unsigned int nCrossSections,
-                                 struct ProcessorCrossSectionInfo* crossSections);
+                                 const unsigned int nCrossSections,
+                                 const struct ProcessorCrossSectionInfo* crossSections);
   bool processSceneCrossSection(const aiScene* scene,
-                                unsigned int c,
+                                const unsigned int c,
                                 const struct ProcessorCrossSectionInfo* crossSection);
   void addCrossSectionLine(const char* label,
                            OutlinerLine2D& actualLine);

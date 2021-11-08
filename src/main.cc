@@ -147,10 +147,10 @@ main(int argc, char** argv) {
       config.crossSectionPoints[config.nCrossSections] =
         crossSectionStart + crossSectionStep * (((outlinerreal)c)+0.5);
       config.crossSectionDirections[config.nCrossSections] = config.automaticCrossSectionsDirection;
-      newOne->start.x = 0;
-      newOne->start.y = 0;
-      newOne->end.x = 0;
-      newOne->end.y = 0;
+      newOne->line.start.x = 0;
+      newOne->line.start.y = 0;
+      newOne->line.end.x = 0;
+      newOne->line.end.y = 0;
       newOne->filename = makeFilenameFromPattern(config.automaticCrossSectionFilenamePattern,c);
       newOne->width = config.crossSectionWidth;
       infof("used cross section width %.2f", newOne->width);
@@ -169,16 +169,16 @@ main(int argc, char** argv) {
     struct ProcessorCrossSectionInfo* thisOne = &config.crossSections[c];
     switch (config.crossSectionDirections[c]) {
     case dir_x:
-      thisOne->start.x = config.crossSectionPoints[c];
-      thisOne->start.y = yOutputStart;
-      thisOne->end.x = thisOne->start.x;
-      thisOne->end.y = yOutputEnd;
+      thisOne->line.start.x = config.crossSectionPoints[c];
+      thisOne->line.start.y = yOutputStart;
+      thisOne->line.end.x = thisOne->line.start.x;
+      thisOne->line.end.y = yOutputEnd;
       break;
     case dir_y:
-      thisOne->start.x = xOutputStart;
-      thisOne->start.y = config.crossSectionPoints[c];
-      thisOne->end.x = xOutputEnd;
-      thisOne->end.y = thisOne->start.y;
+      thisOne->line.start.x = xOutputStart;
+      thisOne->line.start.y = config.crossSectionPoints[c];
+      thisOne->line.end.x = xOutputEnd;
+      thisOne->line.end.y = thisOne->line.start.y;
       break;
     case dir_z:
       errf("Not supported cross section type");
@@ -188,8 +188,8 @@ main(int argc, char** argv) {
       return(1);
     }
     infof("configured a cross section from (%.2f,%.2f) to (%.2f,%.2f)",
-          thisOne->start.x, thisOne->start.y,
-          thisOne->end.x, thisOne->end.y);
+          thisOne->line.start.x, thisOne->line.start.y,
+          thisOne->line.end.x, thisOne->line.end.y);
   }
 
   // Build our own data structure
@@ -242,10 +242,10 @@ main(int argc, char** argv) {
                       config.lineholethreshold,
                       (config.labelCrossSections && config.nCrossSections > 0),
                       config.dimensions,
+                      config.nCrossSections,
+                      config.crossSections,
                       indexed);
-  if (!processor.processScene(scene,
-                              config.nCrossSections,
-                              config.crossSections)) {
+  if (!processor.processScene(scene)) {
     return(1);
   }
 

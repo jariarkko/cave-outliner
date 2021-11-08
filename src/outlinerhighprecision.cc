@@ -106,7 +106,8 @@ OutlinerBox2D::intersection(const OutlinerBox2D& box2,
 void
 OutlinerBox2D::boxUnion(const OutlinerBox2D& box2,
                         OutlinerBox2D& resultBox) const {
-  resultBox = *this;
+  resultBox.start = start;
+  resultBox.end = end;
   if (box2.start.x < resultBox.start.x) resultBox.start.x = box2.start.x;
   if (box2.start.y < resultBox.start.y) resultBox.start.y = box2.start.y;
   if (box2.end.x > resultBox.end.x) resultBox.end.x = box2.end.x;
@@ -200,6 +201,32 @@ OutlinerBox2D::testIntersection(void) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // OutlinerBox3D Functions ////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+OutlinerBox3D::intersection(const OutlinerBox3D& box2,
+                            OutlinerBox3D& resultBox) const {
+  resultBox.start = start;
+  resultBox.end = end;
+  if (box2.start.x > resultBox.start.x) resultBox.start.x = box2.start.x;
+  if (box2.start.y > resultBox.start.y) resultBox.start.y = box2.start.y;
+  if (box2.start.z > resultBox.start.z) resultBox.start.z = box2.start.z;
+  if (box2.end.x < resultBox.end.x) resultBox.end.x = box2.end.x;
+  if (box2.end.y < resultBox.end.y) resultBox.end.y = box2.end.y;
+  if (box2.end.z < resultBox.end.z) resultBox.end.z = box2.end.z;
+}
+
+void
+OutlinerBox3D::boxUnion(const OutlinerBox3D& box2,
+                        OutlinerBox3D& resultBox) const {
+  resultBox.start = start;
+  resultBox.end = end;
+  if (box2.start.x < resultBox.start.x) resultBox.start.x = box2.start.x;
+  if (box2.start.y < resultBox.start.y) resultBox.start.y = box2.start.y;
+  if (box2.start.z < resultBox.start.z) resultBox.start.z = box2.start.z;
+  if (box2.end.x > resultBox.end.x) resultBox.end.x = box2.end.x;
+  if (box2.end.y > resultBox.end.y) resultBox.end.y = box2.end.y;
+  if (box2.end.z > resultBox.end.z) resultBox.end.z = box2.end.z;
+}
 
 void
 OutlinerBox3D::test(void) {

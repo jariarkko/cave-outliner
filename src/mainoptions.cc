@@ -142,10 +142,10 @@ MainOptions::processCommandLineOptions(int& argc,
       }
       config.crossSectionDirections[config.nCrossSections] = linedirection;
       config.crossSectionPoints[config.nCrossSections] = num;
-      config.crossSections[config.nCrossSections].start.x = 0;
-      config.crossSections[config.nCrossSections].start.y = 0;
-      config.crossSections[config.nCrossSections].end.x = 0;
-      config.crossSections[config.nCrossSections].end.y = 0;
+      config.crossSections[config.nCrossSections].line.start.x = 0;
+      config.crossSections[config.nCrossSections].line.start.y = 0;
+      config.crossSections[config.nCrossSections].line.end.x = 0;
+      config.crossSections[config.nCrossSections].line.end.y = 0;
       config.crossSections[config.nCrossSections].filename = file;
       config.crossSections[config.nCrossSections].width = config.crossSectionWidth;
       config.crossSections[config.nCrossSections].label = config.getCrossSectionLabel();

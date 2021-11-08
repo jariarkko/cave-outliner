@@ -143,8 +143,14 @@ public:
                  const outlinerreal endX,
                  const outlinerreal endY) : start(startX,startY), end(endX,endY) {}
 
-  // Assignment.
+  /// Assignment.
   OutlinerLine2D& operator=(const OutlinerLine2D& in) { start = in.start; end = in.end; return(*this); }
+  
+  /// Is the line horizontal (along x axis)?
+  bool horizontal() const { return(start.y == end.y); }
+  
+  /// Is the line vertical (along y axis)?
+  bool vertical() const { return(start.x == end.x); }
   
   /// Run unit tests associated with this class.
   static void test(void);
@@ -291,6 +297,16 @@ public:
   
   /// Assignment
   OutlinerBox3D& operator=(const OutlinerBox3D& in) { start = in.start; end = in.end; return(*this); }
+  
+  /// Take an intersection of this and another box, placing the
+  /// resulting bounding box in "resultBox".
+  void intersection(const OutlinerBox3D& box2,
+                    OutlinerBox3D& resultBox) const;
+  
+  /// Take a union of this and another box, placing the resulting
+  /// bounding box in "resultBox".
+  void boxUnion(const OutlinerBox3D& box2,
+                OutlinerBox3D& resultBox) const;
   
   /// Run unit tests associated with this class.
   static void test(void);

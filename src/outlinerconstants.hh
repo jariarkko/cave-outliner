@@ -33,6 +33,7 @@
 #define outlinerdefaultfontxsize                                                     5.6
 #define outlinerdefaultfontxsizelarge                                                8.0
 #define outlinerdefaultfontysize                                                      12
+#define outlinerdefaultfontysizelarge                                                 15
 #define outlinersmallfont                                                              9
 #define outlinersmallfontxsize                                                       4.3
 #define outlinersmallfontysize                                                       6.0

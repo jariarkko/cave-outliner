@@ -53,6 +53,8 @@ Processor::Processor(const char* fileNameIn,
                      const unsigned int lineHolethresholdIn,
                      const bool labelsIn,
                      const bool dimensionsIn,
+                     unsigned int nCrossSectionsIn,
+                     struct ProcessorCrossSectionInfo* crossSectionsIn,
                      IndexedMesh& indexedIn) :
   fileName(fileNameIn),
   multiplier(multiplierIn),
@@ -82,6 +84,8 @@ Processor::Processor(const char* fileNameIn,
   matrix(planviewBoundingBox,
          stepxIn,
          stepyIn),
+  nCrossSections(nCrossSectionsIn),
+  crossSections(crossSectionsIn),
   indexed(indexedIn) {
   debugf("algorithm %u=%u", algorithm, algorithmIn);
   if (holethreshold > outlinermaxholethreshold) {
@@ -96,6 +100,8 @@ Processor::Processor(const char* fileNameIn,
   // Add spacce for labels
   if (labels) {
     addSpaceForLabels(boundingBox2DExtended,
+                      hasNonHorizontalCrossSections(),
+                      hasHorizontalCrossSections(),
                       stepx,
                       stepy);
   }
@@ -140,9 +146,7 @@ Processor::svgDone() {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 bool
-Processor::processScene(const aiScene* scene,
-                        unsigned int nCrossSections,
-                        struct ProcessorCrossSectionInfo* crossSections) {
+Processor::processScene(const aiScene* scene) {
   
   debugf("processScene");
   assert(scene != 0);
@@ -296,12 +300,22 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
 
 void
 Processor::addSpaceForLabels(OutlinerBox2D& pictureBoundingBox,
+                             bool vertical,
+                             bool horizontal,
                              const outlinerreal thisStepX,
                              const outlinerreal thisStepY) {
-  pictureBoundingBox.start.y -= (outlinercrosssectionextraline * thisStepY);
-  pictureBoundingBox.end.y += (outlinercrosssectionextraline * thisStepY);
-  pictureBoundingBox.end.y += (outlinertitlespaceempty * thisStepY);
-  pictureBoundingBox.end.y += ((outlinerdefaultfontysize * thisStepY) / multiplier);
+  if (vertical) {
+    pictureBoundingBox.start.y -= (outlinercrosssectionextraline * thisStepY);
+    pictureBoundingBox.end.y += (outlinercrosssectionextraline * thisStepY);
+    pictureBoundingBox.end.y += (outlinertitlespaceempty * thisStepY);
+    pictureBoundingBox.end.y += ((outlinerdefaultfontysize * thisStepY) / multiplier);
+  }
+  if (horizontal) {
+    pictureBoundingBox.start.x -= (outlinercrosssectionextraline * thisStepX);
+    pictureBoundingBox.end.x += (outlinercrosssectionextraline * thisStepX);
+    pictureBoundingBox.end.x += (outlinertitlespaceempty * thisStepX);
+    pictureBoundingBox.end.x += ((2 * outlinerdefaultfontysizelarge * thisStepX) / multiplier);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -942,8 +956,8 @@ Processor::createSvgCalculateSizes(const OutlinerBox2D& svgBoundingBox,
 
 bool
 Processor::processSceneCrossSections(const aiScene* scene,
-                                     unsigned int nCrossSections,
-                                     struct ProcessorCrossSectionInfo* crossSections) {
+                                     const unsigned int nCrossSections,
+                                     const struct ProcessorCrossSectionInfo* crossSections) {
   for (unsigned int c = 0; c < nCrossSections; c++) {
     const struct ProcessorCrossSectionInfo* crossSection = &crossSections[c];
     if (!processSceneCrossSection(scene,c,crossSection)) {
@@ -955,22 +969,21 @@ Processor::processSceneCrossSections(const aiScene* scene,
 
 bool
 Processor::processSceneCrossSection(const aiScene* scene,
-                                    unsigned int c,
+                                    const unsigned int c,
                                     const struct ProcessorCrossSectionInfo* crossSection) {
   infof("cross section %u at (%.2f,%.2f)-(%.2f,%.2f) to file %s",
         c,
-        crossSection->start.x,
-        crossSection->start.y,
-        crossSection->end.x,
-        crossSection->end.y,
+        crossSection->line.start.x,
+        crossSection->line.start.y,
+        crossSection->line.end.x,
+        crossSection->line.end.y,
         crossSection->filename);
   assert(crossSection->filename != 0);
   assert(crossSection->width >= 0.0);
   ProcessorCrossSection csproc(crossSection->filename,
                                crossSection->label,
                                DirectionOperations::screenx(direction),
-                               crossSection->start,
-                               crossSection->end,
+                               crossSection->line,
                                stepz,
                                crossSection->width,
                                *this);
@@ -998,9 +1011,35 @@ Processor::addCrossSectionLine(const char* label,
   infof("    process cross-section line text %.2f - font %.2f * 0.5 * pixelXSize %.2f = %.2f",
         actualLine.end.x, outlinerdefaultfontxsizelarge, svg->getPixelXSize(),
         actualLine.end.x - outlinerdefaultfontxsizelarge * 0.5 * svg->getPixelXSize());
-  svg->text(actualLine.end.x - outlinerdefaultfontxsizelarge * 0.5 * svg->getPixelXSize(),
-            actualLine.end.y + outlinerdefaultfontysize * 0.1 * svg->getPixelYSize(),
-            label);
+  if (actualLine.horizontal()) {
+    svg->text(actualLine.end.x + outlinerdefaultfontxsize * 0.2 * svg->getPixelXSize(),
+              actualLine.end.y - outlinerdefaultfontysizelarge * 0.3 * svg->getPixelYSize(),
+              label);
+  } else {
+    svg->text(actualLine.end.x - outlinerdefaultfontxsizelarge * 0.5 * svg->getPixelXSize(),
+              actualLine.end.y + outlinerdefaultfontysize * 0.1 * svg->getPixelYSize(),
+              label);
+  }
+}
+
+bool
+Processor::hasNonHorizontalCrossSections(void) {
+  for (unsigned int i = 0; i < nCrossSections; i++) {
+    if (!crossSections[i].line.horizontal()) {
+      return(1);
+    }
+  }
+  return(0);
+}
+
+bool
+Processor::hasHorizontalCrossSections(void) {
+  for (unsigned int i = 0; i < nCrossSections; i++) {
+    if (crossSections[i].line.horizontal()) {
+      return(1);
+    }
+  }
+  return(0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

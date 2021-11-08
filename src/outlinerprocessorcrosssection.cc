@@ -40,16 +40,14 @@
 ProcessorCrossSection::ProcessorCrossSection(const char* fileNameIn,
                                              const char* labelIn, // 0 if no label desired
                                              enum outlinerdirection sliceDirectionIn,
-                                             const OutlinerVector2D& lineStartIn,
-                                             const OutlinerVector2D& lineEndIn,
+                                             const OutlinerLine2D& lineIn,
                                              outlinerreal stepzIn,
                                              outlinerreal widthIn,
                                              Processor& procIn) :
   fileName(fileNameIn),
   label(labelIn),
   sliceDirection(sliceDirectionIn),
-  lineStart(lineStartIn),
-  lineEnd(lineEndIn),
+  line(lineIn),
   stepz(stepzIn),
   width(widthIn),
   matrix(0),
@@ -233,14 +231,14 @@ ProcessorCrossSection::calculateLineEquation(void) {
 
   // Debugs
   debugf("calculate cross section line equation for (%.2f,%.2f)-(%.2f,%.2f)",
-         lineStart.x, lineStart.y, lineEnd.x, lineEnd.y);
+         line.start.x, line.start.y, line.end.x, line.end.y);
 
   //
   // Calculate the line as an equation
   //
   //   (x,y) = (x0 + n * xStep, y0 + n * yStep)
   //
-  // where x0 = lineStart.x, y0 = lineStart.y, xStep = lineStepX, and
+  // where x0 = line.start.x, y0 = line.start.y, xStep = lineStepX, and
   // yStep = lineStepY. From this equation we can also calculate y for
   // any given x:
   //
@@ -254,10 +252,10 @@ ProcessorCrossSection::calculateLineEquation(void) {
   //
   
   // Calculations
-  xDifference = lineEnd.x - lineStart.x;
-  yDifference = lineEnd.y - lineStart.y;
-  infof("    cross section line xDiff %.2f (%.2f...%.2f)", xDifference, lineStart.x, lineEnd.x);
-  infof("    cross section line yDiff %.2f (%.2f...%.2f)", yDifference, lineStart.y, lineEnd.y);
+  xDifference = line.end.x - line.start.x;
+  yDifference = line.end.y - line.start.y;
+  infof("    cross section line xDiff %.2f (%.2f...%.2f)", xDifference, line.start.x, line.end.x);
+  infof("    cross section line yDiff %.2f (%.2f...%.2f)", yDifference, line.start.y, line.end.y);
   infof("    cross section width %.2f", width);
   if (xDifference == 0 && yDifference == 0) {
     errf("Cross-section starting and ending points cannot be same");
@@ -300,8 +298,8 @@ ProcessorCrossSection::calculateLineXBasedOnY(outlinerreal y) {
   }
 
   // Do the actual calculations
-  outlinerreal n = (y - lineStart.y) / lineStepY;
-  outlinerreal x = lineStart.x + n*lineStepX;
+  outlinerreal n = (y - line.start.y) / lineStepY;
+  outlinerreal x = line.start.x + n*lineStepX;
   return(x);
 }
 
@@ -326,11 +324,11 @@ ProcessorCrossSection::getLineActualEndPointsHorizontal(OutlinerLine2D& actualLi
   //
   
   assert(lineStepY == 0);
-  assert(lineStart.y == lineEnd.y);
-  actualLine.start.x = sliceVerticalBoundingBox.start.x;
-  actualLine.start.y = lineStart.y;
-  actualLine.end.x = sliceVerticalBoundingBox.end.x;
-  actualLine.end.y = lineEnd.y;
+  assert(line.start.y == line.end.y);
+  actualLine.start.x = sliceVerticalBoundingBox.start.x - extralineatends;
+  actualLine.start.y = line.start.y;
+  actualLine.end.x = sliceVerticalBoundingBox.end.x + extralineatends;
+  actualLine.end.y = line.end.y;
   infof("horizontal actual line at y = %.2f x = %.2f..%.2f",
         actualLine.start.y,
         actualLine.start.x,
@@ -378,17 +376,17 @@ ProcessorCrossSection::getLineActualEndPointsGeneral(OutlinerLine2D& actualLine,
 
 void
 ProcessorCrossSection::lineIteratorInit(struct ProcessorCrossSectionLineIterator& iter) {
-  iter.point.x = lineStart.x;
-  iter.point.y = lineStart.y;
+  iter.point.x = line.start.x;
+  iter.point.y = line.start.y;
   iter.step = 0;
 }
 
 bool
 ProcessorCrossSection::lineIteratorDone(struct ProcessorCrossSectionLineIterator& iter) {
-  if (lineEnd.x > lineStart.x && iter.point.x > lineEnd.x) return(1);
-  if (lineEnd.x < lineStart.x && iter.point.x < lineEnd.x) return(1);
-  if (lineEnd.y > lineStart.y && iter.point.y > lineEnd.y) return(1);
-  if (lineEnd.y < lineStart.y && iter.point.y < lineEnd.y) return(1);
+  if (line.end.x > line.start.x && iter.point.x > line.end.x) return(1);
+  if (line.end.x < line.start.x && iter.point.x < line.end.x) return(1);
+  if (line.end.y > line.start.y && iter.point.y > line.end.y) return(1);
+  if (line.end.y < line.start.y && iter.point.y < line.end.y) return(1);
   return(0);
 }
 
@@ -589,19 +587,21 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxMesh(const aiScene* scene,
     unsigned int nFaces = 0;
     const aiFace** faces = 0;
     proc.indexed.getFaces(mesh,iter.point.x,iter.point.y,&nFaces,&faces);
-    if (nFaces > 0) {
-      debugf("got %u cross section faces from (%.2f,%.2f)", nFaces, iter.point.x, iter.point.y);
-      for (unsigned int f = 0; f < nFaces; f++) {
-        getSliceVerticalBoundingBoxFace(scene,mesh,faces[f],
-                                        iter.point.x, iter.point.y,
-                                        set,
-                                        sliceVerticalBoundingBox);
+    unsigned int nActualFaces = 0;
+    for (unsigned int f = 0; f < nFaces; f++) {
+      if (getSliceVerticalBoundingBoxFace(scene,mesh,faces[f],
+                                          iter.point.x, iter.point.y,
+                                          set,
+                                          sliceVerticalBoundingBox)) {
+        nActualFaces++;
       }
     }
+    infof("cross section iteration step %u at %.2f,%.2f: hits %u tiled faces, %u actual faces",
+          iter.step, iter.point.x, iter.point.y, nFaces, nActualFaces);
   }
 }
 
-void
+bool
 ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
                                                        const aiMesh* mesh,
                                                        const aiFace* face,
@@ -626,9 +626,19 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
     deepdeepdebugf("cross section direction %s and %s",
                    DirectionOperations::toString(proc.direction),
                    DirectionOperations::toString(sliceDirection));
-    OutlinerVector2D aSlice(DirectionOperations::outputy(proc.direction,t3.a),DirectionOperations::outputz(proc.direction,t3.a));
-    OutlinerVector2D bSlice(DirectionOperations::outputy(proc.direction,t3.b),DirectionOperations::outputz(proc.direction,t3.b));
-    OutlinerVector2D cSlice(DirectionOperations::outputy(proc.direction,t3.c),DirectionOperations::outputz(proc.direction,t3.c));
+    OutlinerVector2D aSlice((lineStepY == 0 ?
+                             DirectionOperations::outputx(proc.direction,t3.a) :
+                             DirectionOperations::outputy(proc.direction,t3.a)),
+                            DirectionOperations::outputz(proc.direction,t3.a));
+    OutlinerVector2D bSlice((lineStepY == 0 ?
+                             DirectionOperations::outputx(proc.direction,t3.b) :
+                             DirectionOperations::outputy(proc.direction,t3.b)),
+                            DirectionOperations::outputz(proc.direction,t3.b));
+    OutlinerVector2D cSlice((lineStepY == 0 ?
+                             DirectionOperations::outputx(proc.direction,t3.c) :
+                             DirectionOperations::outputy(proc.direction,t3.c)),
+                            DirectionOperations::outputz(proc.direction,t3.c));
+    
     OutlinerBox2D faceBoundingBox;
     OutlinerTriangle2D tSlice(aSlice,bSlice,cSlice);
     OutlinerMath::triangleBoundingBox2D(tSlice,faceBoundingBox);
@@ -637,11 +647,11 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
                faceBoundingBox.end.x, faceBoundingBox.end.y);
     if (!set) {
       sliceVerticalBoundingBox = faceBoundingBox;
-      deepdebugf("setting initial cross section bounding box at (%.2f,%.2f) "
-                 "to (%.2f,%.2f)-(%.2f,%.2f)",
-                 x, y,
-                 sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
-                 sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y);
+      infof("setting initial cross section bounding box at (%.2f,%.2f) "
+            "to (%.2f,%.2f)-(%.2f,%.2f)",
+            x, y,
+            sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
+            sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y);
       set = 1;
     } else {
       OutlinerBox2D newBoundingBox;
@@ -657,12 +667,16 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
                  newBoundingBox.end.x, newBoundingBox.end.y);
       if (!sliceVerticalBoundingBox.equal(newBoundingBox)) {
         sliceVerticalBoundingBox = newBoundingBox;
-        deepdebugf("setting new cross section bounding box to (%.2f,%.2f)-(%.2f,%.2f)",
-                   sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
-                   sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y);
+        infof("setting new cross section bounding box to (%.2f,%.2f)-(%.2f,%.2f)",
+              sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
+              sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y);
       }
-    } 
+    }
+    
+    return(1);
+    
   } else {
+    
     debugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) "
            "for direction %s (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) does NOT hit "
            "step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
@@ -673,6 +687,8 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
            t2.a.x, t2.a.y, t2.b.x, t2.b.y, t2.c.x, t2.c.y,
            thisBox.start.x, thisBox.start.y,
            thisBox.end.x, thisBox.end.y);
+    return(0);
+    
   }
 }
 

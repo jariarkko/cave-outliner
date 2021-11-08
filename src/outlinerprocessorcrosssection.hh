@@ -60,8 +60,7 @@ public:
   ProcessorCrossSection(const char* fileNameIn,
                         const char* labelIn, // 0 if no label desired
                         enum outlinerdirection sliceDirectionIn,
-                        const OutlinerVector2D& lineStartIn,
-                        const OutlinerVector2D& lineEndIn,
+                        const OutlinerLine2D& lineIn,
                         outlinerreal stepzIn,
                         outlinerreal widthIn,
                         Processor& procIn);
@@ -90,10 +89,9 @@ private:
   const char* fileName;
   const char* label; // 0 if no label desired
   const enum outlinerdirection sliceDirection;
-  const OutlinerVector2D lineStart;
-  const OutlinerVector2D lineEnd;
+  const OutlinerLine2D line;
   outlinerreal stepz;
-   outlinerreal width;
+  outlinerreal width;
   outlinerreal xDifference;
   outlinerreal yDifference;
   outlinerreal lineLength;
@@ -131,7 +129,7 @@ private:
                                        const aiMesh* mesh,
                                        bool& set,
                                        OutlinerBox2D& sliceVerticalBoundingBox);
-  void getSliceVerticalBoundingBoxFace(const aiScene* scene,
+  bool getSliceVerticalBoundingBoxFace(const aiScene* scene,
                                        const aiMesh* mesh,
                                        const aiFace* face,
                                        outlinerreal x,
