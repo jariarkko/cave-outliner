@@ -163,6 +163,10 @@ private:
   
   void calculateLineEquation(void);
   outlinerreal calculateLineXBasedOnY(outlinerreal y);
+  void getLineActualEndPointsHorizontal(OutlinerLine2D& actualLine,
+                                        outlinerreal extralineatends);
+  void getLineActualEndPointsGeneral(OutlinerLine2D& actualLine,
+                                     outlinerreal extralineatends);
   void lineIteratorInit(struct ProcessorCrossSectionLineIterator& iter);
   bool lineIteratorDone(struct ProcessorCrossSectionLineIterator& iter);
   void lineIteratorNext(struct ProcessorCrossSectionLineIterator& iter);

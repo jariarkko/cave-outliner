@@ -192,7 +192,9 @@ doc/example1-crosssection-small.jpg:	doc/example1-crosssection.jpg Makefile
 
 test:	cave-outliner \
 	unit-tests \
-	basic-tests
+	basic-tests \
+	cave-tests \
+	failing-tests
 
 unit-tests:	cave-outliner
 	@echo 'Running test case unit-tests...'
@@ -225,12 +227,15 @@ basic-tests:	cave-outliner \
 		cube-cross-section-label-test \
 		cube-cross-section-highres-label-test \
 		cube-cross-section-multiplier-label-test \
-		cave1-test \
+		house-cross-section-test
+
+cave-tests:	cave1-test \
 		cave1-line-test \
 		cave1-x-cross-section-test \
 		cave1-x-cross-section-width-test \
-		house-cross-section-test \
-		house-cross-section-side-test \
+		cave1-y-cross-section-test
+
+failing-tests:	house-cross-section-side-test \
 		house-cross-section-another-side-test \
 		house-cross-section-highres-test
 
@@ -427,6 +432,12 @@ cave1-x-cross-section-width-test:
 	@diff -q test/cave1-x-cross-section-width-0.svg test/cave1-x-cross-section-width-0.svg.expected
 	@diff -q test/cave1-x-cross-section-width-1.svg test/cave1-x-cross-section-width-1.svg.expected
 	@diff -q test/cave1-x-cross-section-width-2.svg test/cave1-x-cross-section-width-2.svg.expected
+
+cave1-y-cross-section-test:
+	@echo 'Running test case cave1-y-cross-section-test...'
+	@./cave-outliner --quiet --label --borderline --multiplier 5 --crosssections y 1 test/cave1-y-cross-section-%.svg --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-y-cross-section.svg
+	@diff -q test/cave1-y-cross-section.svg test/cave1-y-cross-section.svg.expected
+	@diff -q test/cave1-y-cross-section-0.svg test/cave1-y-cross-section-0.svg.expected
 
 updateversion:
 	@echo This makefile target updates one software source file based on tags in GitHub,

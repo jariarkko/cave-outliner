@@ -308,6 +308,45 @@ ProcessorCrossSection::calculateLineXBasedOnY(outlinerreal y) {
 void
 ProcessorCrossSection::getLineActualEndPoints(OutlinerLine2D& actualLine,
                                               outlinerreal extralineatends) {
+  if (lineStepY == 0) {
+    return(getLineActualEndPointsHorizontal(actualLine,extralineatends));
+  } else {
+    return(getLineActualEndPointsGeneral(actualLine,extralineatends));
+  }
+}
+
+void
+ProcessorCrossSection::getLineActualEndPointsHorizontal(OutlinerLine2D& actualLine,
+                                                        outlinerreal extralineatends) {
+  //
+  // This function applies for horizontal lines (y does not change).
+  //
+  // For these lines, we simply take the x endpoints, and extend them
+  // by how much extra line is requested.
+  //
+  
+  assert(lineStepY == 0);
+  assert(lineStart.y == lineEnd.y);
+  actualLine.start.x = sliceVerticalBoundingBox.start.x;
+  actualLine.start.y = lineStart.y;
+  actualLine.end.x = sliceVerticalBoundingBox.end.x;
+  actualLine.end.y = lineEnd.y;
+  infof("horizontal actual line at y = %.2f x = %.2f..%.2f",
+        actualLine.start.y,
+        actualLine.start.x,
+        actualLine.end.x);
+  infof("  from sliceVerticalBoundingBox (%.2f,%.2f) - (%.2f,%.2f)",
+        sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
+        sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y);
+}
+  
+void
+ProcessorCrossSection::getLineActualEndPointsGeneral(OutlinerLine2D& actualLine,
+                                                     outlinerreal extralineatends) {
+  //
+  // This function applies for all lines except those that are along
+  // the horizontal (y does not change).
+  //
   // We need to take the bounding box of the cross section, and the xy
   // plane (plan-view) position of the points where the bounding box
   // and the line equation intersect. We can do this per the equations
@@ -551,7 +590,7 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxMesh(const aiScene* scene,
     const aiFace** faces = 0;
     proc.indexed.getFaces(mesh,iter.point.x,iter.point.y,&nFaces,&faces);
     if (nFaces > 0) {
-      infof("got %u cross section faces from (%.2f,%.2f)", nFaces, iter.point.x, iter.point.y);
+      debugf("got %u cross section faces from (%.2f,%.2f)", nFaces, iter.point.x, iter.point.y);
       for (unsigned int f = 0; f < nFaces; f++) {
         getSliceVerticalBoundingBoxFace(scene,mesh,faces[f],
                                         iter.point.x, iter.point.y,
@@ -578,12 +617,12 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
   OutlinerTriangle2D t2(a,b,c);
   OutlinerBox2D thisBox(x,y,x+boxStepX,y+boxStepY);
   if (OutlinerMath::boundingBoxIntersectsTriangle2D(t2,thisBox)) {
-    infof("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) hits step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
-                   mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
-                   mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
-                   mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
-                   thisBox.start.x, thisBox.start.y,
-                   thisBox.end.x, thisBox.end.y);
+    debugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) hits step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
+           mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
+           mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
+           mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
+           thisBox.start.x, thisBox.start.y,
+           thisBox.end.x, thisBox.end.y);
     deepdeepdebugf("cross section direction %s and %s",
                    DirectionOperations::toString(proc.direction),
                    DirectionOperations::toString(sliceDirection));
@@ -624,16 +663,16 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
       }
     } 
   } else {
-    infof("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) "
-                   "for direction %s (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) does NOT hit "
-                   "step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
-                   mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
-                   mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
-                   mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
-                   DirectionOperations::toString(proc.direction),
-                   t2.a.x, t2.a.y, t2.b.x, t2.b.y, t2.c.x, t2.c.y,
-                   thisBox.start.x, thisBox.start.y,
-                   thisBox.end.x, thisBox.end.y);
+    debugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) "
+           "for direction %s (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) does NOT hit "
+           "step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
+           mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
+           mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
+           mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
+           DirectionOperations::toString(proc.direction),
+           t2.a.x, t2.a.y, t2.b.x, t2.b.y, t2.c.x, t2.c.y,
+           thisBox.start.x, thisBox.start.y,
+           thisBox.end.x, thisBox.end.y);
   }
 }
 
@@ -645,23 +684,23 @@ void
 ProcessorCrossSection::addSpaceForLabel(OutlinerBox2D& pictureBoundingBox,
                                         outlinerreal thisStepX,
                                         outlinerreal thisStepY) {
-  infof("proc.multiplier %u", proc.multiplier);
+  debugf("proc.multiplier %u", proc.multiplier);
   outlinerreal incr =
     (outlinerdefaultfontysize*thisStepY) / proc.multiplier +
     outlinertitlespaceempty*thisStepY;
-  infof("increasing cross-section image vertical size by %.2f (%u*%.2f)/%u+(%u*%.2f) to accommodate label",
-        incr, outlinerdefaultfontysize, thisStepY, proc.multiplier,
-        outlinertitlespaceempty, thisStepY);
+  debugf("increasing cross-section image vertical size by %.2f (%u*%.2f)/%u+(%u*%.2f) to accommodate label",
+         incr, outlinerdefaultfontysize, thisStepY, proc.multiplier,
+         outlinertitlespaceempty, thisStepY);
   pictureBoundingBox.end.y += incr;
   outlinerreal labelHorizontalSpaceNeeded = outlinertitlespacex / proc.multiplier;
   outlinerreal horizontalSpaceAvailable = (pictureBoundingBox.end.x - pictureBoundingBox.start.x)/proc.stepy;
-  infof("horizontal space available %.2f, needed %.2f %.2f/%u (stepy %.2f)",
-        horizontalSpaceAvailable, labelHorizontalSpaceNeeded,
-        outlinertitlespacex, proc.multiplier, proc.stepy);
+  debugf("horizontal space available %.2f, needed %.2f %.2f/%u (stepy %.2f)",
+         horizontalSpaceAvailable, labelHorizontalSpaceNeeded,
+         outlinertitlespacex, proc.multiplier, proc.stepy);
   if (horizontalSpaceAvailable < labelHorizontalSpaceNeeded) {
     outlinerreal incr2 = (labelHorizontalSpaceNeeded - horizontalSpaceAvailable) * proc.stepy;
-    infof("increasing cross-section image horizontal size by %.2f (%f-%2f)*%f to accommodate label",
-          incr2, labelHorizontalSpaceNeeded, horizontalSpaceAvailable, proc.stepy);
+    debugf("increasing cross-section image horizontal size by %.2f (%f-%2f)*%f to accommodate label",
+           incr2, labelHorizontalSpaceNeeded, horizontalSpaceAvailable, proc.stepy);
     pictureBoundingBox.end.x += incr2;
   }
 }
@@ -674,9 +713,9 @@ ProcessorCrossSection::addSpaceAround(OutlinerBox2D& pictureBoundingBox,
   pictureBoundingBox.start.y -= freespacearound*thisStepY;
   pictureBoundingBox.end.x += freespacearound*thisStepX;
   pictureBoundingBox.end.y += freespacearound*thisStepY;
-  infof("  extended cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
-        pictureBoundingBox.start.x, pictureBoundingBox.start.y,
-        pictureBoundingBox.end.x, pictureBoundingBox.end.y);
+  debugf("  extended cross section bounding box after adjustment (%.2f,%.2f) to (%.2f,%.2f)",
+         pictureBoundingBox.start.x, pictureBoundingBox.start.y,
+         pictureBoundingBox.end.x, pictureBoundingBox.end.y);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
