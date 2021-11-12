@@ -253,11 +253,19 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
     file << "\"";
   }
 
+  // Handle color
+  const char* color = "black";
+  if ((line.style & outlinersvgstyle_grey) != 0) {
+    color = "grey";
+  } else if ((line.style & outlinersvgstyle_red) != 0) {
+    color = "red";
+  }
+  
   // Handle smoothing
   if (smooth) {
-    file << " fill=\"none\" stroke=\"black\" ";
+    file << " fill=\"none\" stroke=\"" << color << "\" ";
   } else {
-    file << " fill=\"none\" stroke=\"black\" ";
+    file << " fill=\"none\" stroke=\"" << color << "\" ";
   }
   
   // Handle styles

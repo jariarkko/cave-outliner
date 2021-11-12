@@ -21,10 +21,12 @@ OBJS=	$(OBJDIR)/main.o \
 	$(OBJDIR)/mainconfig.o \
 	$(OBJDIR)/mainoptions.o \
 	$(OBJDIR)/mainoptionshelp.o \
+	$(OBJDIR)/maintest.o \
 	$(OBJDIR)/outlinerprocessor.o \
 	$(OBJDIR)/outlinerprocessorcrosssection.o \
 	$(OBJDIR)/outlinerindexedmesh.o \
-	$(OBJDIR)/outlinermaterialmatrix.o \
+	$(OBJDIR)/outlinermaterialmatrix2d.o \
+	$(OBJDIR)/outlinermaterialmatrix3d.o \
 	$(OBJDIR)/outlinerdescribe.o \
 	$(OBJDIR)/outlinerboundingboxer.o \
 	$(OBJDIR)/outlinerdebug.o \
@@ -36,6 +38,7 @@ OBJS=	$(OBJDIR)/main.o \
 HDRS=	src/main.hh \
 	src/mainconfig.hh \
 	src/mainoptions.hh \
+	src/maintest.hh \
 	src/outlinertypes.hh \
 	src/outlinerconstants.hh \
 	src/outlinerdebug.hh \
@@ -43,7 +46,8 @@ HDRS=	src/main.hh \
 	src/outlinerprocessor.hh \
 	src/outlinerprocessorcrosssection.hh \
 	src/outlinerindexedmesh.hh \
-	src/outlinermaterialmatrix.hh \
+	src/outlinermaterialmatrix2d.hh \
+	src/outlinermaterialmatrix3d.hh \
 	src/outlinerdescribe.hh \
 	src/outlinerboundingboxer.hh \
 	src/outlinermath.hh \
@@ -54,12 +58,14 @@ SRCS=	src/main.cc \
 	src/mainconfig.cc \
 	src/mainoptions.cc \
 	src/mainoptionshelp.cc \
+	src/maintest.cc \
 	src/outlinerdebug.cc \
 	src/outlinerdirection.cc \
 	src/outlinerprocessor.cc \
 	src/outlinerprocessorcrosssection.cc \
 	src/outlinerindexedmesh.cc \
-	src/outlinermaterialmatrix.cc \
+	src/outlinermaterialmatrix2d.cc \
+	src/outlinermaterialmatrix3d.cc \
 	src/outlinerdescribe.cc \
 	src/outlinerboundingboxer.cc \
 	src/outlinermath.cc \
@@ -73,7 +79,8 @@ CLASSES=outliner_math \
 	describer \
 	direction_operations \
 	indexed_mesh \
-	material_matrix \
+	material_matrix2_d \
+	material_matrix3_d \
 	outliner_box2_d \
 	outliner_box3_d \
 	outliner_line2_d \
@@ -92,7 +99,8 @@ CLASSMARKDOWNS=	doc/class_outliner_math.md \
 		doc/class_describer.md \
 		doc/class_direction_operations.md \
 		doc/class_indexed_mesh.md \
-		doc/class_material_matrix.md \
+		doc/class_material_matrix2_d.md \
+		doc/class_material_matrix3_d.md \
 		doc/class_outliner_box2_d.md \
 		doc/class_outliner_box3_d.md \
 		doc/class_outliner_line2_d.md \
@@ -124,6 +132,12 @@ $(OBJDIR)/mainconfig.o:	src/mainconfig.cc $(HDRS)
 $(OBJDIR)/mainoptions.o:	src/mainoptions.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/mainoptions.o
 
+$(OBJDIR)/mainoptionshelp.o:	src/mainoptionshelp.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/mainoptionshelp.o
+
+$(OBJDIR)/maintest.o:	src/maintest.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/maintest.o
+
 $(OBJDIR)/outlinerprocessor.o:	src/outlinerprocessor.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerprocessor.o
 
@@ -133,8 +147,11 @@ $(OBJDIR)/outlinerprocessorcrosssection.o:	src/outlinerprocessorcrosssection.cc 
 $(OBJDIR)/outlinerindexedmesh.o:	src/outlinerindexedmesh.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerindexedmesh.o
 
-$(OBJDIR)/outlinermaterialmatrix.o:	src/outlinermaterialmatrix.cc $(HDRS)
-	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinermaterialmatrix.o
+$(OBJDIR)/outlinermaterialmatrix2d.o:	src/outlinermaterialmatrix2d.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinermaterialmatrix2d.o
+
+$(OBJDIR)/outlinermaterialmatrix3d.o:	src/outlinermaterialmatrix3d.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinermaterialmatrix3d.o
 
 $(OBJDIR)/outlinerdescribe.o:	src/outlinerdescribe.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerdescribe.o

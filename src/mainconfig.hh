@@ -148,6 +148,10 @@ public:
   /// Should we label cross sections in the images?
   bool labelCrossSections;
 
+  /// Should cave outliner perform form analysis of cave entrances,
+  /// stones, drops, stalactites, stalagmites, etc?
+  bool formanalysis;
+  
   /// Should we show dimensions?
   bool dimensions;
   

@@ -34,15 +34,14 @@
 #include "outlinerhighprecision.hh"
 #include "outlinerdebug.hh"
 #include "outlinerindexedmesh.hh"
-#include "outlinermaterialmatrix.hh"
 #include "outlinerprocessor.hh"
 #include "outlinerdescribe.hh"
 #include "outlinerboundingboxer.hh"
-#include "outlinermath.hh"
 #include "outlinersvg.hh"
 #include "outlinerversion.hh"
 #include "mainconfig.hh"
 #include "mainoptions.hh"
+#include "maintest.hh"
 #include "main.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,7 +50,6 @@
 
 static const aiScene* processImport(Assimp::Importer& importer,
                                     const char* file);
-static void runTests(void);
 static char* makeFilenameFromPattern(const char* pattern,
                                      unsigned int index);
 
@@ -75,7 +73,8 @@ main(int argc, char** argv) {
   // Run tests if needed
   if (config.test) {
     debugf("running tests");
-    runTests();
+    MainTest tester;
+    tester.test();
     debugf("done with tests");
     return(0);
   }
@@ -241,6 +240,7 @@ main(int argc, char** argv) {
                       config.holethreshold,
                       config.lineholethreshold,
                       (config.labelCrossSections && config.nCrossSections > 0),
+                      config.formanalysis,
                       config.dimensions,
                       config.nCrossSections,
                       config.crossSections,
@@ -311,24 +311,5 @@ makeFilenameFromPattern(const char* pattern,
   return(result);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////
-// Test functions /////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-static void
-runTests(void) {
-  infof("running tests");
-  OutlinerVector2D::test();
-  OutlinerVector3D::test();
-  OutlinerLine2D::test();
-  OutlinerLine3D::test();
-  OutlinerBox2D::test();
-  OutlinerBox3D::test();
-  OutlinerTriangle2D::test();
-  OutlinerTriangle3D::test();
-  OutlinerMath::mathTests();
-  MaterialMatrix::test();
-  infof("tests ok");
-}
 
 

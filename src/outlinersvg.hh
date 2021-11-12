@@ -39,7 +39,12 @@
 #define outlinersvgstyle_none       0x00
 #define outlinersvgstyle_dashed     0x01
 #define outlinersvgstyle_ends       0x02
-#define outlinersvgstyle_legal      (outlinersvgstyle_dashed+outlinersvgstyle_ends)
+#define outlinersvgstyle_grey       0x04
+#define outlinersvgstyle_red        0x08
+#define outlinersvgstyle_legal      (outlinersvgstyle_dashed + \
+                                     outlinersvgstyle_ends +   \
+                                     outlinersvgstyle_grey +   \
+                                     outlinersvgstyle_red)
 #define outlinersvgstyle_illegal    (~(outlinersvgstyle_legal))
 
 struct OutlinerSvgCoord {

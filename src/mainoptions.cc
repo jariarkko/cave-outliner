@@ -161,6 +161,8 @@ MainOptions::processCommandLineOptions(int& argc,
       }
       config.crossSectionWidth = num;
       argc--;argv++;
+    } else if (strcmp(argv[1],"--formanalysis") == 0) {
+      config.formanalysis = 1;
     } else if (strcmp(argv[1],"--label") == 0) {
       config.labelCrossSections = 1;
     } else if (strcmp(argv[1],"--dimensions") == 0) {

@@ -136,9 +136,9 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   outlinerreal lineStepFactor = lineLength/lineSteps;
   debugf ("  lineStepFactor for material matrix %.2f (from %.2f and %f steps)",
           lineStepFactor, lineLength, lineSteps);
-  matrix = new MaterialMatrix(sliceVerticalBoundingBox,
-                              lineStepFactor,
-                              stepz);
+  matrix = new MaterialMatrix2D(sliceVerticalBoundingBox,
+                                lineStepFactor,
+                                stepz);
   debugf("  slice bounding box after matrix creation (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
          sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
          sliceVerticalBoundingBox.start.x + proc.stepy * matrix->xIndexSize,

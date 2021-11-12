@@ -31,7 +31,7 @@
 #include "outlinerdirection.hh"
 #include "outlinersvg.hh"
 #include "outlinerindexedmesh.hh"
-#include "outlinermaterialmatrix.hh"
+#include "outlinermaterialmatrix2d.hh"
 #include "outlinerprocessor.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,7 +102,7 @@ private:
   outlinerreal boxStepX;
   outlinerreal boxStepY;
   OutlinerBox2D sliceVerticalBoundingBox;
-  MaterialMatrix* matrix;
+  MaterialMatrix2D* matrix;
   Processor& proc;
   SvgCreator* svg;
   outlinerreal dimensionBottomLabelingSpaceStartY;

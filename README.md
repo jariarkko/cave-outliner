@@ -56,6 +56,7 @@ Options:
                              section number in the file name pattern).
     --crossectionwidth n     Width of the analysis for a cross section, by default 1.0, i.e.,
                              one step.
+    --formanalysis           Analyze cave forms, e.g., entrances, stones, stalactites, etc.
     --label                  Label cross sections
     --dimensions             Show dimensions of each cave plan view and cross section.
     --linewidth n            Set the width of the lines in output picture. The value can be a

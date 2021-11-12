@@ -30,13 +30,13 @@
 #include "outlinerdirection.hh"
 #include "outlinermath.hh"
 #include "outlinerdebug.hh"
-#include "outlinermaterialmatrix.hh"
+#include "outlinermaterialmatrix2d.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Material matrix maintenance ////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-MaterialMatrix::MaterialMatrix(OutlinerBox2D boundingbox,
+MaterialMatrix2D::MaterialMatrix2D(OutlinerBox2D boundingbox,
                                outlinerreal stepx,
                                outlinerreal stepy) {
   xIndexSize = ((unsigned int)ceil(((boundingbox.end.x - boundingbox.start.x) / stepx))) + 2;
@@ -61,14 +61,14 @@ MaterialMatrix::MaterialMatrix(OutlinerBox2D boundingbox,
   debugf("created a matrix of %u x %u, nBits %u nChars %u", xIndexSize, yIndexSize, nBits, nChars);
 }
 
-MaterialMatrix::~MaterialMatrix() {
+MaterialMatrix2D::~MaterialMatrix2D() {
   if (bitMatrix != 0) {
     delete bitMatrix;
   }
 }
   
 void
-MaterialMatrix::setMaterialMatrix(unsigned int xIndex,
+MaterialMatrix2D::setMaterialMatrix(unsigned int xIndex,
                                   unsigned int yIndex) {
   if (xIndex >= xIndexSize || yIndex >= yIndexSize)
     debugf("  setMaterialMatrix(%u/%u,%u/%u)",
@@ -88,7 +88,7 @@ MaterialMatrix::setMaterialMatrix(unsigned int xIndex,
 }
 
 bool
-MaterialMatrix::getMaterialMatrix(unsigned int xIndex,
+MaterialMatrix2D::getMaterialMatrix(unsigned int xIndex,
                                   unsigned int yIndex) {
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
@@ -108,7 +108,7 @@ MaterialMatrix::getMaterialMatrix(unsigned int xIndex,
 }
 
 unsigned int
-MaterialMatrix::count(void) {
+MaterialMatrix2D::count(void) {
   unsigned int theCount = 0;
   for (unsigned int i = 0; i < nChars; i++) {
     assert(i < nChars);
@@ -130,7 +130,7 @@ MaterialMatrix::count(void) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void
-MaterialMatrix::test(void) {
+MaterialMatrix2D::test(void) {
 
   infof("material matrix test running");
   
@@ -141,7 +141,7 @@ MaterialMatrix::test(void) {
     OutlinerBox2D boundingBox(boundingBoxStart,boundingBoxEnd);
     float stepx = 1.0;
     float stepy = 1.0;
-    MaterialMatrix test1(boundingBox,stepx,stepy);
+    MaterialMatrix2D test1(boundingBox,stepx,stepy);
     unsigned int xSize = test1.xIndexSize;
     unsigned int ySize = test1.yIndexSize;
     debugf("test1 sizes %u and %u", xSize, ySize);
@@ -181,7 +181,7 @@ MaterialMatrix::test(void) {
     OutlinerBox2D boundingBox(boundingBoxStart,boundingBoxEnd);
     float stepx = 0.1;
     float stepy = 0.1;
-    MaterialMatrix test2(boundingBox,stepx,stepy);
+    MaterialMatrix2D test2(boundingBox,stepx,stepy);
     unsigned int xSize = test2.xIndexSize;
     unsigned int ySize = test2.yIndexSize;
     debugf("test2 sizes %u and %u", xSize, ySize);

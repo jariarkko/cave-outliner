@@ -22,7 +22,7 @@ Overall, the system consists of six major parts:
 
 This is the main program, which lives in src/main.cc. However, bulk of the functionality is in associated classes.
 
-See the detailed description of the [Class MainConfig API](class_main_config.md) and [Class MainOptions API](class_main_options.md).
+See the detailed description of the [Class MainConfig API](class_main_config.md), [Class MainOptions API](class_main_options.md), and [Class MainTest API](class_main_test.md).
 
 ### Assimp
 
@@ -45,13 +45,21 @@ The number of tiles is configurable with the --tiling option of the cave-outline
 
 See the detailed description of the [Class IndexedMesh API](class_indexed_mesh.md). 
 
-#### Outlinermaterialmatrix
+#### Outlinermaterialmatrix2d
 
-This object represents a 2D view into a 3D cave model. Given a desired resolution (N x M pixels), it provides a boolean matrix. Each element (x,y) in the matrix is set to 1 if there's a a face within the model in that pixel location. The resolution is configurable, so for instance for a 1 x 1 resolution all faces within the 3D model would be at the resulting single pixel.
+This object represents a quantized 2D view into a 3D cave model. Given a desired resolution (N x M pixels), it provides a boolean matrix. Each element (x,y) in the matrix is set to 1 if there's a a face within the model in that pixel location. The resolution is configurable, so for instance for a 1 x 1 resolution all faces within the 3D model would be at the resulting single pixel.
 
 Note that the material matrix resolution is not the same as tile resolution in the indexed mesh object. Typically, the indexed mesh has low resolution, just sufficient for fast searches, while the material matrix needs to support the desired high resolution of the output.
 
-See the detailed description of the [Class MaterialMatrix API](class_material_matrix.md). 
+See the detailed description of the [Class MaterialMatrix2D API](class_material_matrix2_d.md). 
+
+#### Outlinermaterialmatrix3d
+
+This object represents a quantized 3D view into a 3D cave model. Given a desired resolution (N x M pixels), it provides a boolean matrix. Each element (x,y) in the matrix is set to 1 if there's a a face within the model in that pixel location. The resolution is configurable, so for instance for a 1 x 1 resolution all faces within the 3D model would be at the resulting single pixel.
+
+Note that the material matrix resolution is not the same as tile resolution in the indexed mesh object. Typically, the indexed mesh has low resolution, just sufficient for fast searches, while the material matrix needs to support the desired high resolution of the output.
+
+See the detailed description of the [Class MaterialMatrix3D API](class_material_matrix3_d.md). 
 
 #### Outlinerprocessor
 

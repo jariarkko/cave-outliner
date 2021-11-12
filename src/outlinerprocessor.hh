@@ -31,7 +31,7 @@
 #include "outlinerdirection.hh"
 #include "outlinersvg.hh"
 #include "outlinerindexedmesh.hh"
-#include "outlinermaterialmatrix.hh"
+#include "outlinermaterialmatrix2d.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Data types /////////////////////////////////////////////////////////////////////////////////
@@ -76,6 +76,7 @@ public:
             const unsigned int holethresholdIn,
             const unsigned int lineHolethresholdIn,
             const bool labelsIn,
+            const bool formanalysisIn,
             const bool dimensionsIn,
             unsigned int nCrossSectionsIn,
             struct ProcessorCrossSectionInfo* crossSectionsIn,
@@ -109,10 +110,11 @@ private:
   const unsigned int holethreshold;
   const unsigned int lineHolethreshold;
   const bool labels;
+  const bool formanalysis;
   const bool dimensions;
   const OutlinerBox2D originalPlanviewBoundingBox;
   const OutlinerBox2D planviewBoundingBox;
-  MaterialMatrix matrix;
+  MaterialMatrix2D matrix;
   const unsigned int nCrossSections;
   const struct ProcessorCrossSectionInfo* crossSections;
   IndexedMesh& indexed;
@@ -149,7 +151,7 @@ private:
                             const unsigned int* neighborTableY);
   bool isBorder(unsigned int xIndex,
                 unsigned int yIndex,
-                MaterialMatrix* theMatrix,
+                MaterialMatrix2D* theMatrix,
                 unsigned int& nBorderTo,
                 unsigned int borderTableSize,
                 bool* borderTablePrev,
@@ -258,7 +260,7 @@ private:
   // Image drawing
   //
   
-  bool matrixToSvg(MaterialMatrix* theMatrix,
+  bool matrixToSvg(MaterialMatrix2D* theMatrix,
                    SvgCreator* theSvg,
                    enum outlineralgorithm theAlgorithm,
                    outlinerreal xStart,

@@ -16,8 +16,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef OUTLINERMATERIALMATRIX_HH
-#define OUTLINERMATERIALMATRIX_HH
+#ifndef OUTLINERMATERIALMATRIX2D_HH
+#define OUTLINERMATERIALMATRIX2D_HH
 
 #include "outlinerdirection.hh"
 
@@ -26,12 +26,13 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ///
-/// This object represents a 2D view into a 3D cave model. Given a
-/// desired resolution (N x M pixels), it provides a boolean
-/// matrix. Each element (x,y) in the matrix is set to 1 if there's a
-/// a face within the model in that pixel location. The resolution is
-/// configurable, so for instance for a 1 x 1 resolution all faces
-/// within the 3D model would be at the resulting single pixel.
+/// This object represents a quantized 2D view into a 3D cave
+/// model. Given a desired resolution (N x M pixels), it provides a
+/// boolean matrix. Each element (x,y) in the matrix is set to 1 if
+/// there's a a face within the model in that pixel location. The
+/// resolution is configurable, so for instance for a 1 x 1 resolution
+/// all faces within the 3D model would be at the resulting single
+/// pixel.
 ///
 /// Note that the material matrix resolution is not the same as tile
 /// resolution in the indexed mesh object. Typically, the indexed mesh
@@ -40,17 +41,17 @@
 /// the output.
 ///
 
-class MaterialMatrix {
+class MaterialMatrix2D {
 
 public:
 
-  /// Create a MaterialMatrix object.
-  MaterialMatrix(OutlinerBox2D boundingbox,
-                 outlinerreal stepx,
-                 outlinerreal stepy);
+  /// Create a MaterialMatrix2D object.
+  MaterialMatrix2D(OutlinerBox2D boundingbox,
+                   outlinerreal stepx,
+                   outlinerreal stepy);
 
   /// Destruct the material matrix.
-  ~MaterialMatrix();
+  ~MaterialMatrix2D();
 
   /// Set the flag indicating that there is material in a given (x,y)
   /// index in the matrix.
@@ -82,4 +83,4 @@ private:
 
 };
 
-#endif // OUTLINERMATERIALMATRIX_HH
+#endif // OUTLINERMATERIALMATRIX2D_HH
