@@ -32,6 +32,7 @@
 #include "outlinersvg.hh"
 #include "outlinerindexedmesh.hh"
 #include "outlinermaterialmatrix2d.hh"
+#include "outlinermaterialmatrix3d.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Data types /////////////////////////////////////////////////////////////////////////////////
@@ -115,6 +116,7 @@ private:
   const OutlinerBox2D originalPlanviewBoundingBox;
   const OutlinerBox2D planviewBoundingBox;
   MaterialMatrix2D matrix;
+  MaterialMatrix3D matrix3;
   const unsigned int nCrossSections;
   const struct ProcessorCrossSectionInfo* crossSections;
   IndexedMesh& indexed;

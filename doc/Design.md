@@ -61,6 +61,14 @@ Note that the material matrix resolution is not the same as tile resolution in t
 
 See the detailed description of the [Class MaterialMatrix3D API](class_material_matrix3_d.md). 
 
+#### Outlinerformmatrix2d
+
+This object represents a semantic 2D view into a 3D cave model. Given a desired resolution (N x M pixels), it provides a matrix of what's in each pixel, e.g., there's a cave with ceiling and floor, there's an entrance or hole with no roof, there's a stalactite, etc.
+
+Note that the form matrix resolution is not the same as tile resolution in the indexed mesh object. Typically, the indexed mesh has low resolution, just sufficient for fast searches, while the material matrix needs to support the desired high resolution of the output.
+
+See the detailed description of the [Class MaterialMatrix2D API](class_material_matrix2_d.md). 
+
 #### Outlinerprocessor
 
 This is the main program of the Core module, it performs the actual mapping from a given model and indexed mesh to an SVG image. It creates a material matrix as part of the process.

@@ -31,6 +31,7 @@
 #include "maintest.hh"
 #include "outlinermaterialmatrix2d.hh"
 #include "outlinermaterialmatrix3d.hh"
+#include "outlinerformmatrix2d.hh"
 #include "outlinermath.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +62,7 @@ MainTest::test(void) {
   OutlinerMath::mathTests();
   MaterialMatrix2D::test();
   MaterialMatrix3D::test();
+  FormMatrix2D::test();
   infof("tests ok");
 }
 

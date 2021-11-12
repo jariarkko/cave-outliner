@@ -27,6 +27,7 @@ OBJS=	$(OBJDIR)/main.o \
 	$(OBJDIR)/outlinerindexedmesh.o \
 	$(OBJDIR)/outlinermaterialmatrix2d.o \
 	$(OBJDIR)/outlinermaterialmatrix3d.o \
+	$(OBJDIR)/outlinerformmatrix2d.o \
 	$(OBJDIR)/outlinerdescribe.o \
 	$(OBJDIR)/outlinerboundingboxer.o \
 	$(OBJDIR)/outlinerdebug.o \
@@ -48,6 +49,7 @@ HDRS=	src/main.hh \
 	src/outlinerindexedmesh.hh \
 	src/outlinermaterialmatrix2d.hh \
 	src/outlinermaterialmatrix3d.hh \
+	src/outlinerformmatrix2d.hh \
 	src/outlinerdescribe.hh \
 	src/outlinerboundingboxer.hh \
 	src/outlinermath.hh \
@@ -66,6 +68,7 @@ SRCS=	src/main.cc \
 	src/outlinerindexedmesh.cc \
 	src/outlinermaterialmatrix2d.cc \
 	src/outlinermaterialmatrix3d.cc \
+	src/outlinerformmatrix2d.cc \
 	src/outlinerdescribe.cc \
 	src/outlinerboundingboxer.cc \
 	src/outlinermath.cc \
@@ -81,6 +84,7 @@ CLASSES=outliner_math \
 	indexed_mesh \
 	material_matrix2_d \
 	material_matrix3_d \
+	form_matrix2_d \
 	outliner_box2_d \
 	outliner_box3_d \
 	outliner_line2_d \
@@ -101,6 +105,7 @@ CLASSMARKDOWNS=	doc/class_outliner_math.md \
 		doc/class_indexed_mesh.md \
 		doc/class_material_matrix2_d.md \
 		doc/class_material_matrix3_d.md \
+		doc/class_form_matrix2_d.md \
 		doc/class_outliner_box2_d.md \
 		doc/class_outliner_box3_d.md \
 		doc/class_outliner_line2_d.md \
@@ -152,6 +157,9 @@ $(OBJDIR)/outlinermaterialmatrix2d.o:	src/outlinermaterialmatrix2d.cc $(HDRS)
 
 $(OBJDIR)/outlinermaterialmatrix3d.o:	src/outlinermaterialmatrix3d.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinermaterialmatrix3d.o
+
+$(OBJDIR)/outlinerformmatrix2d.o:	src/outlinerformmatrix2d.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerformmatrix2d.o
 
 $(OBJDIR)/outlinerdescribe.o:	src/outlinerdescribe.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerdescribe.o
