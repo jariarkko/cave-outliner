@@ -302,13 +302,6 @@ OutlinerMath::pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
 }
 
 bool
-OutlinerMath::pointInsideBoundingBox2D(const OutlinerBox2D& box,
-                                       const OutlinerVector2D& point) {
-  return(point.x >= box.start.x && point.x <= box.end.x &&
-         point.y >= box.start.y && point.y <= box.end.y);
-}
-
-bool
 OutlinerMath::boundingBoxIntersectsTriangle2D(const OutlinerTriangle2D& triangle,
                                               const OutlinerBox2D& box) {
   
@@ -319,9 +312,9 @@ OutlinerMath::boundingBoxIntersectsTriangle2D(const OutlinerTriangle2D& triangle
                  box.end.x, box.end.y);
   
   // First, if triangle corners are in the box, they intersect
-  if (pointInsideBoundingBox2D(box,triangle.a)) debugreturn("        bbit2","corner a",1);
-  if (pointInsideBoundingBox2D(box,triangle.b)) debugreturn("        bbit2","corner b",1);
-  if (pointInsideBoundingBox2D(box,triangle.c)) debugreturn("        bbit2","corner c",1);
+  if (box.pointInside(triangle.a)) debugreturn("        bbit2","corner a",1);
+  if (box.pointInside(triangle.b)) debugreturn("        bbit2","corner b",1);
+  if (box.pointInside(triangle.c)) debugreturn("        bbit2","corner c",1);
 
   // Otherwise, (for now just an approximation) check if the box corners or middle are in the triangle
   OutlinerVector2D boxUpperRight(box.end.x,box.start.y);
@@ -983,15 +976,15 @@ OutlinerMath::boundingBoxTests(void) {
   OutlinerVector2D bbtest1point3(20,30);
   OutlinerVector2D bbtest1point4(30,30);
   OutlinerVector2D bbtest1point5(11,15);
-  bool ans = pointInsideBoundingBox2D(bbtest1,bbtest1point1);
+  bool ans = bbtest1.pointInside(bbtest1point1);
   assert(ans == 0);
-  ans = pointInsideBoundingBox2D(bbtest1,bbtest1point2);
+  ans = bbtest1.pointInside(bbtest1point2);
   assert(ans == 1);
-  ans = pointInsideBoundingBox2D(bbtest1,bbtest1point3);
+  ans = bbtest1.pointInside(bbtest1point3);
   assert(ans == 1);
-  ans = pointInsideBoundingBox2D(bbtest1,bbtest1point4);
+  ans = bbtest1.pointInside(bbtest1point4);
   assert(ans == 0);
-  ans = pointInsideBoundingBox2D(bbtest1,bbtest1point5);
+  ans = bbtest1.pointInside(bbtest1point5);
   assert(ans == 1);
 }
 

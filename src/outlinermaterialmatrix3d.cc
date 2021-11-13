@@ -36,28 +36,38 @@
 // Material matrix maintenance ////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-MaterialMatrix3D::MaterialMatrix3D(OutlinerBox3D boundingbox,
-                                   outlinerreal stepx,
-                                   outlinerreal stepy,
-                                   outlinerreal stepz) {
+MaterialMatrix3D::MaterialMatrix3D(const OutlinerBox3D& boundingBoxIn,
+                                   const outlinerreal stepx,
+                                   const outlinerreal stepy,
+                                   const outlinerreal stepz) :
+  boundingBox(boundingBoxIn),
+  xIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.x,boundingBox.end.x,stepx)),
+  yIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.y,boundingBox.end.y,stepy)),
+  zIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.z,boundingBox.end.z,stepz)),
+  verticalMatrixes(new VerticalMatrix [xIndexSize]) {
+  if (verticalMatrixes == 0) {
+    errf("Cannot allocate %u vertical matrixes", xIndexSize);
+    exit(1);
+  }
+  memset(verticalMatrixes,0,xIndexSize*sizeof(VerticalMatrix));
 }
 
 MaterialMatrix3D::~MaterialMatrix3D() {
 }
   
 void
-MaterialMatrix3D::setMaterialMatrix(unsigned int xIndex,
-                                    unsigned int yIndex,
-                                    unsigned int zIndex) {
+MaterialMatrix3D::setMaterialMatrix(const unsigned int xIndex,
+                                    const unsigned int yIndex,
+                                    const unsigned int zIndex) {
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
   assert(zIndex < zIndexSize);
 }
 
 bool
-MaterialMatrix3D::getMaterialMatrix(unsigned int xIndex,
-                                    unsigned int yIndex,
-                                    unsigned int zIndex) {
+MaterialMatrix3D::getMaterialMatrix(const unsigned int xIndex,
+                                    const unsigned int yIndex,
+                                    const unsigned int zIndex) const {
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
   assert(zIndex < zIndexSize);
@@ -65,8 +75,14 @@ MaterialMatrix3D::getMaterialMatrix(unsigned int xIndex,
 }
 
 unsigned int
-MaterialMatrix3D::count(void) {
+MaterialMatrix3D::count(void) const {
   unsigned int theCount = 0;
+  for (unsigned int xIndex = 0; xIndex < xIndexSize; xIndex++) {
+    const VerticalMatrix& vertical = verticalMatrixes[xIndex];
+    if (vertical.matrix != 0) {
+      theCount += vertical.matrix->count();
+    }
+  }
   return(theCount);
 }
 

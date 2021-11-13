@@ -36,23 +36,24 @@
 // Material matrix maintenance ////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-MaterialMatrix2D::MaterialMatrix2D(OutlinerBox2D boundingbox,
-                               outlinerreal stepx,
-                               outlinerreal stepy) {
-  xIndexSize = ((unsigned int)ceil(((boundingbox.end.x - boundingbox.start.x) / stepx))) + 2;
-  yIndexSize = ((unsigned int)ceil(((boundingbox.end.y - boundingbox.start.y) / stepy))) + 2;
+MaterialMatrix2D::MaterialMatrix2D(const OutlinerBox2D& boundingBoxIn,
+                                   const outlinerreal stepx,
+                                   const outlinerreal stepy) :
+  boundingBox(boundingBoxIn),
+  xIndexSize(calculateSize(boundingBox.start.x,boundingBox.end.x,stepx)),
+  yIndexSize(calculateSize(boundingBox.start.y,boundingBox.end.y,stepy)),
+  nBits(xIndexSize * yIndexSize),
+  nChars((nBits / 8) + 1),
+  bitMatrix(new unsigned char [nChars]) {
   debugf("yIndexSize %u from %.8f - %.8f / %.8f + 2",
-        yIndexSize, boundingbox.start.y, boundingbox.end.y, stepy);
+        yIndexSize, boundingBox.start.y, boundingBox.end.y, stepy);
   debugf("sub %.8f div %.8f",
-        (boundingbox.end.y - boundingbox.start.y),
-        ((boundingbox.end.y - boundingbox.start.y) / stepy));
+        (boundingBox.end.y - boundingBox.start.y),
+        ((boundingBox.end.y - boundingBox.start.y) / stepy));
   debugf("material matrix %ux%u from %.2f..%.2f and %.2f..%.2f",
         xIndexSize, yIndexSize,
-        boundingbox.start.x, boundingbox.end.x,
-        boundingbox.start.y, boundingbox.end.y);
-  nBits = xIndexSize * yIndexSize;
-  nChars = (nBits / 8) + 1;
-  bitMatrix = new unsigned char [nChars];
+        boundingBox.start.x, boundingBox.end.x,
+        boundingBox.start.y, boundingBox.end.y);
   if (bitMatrix == 0) {
     errf("Cannot allocate bit matrix for %u bytes", nChars);
     exit(1);
@@ -63,13 +64,22 @@ MaterialMatrix2D::MaterialMatrix2D(OutlinerBox2D boundingbox,
 
 MaterialMatrix2D::~MaterialMatrix2D() {
   if (bitMatrix != 0) {
-    delete bitMatrix;
+    delete [] bitMatrix;
   }
 }
-  
+
+unsigned int
+MaterialMatrix2D::calculateSize(outlinerreal from,
+                                outlinerreal to,
+                                outlinerreal step) {
+  assert(from <= to);
+  assert(step > 0.0);
+  return(((unsigned int)ceil(((to - from) / step))) + 2);
+}
+
 void
 MaterialMatrix2D::setMaterialMatrix(unsigned int xIndex,
-                                  unsigned int yIndex) {
+                                    unsigned int yIndex) {
   if (xIndex >= xIndexSize || yIndex >= yIndexSize)
     debugf("  setMaterialMatrix(%u/%u,%u/%u)",
            xIndex, xIndexSize, yIndex, yIndexSize);
@@ -89,7 +99,7 @@ MaterialMatrix2D::setMaterialMatrix(unsigned int xIndex,
 
 bool
 MaterialMatrix2D::getMaterialMatrix(unsigned int xIndex,
-                                  unsigned int yIndex) {
+                                    unsigned int yIndex) {
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
   assert(bitMatrix != 0);
@@ -105,6 +115,26 @@ MaterialMatrix2D::getMaterialMatrix(unsigned int xIndex,
   assert(bitpart < 8);
   if ((thechar & bitMask) != 0) return(1);
   else return(0);
+}
+
+bool
+MaterialMatrix2D::getMaterialYBounds(unsigned int xIndex,
+                                     unsigned int& yIndexFrom,
+                                     unsigned int& yIndexTo) {
+  assert(xIndex < xIndexSize);
+  bool found = 0;
+  for (unsigned int yIndex = 0; yIndex < yIndexSize; yIndex++) {
+    if (getMaterialMatrix(xIndex,yIndex)) {
+      if (!found) {
+        yIndexFrom = yIndex;
+        yIndexTo = yIndex;
+        found = 1;
+      } else {
+        yIndexTo = yIndex;
+      }
+    }
+  }
+  return(found);
 }
 
 unsigned int
@@ -160,6 +190,9 @@ MaterialMatrix2D::test(void) {
     test1.setMaterialMatrix(7,10);
     n = test1.count();
     assert(n == 4);
+    test1.setMaterialMatrix(7,2);
+    n = test1.count();
+    assert(n == 5);
     for (unsigned int x = boundingBox.start.x; x <= boundingBox.end.x; x++) {
       for (unsigned int y = boundingBox.start.y; y <= boundingBox.end.y; y++) {
         bool ans =  test1.getMaterialMatrix(x,y);
@@ -168,10 +201,21 @@ MaterialMatrix2D::test(void) {
           assert((x == 5 && y == 5) ||
                  (x == 6 && y == 6) ||
                  (x == 9 && y == 9) ||
+                 (x == 7 && y == 2) ||
                  (x == 7 && y == 10));
         }
       }
     }
+    unsigned int yFrom;
+    unsigned int yTo;
+    bool bans = test1.getMaterialYBounds(3,yFrom,yTo);
+    assert(!bans);
+    bans = test1.getMaterialYBounds(6,yFrom,yTo);
+    assert(bans);
+    assert(yFrom == 6 && yTo == 6);
+    bans = test1.getMaterialYBounds(7,yFrom,yTo);
+    assert(bans);
+    assert(yFrom == 2 && yTo == 10);
   }
   
   // Large test

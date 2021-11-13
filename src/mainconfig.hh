@@ -150,7 +150,11 @@ public:
 
   /// Should cave outliner perform form analysis of cave entrances,
   /// stones, drops, stalactites, stalagmites, etc?
-  bool formanalysis;
+  bool formAnalysis;
+
+  /// If forms are analysed, what's the compression factor with
+  /// respect to the picture size?
+  outlinerreal formCondense;
   
   /// Should we show dimensions?
   bool dimensions;

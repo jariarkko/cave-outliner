@@ -81,10 +81,6 @@ public:
   static bool pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
                                     const OutlinerVector2D& point);
 
-  /// Is a given point inside a bounding box (in 2-dimension model)?
-  static bool pointInsideBoundingBox2D(const OutlinerBox2D& box,
-                                       const OutlinerVector2D& point);
-  
   /// Does a triangle intersect a bounding box?
   static bool boundingBoxIntersectsTriangle2D(const OutlinerTriangle2D& triangle,
                                               const OutlinerBox2D& box);

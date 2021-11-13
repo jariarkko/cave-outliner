@@ -161,8 +161,15 @@ MainOptions::processCommandLineOptions(int& argc,
       }
       config.crossSectionWidth = num;
       argc--;argv++;
-    } else if (strcmp(argv[1],"--formanalysis") == 0) {
-      config.formanalysis = 1;
+    } else if (strcmp(argv[1],"--formanalysis") == 0 && argc > 2) {
+      float num = atof(argv[2]);
+      if (num < 1.0) {
+        errf("Form compression value needs to be larger than or equal to 1, %s given", argv[2]);
+        return(0);
+      }
+      config.formAnalysis = 1;
+      config.formCondense = num;
+      argc--;argv++;
     } else if (strcmp(argv[1],"--label") == 0) {
       config.labelCrossSections = 1;
     } else if (strcmp(argv[1],"--dimensions") == 0) {

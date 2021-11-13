@@ -33,6 +33,7 @@
 #include "outlinerindexedmesh.hh"
 #include "outlinermaterialmatrix2d.hh"
 #include "outlinermaterialmatrix3d.hh"
+#include "outlinerformmatrix2d.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Data types /////////////////////////////////////////////////////////////////////////////////
@@ -77,7 +78,8 @@ public:
             const unsigned int holethresholdIn,
             const unsigned int lineHolethresholdIn,
             const bool labelsIn,
-            const bool formanalysisIn,
+            const bool formAnalysisIn,
+            const outlinerreal formCondenseIn,
             const bool dimensionsIn,
             unsigned int nCrossSectionsIn,
             struct ProcessorCrossSectionInfo* crossSectionsIn,
@@ -111,12 +113,17 @@ private:
   const unsigned int holethreshold;
   const unsigned int lineHolethreshold;
   const bool labels;
-  const bool formanalysis;
+  const bool formAnalysis;
+  const outlinerreal formCondense;
+  const outlinerreal stepxCondensed;
+  const outlinerreal stepyCondensed;
+  const outlinerreal stepzCondensed;
   const bool dimensions;
   const OutlinerBox2D originalPlanviewBoundingBox;
   const OutlinerBox2D planviewBoundingBox;
-  MaterialMatrix2D matrix;
-  MaterialMatrix3D matrix3;
+  MaterialMatrix2D matrix2; // Plan view matrix
+  MaterialMatrix3D matrix3; // A 3D view matrix
+  FormMatrix2D forms;
   const unsigned int nCrossSections;
   const struct ProcessorCrossSectionInfo* crossSections;
   IndexedMesh& indexed;
@@ -257,6 +264,18 @@ private:
                                 const struct ProcessorCrossSectionInfo* crossSection);
   void addCrossSectionLine(const char* label,
                            OutlinerLine2D& actualLine);
+
+  //
+  // Main processing functions
+  //
+
+  bool preprocessSceneAlgorithmDraw(const aiScene* scene);
+  bool processSceneAlgorithmDraw(const aiScene* scene);
+  bool performFormAnalysis(const aiScene* scene);
+  bool performFormAnalysisSlicing(const aiScene* scene);
+  bool performFormAnalysisOneSlice(const aiScene* scene,
+                                   unsigned int xIndex);
+  bool performFormAnalysisAnalyze(void);
   
   //
   // Image drawing

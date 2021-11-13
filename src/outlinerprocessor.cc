@@ -52,7 +52,8 @@ Processor::Processor(const char* fileNameIn,
                      const unsigned int holethresholdIn,
                      const unsigned int lineHolethresholdIn,
                      const bool labelsIn,
-                     const bool formanalysisIn,
+                     const bool formAnalysisIn,
+                     const outlinerreal formCondenseIn,
                      const bool dimensionsIn,
                      unsigned int nCrossSectionsIn,
                      struct ProcessorCrossSectionInfo* crossSectionsIn,
@@ -73,7 +74,11 @@ Processor::Processor(const char* fileNameIn,
   holethreshold(holethresholdIn),
   lineHolethreshold(lineHolethresholdIn),
   labels(labelsIn),
-  formanalysis(formanalysisIn),
+  formAnalysis(formAnalysisIn),
+  formCondense(formCondenseIn),
+  stepxCondensed(stepx*formCondense),
+  stepyCondensed(stepy*formCondense),
+  stepzCondensed(stepz*formCondense),
   dimensions(dimensionsIn),
   originalPlanviewBoundingBox(DirectionOperations::outputx(direction,originalBoundingBox.start),
                               DirectionOperations::outputy(direction,originalBoundingBox.start),
@@ -83,13 +88,15 @@ Processor::Processor(const char* fileNameIn,
                       DirectionOperations::outputy(direction,boundingBox.start),
                       DirectionOperations::outputx(direction,boundingBox.end),
                       DirectionOperations::outputy(direction,boundingBox.end)),
-  matrix(planviewBoundingBox,
-         stepxIn,
-         stepyIn),
+  matrix2(planviewBoundingBox,
+          stepx,
+          stepy),
   matrix3(boundingBox,
-          stepxIn,
-          stepyIn,
-          stepzIn*(nCrossSectionsIn > 0 ? crossSectionsIn[0].width : 1.0)),
+          stepxCondensed,
+          stepyCondensed,
+          stepzCondensed),
+  forms(matrix2.xIndexSize,
+        matrix2.yIndexSize),
   nCrossSections(nCrossSectionsIn),
   crossSections(crossSectionsIn),
   indexed(indexedIn) {
@@ -157,13 +164,100 @@ Processor::processScene(const aiScene* scene) {
   debugf("processScene");
   assert(scene != 0);
 
-  // Decide what to do, based on the algorithm specified
-  switch (algorithm) {
+  // Construct a plan-view matrix
+  if (!preprocessSceneAlgorithmDraw(scene)) {
+    return(0);
+  }
+  
+  // Figure out if we need to analyse cave forms
+  if (formAnalysis) {
+    performFormAnalysis(scene);
+  }
+  
+  // Draw the basic plan view
+  if (!processSceneAlgorithmDraw(scene)) {
+    return(0);
+  }
+  
+  // Add dimension lines, if any
+  if (dimensions) {
+    addDimensionLines(svg,
+                      originalPlanviewBoundingBox,
+                      dimensionBottomLabelingSpaceStartY,
+                      dimensionRightLabelingSpaceStartX,
+                      stepx,
+                      stepy);
+  }
 
-  case alg_pixel:
-  case alg_borderpixel:
-  case alg_borderline:
-  case alg_borderactual:
+  // Process cross sections
+  if (!processSceneCrossSections(scene,nCrossSections,crossSections)) {
+    return(0);
+  }
+  
+  // Main result (plan view) is also done, flush the image output
+  svgDone();
+  
+  // Done, all good
+  return(1);
+}
+
+bool
+Processor::performFormAnalysis(const aiScene* scene) {
+  infof("Slicing cave in %u slices...", matrix3.xIndexSize - 2);
+  if (!performFormAnalysisSlicing(scene)) {
+    return(0);
+  }
+  infof("Performing form analysis...");
+  if (!performFormAnalysisAnalyze()) {
+    return(0);
+  }
+  return(1);
+}
+
+bool
+Processor::performFormAnalysisSlicing(const aiScene* scene) {
+  for (unsigned int xIndex = 0; xIndex < matrix2.xIndexSize - 2; xIndex++) {
+    performFormAnalysisOneSlice(scene,xIndex);
+  }
+  return(1);
+}
+
+bool
+Processor::performFormAnalysisOneSlice(const aiScene* scene,
+                                       unsigned int xIndex) {
+  unsigned int yIndexFrom;
+  unsigned int yIndexTo;
+  outlinerreal x = planviewBoundingBox.start.x + xIndex * stepxCondensed;
+  unsigned int xIndexMatrix2 = coordinateXToIndex(x);
+  matrix2.getMaterialYBounds(xIndexMatrix2,yIndexFrom,yIndexTo);
+  outlinerreal yFrom = indexToCoordinateY(yIndexFrom);
+  outlinerreal yTo = indexToCoordinateY(yIndexTo);
+  OutlinerLine2D sliceLine(x,yFrom,x,yTo);
+  infof("  slice %u: x = %.2f, y = %.2f..%.2f", xIndex, x, yFrom, yTo);
+  ProcessorCrossSection csproc(0, // no image
+                               0, // no labels
+                               DirectionOperations::screenx(direction),
+                               sliceLine,
+                               stepzCondensed,
+                               1.0,
+                               *this);
+  csproc.processSceneCrossSection(scene);
+  OutlinerBox2D verticalBoundingBox;
+  csproc.getCrossSectionBoundingBox(verticalBoundingBox);
+  MaterialMatrix2D* verticalMatrix = 0;
+  csproc.getVerticalMatrix(verticalMatrix);
+  assert(verticalMatrix != 0);
+  return(1);
+}
+
+bool
+Processor::performFormAnalysisAnalyze(void) {
+  return(1);
+}
+
+bool
+Processor::preprocessSceneAlgorithmDraw(const aiScene* scene) {
+  if (algorithm != alg_triangle) {
     
     // First, go through each part of the picture, and determine if
     // there's material in it. Construct a matrix representing the
@@ -194,10 +288,26 @@ Processor::processScene(const aiScene* scene) {
       }
     }
     
+  }
+
+  // Done
+  return(1);
+}
+
+bool
+Processor::processSceneAlgorithmDraw(const aiScene* scene) {
+  // Decide what to do, based on the algorithm specified
+  switch (algorithm) {
+
+  case alg_pixel:
+  case alg_borderpixel:
+  case alg_borderline:
+  case alg_borderactual:
+    
     // Now there's a matrix filled with a flag for each coordinate,
     // whether there was material or not. And small holes have been filled per above.
     // Draw the output based on all this.
-    if (!matrixToSvg(&matrix,svg,algorithm,
+    if (!matrixToSvg(&matrix2,svg,algorithm,
                      DirectionOperations::outputx(direction,boundingBox.start),
                      DirectionOperations::outputy(direction,boundingBox.start),
                      stepx,
@@ -223,25 +333,7 @@ Processor::processScene(const aiScene* scene) {
       
   }
 
-  // Add dimension lines, if any
-  if (dimensions) {
-    addDimensionLines(svg,
-                      originalPlanviewBoundingBox,
-                      dimensionBottomLabelingSpaceStartY,
-                      dimensionRightLabelingSpaceStartX,
-                      stepx,
-                      stepy);
-  }
-
-  // Process cross sections
-  if (!processSceneCrossSections(scene,nCrossSections,crossSections)) {
-    return(0);
-  }
-  
-  // Main result (plan view) is also done, flush the image output
-  svgDone();
-  
-  // Done, all good
+  // Ok
   return(1);
 }
 
@@ -262,10 +354,10 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
     assert(outlinergeepsilon(x,DirectionOperations::outputx(direction,boundingBox.start)));
     assert(outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end)));
     unsigned int yIndex = 0;
-    if (xIndex >= matrix.xIndexSize) {
-      debugf("processScene %u/%u", xIndex, matrix.xIndexSize);
+    if (xIndex >= matrix2.xIndexSize) {
+      debugf("processScene %u/%u", xIndex, matrix2.xIndexSize);
     }
-    assert(xIndex < matrix.xIndexSize);
+    assert(xIndex < matrix2.xIndexSize);
     
     for (outlinerreal y = DirectionOperations::outputy(direction,boundingBox.start);
          outlinerleepsilon(y,DirectionOperations::outputy(direction,boundingBox.end));
@@ -275,10 +367,10 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
       assert(outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end)));
       assert(outlinergeepsilon(y,DirectionOperations::outputy(direction,boundingBox.start)));
       assert(outlinerleepsilon(y,DirectionOperations::outputy(direction,boundingBox.end)));
-      if (yIndex >= matrix.yIndexSize) {
-        debugf("processScene %u,%u/%u,%u", xIndex, yIndex, matrix.xIndexSize, matrix.yIndexSize);
+      if (yIndex >= matrix2.yIndexSize) {
+        debugf("processScene %u,%u/%u,%u", xIndex, yIndex, matrix2.xIndexSize, matrix2.yIndexSize);
       }
-      assert(yIndex < matrix.yIndexSize);
+      assert(yIndex < matrix2.yIndexSize);
       if (x > -0.605 && x < -0.595) {
         debugf("checking (%.2f,%.2f) or (%u,%u)",x,y,xIndex,yIndex);
       } else {
@@ -286,7 +378,7 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
       }
       if (sceneHasMaterial(scene,indexed,x,y)) {
         debugf("  material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
-        matrix.setMaterialMatrix(xIndex,yIndex);
+        matrix2.setMaterialMatrix(xIndex,yIndex);
       }
       
       yIndex++;
@@ -724,19 +816,19 @@ Processor::getNeighbours(unsigned int xIndex,
   
   // Left and right neighbors at the same level
   if (xIndex > 0)                                                     { tableX[n] = xIndex-1; tableY[n] = yIndex;   n++; }
-  if (xIndex < matrix.xIndexSize-1)                                   { tableX[n] = xIndex+1; tableY[n] = yIndex;   n++; }
+  if (xIndex < matrix2.xIndexSize-1)                                   { tableX[n] = xIndex+1; tableY[n] = yIndex;   n++; }
   
   // Top and bottom neighbours
   if (yIndex > 0)                                                     { tableX[n] = xIndex;   tableY[n] = yIndex-1; n++; }
-  if (yIndex < matrix.yIndexSize-1)                                   { tableX[n] = xIndex;   tableY[n] = yIndex+1; n++; }
+  if (yIndex < matrix2.yIndexSize-1)                                   { tableX[n] = xIndex;   tableY[n] = yIndex+1; n++; }
   
   // Left side corner neighbours
   if (xIndex > 0 && yIndex > 0)                                       { tableX[n] = xIndex-1; tableY[n] = yIndex-1; n++; }
-  if (xIndex > 0 && yIndex < matrix.yIndexSize-1)                     { tableX[n] = xIndex-1; tableY[n] = yIndex+1; n++; }
+  if (xIndex > 0 && yIndex < matrix2.yIndexSize-1)                     { tableX[n] = xIndex-1; tableY[n] = yIndex+1; n++; }
 
   // Right side corner neighbours
-  if (xIndex < matrix.xIndexSize-1 && yIndex > 0)                     { tableX[n] = xIndex+1; tableY[n] = yIndex-1; n++; }
-  if (xIndex < matrix.xIndexSize-1 && yIndex < matrix.yIndexSize-1)   { tableX[n] = xIndex+1; tableY[n] = yIndex+1; n++; }
+  if (xIndex < matrix2.xIndexSize-1 && yIndex > 0)                     { tableX[n] = xIndex+1; tableY[n] = yIndex-1; n++; }
+  if (xIndex < matrix2.xIndexSize-1 && yIndex < matrix2.yIndexSize-1)   { tableX[n] = xIndex+1; tableY[n] = yIndex+1; n++; }
   
   // Done
   assert(n <= tableSize);
@@ -1060,10 +1152,10 @@ Processor::objectHoleRemoval(unsigned int& holeMinSize,
   holeMaxSize = 0;
   if (holethreshold > 0) {
     infof("filtering holes...");
-     for (unsigned int xIndex = 1; xIndex < matrix.xIndexSize; xIndex++) {
-      for (unsigned int yIndex = 0; yIndex < matrix.yIndexSize; yIndex++) {
-        if (!matrix.getMaterialMatrix(xIndex-1,yIndex)) continue;
-        if (!matrix.getMaterialMatrix(xIndex,yIndex)) {
+     for (unsigned int xIndex = 1; xIndex < matrix2.xIndexSize; xIndex++) {
+      for (unsigned int yIndex = 0; yIndex < matrix2.yIndexSize; yIndex++) {
+        if (!matrix2.getMaterialMatrix(xIndex-1,yIndex)) continue;
+        if (!matrix2.getMaterialMatrix(xIndex,yIndex)) {
           unsigned int n;
           unsigned int holeXtable[outlinermaxholethreshold];
           unsigned int holeYtable[outlinermaxholethreshold];
@@ -1073,7 +1165,7 @@ Processor::objectHoleRemoval(unsigned int& holeMinSize,
             if (holeMinSize > n) holeMinSize = n;
             if (holeMaxSize < n) holeMaxSize = n;
             for (unsigned int i = 0; i < n; i++) {
-              matrix.setMaterialMatrix(holeXtable[i],holeYtable[i]);
+              matrix2.setMaterialMatrix(holeXtable[i],holeYtable[i]);
             }
           }
         }
@@ -1100,7 +1192,7 @@ Processor::objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
                                           unsigned int* holeYtable) {
   assert(tableSize <= outlinermaxholethreshold);
   assert(holethreshold <= outlinermaxholethreshold);
-  assert(!matrix.getMaterialMatrix(xIndex,yIndex));
+  assert(!matrix2.getMaterialMatrix(xIndex,yIndex));
   unsigned int nInvestigate = 1;
   const unsigned int maxInvestigate = 2 * outlinermaxholethreshold;
   unsigned int investigateXtable[maxInvestigate];
@@ -1120,7 +1212,7 @@ Processor::objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
     nInvestigate--;
     
     // Does the entry have material? If yes, we don't need to consider it further.
-    if (matrix.getMaterialMatrix(xIndex,yIndex)) continue;
+    if (matrix2.getMaterialMatrix(xIndex,yIndex)) continue;
 
     // Otherwise, this entry is in the hole. But is the hole already too large?
     if (n == holethreshold) return(0);

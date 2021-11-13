@@ -57,7 +57,7 @@ public:
 
   /// Create an object to prepare for the drawing of a cross section
   /// view of a cave tunnel.
-  ProcessorCrossSection(const char* fileNameIn,
+  ProcessorCrossSection(const char* fileNameIn, // 0 if no image desired
                         const char* labelIn, // 0 if no label desired
                         enum outlinerdirection sliceDirectionIn,
                         const OutlinerLine2D& lineIn,
@@ -75,13 +75,24 @@ public:
   /// created.
   bool processSceneCrossSection(const aiScene* scene);
 
-  /// Once a cross section has been draw, we have information exactly
+  /// Once a cross section has been drawn, we have information exactly
   /// how wide/high the cross section is. On the plan view this can be
   /// represented by a line drawn across the cave tunnel, with each
   /// end of the line ending exactly at the tunnel walls. This
   /// function returns the coordinates for this line.
   void getLineActualEndPoints(OutlinerLine2D& actualLine,
                               outlinerreal extralineatends);
+
+  /// Once a cross section has been drawn, we have information exactly
+  /// what size the cave cross section is. Return it.
+  void getCrossSectionBoundingBox(OutlinerBox2D& boundingBox);
+  
+  /// Once a cross section has been drawn, we have information exactly
+  /// what's inside, in the form of a vertical material matrix. This
+  /// function fetches that matrix. If fetched, the
+  /// ProcessorCrossSection object no longer keeps the matrix, so the
+  /// caller will be responsible for deallocating it.
+  void getVerticalMatrix(MaterialMatrix2D*& output);
   
 private:
 

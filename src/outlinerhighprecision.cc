@@ -92,6 +92,12 @@ OutlinerBox2D::equal(const OutlinerBox2D& box2) const {
          end.y == box2.end.y);
 }
 
+bool
+OutlinerBox2D::pointInside(const OutlinerVector2D& point) const {
+  return(point.x >= start.x && point.x <= end.x &&
+         point.y >= start.y && point.y <= end.y);
+}
+
 void
 OutlinerBox2D::intersection(const OutlinerBox2D& box2,
                             OutlinerBox2D& resultBox) const {

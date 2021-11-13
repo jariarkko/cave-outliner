@@ -46,9 +46,9 @@ class MaterialMatrix2D {
 public:
 
   /// Create a MaterialMatrix2D object.
-  MaterialMatrix2D(OutlinerBox2D boundingbox,
-                   outlinerreal stepx,
-                   outlinerreal stepy);
+  MaterialMatrix2D(const OutlinerBox2D& boundingBoxIn,
+                   const outlinerreal stepx,
+                   const outlinerreal stepy);
 
   /// Destruct the material matrix.
   ~MaterialMatrix2D();
@@ -62,23 +62,37 @@ public:
   /// (x,y) index in the matrix.
   bool getMaterialMatrix(unsigned int xIndex,
                          unsigned int yIndex);
-
+  
+  /// Find bounds of material at the y index range, on a given x index
+  bool getMaterialYBounds(unsigned int xIndex,
+                          unsigned int& yIndexFrom,
+                          unsigned int& yIndexTo);
+  
+  /// Calculate size needed to represent from...to with increments of
+  /// size step.
+  static unsigned int calculateSize(outlinerreal from,
+                                    outlinerreal to,
+                                    outlinerreal step);
+  
   /// Count the number of matrix elements with flags on.
   unsigned int count(void);
 
   /// Run unit tests for this module.
   static void test(void);
 
+  // Matrix bounding box in the actual coordinates
+  const OutlinerBox2D boundingBox;
+  
   /// Matrix size in x-coordinate direction.
-  unsigned int xIndexSize;
+  const unsigned int xIndexSize;
   
   /// Matrix size in y-coordinate direction.
-  unsigned int yIndexSize;
-
+  const unsigned int yIndexSize;
+  
 private:
 
-  unsigned int nBits;
-  unsigned int nChars;
+  const unsigned int nBits;
+  const unsigned int nChars;
   unsigned char* bitMatrix;
 
 };

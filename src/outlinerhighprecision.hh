@@ -236,7 +236,10 @@ public:
   
   /// Test for equality.
   bool equal(const OutlinerBox2D& box2) const;
-
+  
+  /// Is a given point inside a bounding box (in 2-dimension model)?
+  bool pointInside(const OutlinerVector2D& point) const;
+  
   /// Take an intersection of this and another box, placing the
   /// resulting bounding box in "resultBox".
   void intersection(const OutlinerBox2D& box2,

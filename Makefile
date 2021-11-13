@@ -260,9 +260,16 @@ cave-tests:	cave1-test \
 		cave1-x-cross-section-width-test \
 		cave1-y-cross-section-test
 
-failing-tests:	house-cross-section-side-test \
+failing-tests:	failing-tests-note \
+		cave1-form-analysis-test \
+		house-cross-section-side-test \
 		house-cross-section-another-side-test \
 		house-cross-section-highres-test
+
+failing-tests-note:
+	@echo ''
+	@echo 'Note: The subsequent tests mail fail'
+	@echo ''
 
 cube-pixel-test:
 	@echo 'Running test case cube-pixel-test...'
@@ -463,6 +470,11 @@ cave1-y-cross-section-test:
 	@./cave-outliner --quiet --label --borderline --multiplier 5 --crosssections y 1 test/cave1-y-cross-section-%.svg --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-y-cross-section.svg
 	@diff -q test/cave1-y-cross-section.svg test/cave1-y-cross-section.svg.expected
 	@diff -q test/cave1-y-cross-section-0.svg test/cave1-y-cross-section-0.svg.expected
+
+cave1-form-analysis-test:
+	@echo 'Running test case cave1-form-analysis-test...'
+	@./cave-outliner --quiet --pixel --formanalysis 1.0 --step 0.1 --holethreshold 10 test/cave1.stl test/cave1-form-analysis.svg
+	@diff -q test/cave1-form-analysis.svg test/cave1-form-analysis.svg.expected
 
 updateversion:
 	@echo This makefile target updates one software source file based on tags in GitHub,

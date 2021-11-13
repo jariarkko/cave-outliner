@@ -77,7 +77,7 @@ FormMatrix2D::setForm(unsigned int xIndex,
   const unsigned int nibbleIndex = formMatrixNibbleIndex(xIndex,yIndex);
   const unsigned int charIndex = formMatrixCharIndex(nibbleIndex);
   const unsigned int shift = formMatrixShift(nibbleIndex);
-  printf("setForm(%u,%u) index %u %u shift %u fs %u\n", xIndex, yIndex, nibbleIndex, charIndex, shift, fullSizeChars);
+  deepdeepdebugf("setForm(%u,%u) index %u %u shift %u fs %u\n", xIndex, yIndex, nibbleIndex, charIndex, shift, fullSizeChars);
   assert(charIndex < fullSizeChars);
   uint8_t baseValue = data[charIndex];
   baseValue &= (0xF << shift);
@@ -94,7 +94,7 @@ FormMatrix2D::getForm(unsigned int xIndex,
   const unsigned int nibbleIndex = formMatrixNibbleIndex(xIndex,yIndex);
   const unsigned int charIndex = formMatrixCharIndex(nibbleIndex);
   const unsigned int shift = formMatrixShift(nibbleIndex);
-  printf("setForm(%u,%u) index %u %u shift %u fs %u\n", xIndex, yIndex, nibbleIndex, charIndex, shift, fullSizeChars);
+  deepdeepdebugf("setForm(%u,%u) index %u %u shift %u fs %u\n", xIndex, yIndex, nibbleIndex, charIndex, shift, fullSizeChars);
   assert(charIndex < fullSizeChars);
   const uint8_t baseValue = data[charIndex];
   outlinerform form = (baseValue >> shift);

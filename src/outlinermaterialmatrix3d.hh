@@ -26,6 +26,10 @@
 // Class definition ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+struct VerticalMatrix {
+  MaterialMatrix2D* matrix;
+};
+
 ///
 /// This object represents a quantized 3D view into a 3D cave
 /// model. Given a desired resolution (N x M x L pixels), it provides
@@ -47,43 +51,47 @@ class MaterialMatrix3D {
 public:
 
   /// Create a MaterialMatrix3D object.
-  MaterialMatrix3D(OutlinerBox3D boundingbox,
-                   outlinerreal stepx,
-                   outlinerreal stepy,
-                   outlinerreal stepz);
+  MaterialMatrix3D(const OutlinerBox3D& boundingbox,
+                   const outlinerreal stepx,
+                   const outlinerreal stepy,
+                   const outlinerreal stepz);
 
   /// Destruct the material matrix.
   ~MaterialMatrix3D();
 
   /// Set the flag indicating that there is material in a given (x,y)
   /// index in the matrix.
-  void setMaterialMatrix(unsigned int xIndex,
-                         unsigned int yIndex,
-                         unsigned int zIndex);
+  void setMaterialMatrix(const unsigned int xIndex,
+                         const unsigned int yIndex,
+                         const unsigned int zIndex);
 
   /// Get the flag indicating whether there is material in a given
   /// (x,y) index in the matrix.
-  bool getMaterialMatrix(unsigned int xIndex,
-                         unsigned int yIndex,
-                         unsigned int zIndex);
+  bool getMaterialMatrix(const unsigned int xIndex,
+                         const unsigned int yIndex,
+                         const unsigned int zIndex) const;
 
   /// Count the number of matrix elements with flags on.
-  unsigned int count(void);
+  unsigned int count(void) const;
 
   /// Run unit tests for this module.
   static void test(void);
 
+  // Matrix bounding box in the actual coordinates
+   const OutlinerBox3D boundingBox;
+  
   /// Matrix size in x-coordinate direction.
-  unsigned int xIndexSize;
+  const unsigned int xIndexSize;
   
   /// Matrix size in y-coordinate direction.
-  unsigned int yIndexSize;
+  const unsigned int yIndexSize;
 
   /// Matrix size in z-coordinate direction.
-  unsigned int zIndexSize;
+  const unsigned int zIndexSize;
   
 private:
 
+  struct VerticalMatrix* verticalMatrixes;
 };
 
 #endif // OUTLINERMATERIALMATRIX3D_HH
