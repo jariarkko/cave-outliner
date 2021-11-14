@@ -63,16 +63,16 @@ SvgCreator Class Reference
 <tr class="even separator:aac31dda29a528af01855654151598310">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:ad58b8ea3bb3de693b6bfd3e97a6fd3ba">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ad58b8ea3bb3de693b6bfd3e97a6fd3ba"></span> void </td>
-<td class="memItemRight" data-valign="bottom"><strong>pixel</strong> (outlinerreal x, outlinerreal y)</td>
+<tr class="odd memitem:a8f116aa8d78c8f4d7214a3252d2363e1">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a8f116aa8d78c8f4d7214a3252d2363e1"></span> void </td>
+<td class="memItemRight" data-valign="bottom"><strong>pixel</strong> (outlinerreal x, outlinerreal y, OutlinerSvgStyle style=outlinersvgstyle_none)</td>
 </tr>
-<tr class="even memdesc:ad58b8ea3bb3de693b6bfd3e97a6fd3ba">
+<tr class="even memdesc:a8f116aa8d78c8f4d7214a3252d2363e1">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Draw a pixel.<br />
 </td>
 </tr>
-<tr class="odd separator:ad58b8ea3bb3de693b6bfd3e97a6fd3ba">
+<tr class="odd separator:a8f116aa8d78c8f4d7214a3252d2363e1">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a4b8ad311b7b09d5ec43a7c3dce0cfb79">

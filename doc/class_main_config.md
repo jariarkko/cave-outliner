@@ -418,6 +418,20 @@ MainConfig Class Reference
 <tr class="even separator:a903dc0119ec4155627ce8bb3531f4d86">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
+<tr class="odd memitem:ade3b2a5c0fdcf0498e926504267bdb47">
+<td style="text-align: right;" class="memItemLeft" data-valign="top">bool </td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_main_config.md#ade3b2a5c0fdcf0498e926504267bdb47" class="el">formAnalysis</a></td>
+</tr>
+<tr class="even separator:ade3b2a5c0fdcf0498e926504267bdb47">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:a7426aa3525b80bbe633a2723a1d186a0">
+<td style="text-align: right;" class="memItemLeft" data-valign="top">outlinerreal </td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_main_config.md#a7426aa3525b80bbe633a2723a1d186a0" class="el">formCondense</a></td>
+</tr>
+<tr class="even separator:a7426aa3525b80bbe633a2723a1d186a0">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
 <tr class="odd memitem:a1525af4e5fd0a285c25bc7ca4471e8ed">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a1525af4e5fd0a285c25bc7ca4471e8ed"></span> bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>dimensions</strong></td>
@@ -491,6 +505,36 @@ names and labels they should use, etc.
 
 Width of cross sections (in unit of one step, e.g., 2.0 means analysis
 of a cross slice looks at two steps of 3D model data).
+
+<span id="ade3b2a5c0fdcf0498e926504267bdb47"></span>
+
+## <span class="permalink">[◆ ](#ade3b2a5c0fdcf0498e926504267bdb47)</span>formAnalysis
+
+<table class="memname">
+<tbody>
+<tr class="odd">
+<td class="memname">bool MainConfig::formAnalysis</td>
+</tr>
+</tbody>
+</table>
+
+Should cave outliner perform form analysis of cave entrances, stones,
+drops, stalactites, stalagmites, etc?
+
+<span id="a7426aa3525b80bbe633a2723a1d186a0"></span>
+
+## <span class="permalink">[◆ ](#a7426aa3525b80bbe633a2723a1d186a0)</span>formCondense
+
+<table class="memname">
+<tbody>
+<tr class="odd">
+<td class="memname">outlinerreal MainConfig::formCondense</td>
+</tr>
+</tbody>
+</table>
+
+If forms are analysed, what's the compression factor with respect to the
+picture size?
 
 <span id="ab7dea6503e3065f583472dfed0b032cb"></span>
 

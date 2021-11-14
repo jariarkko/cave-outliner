@@ -75,7 +75,48 @@ OutlinerLine2D Class Reference
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="abb3245feea0b6f40575aaa54005dacb1"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp; </td>
 <td class="memItemRight" data-valign="bottom"><strong>operator=</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp;in)</td>
 </tr>
-<tr class="even separator:abb3245feea0b6f40575aaa54005dacb1">
+<tr class="even memdesc:abb3245feea0b6f40575aaa54005dacb1">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Assignment.<br />
+</td>
+</tr>
+<tr class="odd separator:abb3245feea0b6f40575aaa54005dacb1">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:a1c0191abfd41ef59241c77e3e9473af3">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a1c0191abfd41ef59241c77e3e9473af3"></span> bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>pointOnLine</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;point) const</td>
+</tr>
+<tr class="odd memdesc:a1c0191abfd41ef59241c77e3e9473af3">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Is a given point on a line?<br />
+</td>
+</tr>
+<tr class="even separator:a1c0191abfd41ef59241c77e3e9473af3">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:aae224f98ed05f69f0d3a3548ef5531a1">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aae224f98ed05f69f0d3a3548ef5531a1"></span> bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>horizontal</strong> () const</td>
+</tr>
+<tr class="even memdesc:aae224f98ed05f69f0d3a3548ef5531a1">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Is the line horizontal (along x axis)?<br />
+</td>
+</tr>
+<tr class="odd separator:aae224f98ed05f69f0d3a3548ef5531a1">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:a1a7faaeca47a4d49cd8f6cb5795a1a7d">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a1a7faaeca47a4d49cd8f6cb5795a1a7d"></span> bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>vertical</strong> () const</td>
+</tr>
+<tr class="odd memdesc:a1a7faaeca47a4d49cd8f6cb5795a1a7d">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Is the line vertical (along y axis)?<br />
+</td>
+</tr>
+<tr class="even separator:a1a7faaeca47a4d49cd8f6cb5795a1a7d">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>

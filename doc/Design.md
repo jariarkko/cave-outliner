@@ -77,9 +77,15 @@ See the detailed description of the [Class Processor API](class_processor.md).
 
 #### Outlinerprocessorcrosssection
 
-This is the module inside of the Core module that performs the the drawing of cross sections.
+This is the module inside of the Core module that performs the drawing of cross sections.
 
 See the detailed description of the [Class ProcessorCrossSection API](class_processor_cross_section.md). 
+
+#### Outlinerprocessorforms
+
+This is the module inside of the Core module that performs the analysis of what cave shapes and forms there are. These include entrances, stones, drops, stalactites, etc.
+
+See the detailed description of the [Class ProcessorForms API](class_processor_forms.md). 
 
 ### Outlinersvg
 

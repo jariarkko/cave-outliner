@@ -24,6 +24,7 @@ OBJS=	$(OBJDIR)/main.o \
 	$(OBJDIR)/maintest.o \
 	$(OBJDIR)/outlinerprocessor.o \
 	$(OBJDIR)/outlinerprocessorcrosssection.o \
+	$(OBJDIR)/outlinerprocessorforms.o \
 	$(OBJDIR)/outlinerindexedmesh.o \
 	$(OBJDIR)/outlinermaterialmatrix2d.o \
 	$(OBJDIR)/outlinermaterialmatrix3d.o \
@@ -46,6 +47,7 @@ HDRS=	src/main.hh \
 	src/outlinerdirection.hh \
 	src/outlinerprocessor.hh \
 	src/outlinerprocessorcrosssection.hh \
+	src/outlinerprocessorforms.hh \
 	src/outlinerindexedmesh.hh \
 	src/outlinermaterialmatrix2d.hh \
 	src/outlinermaterialmatrix3d.hh \
@@ -65,6 +67,7 @@ SRCS=	src/main.cc \
 	src/outlinerdirection.cc \
 	src/outlinerprocessor.cc \
 	src/outlinerprocessorcrosssection.cc \
+	src/outlinerprocessorforms.cc \
 	src/outlinerindexedmesh.cc \
 	src/outlinermaterialmatrix2d.cc \
 	src/outlinermaterialmatrix3d.cc \
@@ -95,6 +98,7 @@ CLASSES=outliner_math \
 	outliner_vector3_d \
 	processor \
 	processor_cross_section \
+	processor_forms \
 	svg_creator
 CLASSMARKDOWNS=	doc/class_outliner_math.md \
 		doc/class_main_config.md \
@@ -116,6 +120,7 @@ CLASSMARKDOWNS=	doc/class_outliner_math.md \
 		doc/class_outliner_vector3_d.md \
 		doc/class_processor.md \
 		doc/class_processor_cross_section.md \
+		doc/class_processor_forms.md \
 		doc/class_svg_creator.md
 TOOLS=	doc/markdowncleanup.sh
 SUPP=	Makefile $(TOOLS)
@@ -148,6 +153,9 @@ $(OBJDIR)/outlinerprocessor.o:	src/outlinerprocessor.cc $(HDRS)
 
 $(OBJDIR)/outlinerprocessorcrosssection.o:	src/outlinerprocessorcrosssection.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerprocessorcrosssection.o
+
+$(OBJDIR)/outlinerprocessorforms.o:	src/outlinerprocessorforms.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerprocessorforms.o
 
 $(OBJDIR)/outlinerindexedmesh.o:	src/outlinerindexedmesh.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerindexedmesh.o

@@ -27,16 +27,16 @@ Processor Class Reference
 <tr class="odd heading">
 <td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
 </tr>
-<tr class="even memitem:a9fd44283c2b1ec68b17ff57e111c667a">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a9fd44283c2b1ec68b17ff57e111c667a"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>Processor</strong> (const char *fileNameIn, const unsigned int multiplierIn, const bool smoothIn, const bool mergedLinesIn, const float linewidthIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;originalBoundingBoxIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBoxIn, const outlinerreal stepxIn, const outlinerreal stepyIn, const outlinerreal stepzIn, const enum outlinerdirection directionIn, const enum outlineralgorithm algorithmIn, const unsigned int holethresholdIn, const unsigned int lineHolethresholdIn, const bool labelsIn, const bool dimensionsIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_indexed_mesh.md" class="el">IndexedMesh</a> &amp;indexedIn)</td>
+<tr class="even memitem:a3c2a286fc82f5ecc4111b9a6ae2ad9d9">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a3c2a286fc82f5ecc4111b9a6ae2ad9d9"></span>  </td>
+<td class="memItemRight" data-valign="bottom"><strong>Processor</strong> (const char *fileNameIn, const unsigned int multiplierIn, const bool smoothIn, const bool mergedLinesIn, const float linewidthIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;originalBoundingBoxIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBoxIn, const outlinerreal stepxIn, const outlinerreal stepyIn, const outlinerreal stepzIn, const enum outlinerdirection directionIn, const enum outlineralgorithm algorithmIn, const unsigned int holethresholdIn, const unsigned int lineHolethresholdIn, const bool labelsIn, const bool formAnalysisIn, const outlinerreal formCondenseIn, const bool dimensionsIn, unsigned int nCrossSectionsIn, struct <a href="struct_processor_cross_section_info.md" class="el">ProcessorCrossSectionInfo</a> *crossSectionsIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_indexed_mesh.md" class="el">IndexedMesh</a> &amp;indexedIn)</td>
 </tr>
-<tr class="odd memdesc:a9fd44283c2b1ec68b17ff57e111c667a">
+<tr class="odd memdesc:a3c2a286fc82f5ecc4111b9a6ae2ad9d9">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Create a <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor.md" class="el">Processor</a>.<br />
 </td>
 </tr>
-<tr class="even separator:a9fd44283c2b1ec68b17ff57e111c667a">
+<tr class="even separator:a3c2a286fc82f5ecc4111b9a6ae2ad9d9">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:acf37952c5b420d4e903a512571678692">
@@ -51,11 +51,11 @@ Processor Class Reference
 <tr class="odd separator:acf37952c5b420d4e903a512571678692">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:ac9ea1cec3c065afad46bb6ef7c21a934">
+<tr class="even memitem:a2db9b603b09bf7de1e7e0976b1dac1bc">
 <td style="text-align: right;" class="memItemLeft" data-valign="top">bool </td>
-<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor.md#ac9ea1cec3c065afad46bb6ef7c21a934" class="el">processScene</a> (const aiScene *scene, unsigned int nCrossSections, struct <a href="struct_processor_cross_section_info.md" class="el">ProcessorCrossSectionInfo</a> *crossSections)</td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor.md#a2db9b603b09bf7de1e7e0976b1dac1bc" class="el">processScene</a> (const aiScene *scene)</td>
 </tr>
-<tr class="odd separator:ac9ea1cec3c065afad46bb6ef7c21a934">
+<tr class="odd separator:a2db9b603b09bf7de1e7e0976b1dac1bc">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
@@ -90,9 +90,9 @@ a material matrix as part of the process.
 
 ## Member Function Documentation
 
-<span id="ac9ea1cec3c065afad46bb6ef7c21a934"></span>
+<span id="a2db9b603b09bf7de1e7e0976b1dac1bc"></span>
 
-## <span class="permalink">[◆ ](#ac9ea1cec3c065afad46bb6ef7c21a934)</span>processScene()
+## <span class="permalink">[◆ ](#a2db9b603b09bf7de1e7e0976b1dac1bc)</span>processScene()
 
 <table class="memname">
 <tbody>
@@ -100,24 +100,8 @@ a material matrix as part of the process.
 <td class="memname">bool Processor::processScene</td>
 <td>(</td>
 <td class="paramtype">const aiScene * </td>
-<td class="paramname"><em>scene</em>,</td>
-</tr>
-<tr class="even">
-<td class="paramkey"></td>
-<td></td>
-<td class="paramtype">unsigned int </td>
-<td class="paramname"><em>nCrossSections</em>,</td>
-</tr>
-<tr class="odd">
-<td class="paramkey"></td>
-<td></td>
-<td class="paramtype">struct <a href="struct_processor_cross_section_info.md" class="el">ProcessorCrossSectionInfo</a> * </td>
-<td class="paramname"><em>crossSections</em> </td>
-</tr>
-<tr class="even">
-<td></td>
+<td class="paramname"><em>scene</em></td>
 <td>)</td>
-<td></td>
 <td></td>
 </tr>
 </tbody>

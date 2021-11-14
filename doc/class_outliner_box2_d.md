@@ -95,6 +95,30 @@ OutlinerBox2D Class Reference
 <tr class="even separator:ae7909e320812130d353ad424607e12a7">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
+<tr class="odd memitem:af895cbe23599dab75ad4df554ffc17b2">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="af895cbe23599dab75ad4df554ffc17b2"></span> bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>pointInside</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;point) const</td>
+</tr>
+<tr class="even memdesc:af895cbe23599dab75ad4df554ffc17b2">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Is a given point inside a bounding box (in 2-dimension model)?<br />
+</td>
+</tr>
+<tr class="odd separator:af895cbe23599dab75ad4df554ffc17b2">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:ab39c55ca240be52707607c32b8dd8287">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ab39c55ca240be52707607c32b8dd8287"></span> bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>doesIntersect</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;boundingBox2) const</td>
+</tr>
+<tr class="odd memdesc:ab39c55ca240be52707607c32b8dd8287">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Does a bounding box intersect another one?<br />
+</td>
+</tr>
+<tr class="even separator:ab39c55ca240be52707607c32b8dd8287">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
 <tr class="odd memitem:a3a8e08ddb95dd75a40d0607c64d70d33">
 <td style="text-align: right;" class="memItemLeft" data-valign="top">void </td>
 <td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md#a3a8e08ddb95dd75a40d0607c64d70d33" class="el">intersection</a> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;box2, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;resultBox) const</td>

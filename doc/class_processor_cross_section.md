@@ -27,11 +27,11 @@ ProcessorCrossSection Class Reference
 <tr class="odd heading">
 <td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
 </tr>
-<tr class="even memitem:a4be7551b67987e4edf1a3a69cf0bff2e">
+<tr class="even memitem:a2ff9c6c2f17f6cd865d668177bb4f4ac">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"> </td>
-<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor_cross_section.md#a4be7551b67987e4edf1a3a69cf0bff2e" class="el">ProcessorCrossSection</a> (const char *fileNameIn, const char *labelIn, enum outlinerdirection sliceDirectionIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;lineStartIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;lineEndIn, outlinerreal stepzIn, outlinerreal widthIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor.md" class="el">Processor</a> &amp;procIn)</td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor_cross_section.md#a2ff9c6c2f17f6cd865d668177bb4f4ac" class="el">ProcessorCrossSection</a> (const char *fileNameIn, const char *labelIn, enum outlinerdirection sliceDirectionIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp;lineIn, outlinerreal stepxIn, outlinerreal stepyIn, outlinerreal stepzIn, outlinerreal widthIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor.md" class="el">Processor</a> &amp;procIn)</td>
 </tr>
-<tr class="odd separator:a4be7551b67987e4edf1a3a69cf0bff2e">
+<tr class="odd separator:a2ff9c6c2f17f6cd865d668177bb4f4ac">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a18dee48dd788c2c74b40d88d75b0417c">
@@ -55,6 +55,20 @@ ProcessorCrossSection Class Reference
 <tr class="odd separator:ae29053fb50a8ac8e7a640807697c7ccc">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
+<tr class="even memitem:a43ad24fc22970f4f7479b765032e26ba">
+<td style="text-align: right;" class="memItemLeft" data-valign="top">void </td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor_cross_section.md#a43ad24fc22970f4f7479b765032e26ba" class="el">getCrossSectionBoundingBox</a> (<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp;boundingBox)</td>
+</tr>
+<tr class="odd separator:a43ad24fc22970f4f7479b765032e26ba">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:ad7158d52b5f323afb6072f3855c3924e">
+<td style="text-align: right;" class="memItemLeft" data-valign="top">void </td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor_cross_section.md#ad7158d52b5f323afb6072f3855c3924e" class="el">getVerticalMatrix</a> (<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_material_matrix2_d.md" class="el">MaterialMatrix2D</a> *&amp;output)</td>
+</tr>
+<tr class="odd separator:ad7158d52b5f323afb6072f3855c3924e">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
 </tbody>
 </table>
 
@@ -67,9 +81,9 @@ drawing of cross sections.
 
 ## Constructor & Destructor Documentation
 
-<span id="a4be7551b67987e4edf1a3a69cf0bff2e"></span>
+<span id="a2ff9c6c2f17f6cd865d668177bb4f4ac"></span>
 
-## <span class="permalink">[◆ ](#a4be7551b67987e4edf1a3a69cf0bff2e)</span>ProcessorCrossSection()
+## <span class="permalink">[◆ ](#a2ff9c6c2f17f6cd865d668177bb4f4ac)</span>ProcessorCrossSection()
 
 <table class="memname">
 <tbody>
@@ -94,34 +108,40 @@ drawing of cross sections.
 <tr class="even">
 <td class="paramkey"></td>
 <td></td>
-<td class="paramtype">const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp; </td>
-<td class="paramname"><em>lineStartIn</em>,</td>
+<td class="paramtype">const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp; </td>
+<td class="paramname"><em>lineIn</em>,</td>
 </tr>
 <tr class="odd">
 <td class="paramkey"></td>
 <td></td>
-<td class="paramtype">const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp; </td>
-<td class="paramname"><em>lineEndIn</em>,</td>
+<td class="paramtype">outlinerreal </td>
+<td class="paramname"><em>stepxIn</em>,</td>
 </tr>
 <tr class="even">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype">outlinerreal </td>
+<td class="paramname"><em>stepyIn</em>,</td>
+</tr>
+<tr class="odd">
 <td class="paramkey"></td>
 <td></td>
 <td class="paramtype">outlinerreal </td>
 <td class="paramname"><em>stepzIn</em>,</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="paramkey"></td>
 <td></td>
 <td class="paramtype">outlinerreal </td>
 <td class="paramname"><em>widthIn</em>,</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="paramkey"></td>
 <td></td>
 <td class="paramtype"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor.md" class="el">Processor</a> &amp; </td>
 <td class="paramname"><em>procIn</em> </td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td></td>
 <td>)</td>
 <td></td>
@@ -154,6 +174,26 @@ image file, etc.
 
 ## Member Function Documentation
 
+<span id="a43ad24fc22970f4f7479b765032e26ba"></span>
+
+## <span class="permalink">[◆ ](#a43ad24fc22970f4f7479b765032e26ba)</span>getCrossSectionBoundingBox()
+
+<table class="memname">
+<tbody>
+<tr class="odd">
+<td class="memname">void ProcessorCrossSection::getCrossSectionBoundingBox</td>
+<td>(</td>
+<td class="paramtype"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box2_d.md" class="el">OutlinerBox2D</a> &amp; </td>
+<td class="paramname"><em>boundingBox</em></td>
+<td>)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+Once a cross section has been drawn, we have information exactly what
+size the cave cross section is. Return it.
+
 <span id="ae29053fb50a8ac8e7a640807697c7ccc"></span>
 
 ## <span class="permalink">[◆ ](#ae29053fb50a8ac8e7a640807697c7ccc)</span>getLineActualEndPoints()
@@ -181,11 +221,35 @@ image file, etc.
 </tbody>
 </table>
 
-Once a cross section has been draw, we have information exactly how
+Once a cross section has been drawn, we have information exactly how
 wide/high the cross section is. On the plan view this can be represented
 by a line drawn across the cave tunnel, with each end of the line ending
 exactly at the tunnel walls. This function returns the coordinates for
 this line.
+
+<span id="ad7158d52b5f323afb6072f3855c3924e"></span>
+
+## <span class="permalink">[◆ ](#ad7158d52b5f323afb6072f3855c3924e)</span>getVerticalMatrix()
+
+<table class="memname">
+<tbody>
+<tr class="odd">
+<td class="memname">void ProcessorCrossSection::getVerticalMatrix</td>
+<td>(</td>
+<td class="paramtype"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_material_matrix2_d.md" class="el">MaterialMatrix2D</a> *&amp; </td>
+<td class="paramname"><em>output</em></td>
+<td>)</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+Once a cross section has been drawn, we have information exactly what's
+inside, in the form of a vertical material matrix. This function fetches
+that matrix. If fetched, the
+<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_processor_cross_section.md" class="el">ProcessorCrossSection</a>
+object no longer keeps the matrix, so the caller will be responsible for
+deallocating it.
 
 <span id="a2454d1a516440eb265832a87f40be255"></span>
 

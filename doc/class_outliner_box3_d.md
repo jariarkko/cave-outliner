@@ -83,6 +83,44 @@ OutlinerBox3D Class Reference
 <tr class="odd separator:ae2e2616f80b372443ed60d919de82088">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
+<tr class="even memitem:aa06a12de43e4b6a3ffefe5e0cc857ad1">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aa06a12de43e4b6a3ffefe5e0cc857ad1"></span> bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>equal</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;box2) const</td>
+</tr>
+<tr class="odd memdesc:aa06a12de43e4b6a3ffefe5e0cc857ad1">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Test for equality.<br />
+</td>
+</tr>
+<tr class="even separator:aa06a12de43e4b6a3ffefe5e0cc857ad1">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:a3acf14185f0d7942d8d1632ae5cfdd02">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a3acf14185f0d7942d8d1632ae5cfdd02"></span> bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>doesIntersect</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBox2) const</td>
+</tr>
+<tr class="even memdesc:a3acf14185f0d7942d8d1632ae5cfdd02">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Does a bounding box intersect another one?<br />
+</td>
+</tr>
+<tr class="odd separator:a3acf14185f0d7942d8d1632ae5cfdd02">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:af07d3fa094eec3a009fd2bb7aa32f7b9">
+<td style="text-align: right;" class="memItemLeft" data-valign="top">void </td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md#af07d3fa094eec3a009fd2bb7aa32f7b9" class="el">intersection</a> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;box2, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;resultBox) const</td>
+</tr>
+<tr class="odd separator:af07d3fa094eec3a009fd2bb7aa32f7b9">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:a4ee21cb0a77fa5c6aa5a1a55a5d494f4">
+<td style="text-align: right;" class="memItemLeft" data-valign="top">void </td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md#a4ee21cb0a77fa5c6aa5a1a55a5d494f4" class="el">boxUnion</a> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;box2, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;resultBox) const</td>
+</tr>
+<tr class="odd separator:a4ee21cb0a77fa5c6aa5a1a55a5d494f4">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
 </tbody>
 </table>
 
@@ -219,6 +257,68 @@ space.
 
 Make a line based on given two points, both given as x,y,z coordinates,
 six arguments in total.
+
+## Member Function Documentation
+
+<span id="a4ee21cb0a77fa5c6aa5a1a55a5d494f4"></span>
+
+## <span class="permalink">[◆ ](#a4ee21cb0a77fa5c6aa5a1a55a5d494f4)</span>boxUnion()
+
+<table class="memname">
+<tbody>
+<tr class="odd">
+<td class="memname">void OutlinerBox3D::boxUnion</td>
+<td>(</td>
+<td class="paramtype">const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp; </td>
+<td class="paramname"><em>box2</em>,</td>
+</tr>
+<tr class="even">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp; </td>
+<td class="paramname"><em>resultBox</em> </td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>)</td>
+<td></td>
+<td>const</td>
+</tr>
+</tbody>
+</table>
+
+Take a union of this and another box, placing the resulting bounding box
+in "resultBox".
+
+<span id="af07d3fa094eec3a009fd2bb7aa32f7b9"></span>
+
+## <span class="permalink">[◆ ](#af07d3fa094eec3a009fd2bb7aa32f7b9)</span>intersection()
+
+<table class="memname">
+<tbody>
+<tr class="odd">
+<td class="memname">void OutlinerBox3D::intersection</td>
+<td>(</td>
+<td class="paramtype">const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp; </td>
+<td class="paramname"><em>box2</em>,</td>
+</tr>
+<tr class="even">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp; </td>
+<td class="paramname"><em>resultBox</em> </td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>)</td>
+<td></td>
+<td>const</td>
+</tr>
+</tbody>
+</table>
+
+Take an intersection of this and another box, placing the resulting
+bounding box in "resultBox".
 
 ------------------------------------------------------------------------
 
