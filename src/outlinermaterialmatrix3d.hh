@@ -29,6 +29,7 @@
 struct VerticalMatrix {
   OutlinerBox2D matrixBoundingBox;
   unsigned int yIndexOffset;
+  unsigned int zIndexOffset;
   MaterialMatrix2D* matrix;
 };
 

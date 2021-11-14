@@ -71,17 +71,17 @@ MaterialMatrix2D::~MaterialMatrix2D() {
 }
 
 unsigned int
-MaterialMatrix2D::calculateSize(outlinerreal from,
-                                outlinerreal to,
-                                outlinerreal step) {
+MaterialMatrix2D::calculateSize(const outlinerreal from,
+                                const outlinerreal to,
+                                const outlinerreal step) {
   assert(from <= to);
   assert(step > 0.0);
   return(((unsigned int)ceil(((to - from) / step))) + 2);
 }
 
 void
-MaterialMatrix2D::setMaterialMatrix(unsigned int xIndex,
-                                    unsigned int yIndex) {
+MaterialMatrix2D::setMaterialMatrix(const unsigned int xIndex,
+                                    const unsigned int yIndex) {
   if (xIndex >= xIndexSize || yIndex >= yIndexSize)
     debugf("  setMaterialMatrix(%u/%u,%u/%u)",
            xIndex, xIndexSize, yIndex, yIndexSize);
@@ -100,8 +100,8 @@ MaterialMatrix2D::setMaterialMatrix(unsigned int xIndex,
 }
 
 bool
-MaterialMatrix2D::getMaterialMatrix(unsigned int xIndex,
-                                    unsigned int yIndex) {
+MaterialMatrix2D::getMaterialMatrix(const unsigned int xIndex,
+                                    const unsigned int yIndex) const {
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
   assert(bitMatrix != 0);
@@ -120,9 +120,37 @@ MaterialMatrix2D::getMaterialMatrix(unsigned int xIndex,
 }
 
 bool
-MaterialMatrix2D::getMaterialYBounds(unsigned int xIndex,
+MaterialMatrix2D::getMaterialMatrix(const unsigned int xIndexStart,
+                                    const unsigned int yIndexStart,
+                                    const unsigned int xIndexEnd,
+                                    const unsigned int yIndexEnd) const {
+  infof("      multi-get-mm %u..%u x %u..%u", xIndexStart, xIndexEnd, yIndexStart, yIndexEnd);
+  assert(xIndexStart < xIndexSize);
+  assert(yIndexStart < yIndexSize);
+  for (unsigned int xIndex = xIndexStart;
+       xIndex <= xIndexEnd && xIndex < xIndexSize;
+       xIndex++) {
+    for (unsigned int yIndex = yIndexStart;
+         yIndex <= yIndexEnd && yIndex < yIndexSize;
+         yIndex++) {
+      assert(xIndex < xIndexSize);
+      assert(yIndex < yIndexSize);
+      if (getMaterialMatrix(xIndex,yIndex)) {
+        infof("      multi-get-mm found");
+        return(1);
+      }
+    }
+  }
+  
+  // Not found
+  infof("      multi-get-mm not found");
+  return(0);
+}
+
+bool
+MaterialMatrix2D::getMaterialYBounds(const unsigned int xIndex,
                                      unsigned int& yIndexFrom,
-                                     unsigned int& yIndexTo) {
+                                     unsigned int& yIndexTo) const {
   assert(xIndex < xIndexSize);
   bool found = 0;
   for (unsigned int yIndex = 0; yIndex < yIndexSize; yIndex++) {
@@ -140,7 +168,7 @@ MaterialMatrix2D::getMaterialYBounds(unsigned int xIndex,
 }
 
 unsigned int
-MaterialMatrix2D::count(void) {
+MaterialMatrix2D::count(void) const {
   unsigned int theCount = 0;
   for (unsigned int i = 0; i < nChars; i++) {
     assert(i < nChars);

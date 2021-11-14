@@ -273,6 +273,14 @@ private:
   bool performFormAnalysisOneSlice(const aiScene* scene,
                                    unsigned int xIndex);
   bool performFormAnalysisAnalyze(void);
+  bool performFormAnalysisAnalyzeOnePixel(const unsigned int matrix3xIndex,
+                                          const unsigned int matrix3yIndex,
+                                          const unsigned int matrix2xIndexStart,
+                                          const unsigned int matrix2yIndexStart,
+                                          const unsigned int matrix2xIndexEnd,
+                                          const unsigned int matrix2yIndexEnd);
+  unsigned int formAnalysisCountLayers(const unsigned int matrix3xIndex,
+                                       const unsigned int matrix3yIndex) const;
   OutlinerSvgStyle formToColor(const unsigned int xIndex,
                                const unsigned int yIndex) const;
   

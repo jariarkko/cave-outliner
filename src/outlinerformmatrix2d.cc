@@ -94,7 +94,7 @@ FormMatrix2D::getForm(const unsigned int xIndex,
   deepdeepdebugf("setForm(%u,%u) index %u %u shift %u fs %u\n", xIndex, yIndex, nibbleIndex, charIndex, shift, fullSizeChars);
   assert(charIndex < fullSizeChars);
   const uint8_t baseValue = data[charIndex];
-  outlinerform form = (baseValue >> shift);
+  outlinerform form = ((baseValue >> shift) & 0x0F);
   assert(form <= outlinerform_max);
   return(form);
 }

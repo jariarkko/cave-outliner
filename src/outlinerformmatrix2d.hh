@@ -36,7 +36,7 @@
                                                // block of material (exit, border, etc)
 #define outlinerform_mainform_complex        4 // More than two layers of material
                                                // and air (complex cave, multi-level tunnels, ...)
-#define outlinerform_max                  0x04
+#define outlinerform_max                  0x07
 
 ///
 /// This object represents a quantized 3D view into a 3D cave

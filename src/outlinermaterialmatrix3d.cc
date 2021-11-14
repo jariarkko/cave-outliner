@@ -43,7 +43,7 @@ MaterialMatrix3D::MaterialMatrix3D(const OutlinerBox3D& boundingBoxIn,
   boundingBox(boundingBoxIn),
   xIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.x,boundingBox.end.x,stepxIn)),
   yIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.y,boundingBox.end.y,stepyIn)),
-  zIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.z,boundingBox.end.z, stepzIn)),
+  zIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.z,boundingBox.end.z,stepzIn)),
   stepx(stepxIn),
   stepy(stepyIn),
   stepz(stepzIn),
@@ -70,6 +70,7 @@ MaterialMatrix3D::setMaterialMatrix(const unsigned int xIndex,
                            boundingBox.end.y,boundingBox.end.z);
     verticalMatrixes[xIndex].matrixBoundingBox = sliceBox;
     verticalMatrixes[xIndex].yIndexOffset = 0;
+    verticalMatrixes[xIndex].zIndexOffset = 0;
     verticalMatrixes[xIndex].matrix = new MaterialMatrix2D(sliceBox,stepy,stepz);
     if (verticalMatrixes[xIndex].matrix == 0) {
       errf("Cannot allocate a vertical matrix");
@@ -77,8 +78,11 @@ MaterialMatrix3D::setMaterialMatrix(const unsigned int xIndex,
     }
   }
   assert(yIndex >= verticalMatrixes[xIndex].yIndexOffset);
+  assert(zIndex >= verticalMatrixes[xIndex].zIndexOffset);
   unsigned int sliceYIndex = yIndex - verticalMatrixes[xIndex].yIndexOffset;
+  unsigned int sliceZIndex = zIndex - verticalMatrixes[xIndex].zIndexOffset;
   assert(sliceYIndex < verticalMatrixes[xIndex].matrix->xIndexSize);
+  assert(sliceZIndex < verticalMatrixes[xIndex].matrix->yIndexSize);
   verticalMatrixes[xIndex].matrix->setMaterialMatrix(yIndex,zIndex);
 }
 
@@ -88,9 +92,12 @@ MaterialMatrix3D::setMaterialMatrixSlice(const unsigned int xIndex,
                                          MaterialMatrix2D* sliceMatrix) {
   assert(xIndex < xIndexSize);
   assert(verticalMatrixes[xIndex].matrix == 0);
-  outlinerreal yDiff = sliceBoundingBox.start.y - boundingBox.start.y;
+  outlinerreal yDiff = sliceBoundingBox.start.x - boundingBox.start.y;
+  outlinerreal zDiff = sliceBoundingBox.start.y - boundingBox.start.z;
   assert(yDiff >= 0.0);
+  assert(zDiff >= 0.0);
   verticalMatrixes[xIndex].yIndexOffset = yDiff / stepy;
+  verticalMatrixes[xIndex].zIndexOffset = zDiff / stepz;
   verticalMatrixes[xIndex].matrixBoundingBox = sliceBoundingBox;
   verticalMatrixes[xIndex].matrix = sliceMatrix;
 }
@@ -107,12 +114,24 @@ MaterialMatrix3D::getMaterialMatrix(const unsigned int xIndex,
     return(0);
   } else if (yIndex < verticalMatrixes[xIndex].yIndexOffset) {
     return(0);
+  } else if (zIndex < verticalMatrixes[xIndex].zIndexOffset) {
+    return(0);
   } else {
     unsigned int sliceYIndex = yIndex - verticalMatrixes[xIndex].yIndexOffset;
+    unsigned int sliceZIndex = zIndex - verticalMatrixes[xIndex].zIndexOffset;
+    infof("      3d getmm %u,%u,%u slice yz %u %u (offsets %u %u maxes %u %u)",
+          xIndex,yIndex,zIndex,
+          sliceYIndex, sliceZIndex,
+          verticalMatrixes[xIndex].yIndexOffset,
+          verticalMatrixes[xIndex].zIndexOffset,
+          sliceMatrix->xIndexSize,
+          sliceMatrix->yIndexSize);
     if (sliceYIndex >= sliceMatrix->xIndexSize) {
       return(0);
+    } else if (sliceZIndex >= sliceMatrix->yIndexSize) {
+      return(0);
     } else {
-      return(sliceMatrix->getMaterialMatrix(yIndex,zIndex));
+      return(sliceMatrix->getMaterialMatrix(sliceYIndex,sliceZIndex));
     }
   }
 }

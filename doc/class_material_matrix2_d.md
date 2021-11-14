@@ -52,90 +52,97 @@ MaterialMatrix2D Class Reference
 <tr class="odd separator:a73554d827f29c3cc544c4f9bf63379d8">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:a13d1437e461a5f98b18e30697b397a44">
+<tr class="even memitem:ad749f88cd38c6ee026159c4c25799f6e">
 <td style="text-align: right;" class="memItemLeft" data-valign="top">void </td>
-<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_material_matrix2_d.md#a13d1437e461a5f98b18e30697b397a44" class="el">setMaterialMatrix</a> (unsigned int xIndex, unsigned int yIndex)</td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_material_matrix2_d.md#ad749f88cd38c6ee026159c4c25799f6e" class="el">setMaterialMatrix</a> (const unsigned int xIndex, const unsigned int yIndex)</td>
 </tr>
-<tr class="odd separator:a13d1437e461a5f98b18e30697b397a44">
+<tr class="odd separator:ad749f88cd38c6ee026159c4c25799f6e">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:aea7f989dafca2ce42109d765a849a993">
+<tr class="even memitem:abcadd044a0a3a67371f28e96990c2521">
 <td style="text-align: right;" class="memItemLeft" data-valign="top">bool </td>
-<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_material_matrix2_d.md#aea7f989dafca2ce42109d765a849a993" class="el">getMaterialMatrix</a> (unsigned int xIndex, unsigned int yIndex)</td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_material_matrix2_d.md#abcadd044a0a3a67371f28e96990c2521" class="el">getMaterialMatrix</a> (const unsigned int xIndex, const unsigned int yIndex) const</td>
 </tr>
-<tr class="odd separator:aea7f989dafca2ce42109d765a849a993">
+<tr class="odd separator:abcadd044a0a3a67371f28e96990c2521">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:a0f3cb172795c299d5a278ff664c2a867">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a0f3cb172795c299d5a278ff664c2a867"></span> bool </td>
-<td class="memItemRight" data-valign="bottom"><strong>getMaterialYBounds</strong> (unsigned int xIndex, unsigned int &amp;yIndexFrom, unsigned int &amp;yIndexTo)</td>
+<tr class="even memitem:ae2897299ab70201d14a87f01c806d476">
+<td style="text-align: right;" class="memItemLeft" data-valign="top">bool </td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_material_matrix2_d.md#ae2897299ab70201d14a87f01c806d476" class="el">getMaterialMatrix</a> (const unsigned int xIndexStart, const unsigned int yIndexStart, const unsigned int xIndexEnd, const unsigned int yIndexEnd) const</td>
 </tr>
-<tr class="odd memdesc:a0f3cb172795c299d5a278ff664c2a867">
+<tr class="odd separator:ae2897299ab70201d14a87f01c806d476">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:a95b372e241e38a1db45a4ac0caa89e23">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a95b372e241e38a1db45a4ac0caa89e23"></span> bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>getMaterialYBounds</strong> (const unsigned int xIndex, unsigned int &amp;yIndexFrom, unsigned int &amp;yIndexTo) const</td>
+</tr>
+<tr class="odd memdesc:a95b372e241e38a1db45a4ac0caa89e23">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Find bounds of material at the y index range, on a given x index.<br />
 </td>
 </tr>
-<tr class="even separator:a0f3cb172795c299d5a278ff664c2a867">
+<tr class="even separator:a95b372e241e38a1db45a4ac0caa89e23">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a9b3d867c2b589b8de90efae580e84370">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a9b3d867c2b589b8de90efae580e84370"></span> unsigned int </td>
-<td class="memItemRight" data-valign="bottom"><strong>coordinateXToIndex</strong> (outlinerreal x) const</td>
+<tr class="odd memitem:ac7dbeee39b2435ad1bdd1ee377b3f2ac">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ac7dbeee39b2435ad1bdd1ee377b3f2ac"></span> unsigned int </td>
+<td class="memItemRight" data-valign="bottom"><strong>coordinateXToIndex</strong> (const outlinerreal x) const</td>
 </tr>
-<tr class="even memdesc:a9b3d867c2b589b8de90efae580e84370">
+<tr class="even memdesc:ac7dbeee39b2435ad1bdd1ee377b3f2ac">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Map an actual coordinate value to an index.<br />
 </td>
 </tr>
-<tr class="odd separator:a9b3d867c2b589b8de90efae580e84370">
+<tr class="odd separator:ac7dbeee39b2435ad1bdd1ee377b3f2ac">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:a478449823377ac39577ffc4dcc6881ca">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a478449823377ac39577ffc4dcc6881ca"></span> unsigned int </td>
-<td class="memItemRight" data-valign="bottom"><strong>coordinateYToIndex</strong> (outlinerreal y) const</td>
+<tr class="even memitem:a1d2ab0a414b6f03d0a4ce3b201e3e1dc">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a1d2ab0a414b6f03d0a4ce3b201e3e1dc"></span> unsigned int </td>
+<td class="memItemRight" data-valign="bottom"><strong>coordinateYToIndex</strong> (const outlinerreal y) const</td>
 </tr>
-<tr class="odd memdesc:a478449823377ac39577ffc4dcc6881ca">
+<tr class="odd memdesc:a1d2ab0a414b6f03d0a4ce3b201e3e1dc">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Map an actual coordinate value to an index.<br />
 </td>
 </tr>
-<tr class="even separator:a478449823377ac39577ffc4dcc6881ca">
+<tr class="even separator:a1d2ab0a414b6f03d0a4ce3b201e3e1dc">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a2b78a7efdeda723a4ad8974c36a44191">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a2b78a7efdeda723a4ad8974c36a44191"></span> outlinerreal </td>
-<td class="memItemRight" data-valign="bottom"><strong>indexToCoordinateX</strong> (unsigned int xIndex) const</td>
+<tr class="odd memitem:a494b7fa27f1f63eb973ddb18c75710e3">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a494b7fa27f1f63eb973ddb18c75710e3"></span> outlinerreal </td>
+<td class="memItemRight" data-valign="bottom"><strong>indexToCoordinateX</strong> (const unsigned int xIndex) const</td>
 </tr>
-<tr class="even memdesc:a2b78a7efdeda723a4ad8974c36a44191">
+<tr class="even memdesc:a494b7fa27f1f63eb973ddb18c75710e3">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Map a coordinate index to an actual coordinate value.<br />
 </td>
 </tr>
-<tr class="odd separator:a2b78a7efdeda723a4ad8974c36a44191">
+<tr class="odd separator:a494b7fa27f1f63eb973ddb18c75710e3">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:ae32128e44354e04adb23c285e625bf89">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ae32128e44354e04adb23c285e625bf89"></span> outlinerreal </td>
-<td class="memItemRight" data-valign="bottom"><strong>indexToCoordinateY</strong> (unsigned int yIndex) const</td>
+<tr class="even memitem:a6c152886101975ca8152adc80834a1c2">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a6c152886101975ca8152adc80834a1c2"></span> outlinerreal </td>
+<td class="memItemRight" data-valign="bottom"><strong>indexToCoordinateY</strong> (const unsigned int yIndex) const</td>
 </tr>
-<tr class="odd memdesc:ae32128e44354e04adb23c285e625bf89">
+<tr class="odd memdesc:a6c152886101975ca8152adc80834a1c2">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Map a coordinate index to an actual coordinate value.<br />
 </td>
 </tr>
-<tr class="even separator:ae32128e44354e04adb23c285e625bf89">
+<tr class="even separator:a6c152886101975ca8152adc80834a1c2">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a4f20db3ddcef2334fc264a942f7a081f">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a4f20db3ddcef2334fc264a942f7a081f"></span> unsigned int </td>
-<td class="memItemRight" data-valign="bottom"><strong>count</strong> (void)</td>
+<tr class="odd memitem:ac5af09bb1963a5b7c792f601d204916c">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ac5af09bb1963a5b7c792f601d204916c"></span> unsigned int </td>
+<td class="memItemRight" data-valign="bottom"><strong>count</strong> (void) const</td>
 </tr>
-<tr class="even memdesc:a4f20db3ddcef2334fc264a942f7a081f">
+<tr class="even memdesc:ac5af09bb1963a5b7c792f601d204916c">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Count the number of matrix elements with flags on.<br />
 </td>
 </tr>
-<tr class="odd separator:a4f20db3ddcef2334fc264a942f7a081f">
+<tr class="odd separator:ac5af09bb1963a5b7c792f601d204916c">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>
@@ -150,11 +157,11 @@ MaterialMatrix2D Class Reference
 <tr class="odd heading">
 <td colspan="2"><h2 id="static-public-member-functions" class="groupheader"><span id="pub-static-methods"></span> Static Public Member Functions</h2></td>
 </tr>
-<tr class="even memitem:ab4718a91ae6995a7fd8de21b792ea457">
+<tr class="even memitem:a6ae7b380f868c28b048e9f43daacaf1a">
 <td style="text-align: right;" class="memItemLeft" data-valign="top">static unsigned int </td>
-<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_material_matrix2_d.md#ab4718a91ae6995a7fd8de21b792ea457" class="el">calculateSize</a> (outlinerreal from, outlinerreal to, outlinerreal step)</td>
+<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/class_material_matrix2_d.md#a6ae7b380f868c28b048e9f43daacaf1a" class="el">calculateSize</a> (const outlinerreal from, const outlinerreal to, const outlinerreal step)</td>
 </tr>
-<tr class="odd separator:ab4718a91ae6995a7fd8de21b792ea457">
+<tr class="odd separator:a6ae7b380f868c28b048e9f43daacaf1a">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a969b402f51ab121dbaafa9033046e676">
@@ -233,9 +240,9 @@ matrix needs to support the desired high resolution of the output.
 
 ## Member Function Documentation
 
-<span id="ab4718a91ae6995a7fd8de21b792ea457"></span>
+<span id="a6ae7b380f868c28b048e9f43daacaf1a"></span>
 
-## <span class="permalink">[◆ ](#ab4718a91ae6995a7fd8de21b792ea457)</span>calculateSize()
+## <span class="permalink">[◆ ](#a6ae7b380f868c28b048e9f43daacaf1a)</span>calculateSize()
 
 <table class="mlabels">
 <colgroup>
@@ -249,19 +256,19 @@ matrix needs to support the desired high resolution of the output.
 <tr class="odd">
 <td class="memname">static unsigned int MaterialMatrix2D::calculateSize</td>
 <td>(</td>
-<td class="paramtype">outlinerreal </td>
+<td class="paramtype">const outlinerreal </td>
 <td class="paramname"><em>from</em>,</td>
 </tr>
 <tr class="even">
 <td class="paramkey"></td>
 <td></td>
-<td class="paramtype">outlinerreal </td>
+<td class="paramtype">const outlinerreal </td>
 <td class="paramname"><em>to</em>,</td>
 </tr>
 <tr class="odd">
 <td class="paramkey"></td>
 <td></td>
-<td class="paramtype">outlinerreal </td>
+<td class="paramtype">const outlinerreal </td>
 <td class="paramname"><em>step</em> </td>
 </tr>
 <tr class="even">
@@ -280,29 +287,29 @@ matrix needs to support the desired high resolution of the output.
 Calculate size needed to represent from...to with increments of size
 step.
 
-<span id="aea7f989dafca2ce42109d765a849a993"></span>
+<span id="abcadd044a0a3a67371f28e96990c2521"></span>
 
-## <span class="permalink">[◆ ](#aea7f989dafca2ce42109d765a849a993)</span>getMaterialMatrix()
+## <span class="permalink">[◆ ](#abcadd044a0a3a67371f28e96990c2521)</span>getMaterialMatrix() <span class="overload">\[1/2\]</span>
 
 <table class="memname">
 <tbody>
 <tr class="odd">
 <td class="memname">bool MaterialMatrix2D::getMaterialMatrix</td>
 <td>(</td>
-<td class="paramtype">unsigned int </td>
+<td class="paramtype">const unsigned int </td>
 <td class="paramname"><em>xIndex</em>,</td>
 </tr>
 <tr class="even">
 <td class="paramkey"></td>
 <td></td>
-<td class="paramtype">unsigned int </td>
+<td class="paramtype">const unsigned int </td>
 <td class="paramname"><em>yIndex</em> </td>
 </tr>
 <tr class="odd">
 <td></td>
 <td>)</td>
 <td></td>
-<td></td>
+<td>const</td>
 </tr>
 </tbody>
 </table>
@@ -310,22 +317,64 @@ step.
 Get the flag indicating whether there is material in a given (x,y) index
 in the matrix.
 
-<span id="a13d1437e461a5f98b18e30697b397a44"></span>
+<span id="ae2897299ab70201d14a87f01c806d476"></span>
 
-## <span class="permalink">[◆ ](#a13d1437e461a5f98b18e30697b397a44)</span>setMaterialMatrix()
+## <span class="permalink">[◆ ](#ae2897299ab70201d14a87f01c806d476)</span>getMaterialMatrix() <span class="overload">\[2/2\]</span>
+
+<table class="memname">
+<tbody>
+<tr class="odd">
+<td class="memname">bool MaterialMatrix2D::getMaterialMatrix</td>
+<td>(</td>
+<td class="paramtype">const unsigned int </td>
+<td class="paramname"><em>xIndexStart</em>,</td>
+</tr>
+<tr class="even">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype">const unsigned int </td>
+<td class="paramname"><em>yIndexStart</em>,</td>
+</tr>
+<tr class="odd">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype">const unsigned int </td>
+<td class="paramname"><em>xIndexEnd</em>,</td>
+</tr>
+<tr class="even">
+<td class="paramkey"></td>
+<td></td>
+<td class="paramtype">const unsigned int </td>
+<td class="paramname"><em>yIndexEnd</em> </td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>)</td>
+<td></td>
+<td>const</td>
+</tr>
+</tbody>
+</table>
+
+Get the flag indicating whether there is material in a given
+(xStart,yStart)..(xEnd,yEnd) rectangle in the matrix.
+
+<span id="ad749f88cd38c6ee026159c4c25799f6e"></span>
+
+## <span class="permalink">[◆ ](#ad749f88cd38c6ee026159c4c25799f6e)</span>setMaterialMatrix()
 
 <table class="memname">
 <tbody>
 <tr class="odd">
 <td class="memname">void MaterialMatrix2D::setMaterialMatrix</td>
 <td>(</td>
-<td class="paramtype">unsigned int </td>
+<td class="paramtype">const unsigned int </td>
 <td class="paramname"><em>xIndex</em>,</td>
 </tr>
 <tr class="even">
 <td class="paramkey"></td>
 <td></td>
-<td class="paramtype">unsigned int </td>
+<td class="paramtype">const unsigned int </td>
 <td class="paramname"><em>yIndex</em> </td>
 </tr>
 <tr class="odd">

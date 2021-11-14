@@ -412,7 +412,80 @@ Processor::performFormAnalysisOneSlice(const aiScene* scene,
 
 bool
 Processor::performFormAnalysisAnalyze(void) {
+  infof("  form analysis matrix2 %u x %u matrix3 %u x %u",
+        matrix2.xIndexSize, matrix2.yIndexSize,
+        matrix3.xIndexSize, matrix3.yIndexSize);
+  char buf[50];
+  OutlinerMath::boxDescribe(matrix2.boundingBox,buf,sizeof(buf),1);
+  infof("  form matrix2 box %s", buf);
+  OutlinerMath::boxDescribe(matrix3.boundingBox,buf,sizeof(buf),1);
+  infof("  form matrix3 box %s", buf);
+  for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
+    outlinerreal x = matrix3.indexToCoordinateX(xIndex);
+    unsigned int matrix2xIndexStart = matrix2.coordinateXToIndex(x);
+    unsigned int matrix2xIndexEnd = matrix2xIndexStart + (unsigned int)ceil(formCondense);
+    for (unsigned int yIndex = 0; yIndex < matrix3.yIndexSize - 2; yIndex++) {
+      outlinerreal y = matrix3.indexToCoordinateY(yIndex);
+      infof("    analyze %u,%u: %.2f,%.2f", xIndex, yIndex, x, y);
+      unsigned int matrix2yIndexStart = matrix2.coordinateYToIndex(y);
+      unsigned int matrix2yIndexEnd = matrix2yIndexStart + (unsigned int)ceil(formCondense);
+      performFormAnalysisAnalyzeOnePixel(xIndex,yIndex,
+                                         matrix2xIndexStart,matrix2yIndexStart,
+                                         matrix2xIndexEnd,matrix2yIndexEnd);
+    }
+  }
   return(1);
+}
+
+bool
+Processor::performFormAnalysisAnalyzeOnePixel(const unsigned int matrix3xIndex,
+                                              const unsigned int matrix3yIndex,
+                                              const unsigned int matrix2xIndexStart,
+                                              const unsigned int matrix2yIndexStart,
+                                              const unsigned int matrix2xIndexEnd,
+                                              const unsigned int matrix2yIndexEnd) {
+  if (!matrix2.getMaterialMatrix(matrix2xIndexStart,
+                                 matrix2yIndexStart,
+                                 matrix2xIndexEnd,
+                                 matrix2yIndexEnd)) {
+    forms.setForm(matrix3xIndex,matrix3yIndex,outlinerform_mainform_empty);
+  } else {
+    unsigned int materialLayers = formAnalysisCountLayers(matrix3xIndex,matrix3yIndex);
+    infof("  layers = %u", materialLayers);
+    switch (materialLayers) {
+    case 0:
+      forms.setForm(matrix3xIndex,matrix3yIndex,outlinerform_mainform_empty);
+      break;
+    case 1:
+      forms.setForm(matrix3xIndex,matrix3yIndex,outlinerform_mainform_degenerate);
+      break;
+    case 2:
+      forms.setForm(matrix3xIndex,matrix3yIndex,outlinerform_mainform_tunnel);
+      break;
+    default:
+      forms.setForm(matrix3xIndex,matrix3yIndex,outlinerform_mainform_complex);
+      break;
+    }
+  }
+  return(1);
+}
+
+unsigned int
+Processor::formAnalysisCountLayers(const unsigned int matrix3xIndex,
+                                   const unsigned int matrix3yIndex) const {
+  unsigned int count = 0;
+  bool layerOn = 0;
+  infof("  count layers %u,%u", matrix3xIndex, matrix3yIndex);
+  for (unsigned int matrix3zIndex = 0; matrix3zIndex < matrix3.zIndexSize -2; matrix3zIndex++) {
+    infof("  iter count %u,%u,%u", matrix3xIndex, matrix3yIndex, matrix3zIndex);
+    bool material = matrix3.getMaterialMatrix(matrix3xIndex,matrix3yIndex,matrix3zIndex);
+    if (layerOn && material) continue;
+    else if (!layerOn && !material) continue;
+    else if (!layerOn && material) { layerOn = 1; count++; continue; }
+    else if (layerOn && !material) { layerOn = 0; continue; }
+  }
+  infof("  count done %u", count);
+  return(count);
 }
 
 OutlinerSvgStyle
