@@ -41,6 +41,7 @@ Options:
                              showing x/z picture.
     --pixel                  Use the pixel output drawing algorithm (default, fills cave
                              with pixels).
+    --pixelform              Same as --pixel, but color pixels based form analysis.
     --triangle               Use the triangle output drawing algorithm (draws model faces
                              in plan view).
     --borderpixel            Use the border-only drawing algorithm, draws only the cave

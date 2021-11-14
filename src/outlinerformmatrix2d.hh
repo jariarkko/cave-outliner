@@ -59,36 +59,36 @@ class FormMatrix2D {
 public:
 
   /// Create a Formmatrix2d object.
-  FormMatrix2D(unsigned int xIndexSizeIn,
-               unsigned int yIndexSizeIn);
+  FormMatrix2D(const unsigned int xIndexSizeIn,
+               const unsigned int yIndexSizeIn);
   
   /// Destruct the material matrix.
   ~FormMatrix2D();
 
   /// Set the flag indicating that there is material in a given (x,y)
   /// index in the matrix.
-  void setForm(unsigned int xIndex,
-               unsigned int yIndex,
-               outlinerform form);
+  void setForm(const unsigned int xIndex,
+               const unsigned int yIndex,
+               const outlinerform form);
 
   /// Get the flag indicating whether there is material in a given
   /// (x,y) index in the matrix.
-  outlinerform getForm(unsigned int xIndex,
-                       unsigned int yIndex);
+  outlinerform getForm(const unsigned int xIndex,
+                       const unsigned int yIndex) const;
   
   /// Run unit tests for this module.
   static void test(void);
 
   /// Matrix size in x-coordinate direction.
-  unsigned int xIndexSize;
+  const unsigned int xIndexSize;
   
   /// Matrix size in y-coordinate direction.
-  unsigned int yIndexSize;
+  const unsigned int yIndexSize;
 
 private:
 
-  unsigned int fullSizeNibbles;
-  unsigned int fullSizeChars;
+  const unsigned int fullSizeNibbles;
+  const unsigned int fullSizeChars;
   uint8_t* data;
 };
 

@@ -40,6 +40,7 @@
 
 enum outlineralgorithm {
   alg_pixel,
+  alg_pixelform,
   alg_triangle,
   alg_borderpixel,
   alg_borderline,

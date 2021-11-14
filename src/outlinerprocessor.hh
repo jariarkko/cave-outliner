@@ -263,10 +263,17 @@ private:
   bool preprocessSceneAlgorithmDraw(const aiScene* scene);
   bool processSceneAlgorithmDraw(const aiScene* scene);
   bool performFormAnalysis(const aiScene* scene);
+
+  //
+  // Form analysis
+  //
+  
   bool performFormAnalysisSlicing(const aiScene* scene);
   bool performFormAnalysisOneSlice(const aiScene* scene,
                                    unsigned int xIndex);
   bool performFormAnalysisAnalyze(void);
+  OutlinerSvgStyle formToColor(const unsigned int xIndex,
+                               const unsigned int yIndex) const;
   
   //
   // Image drawing

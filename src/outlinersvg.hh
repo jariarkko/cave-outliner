@@ -41,10 +41,14 @@
 #define outlinersvgstyle_ends       0x02
 #define outlinersvgstyle_grey       0x04
 #define outlinersvgstyle_red        0x08
+#define outlinersvgstyle_blue       0x10
+#define outlinersvgstyle_green      0x20
 #define outlinersvgstyle_legal      (outlinersvgstyle_dashed + \
                                      outlinersvgstyle_ends +   \
                                      outlinersvgstyle_grey +   \
-                                     outlinersvgstyle_red)
+                                     outlinersvgstyle_red +    \
+                                     outlinersvgstyle_blue +   \
+                                     outlinersvgstyle_green)
 #define outlinersvgstyle_illegal    (~(outlinersvgstyle_legal))
 
 struct OutlinerSvgCoord {
@@ -104,7 +108,8 @@ class SvgCreator {
 
   /// Draw a pixel.
   void pixel(outlinerreal x,
-             outlinerreal y);
+             outlinerreal y,
+             OutlinerSvgStyle style = outlinersvgstyle_none);
 
   /// Draw a triangle.
   void triangle(OutlinerTriangle2D triangle,
@@ -155,6 +160,7 @@ class SvgCreator {
   unsigned int lineTableSize;
   struct OutlinerSvgLineList** lineTable;
   
+  const char* colorBasedOnStyle(OutlinerSvgStyle style) const;
   void preamble();
   void postamble();
   void coordinateNormalization(outlinerreal x,

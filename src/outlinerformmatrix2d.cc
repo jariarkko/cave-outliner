@@ -36,18 +36,15 @@
 // Material matrix maintenance ////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-FormMatrix2D::FormMatrix2D(unsigned int xIndexSizeIn,
-                           unsigned int yIndexSizeIn) :
+FormMatrix2D::FormMatrix2D(const unsigned int xIndexSizeIn,
+                           const unsigned int yIndexSizeIn) :
   xIndexSize(xIndexSizeIn),
   yIndexSize(yIndexSizeIn),
+  fullSizeNibbles(xIndexSize * yIndexSize),
+  fullSizeChars((fullSizeNibbles & 1) != 0 ? (fullSizeNibbles/2)+1 : fullSizeNibbles/2),
   data(0) {
   assert(xIndexSize > 0);
   assert(yIndexSize > 0);
-  fullSizeNibbles = xIndexSize * yIndexSize;
-  fullSizeChars = fullSizeNibbles/2;
-  if ((fullSizeNibbles & 1) != 0) {
-    fullSizeChars++;
-  }
   data = new uint8_t[fullSizeChars];
   if (data == 0) {
     errf("Cannot allocaet form matrix of %u bytes", fullSizeChars);
@@ -64,9 +61,9 @@ FormMatrix2D::~FormMatrix2D() {
 }
   
 void
-FormMatrix2D::setForm(unsigned int xIndex,
-                      unsigned int yIndex,
-                      outlinerform form) {
+FormMatrix2D::setForm(const unsigned int xIndex,
+                      const unsigned int yIndex,
+                      const outlinerform form) {
 # define formMatrixNibbleIndex(x,y)       (((y)*yIndexSize)+((x)))
 # define formMatrixCharIndex(ni)          ((ni)>>1)
 # define formMatrixShift(ni)              (((ni)&0x1) != 0 ? 4 : 0)
@@ -86,8 +83,8 @@ FormMatrix2D::setForm(unsigned int xIndex,
 }
 
 outlinerform
-FormMatrix2D::getForm(unsigned int xIndex,
-                      unsigned int yIndex) {
+FormMatrix2D::getForm(const unsigned int xIndex,
+                      const unsigned int yIndex) const {
   assert(data != 0);
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);

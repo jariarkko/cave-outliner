@@ -215,65 +215,6 @@ Processor::performFormAnalysis(const aiScene* scene) {
 }
 
 bool
-Processor::performFormAnalysisSlicing(const aiScene* scene) {
-  for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
-    performFormAnalysisOneSlice(scene,xIndex);
-  }
-  unsigned int memory;
-  unsigned int theoretical;
-  outlinerreal percentage = matrix3.filledPercentage(memory,theoretical);
-  infof("3D slice matrix has %u set pixels (uses %.2f MB, %.2f%% filled from theoretical %.2f MB)",
-        matrix3.count(),
-        memory / (1024.0 * 1024.0),
-        percentage,
-        theoretical / (1024.0 * 1024.0));
-  return(1);
-}
-
-bool
-Processor::performFormAnalysisOneSlice(const aiScene* scene,
-                                       unsigned int xIndex) {
-  unsigned int yIndexFrom;
-  unsigned int yIndexTo;
-  outlinerreal x = planviewBoundingBox.start.x + xIndex * stepxCondensed;
-  unsigned int xIndexMatrix2 = matrix2.coordinateXToIndex(x);
-  if (matrix2.getMaterialYBounds(xIndexMatrix2,yIndexFrom,yIndexTo)) {
-    outlinerreal yFrom = matrix2.indexToCoordinateY(yIndexFrom);
-    outlinerreal yTo = matrix2.indexToCoordinateY(yIndexTo);
-    OutlinerLine2D sliceLine(x,yFrom,x,yTo);
-    infof("  slice %u: x = %.2f, y = %.2f..%.2f (%u..%u, in a matrix of %ux%u)",
-          xIndex, x,
-          yFrom, yTo,
-          yIndexFrom,
-          yIndexTo,
-          matrix2.xIndexSize, matrix2.yIndexSize);
-    ProcessorCrossSection csproc(0, // no image
-                                 0, // no labels
-                                 DirectionOperations::screenx(direction),
-                                 sliceLine,
-                                 stepxCondensed,
-                                 stepyCondensed,
-                                 stepzCondensed,
-                                 1.0,
-                                 *this);
-    csproc.processSceneCrossSection(scene);
-    OutlinerBox2D verticalBoundingBox;
-    csproc.getCrossSectionBoundingBox(verticalBoundingBox);
-    MaterialMatrix2D* verticalMatrix = 0;
-    csproc.getVerticalMatrix(verticalMatrix);
-    assert(verticalMatrix != 0);
-    matrix3.setMaterialMatrixSlice(xIndex,verticalBoundingBox,verticalMatrix);
-    infof("  slice size %u x %u", verticalMatrix->xIndexSize, verticalMatrix->yIndexSize);
-  }
-  return(1);
-}
-
-bool
-Processor::performFormAnalysisAnalyze(void) {
-  return(1);
-}
-
-bool
 Processor::preprocessSceneAlgorithmDraw(const aiScene* scene) {
   if (algorithm != alg_triangle) {
     
@@ -318,6 +259,7 @@ Processor::processSceneAlgorithmDraw(const aiScene* scene) {
   switch (algorithm) {
 
   case alg_pixel:
+  case alg_pixelform:
   case alg_borderpixel:
   case alg_borderline:
   case alg_borderactual:
@@ -346,7 +288,7 @@ Processor::processSceneAlgorithmDraw(const aiScene* scene) {
     break;
     
   default:
-    errf("Invalid algorithm");
+    errf("Invalid algorithm %u", algorithm);
     return(0);
       
   }
@@ -408,6 +350,92 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
   }
   
   return(1);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Form analysis //////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+bool
+Processor::performFormAnalysisSlicing(const aiScene* scene) {
+  for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
+    performFormAnalysisOneSlice(scene,xIndex);
+  }
+  unsigned int memory;
+  unsigned int theoretical;
+  outlinerreal percentage = matrix3.filledPercentage(memory,theoretical);
+  infof("3D slice matrix has %u set pixels (uses %.2f MB, %.2f%% filled from theoretical %.2f MB)",
+        matrix3.count(),
+        memory / (1024.0 * 1024.0),
+        percentage,
+        theoretical / (1024.0 * 1024.0));
+  return(1);
+}
+
+bool
+Processor::performFormAnalysisOneSlice(const aiScene* scene,
+                                       unsigned int xIndex) {
+  unsigned int yIndexFrom;
+  unsigned int yIndexTo;
+  outlinerreal x = planviewBoundingBox.start.x + xIndex * stepxCondensed;
+  unsigned int xIndexMatrix2 = matrix2.coordinateXToIndex(x);
+  if (matrix2.getMaterialYBounds(xIndexMatrix2,yIndexFrom,yIndexTo)) {
+    outlinerreal yFrom = matrix2.indexToCoordinateY(yIndexFrom);
+    outlinerreal yTo = matrix2.indexToCoordinateY(yIndexTo);
+    OutlinerLine2D sliceLine(x,yFrom,x,yTo);
+    infof("  slice %u: x = %.2f, y = %.2f..%.2f (%u..%u, in a matrix of %ux%u)",
+          xIndex, x,
+          yFrom, yTo,
+          yIndexFrom,
+          yIndexTo,
+          matrix2.xIndexSize, matrix2.yIndexSize);
+    ProcessorCrossSection csproc(0, // no image
+                                 0, // no labels
+                                 DirectionOperations::screenx(direction),
+                                 sliceLine,
+                                 stepxCondensed,
+                                 stepyCondensed,
+                                 stepzCondensed,
+                                 1.0,
+                                 *this);
+    csproc.processSceneCrossSection(scene);
+    OutlinerBox2D verticalBoundingBox;
+    csproc.getCrossSectionBoundingBox(verticalBoundingBox);
+    MaterialMatrix2D* verticalMatrix = 0;
+    csproc.getVerticalMatrix(verticalMatrix);
+    assert(verticalMatrix != 0);
+    matrix3.setMaterialMatrixSlice(xIndex,verticalBoundingBox,verticalMatrix);
+    infof("  slice size %u x %u", verticalMatrix->xIndexSize, verticalMatrix->yIndexSize);
+  }
+  return(1);
+}
+
+bool
+Processor::performFormAnalysisAnalyze(void) {
+  return(1);
+}
+
+OutlinerSvgStyle
+Processor::formToColor(const unsigned int xIndex,
+                       const unsigned int yIndex) const {
+  outlinerform form = forms.getForm(xIndex,yIndex);
+  uint8_t mainform = (form & outlinerform_mainform);
+  deepdebugf("    mainform = %u", mainform);
+  switch (mainform) {
+  case outlinerform_mainform_empty:
+    return(outlinersvgstyle_grey);
+  case outlinerform_mainform_tunnel:
+    return(outlinersvgstyle_none);
+  case outlinerform_mainform_tunnel_stalac:
+    return(outlinersvgstyle_red);
+  case outlinerform_mainform_degenerate:
+    return(outlinersvgstyle_blue);
+  case outlinerform_mainform_complex:
+    return(outlinersvgstyle_green);
+  default:
+    errf("Invalid form %x", form);
+    exit(1);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -645,6 +673,10 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
         case alg_pixel:
           debugf("pixel alg %u,%u from %.2f,%.2f", xIndex, yIndex, x, y);
           theSvg->pixel(x,y);
+          break;
+        case alg_pixelform:
+          debugf("pixelform alg %u,%u from %.2f,%.2f", xIndex, yIndex, x, y);
+          theSvg->pixel(x,y,formToColor(xIndex,yIndex));
           break;
         case alg_triangle:
           errf("Invalid algorithm for matrix-based operation");

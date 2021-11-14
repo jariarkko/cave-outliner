@@ -78,19 +78,20 @@ MainOptions::processCommandLineOptions(int& argc,
       config.direction = dir_y;
     } else if (strcmp(argv[1],"--pixel") == 0) {
       config.algorithm = alg_pixel;
-      debugf("algorithm now %u", config.algorithm);
+    } else if (strcmp(argv[1],"--pixelform") == 0) {
+      if (!config.formAnalysis) {
+        errf("The use of --pixelform requires a preceding --formanalysis option");
+        return(0);
+      }
+      config.algorithm = alg_pixelform;
     } else if (strcmp(argv[1],"--triangle") == 0) {
       config.algorithm = alg_triangle;
-      debugf("algorithm now %u", config.algorithm);
     } else if (strcmp(argv[1],"--borderpixel") == 0) {
       config.algorithm = alg_borderpixel;
-      debugf("algorithm now %u", config.algorithm);
     } else if (strcmp(argv[1],"--borderline") == 0) {
       config.algorithm = alg_borderline;
-      debugf("algorithm now %u", config.algorithm);
     } else if (strcmp(argv[1],"--borderactual") == 0) {
       config.algorithm = alg_borderactual;
-      debugf("algorithm now %u", config.algorithm);
     } else if (strcmp(argv[1],"--crosssections") == 0 && argc > 4) {
       if (config.nCrossSections == outlinermaxcrosssections) {
         errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);

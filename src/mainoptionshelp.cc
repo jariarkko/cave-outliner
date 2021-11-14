@@ -57,6 +57,7 @@ MainOptions::processHelp(void) {
   std::cout << "                           showing x/z picture.\n";
   std::cout << "  --pixel                  Use the pixel output drawing algorithm (default, fills cave\n";
   std::cout << "                           with pixels).\n";
+  std::cout << "  --pixelform              Same as --pixel, but color pixels based form analysis.\n";
   std::cout << "  --triangle               Use the triangle output drawing algorithm (draws model faces\n";
   std::cout << "                           in plan view).\n";
   std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave\n";

@@ -254,12 +254,7 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
   }
 
   // Handle color
-  const char* color = "black";
-  if ((line.style & outlinersvgstyle_grey) != 0) {
-    color = "grey";
-  } else if ((line.style & outlinersvgstyle_red) != 0) {
-    color = "red";
-  }
+  const char* color = colorBasedOnStyle(line.style);
   
   // Handle smoothing
   if (smooth) {
@@ -327,16 +322,19 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
 
 void
 SvgCreator::pixel(outlinerreal x,
-                  outlinerreal y) {
+                  outlinerreal y,
+                  OutlinerSvgStyle style) {
   deepdeepdebugf("pixel %.2f,%.2f", x, y);
   unsigned int xInt;
   unsigned int yInt;
   coordinateNormalization(x,y,xInt,yInt);
-  debugf("SvgCreator::pixel %.2f,%.2f to %u,%u", x, y, xInt, yInt);
+  const char* color = colorBasedOnStyle(style);
+  deepdebugf("     pixel %u %s", style, color);
+  deepdebugf("SvgCreator::pixel %.2f,%.2f to %u,%u", x, y, xInt, yInt);
   file << "<rect x=\"" << xInt << "\" y=\"" << yInt << "\"";
   file << " width=\"" << multiplier << "\" height=\"" << multiplier << "\"";
-  file << " fill=\"black\"";
-  file << " stroke-width=\"0\" stroke=\"black\" />\n";
+  file << " fill=\"" << color << "\"";
+  file << " stroke-width=\"0\" stroke=\"" << color << "\" />\n";
   pixels++;
 }
 
@@ -439,7 +437,22 @@ SvgCreator::ok() {
   deepdeepdebugf("SvgCreator::ok %u %u", xSize, ySize);
   return(xSize > 0 && ySize > 0 && file.good());
 }
-  
+
+const char*
+SvgCreator::colorBasedOnStyle(OutlinerSvgStyle style) const {
+  const char* color = "black";
+  if ((style & outlinersvgstyle_grey) != 0) {
+    color = "grey";
+  } else if ((style & outlinersvgstyle_red) != 0) {
+    color = "red";
+  } else if ((style & outlinersvgstyle_green) != 0) {
+    color = "green";
+  } else if ((style & outlinersvgstyle_blue) != 0) {
+    color = "blue";
+  }
+  return(color);
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Post and preambles /////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
