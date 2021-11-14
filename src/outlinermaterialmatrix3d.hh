@@ -27,6 +27,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 struct VerticalMatrix {
+  OutlinerBox2D matrixBoundingBox;
+  unsigned int yIndexOffset;
   MaterialMatrix2D* matrix;
 };
 
@@ -67,6 +69,7 @@ public:
 
   /// Set the entire z slice in one go
   void setMaterialMatrixSlice(const unsigned int xIndex,
+                              const OutlinerBox2D& sliceBoundingBox,
                               MaterialMatrix2D* sliceMatrix);
 
   /// Get the flag indicating whether there is material in a given
@@ -74,10 +77,15 @@ public:
   bool getMaterialMatrix(const unsigned int xIndex,
                          const unsigned int yIndex,
                          const unsigned int zIndex) const;
-
+  
   /// Count the number of matrix elements with flags on.
   unsigned int count(void) const;
-
+  
+  /// Percentage of the 3D matrix actually constructed (the rest
+  /// consumes no memory).
+  outlinerreal filledPercentage(unsigned int& memory,
+                                unsigned int& theoretical) const;
+  
   /// Run unit tests for this module.
   static void test(void);
 

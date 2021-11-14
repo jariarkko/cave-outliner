@@ -68,20 +68,30 @@ MaterialMatrix3D::setMaterialMatrix(const unsigned int xIndex,
   if (verticalMatrixes[xIndex].matrix == 0) {
     OutlinerBox2D sliceBox(boundingBox.start.y,boundingBox.start.z,
                            boundingBox.end.y,boundingBox.end.z);
+    verticalMatrixes[xIndex].matrixBoundingBox = sliceBox;
+    verticalMatrixes[xIndex].yIndexOffset = 0;
     verticalMatrixes[xIndex].matrix = new MaterialMatrix2D(sliceBox,stepy,stepz);
     if (verticalMatrixes[xIndex].matrix == 0) {
       errf("Cannot allocate a vertical matrix");
       exit(1);
     }
   }
+  assert(yIndex >= verticalMatrixes[xIndex].yIndexOffset);
+  unsigned int sliceYIndex = yIndex - verticalMatrixes[xIndex].yIndexOffset;
+  assert(sliceYIndex < verticalMatrixes[xIndex].matrix->xIndexSize);
   verticalMatrixes[xIndex].matrix->setMaterialMatrix(yIndex,zIndex);
 }
 
 void
 MaterialMatrix3D::setMaterialMatrixSlice(const unsigned int xIndex,
+                                         const OutlinerBox2D& sliceBoundingBox,
                                          MaterialMatrix2D* sliceMatrix) {
   assert(xIndex < xIndexSize);
   assert(verticalMatrixes[xIndex].matrix == 0);
+  outlinerreal yDiff = sliceBoundingBox.start.y - boundingBox.start.y;
+  assert(yDiff >= 0.0);
+  verticalMatrixes[xIndex].yIndexOffset = yDiff / stepy;
+  verticalMatrixes[xIndex].matrixBoundingBox = sliceBoundingBox;
   verticalMatrixes[xIndex].matrix = sliceMatrix;
 }
 
@@ -95,8 +105,15 @@ MaterialMatrix3D::getMaterialMatrix(const unsigned int xIndex,
   MaterialMatrix2D* sliceMatrix = verticalMatrixes[xIndex].matrix;
   if (sliceMatrix == 0) {
     return(0);
+  } else if (yIndex < verticalMatrixes[xIndex].yIndexOffset) {
+    return(0);
   } else {
-    return(sliceMatrix->getMaterialMatrix(yIndex,zIndex));
+    unsigned int sliceYIndex = yIndex - verticalMatrixes[xIndex].yIndexOffset;
+    if (sliceYIndex >= sliceMatrix->xIndexSize) {
+      return(0);
+    } else {
+      return(sliceMatrix->getMaterialMatrix(yIndex,zIndex));
+    }
   }
 }
 
@@ -110,6 +127,29 @@ MaterialMatrix3D::count(void) const {
     }
   }
   return(theCount);
+}
+
+outlinerreal
+MaterialMatrix3D::filledPercentage(unsigned int& memory,
+                                   unsigned int& theoretical) const {
+  unsigned int fullPixels = xIndexSize * yIndexSize * zIndexSize;
+  infof("  filled percentage size %u x %u x %u", xIndexSize, yIndexSize, zIndexSize);
+  theoretical = fullPixels / 8;
+  unsigned int actualPixels = 0;
+  for (unsigned int xIndex = 0; xIndex < xIndexSize; xIndex++) {
+    const VerticalMatrix& vertical = verticalMatrixes[xIndex];
+    if (vertical.matrix != 0) {
+      actualPixels += vertical.matrix->xIndexSize * vertical.matrix->yIndexSize;
+      debugf("    filled percentage at x %u size %u x %u",
+             xIndex,
+             vertical.matrix->xIndexSize, vertical.matrix->yIndexSize);
+    }
+  }
+  memory = actualPixels / 8;
+  debugf("  filled percentage pixels %u %u mems %u %u",
+         actualPixels, fullPixels,
+         memory, theoretical);
+  return((100.0 * ((outlinerreal)actualPixels)) / ((outlinerreal)fullPixels));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

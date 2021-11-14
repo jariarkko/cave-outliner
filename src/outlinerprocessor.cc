@@ -219,6 +219,14 @@ Processor::performFormAnalysisSlicing(const aiScene* scene) {
   for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
     performFormAnalysisOneSlice(scene,xIndex);
   }
+  unsigned int memory;
+  unsigned int theoretical;
+  outlinerreal percentage = matrix3.filledPercentage(memory,theoretical);
+  infof("3D slice matrix has %u set pixels (uses %.2f MB, %.2f%% filled from theoretical %.2f MB)",
+        matrix3.count(),
+        memory / (1024.0 * 1024.0),
+        percentage,
+        theoretical / (1024.0 * 1024.0));
   return(1);
 }
 
@@ -243,6 +251,8 @@ Processor::performFormAnalysisOneSlice(const aiScene* scene,
                                  0, // no labels
                                  DirectionOperations::screenx(direction),
                                  sliceLine,
+                                 stepxCondensed,
+                                 stepyCondensed,
                                  stepzCondensed,
                                  1.0,
                                  *this);
@@ -252,7 +262,8 @@ Processor::performFormAnalysisOneSlice(const aiScene* scene,
     MaterialMatrix2D* verticalMatrix = 0;
     csproc.getVerticalMatrix(verticalMatrix);
     assert(verticalMatrix != 0);
-    matrix3.setMaterialMatrixSlice(xIndex,verticalMatrix);
+    matrix3.setMaterialMatrixSlice(xIndex,verticalBoundingBox,verticalMatrix);
+    infof("  slice size %u x %u", verticalMatrix->xIndexSize, verticalMatrix->yIndexSize);
   }
   return(1);
 }
@@ -1055,6 +1066,8 @@ Processor::processSceneCrossSection(const aiScene* scene,
                                crossSection->label,
                                DirectionOperations::screenx(direction),
                                crossSection->line,
+                               stepx,
+                               stepy,
                                stepz,
                                crossSection->width,
                                *this);

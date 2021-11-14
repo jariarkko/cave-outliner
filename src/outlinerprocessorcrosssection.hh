@@ -61,6 +61,8 @@ public:
                         const char* labelIn, // 0 if no label desired
                         enum outlinerdirection sliceDirectionIn,
                         const OutlinerLine2D& lineIn,
+                        outlinerreal stepxIn,
+                        outlinerreal stepyIn,
                         outlinerreal stepzIn,
                         outlinerreal widthIn,
                         Processor& procIn);
@@ -101,6 +103,8 @@ private:
   const char* label; // 0 if no label desired
   const enum outlinerdirection sliceDirection;
   const OutlinerLine2D line;
+  outlinerreal stepx;
+  outlinerreal stepy;
   outlinerreal stepz;
   outlinerreal width;
   outlinerreal xDifference;
