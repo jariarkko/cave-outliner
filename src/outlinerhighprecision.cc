@@ -197,6 +197,25 @@ OutlinerBox2D::pointInside(const OutlinerVector2D& point) const {
          point.y >= start.y && point.y <= end.y);
 }
 
+bool
+OutlinerBox2D::doesIntersect(const OutlinerBox2D& boundingBox2) const {
+  // Following the algorithm from
+  // https://math.stackexchange.com/questions/2651710/simplest-way-to-determine-if-two-3d-boxes-intersect
+  
+  bool xOverlap = (outlinerbetweenepsilon(             start.x,boundingBox2.start.x,end.x) ||
+                   outlinerbetweenepsilon(             start.x,boundingBox2.end.x,  end.x) ||
+                   outlinerbetweenepsilon(boundingBox2.start.x,             start.x,boundingBox2.end.x) ||
+                   outlinerbetweenepsilon(boundingBox2.start.x,             end.x,  boundingBox2.end.x));
+  if (!xOverlap) return(0);
+  bool yOverlap = (outlinerbetweenepsilon(             start.y,boundingBox2.start.y,end.y) ||
+                   outlinerbetweenepsilon(             start.y,boundingBox2.end.y,  end.y) ||
+                   outlinerbetweenepsilon(boundingBox2.start.y,             start.y,boundingBox2.end.y) ||
+                   outlinerbetweenepsilon(boundingBox2.start.y,              end.y, boundingBox2.end.y));
+  if (!yOverlap) return(0);
+  
+  return(1);
+}
+
 void
 OutlinerBox2D::intersection(const OutlinerBox2D& box2,
                             OutlinerBox2D& resultBox) const {
@@ -223,7 +242,8 @@ void
 OutlinerBox2D::test(void) {
   testEqual();
   testUnion();
-  testIntersection();
+  testIntersectionTest();
+  testDoIntersection();
 }
 
 void
@@ -283,7 +303,51 @@ OutlinerBox2D::testUnion(void) {
 }
 
 void
-OutlinerBox2D::testIntersection(void) {
+OutlinerBox2D::testIntersectionTest(void) {
+  infof("bounding box intersection tests...");
+  
+  OutlinerVector3D test1boundingBox1Start(0,0,0);
+  OutlinerVector3D test1boundingBox1End(100,100,100);
+  OutlinerVector3D test1boundingBox2Start(10,10,10);
+  OutlinerVector3D test1boundingBox2End(11,11,11);
+  OutlinerBox3D test1boundingBox1(test1boundingBox1Start,test1boundingBox1End);
+  OutlinerBox3D test1boundingBox2(test1boundingBox2Start,test1boundingBox2End);
+  bool ans = test1boundingBox1.doesIntersect(test1boundingBox2);
+  assert(ans);
+  
+  OutlinerVector3D test2boundingBox1Start(0,0,0);
+  OutlinerVector3D test2boundingBox1End(10,10,10);
+  OutlinerVector3D test2boundingBox2Start(11,11,11);
+  OutlinerVector3D test2boundingBox2End(12,12,12);
+  OutlinerBox3D test2boundingBox1(test2boundingBox1Start,test2boundingBox1End);
+  OutlinerBox3D test2boundingBox2(test2boundingBox2Start,test2boundingBox2End);
+  ans = test2boundingBox1.doesIntersect(test2boundingBox2);
+  assert(!ans);
+  
+  OutlinerVector3D test3boundingBox1Start(0,0,0);
+  OutlinerVector3D test3boundingBox1End(10,10,10);
+  OutlinerVector3D test3boundingBox2Start(0,0,11);
+  OutlinerVector3D test3boundingBox2End(2,2,12);
+  OutlinerBox3D test3boundingBox1(test3boundingBox1Start,test3boundingBox1End);
+  OutlinerBox3D test3boundingBox2(test3boundingBox2Start,test3boundingBox2End);
+  ans = test3boundingBox1.doesIntersect(test3boundingBox2);
+  assert(!ans);
+
+  infof("bounding box intersection tests ok");
+  
+  infof("bounding box intersection cross cut bug tests...");
+  OutlinerBox3D bug(-1.00, -1.00, -1.00,
+                     1.00, -1.00,  1.00);
+  OutlinerBox3D pixel( 0.00, -1.00, 0.00,
+                       0.00, -0.90, 0.10);
+  bool buganswer = bug.doesIntersect(pixel);
+  debugf("buganswer = %u", buganswer);
+  assert(buganswer);
+  infof("bounding box intersection cross cut bug tests ok");
+}
+
+void
+OutlinerBox2D::testDoIntersection(void) {
 
   const OutlinerVector2D box1aStart(0,0);
   const OutlinerVector2D box1aEnd(10,10);
@@ -306,6 +370,16 @@ OutlinerBox2D::testIntersection(void) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // OutlinerBox3D Functions ////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+bool
+OutlinerBox3D::equal(const OutlinerBox3D& box2) const {
+  return(start.x == box2.start.x &&
+         start.y == box2.start.y &&
+         start.z == box2.start.z &&
+         end.x == box2.end.x &&
+         end.y == box2.end.y &&
+         end.z == box2.end.z);
+}
 
 void
 OutlinerBox3D::intersection(const OutlinerBox3D& box2,
@@ -335,7 +409,84 @@ OutlinerBox3D::boxUnion(const OutlinerBox3D& box2,
 
 void
 OutlinerBox3D::test(void) {
+  testEqual();
+  testUnion();
+  testIntersectionTest();
+  testDoIntersection();
 }
+
+void
+OutlinerBox3D::testEqual(void) {
+  OutlinerBox3D a(1,2,3,4,5,6);
+  OutlinerBox3D b(1,2,3,4,5,6);
+  OutlinerBox3D c(1,2,4,4,5,7);
+  assert(a.equal(a));
+  assert(a.equal(b));
+  assert(!a.equal(c));
+}
+
+void
+OutlinerBox3D::testUnion(void) {
+  OutlinerBox3D a(0,0,0,10,10,10);
+  OutlinerBox3D b(0,0,0,20,20,20);
+  OutlinerBox3D result;
+  a.boxUnion(b,result);
+  assert(result.equal(b));
+}
+
+void
+OutlinerBox3D::testIntersectionTest(void) {
+  infof("bounding box intersection tests...");
+  
+  OutlinerVector3D test1boundingBox1Start(0,0,0);
+  OutlinerVector3D test1boundingBox1End(100,100,100);
+  OutlinerVector3D test1boundingBox2Start(10,10,10);
+  OutlinerVector3D test1boundingBox2End(11,11,11);
+  OutlinerBox3D test1boundingBox1(test1boundingBox1Start,test1boundingBox1End);
+  OutlinerBox3D test1boundingBox2(test1boundingBox2Start,test1boundingBox2End);
+  bool ans = test1boundingBox1.doesIntersect(test1boundingBox2);
+  assert(ans);
+  
+  OutlinerVector3D test2boundingBox1Start(0,0,0);
+  OutlinerVector3D test2boundingBox1End(10,10,10);
+  OutlinerVector3D test2boundingBox2Start(11,11,11);
+  OutlinerVector3D test2boundingBox2End(12,12,12);
+  OutlinerBox3D test2boundingBox1(test2boundingBox1Start,test2boundingBox1End);
+  OutlinerBox3D test2boundingBox2(test2boundingBox2Start,test2boundingBox2End);
+  ans = test2boundingBox1.doesIntersect(test2boundingBox2);
+  assert(!ans);
+  
+  OutlinerVector3D test3boundingBox1Start(0,0,0);
+  OutlinerVector3D test3boundingBox1End(10,10,10);
+  OutlinerVector3D test3boundingBox2Start(0,0,11);
+  OutlinerVector3D test3boundingBox2End(2,2,12);
+  OutlinerBox3D test3boundingBox1(test3boundingBox1Start,test3boundingBox1End);
+  OutlinerBox3D test3boundingBox2(test3boundingBox2Start,test3boundingBox2End);
+  ans = test3boundingBox1.doesIntersect(test3boundingBox2);
+  assert(!ans);
+
+  infof("bounding box intersection tests ok");
+  
+  infof("bounding box intersection cross cut bug tests...");
+  OutlinerBox3D bug(-1.00, -1.00, -1.00,
+                     1.00, -1.00,  1.00);
+  OutlinerBox3D pixel( 0.00, -1.00, 0.00,
+                       0.00, -0.90, 0.10);
+  bool buganswer = bug.doesIntersect(pixel);
+  debugf("buganswer = %u", buganswer);
+  assert(buganswer);
+  infof("bounding box intersection cross cut bug tests ok");
+}
+
+void
+OutlinerBox3D::testDoIntersection(void) {
+  OutlinerBox3D a(0,0,0,10,10,10);
+  OutlinerBox3D b(-2,-2,-7,20,30,20);
+  OutlinerBox3D result;
+  a.intersection(b,result);
+  assert(result.equal(a));
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // OutlinerTriangle2D Functions ///////////////////////////////////////////////////////////////

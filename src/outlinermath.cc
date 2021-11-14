@@ -310,7 +310,7 @@ OutlinerMath::boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle
            triangle.a.z, triangle.b.z, triangle.c.z);
   }
   triangleBoundingBox3D(triangle,triangleBoundingBox);
-  bool ans = boundingBoxesIntersect3D(triangleBoundingBox,box);
+  bool ans = triangleBoundingBox.doesIntersect(box);
   if (debugbbit3) {
     char buf[150];
     triangleDescribe(triangle,buf,sizeof(buf),1);
@@ -359,62 +359,46 @@ OutlinerMath::boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle
 }
 
 bool
-OutlinerMath::boundingBoxesIntersect2D(const OutlinerBox2D& boundingBox1,
-                                       const OutlinerBox2D& boundingBox2) {
-  // Following the algorithm from https://math.stackexchange.com/questions/2651710/simplest-way-to-determine-if-two-3d-boxes-intersect
+OutlinerBox3D::doesIntersect(const OutlinerBox3D& boundingBox2) const {
+  // Following the algorithm from
+  // https://math.stackexchange.com/questions/2651710/simplest-way-to-determine-if-two-3d-boxes-intersect
   
-  bool xOverlap = (outlinerbetweenepsilon(boundingBox1.start.x,boundingBox2.start.x,boundingBox1.end.x) ||
-                   outlinerbetweenepsilon(boundingBox1.start.x,boundingBox2.end.x,boundingBox1.end.x) ||
-                   outlinerbetweenepsilon(boundingBox2.start.x,boundingBox1.start.x,boundingBox2.end.x) ||
-                   outlinerbetweenepsilon(boundingBox2.start.x,boundingBox1.end.x,boundingBox2.end.x));
-  if (!xOverlap) return(0);
-  bool yOverlap = (outlinerbetweenepsilon(boundingBox1.start.y,boundingBox2.start.y,boundingBox1.end.y) ||
-                   outlinerbetweenepsilon(boundingBox1.start.y,boundingBox2.end.y,boundingBox1.end.y) ||
-                   outlinerbetweenepsilon(boundingBox2.start.y,boundingBox1.start.y,boundingBox2.end.y) ||
-                   outlinerbetweenepsilon(boundingBox2.start.y,boundingBox1.end.y,boundingBox2.end.y));
-  if (!yOverlap) return(0);
-  return(1);
-}
-
-bool
-OutlinerMath::boundingBoxesIntersect3D(const OutlinerBox3D& boundingBox1,
-                                       const OutlinerBox3D& boundingBox2) {
-  // Following the algorithm from https://math.stackexchange.com/questions/2651710/simplest-way-to-determine-if-two-3d-boxes-intersect
-  
-  bool xOverlap = (outlinerbetweenepsilon(boundingBox1.start.x, boundingBox2.start.x,boundingBox1.end.x) ||
-                   outlinerbetweenepsilon(boundingBox1.start.x, boundingBox2.end.x,  boundingBox1.end.x) ||
-                   outlinerbetweenepsilon(boundingBox2.start.x, boundingBox1.start.x,boundingBox2.end.x) ||
-                   outlinerbetweenepsilon(boundingBox2.start.x, boundingBox1.end.x,  boundingBox2.end.x));
+  bool xOverlap = (outlinerbetweenepsilon(             start.x, boundingBox2.start.x,             end.x) ||
+                   outlinerbetweenepsilon(             start.x, boundingBox2.end.x,               end.x) ||
+                   outlinerbetweenepsilon(boundingBox2.start.x,              start.x,boundingBox2.end.x) ||
+                   outlinerbetweenepsilon(boundingBox2.start.x,              end.x,  boundingBox2.end.x));
   if (debugbbit3) debugf("        bbi3 xOverlap %u", xOverlap);
   if (!xOverlap) return(0);
-  bool yOverlap = (outlinerbetweenepsilon(boundingBox1.start.y, boundingBox2.start.y,boundingBox1.end.y) ||
-                   outlinerbetweenepsilon(boundingBox1.start.y, boundingBox2.end.y,  boundingBox1.end.y) ||
-                   outlinerbetweenepsilon(boundingBox2.start.y, boundingBox1.start.y,boundingBox2.end.y) ||
-                   outlinerbetweenepsilon(boundingBox2.start.y, boundingBox1.end.y,  boundingBox2.end.y));
+  bool yOverlap = (outlinerbetweenepsilon(             start.y, boundingBox2.start.y,             end.y) ||
+                   outlinerbetweenepsilon(             start.y, boundingBox2.end.y,               end.y) ||
+                   outlinerbetweenepsilon(boundingBox2.start.y,              start.y,boundingBox2.end.y) ||
+                   outlinerbetweenepsilon(boundingBox2.start.y,              end.y,  boundingBox2.end.y));
   if (debugbbit3) debugf("        bbi3 yOverlap %u    %.2f..%.2f and %.2f...%.2f",
                          yOverlap,
-                         boundingBox1.start.y, boundingBox1.end.y,
+                                      start.y,              end.y,
                          boundingBox2.start.y, boundingBox2.end.y);
   if (debugbbit3) debugf("        bbi3 yOverlap components %u, %u, %u, %u",
-                         outlinerbetweenepsilon(boundingBox1.start.y, boundingBox2.start.y,boundingBox1.end.y),
-                         outlinerbetweenepsilon(boundingBox1.start.y, boundingBox2.end.y,  boundingBox1.end.y),
-                         outlinerbetweenepsilon(boundingBox2.start.y, boundingBox1.start.y,boundingBox2.end.y),
-                         outlinerbetweenepsilon(boundingBox2.start.y, boundingBox1.end.y,  boundingBox2.end.y));
+                         outlinerbetweenepsilon(             start.y, boundingBox2.start.y,             end.y),
+                         outlinerbetweenepsilon(             start.y, boundingBox2.end.y,               end.y),
+                         outlinerbetweenepsilon(boundingBox2.start.y,              start.y,boundingBox2.end.y),
+                         outlinerbetweenepsilon(boundingBox2.start.y,              end.y,  boundingBox2.end.y));
   if (debugbbit3) debugf("        bbi3 yOverlap tests %u %u box1 ydiff %f box12 diff %f",
-                         boundingBox1.start.y <= boundingBox2.start.y,
-                         boundingBox2.start.y <= boundingBox1.end.y,
-                         boundingBox1.end.y - boundingBox1.start.y,
-                         boundingBox1.end.y - boundingBox2.start.y);
+                                      start.y <= boundingBox2.start.y,
+                         boundingBox2.start.y <=              end.y,
+                                      end.y -              start.y,
+                                      end.y - boundingBox2.start.y);
   if (!yOverlap) return(0);
-  bool zOverlap = (outlinerbetweenepsilon(boundingBox1.start.z, boundingBox2.start.z,boundingBox1.end.z) ||
-                   outlinerbetweenepsilon(boundingBox1.start.z, boundingBox2.end.z,  boundingBox1.end.z) ||
-                   outlinerbetweenepsilon(boundingBox2.start.z, boundingBox1.start.z,boundingBox2.end.z) ||
-                   outlinerbetweenepsilon(boundingBox2.start.z, boundingBox1.end.z,  boundingBox2.end.z));
+  bool zOverlap = (outlinerbetweenepsilon(             start.z, boundingBox2.start.z,             end.z) ||
+                   outlinerbetweenepsilon(             start.z, boundingBox2.end.z,               end.z) ||
+                   outlinerbetweenepsilon(boundingBox2.start.z,              start.z,boundingBox2.end.z) ||
+                   outlinerbetweenepsilon(boundingBox2.start.z,              end.z,  boundingBox2.end.z));
   if (debugbbit3) debugf("        bbi3 zOverlap %u    %.2f..%2.f and %.2f...%.2f",
                          zOverlap,
-                         boundingBox1.start.z, boundingBox1.end.z,
+                                      start.z,              end.z,
                          boundingBox2.start.z, boundingBox2.end.z);
   if (!zOverlap) return(0);
+
+  // Done. They intersect.
   return(1);
 }
 
@@ -823,7 +807,6 @@ OutlinerMath::mathTests(void) {
   lineIntersectionTests();
   triangleTests();
   boundingBoxTests();
-  boundingBoxIntersectionTests();
   triangleBoundingBoxTests();
   infof("math tests ok");
 }
@@ -946,43 +929,6 @@ OutlinerMath::boundingBoxTests(void) {
   assert(ans == 0);
   ans = bbtest1.pointInside(bbtest1point5);
   assert(ans == 1);
-}
-
-void
-OutlinerMath::boundingBoxIntersectionTests(void) {
-  infof("bounding box intersection tests...");
-  
-  OutlinerVector3D test1boundingBox1Start(0,0,0);
-  OutlinerVector3D test1boundingBox1End(100,100,100);
-  OutlinerVector3D test1boundingBox2Start(10,10,10);
-  OutlinerVector3D test1boundingBox2End(11,11,11);
-  OutlinerBox3D test1boundingBox1(test1boundingBox1Start,test1boundingBox1End);
-  OutlinerBox3D test1boundingBox2(test1boundingBox2Start,test1boundingBox2End);
-  bool ans = boundingBoxesIntersect3D(test1boundingBox1,
-                                      test1boundingBox2);
-  assert(ans);
-  
-  OutlinerVector3D test2boundingBox1Start(0,0,0);
-  OutlinerVector3D test2boundingBox1End(10,10,10);
-  OutlinerVector3D test2boundingBox2Start(11,11,11);
-  OutlinerVector3D test2boundingBox2End(12,12,12);
-  OutlinerBox3D test2boundingBox1(test2boundingBox1Start,test2boundingBox1End);
-  OutlinerBox3D test2boundingBox2(test2boundingBox2Start,test2boundingBox2End);
-  ans = boundingBoxesIntersect3D(test2boundingBox1,
-                                 test2boundingBox2);
-  assert(!ans);
-  
-  OutlinerVector3D test3boundingBox1Start(0,0,0);
-  OutlinerVector3D test3boundingBox1End(10,10,10);
-  OutlinerVector3D test3boundingBox2Start(0,0,11);
-  OutlinerVector3D test3boundingBox2End(2,2,12);
-  OutlinerBox3D test3boundingBox1(test3boundingBox1Start,test3boundingBox1End);
-  OutlinerBox3D test3boundingBox2(test3boundingBox2Start,test3boundingBox2End);
-  ans = boundingBoxesIntersect3D(test3boundingBox1,
-                                 test3boundingBox2);
-  assert(!ans);
-
-  infof("bounding box intersection tests ok");
 }
 
 void
@@ -1276,13 +1222,4 @@ OutlinerMath::triangleBoundingBoxTests(void) {
   assert(ans);
   infof("triangle bounding box tests ok");
 
-  infof("bounding box intersection cross cut bug tests...");
-  OutlinerBox3D bug(-1.00, -1.00, -1.00,
-                     1.00, -1.00,  1.00);
-  OutlinerBox3D pixel( 0.00, -1.00, 0.00,
-                       0.00, -0.90, 0.10);
-  bool buganswer = boundingBoxesIntersect3D(bug,pixel);
-  debugf("buganswer = %u", buganswer);
-  assert(buganswer);
-  infof("bounding box intersection cross cut bug tests ok");
 }

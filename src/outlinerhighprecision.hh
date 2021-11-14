@@ -243,6 +243,9 @@ public:
   /// Is a given point inside a bounding box (in 2-dimension model)?
   bool pointInside(const OutlinerVector2D& point) const;
   
+  /// Does a bounding box intersect another one?
+  bool doesIntersect(const OutlinerBox2D& boundingBox2) const;
+
   /// Take an intersection of this and another box, placing the
   /// resulting bounding box in "resultBox".
   void intersection(const OutlinerBox2D& box2,
@@ -260,12 +263,15 @@ private:
   
   /// Run unit tests associated with this class.
   static void testEqual(void);
-
+  
   /// Run unit tests associated with this class.
   static void testUnion(void);
-
+  
   /// Run unit tests associated with this class.
-  static void testIntersection(void);
+  static void testIntersectionTest(void);
+  
+  /// Run unit tests associated with this class.
+  static void testDoIntersection(void);
 };
 
 ///
@@ -303,6 +309,12 @@ public:
   
   /// Assignment
   OutlinerBox3D& operator=(const OutlinerBox3D& in) { start = in.start; end = in.end; return(*this); }
+
+  /// Test for equality.
+  bool equal(const OutlinerBox3D& box2) const;
+  
+  /// Does a bounding box intersect another one?
+  bool doesIntersect(const OutlinerBox3D& boundingBox2) const;
   
   /// Take an intersection of this and another box, placing the
   /// resulting bounding box in "resultBox".
@@ -316,6 +328,20 @@ public:
   
   /// Run unit tests associated with this class.
   static void test(void);
+
+private:
+  
+  /// Run unit tests associated with this class.
+  static void testEqual(void);
+  
+  /// Run unit tests associated with this class.
+  static void testUnion(void);
+
+  /// Run unit tests associated with this class.
+  static void testIntersectionTest(void);
+  
+  /// Run unit tests associated with this class.
+  static void testDoIntersection(void);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

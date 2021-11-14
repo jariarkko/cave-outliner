@@ -89,14 +89,6 @@ public:
   static bool boundingBoxIntersectsTriangle3D(const OutlinerTriangle3D& triangle,
                                               const OutlinerBox3D& box);
 
-  /// Does a bounding box intersect another one?
-  static bool boundingBoxesIntersect2D(const OutlinerBox2D& boundingBox1,
-                                       const OutlinerBox2D& boundingBox2);
-
-  /// Does a bounding box intersect another one?
-  static bool boundingBoxesIntersect3D(const OutlinerBox3D& boundingBox1,
-                                       const OutlinerBox3D& boundingBox2);
-
   /// Does a line intersect a vertical line?
   static bool lineIntersectsVerticalLine2D(const OutlinerLine2D& line,
                                            const OutlinerLine2D& verticalLine,
@@ -123,7 +115,6 @@ private:
   static void vectorTests(void);
   static void detTests(void);
   static void boundingBoxTests(void);
-  static void boundingBoxIntersectionTests(void);
   static void triangleBoundingBoxTests(void);
   static void pointTests(void);
   static void lineIntersectionTests(void);
