@@ -37,13 +37,16 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 MaterialMatrix3D::MaterialMatrix3D(const OutlinerBox3D& boundingBoxIn,
-                                   const outlinerreal stepx,
-                                   const outlinerreal stepy,
-                                   const outlinerreal stepz) :
+                                   const outlinerreal stepxIn,
+                                   const outlinerreal stepyIn,
+                                   const outlinerreal stepzIn) :
   boundingBox(boundingBoxIn),
-  xIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.x,boundingBox.end.x,stepx)),
-  yIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.y,boundingBox.end.y,stepy)),
-  zIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.z,boundingBox.end.z,stepz)),
+  xIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.x,boundingBox.end.x,stepxIn)),
+  yIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.y,boundingBox.end.y,stepyIn)),
+  zIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.z,boundingBox.end.z, stepzIn)),
+  stepx(stepxIn),
+  stepy(stepyIn),
+  stepz(stepzIn),
   verticalMatrixes(new VerticalMatrix [xIndexSize]) {
   if (verticalMatrixes == 0) {
     errf("Cannot allocate %u vertical matrixes", xIndexSize);
@@ -62,6 +65,24 @@ MaterialMatrix3D::setMaterialMatrix(const unsigned int xIndex,
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
   assert(zIndex < zIndexSize);
+  if (verticalMatrixes[xIndex].matrix == 0) {
+    OutlinerBox2D sliceBox(boundingBox.start.y,boundingBox.start.z,
+                           boundingBox.end.y,boundingBox.end.z);
+    verticalMatrixes[xIndex].matrix = new MaterialMatrix2D(sliceBox,stepy,stepz);
+    if (verticalMatrixes[xIndex].matrix == 0) {
+      errf("Cannot allocate a vertical matrix");
+      exit(1);
+    }
+  }
+  verticalMatrixes[xIndex].matrix->setMaterialMatrix(yIndex,zIndex);
+}
+
+void
+MaterialMatrix3D::setMaterialMatrixSlice(const unsigned int xIndex,
+                                         MaterialMatrix2D* sliceMatrix) {
+  assert(xIndex < xIndexSize);
+  assert(verticalMatrixes[xIndex].matrix == 0);
+  verticalMatrixes[xIndex].matrix = sliceMatrix;
 }
 
 bool
@@ -71,7 +92,12 @@ MaterialMatrix3D::getMaterialMatrix(const unsigned int xIndex,
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
   assert(zIndex < zIndexSize);
-  return(0);
+  MaterialMatrix2D* sliceMatrix = verticalMatrixes[xIndex].matrix;
+  if (sliceMatrix == 0) {
+    return(0);
+  } else {
+    return(sliceMatrix->getMaterialMatrix(yIndex,zIndex));
+  }
 }
 
 unsigned int

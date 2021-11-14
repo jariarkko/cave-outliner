@@ -518,11 +518,11 @@ IndexedMesh::coordsToTile(outlinerreal x,
   if (tileX == subdivisions) tileX = subdivisions - 1;
   outlinerreal yInView = y - viewBoundingBox.start.y;
   tileY = yInView / tileSizeY;
-   assert(tileY <= subdivisions);
+  assert(tileY <= subdivisions);
   if (tileY == subdivisions) tileY = subdivisions - 1;
-  debugf("      coordinate (%f,%f) tile is (%u,%u)",
-         x, y,
-         tileX, tileY);
+  deepdebugf("      coordinate (%f,%f) tile is (%u,%u)",
+             x, y,
+             tileX, tileY);
 }
 
 IndexedMesh::~IndexedMesh() {

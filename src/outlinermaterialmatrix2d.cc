@@ -37,11 +37,13 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 MaterialMatrix2D::MaterialMatrix2D(const OutlinerBox2D& boundingBoxIn,
-                                   const outlinerreal stepx,
-                                   const outlinerreal stepy) :
+                                   const outlinerreal stepxIn,
+                                   const outlinerreal stepyIn) :
   boundingBox(boundingBoxIn),
-  xIndexSize(calculateSize(boundingBox.start.x,boundingBox.end.x,stepx)),
-  yIndexSize(calculateSize(boundingBox.start.y,boundingBox.end.y,stepy)),
+  xIndexSize(calculateSize(boundingBox.start.x,boundingBox.end.x,stepxIn)),
+  yIndexSize(calculateSize(boundingBox.start.y,boundingBox.end.y,stepyIn)),
+  stepx(stepxIn),
+  stepy(stepyIn),
   nBits(xIndexSize * yIndexSize),
   nChars((nBits / 8) + 1),
   bitMatrix(new unsigned char [nChars]) {
@@ -153,6 +155,40 @@ MaterialMatrix2D::count(void) {
     }
   }
   return(theCount);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Model processing -- coordinate conversions /////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+unsigned int
+MaterialMatrix2D::coordinateXToIndex(outlinerreal x) {
+  outlinerreal xStart = boundingBox.start.x;
+  outlinerreal xEnd = boundingBox.end.x;
+  assert(outlinergeepsilon(x,xStart));
+  assert(outlinerleepsilon(x,xEnd));
+  return((x - xStart)/stepx);
+}
+
+unsigned int
+MaterialMatrix2D::coordinateYToIndex(outlinerreal y) {
+  outlinerreal yStart = boundingBox.start.y;
+  outlinerreal yEnd = boundingBox.end.y;
+  assert(outlinergeepsilon(y,yStart));
+  assert(outlinerleepsilon(y,yEnd));
+  return((y - yStart)/stepy);
+}
+
+outlinerreal
+MaterialMatrix2D::indexToCoordinateX(unsigned int xIndex) {
+  outlinerreal xStart = boundingBox.start.x;
+  return(xStart + stepx * xIndex);
+}
+
+outlinerreal
+MaterialMatrix2D::indexToCoordinateY(unsigned int yIndex) {
+  outlinerreal yStart = boundingBox.start.y;
+  return(yStart + stepy * yIndex);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

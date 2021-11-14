@@ -215,15 +215,6 @@ private:
                          OutlinerTriangle3D& t);
   
   //
-  // Coordinate management
-  //
-  
-  unsigned int coordinateXToIndex(outlinerreal x);
-  unsigned int coordinateYToIndex(outlinerreal y);
-  outlinerreal indexToCoordinateX(unsigned int xIndex);
-  outlinerreal indexToCoordinateY(unsigned int yIndex);
-
-  //
   // Labels
   //
   

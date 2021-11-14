@@ -47,8 +47,8 @@ public:
 
   /// Create a MaterialMatrix2D object.
   MaterialMatrix2D(const OutlinerBox2D& boundingBoxIn,
-                   const outlinerreal stepx,
-                   const outlinerreal stepy);
+                   const outlinerreal stepxIn,
+                   const outlinerreal stepyIn);
 
   /// Destruct the material matrix.
   ~MaterialMatrix2D();
@@ -74,6 +74,15 @@ public:
                                     outlinerreal to,
                                     outlinerreal step);
   
+  //
+  // Coordinate management
+  //
+  
+  unsigned int coordinateXToIndex(outlinerreal x);
+  unsigned int coordinateYToIndex(outlinerreal y);
+  outlinerreal indexToCoordinateX(unsigned int xIndex);
+  outlinerreal indexToCoordinateY(unsigned int yIndex);
+  
   /// Count the number of matrix elements with flags on.
   unsigned int count(void);
 
@@ -91,6 +100,8 @@ public:
   
 private:
 
+  const outlinerreal stepx;
+  const outlinerreal stepy;
   const unsigned int nBits;
   const unsigned int nChars;
   unsigned char* bitMatrix;

@@ -612,8 +612,8 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxMesh(const aiScene* scene,
         nActualFaces++;
       }
     }
-    infof("cross section iteration step %u at %.2f,%.2f: hits %u tiled faces, %u actual faces",
-          iter.step, iter.point.x, iter.point.y, nFaces, nActualFaces);
+    debugf("cross section iteration step %u at %.2f,%.2f: hits %u tiled faces, %u actual faces",
+           iter.step, iter.point.x, iter.point.y, nFaces, nActualFaces);
   }
 }
 

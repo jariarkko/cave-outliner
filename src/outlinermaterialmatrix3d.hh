@@ -52,9 +52,9 @@ public:
 
   /// Create a MaterialMatrix3D object.
   MaterialMatrix3D(const OutlinerBox3D& boundingbox,
-                   const outlinerreal stepx,
-                   const outlinerreal stepy,
-                   const outlinerreal stepz);
+                   const outlinerreal stepxIn,
+                   const outlinerreal stepyIn,
+                   const outlinerreal stepzIn);
 
   /// Destruct the material matrix.
   ~MaterialMatrix3D();
@@ -64,6 +64,10 @@ public:
   void setMaterialMatrix(const unsigned int xIndex,
                          const unsigned int yIndex,
                          const unsigned int zIndex);
+
+  /// Set the entire z slice in one go
+  void setMaterialMatrixSlice(const unsigned int xIndex,
+                              MaterialMatrix2D* sliceMatrix);
 
   /// Get the flag indicating whether there is material in a given
   /// (x,y) index in the matrix.
@@ -90,7 +94,10 @@ public:
   const unsigned int zIndexSize;
   
 private:
-
+  
+  const outlinerreal stepx;
+  const outlinerreal stepy;
+  const outlinerreal stepz;
   struct VerticalMatrix* verticalMatrixes;
 };
 

@@ -216,7 +216,7 @@ Processor::performFormAnalysis(const aiScene* scene) {
 
 bool
 Processor::performFormAnalysisSlicing(const aiScene* scene) {
-  for (unsigned int xIndex = 0; xIndex < matrix2.xIndexSize - 2; xIndex++) {
+  for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
     performFormAnalysisOneSlice(scene,xIndex);
   }
   return(1);
@@ -228,25 +228,32 @@ Processor::performFormAnalysisOneSlice(const aiScene* scene,
   unsigned int yIndexFrom;
   unsigned int yIndexTo;
   outlinerreal x = planviewBoundingBox.start.x + xIndex * stepxCondensed;
-  unsigned int xIndexMatrix2 = coordinateXToIndex(x);
-  matrix2.getMaterialYBounds(xIndexMatrix2,yIndexFrom,yIndexTo);
-  outlinerreal yFrom = indexToCoordinateY(yIndexFrom);
-  outlinerreal yTo = indexToCoordinateY(yIndexTo);
-  OutlinerLine2D sliceLine(x,yFrom,x,yTo);
-  infof("  slice %u: x = %.2f, y = %.2f..%.2f", xIndex, x, yFrom, yTo);
-  ProcessorCrossSection csproc(0, // no image
-                               0, // no labels
-                               DirectionOperations::screenx(direction),
-                               sliceLine,
-                               stepzCondensed,
-                               1.0,
-                               *this);
-  csproc.processSceneCrossSection(scene);
-  OutlinerBox2D verticalBoundingBox;
-  csproc.getCrossSectionBoundingBox(verticalBoundingBox);
-  MaterialMatrix2D* verticalMatrix = 0;
-  csproc.getVerticalMatrix(verticalMatrix);
-  assert(verticalMatrix != 0);
+  unsigned int xIndexMatrix2 = matrix2.coordinateXToIndex(x);
+  if (matrix2.getMaterialYBounds(xIndexMatrix2,yIndexFrom,yIndexTo)) {
+    outlinerreal yFrom = matrix2.indexToCoordinateY(yIndexFrom);
+    outlinerreal yTo = matrix2.indexToCoordinateY(yIndexTo);
+    OutlinerLine2D sliceLine(x,yFrom,x,yTo);
+    infof("  slice %u: x = %.2f, y = %.2f..%.2f (%u..%u, in a matrix of %ux%u)",
+          xIndex, x,
+          yFrom, yTo,
+          yIndexFrom,
+          yIndexTo,
+          matrix2.xIndexSize, matrix2.yIndexSize);
+    ProcessorCrossSection csproc(0, // no image
+                                 0, // no labels
+                                 DirectionOperations::screenx(direction),
+                                 sliceLine,
+                                 stepzCondensed,
+                                 1.0,
+                                 *this);
+    csproc.processSceneCrossSection(scene);
+    OutlinerBox2D verticalBoundingBox;
+    csproc.getCrossSectionBoundingBox(verticalBoundingBox);
+    MaterialMatrix2D* verticalMatrix = 0;
+    csproc.getVerticalMatrix(verticalMatrix);
+    assert(verticalMatrix != 0);
+    matrix3.setMaterialMatrixSlice(xIndex,verticalMatrix);
+  }
   return(1);
 }
 
@@ -648,8 +655,8 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
                 assert(outlinersaneindex(borderTableX[b]));
                 assert(outlinersaneindex(borderTableY[b]));
                 if (borderTablePrev[b]) {
-                  outlinerreal otherX = indexToCoordinateX(borderTableX[b]);
-                  outlinerreal otherY = indexToCoordinateY(borderTableY[b]);
+                  outlinerreal otherX = matrix2.indexToCoordinateX(borderTableX[b]);
+                  outlinerreal otherY = matrix2.indexToCoordinateY(borderTableY[b]);
                   deepdeepdebugf("calling theSvg->line");
                   theSvg->line(otherX,otherY,x,y);
                 }
@@ -917,40 +924,6 @@ Processor::isBorder(unsigned int xIndex,
     debugf("point %u,%u is inside cave", xIndex, yIndex);
   }
   return(ans);
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-// Model processing -- coordinate conversions /////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-unsigned int
-Processor::coordinateXToIndex(outlinerreal x) {
-  outlinerreal xStart = DirectionOperations::outputx(direction,boundingBox.start);
-  outlinerreal xEnd = DirectionOperations::outputx(direction,boundingBox.end);
-  assert(outlinergeepsilon(x,xStart));
-  assert(outlinerleepsilon(x,xEnd));
-  return((x - xStart)/stepx);
-}
-
-unsigned int
-Processor::coordinateYToIndex(outlinerreal y) {
-  outlinerreal yStart = DirectionOperations::outputy(direction,boundingBox.start);
-  outlinerreal yEnd = DirectionOperations::outputy(direction,boundingBox.end);
-  assert(outlinergeepsilon(y,yStart));
-  assert(outlinerleepsilon(y,yEnd));
-  return((y - yStart)/stepy);
-}
-
-outlinerreal
-Processor::indexToCoordinateX(unsigned int xIndex) {
-  outlinerreal xStart = DirectionOperations::outputx(direction,boundingBox.start);
-  return(xStart + stepx * xIndex);
-}
-
-outlinerreal
-Processor::indexToCoordinateY(unsigned int yIndex) {
-  outlinerreal yStart = DirectionOperations::outputy(direction,boundingBox.start);
-  return(yStart + stepy * yIndex);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
