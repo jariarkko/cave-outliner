@@ -222,45 +222,6 @@ OutlinerMath::triangleBoundingBox3D(const OutlinerTriangle3D& triangle,
 }
 
 bool
-OutlinerMath::pointOnLine2D(const OutlinerLine2D& line,
-                            const OutlinerVector2D& point) {
-
-  // Debugs
-  deepdeepdebugf("          pointOnLine2D high precision (%.2f,%.2f)-(%.2f,%.2f) vs. (%.2f,%.2f)",
-                 line.start.x, line.start.y, line.end.x, line.end.y,
-                 point.x, point.y);
-  
-  // Check for a special case: line points are equal, resulting in
-  // comparing to a point, not a line.
-  
-  if (line.start.equal(line.end))  {
-    debugreturn("          pol2","line points equal",line.start.equal(point));
-  }
-
-  // Check for a special case: line is horizontal
-  if (line.start.y == line.end.y) {
-    if (point.y != line.start.y) debugreturn("          pol","horizontal y diff",0);
-    debugreturn("          pol2","line is horizontal",outlinerbetweenanyorderepsilon(line.start.x,point.x,line.end.x));
-  }
-  
-  // Check for a special case: line is vertical
-  if (line.start.x == line.end.x) {
-    if (point.x != line.start.x) debugreturn("          pol2","vertical x diff",0);
-    debugreturn("          pol2","line is vertical",outlinerbetweenanyorderepsilon(line.start.y,point.y,line.end.y));
-  }
-  
-  // Not a special case. Run the general check, taking algorithm from
-  // https://stackoverflow.com/questions/17692922/check-is-a-point-x-y-is-between-two-points-drawn-on-a-straight-line
-
-  float alpha1 = (point.x - line.start.x) / (line.end.x - line.start.x);
-  float alpha2 = (point.y - line.start.y) / (line.end.y - line.start.y);
-  if (alpha1 != alpha2) debugreturn("          pol2","alpha diff",0);
-  if (alpha1 < 0) debugreturn("          pol2","alpha neg",0);
-  if (alpha1 > 1) debugreturn("          pol2","alpha above one",0);
-  debugreturn("          pol2","fallthrough",1);
-}
-
-bool
 OutlinerMath::pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
                                     const OutlinerVector2D& point) {
 
@@ -275,13 +236,13 @@ OutlinerMath::pointInsideTriangle2D(const OutlinerTriangle2D& triangle,
   // in 2D).
   if (triangle.a.equal(triangle.b)) {
     OutlinerLine2D ac(triangle.a,triangle.c);
-    debugreturn("        pit2","point on AB line",pointOnLine2D(ac,point));
+    debugreturn("        pit2","point on AB line",ac.pointOnLine(point));
   } else if (triangle.a.equal(triangle.c)) {
     OutlinerLine2D ab(triangle.a,triangle.b);
-    debugreturn("        pit2","point on AC line",pointOnLine2D(ab,point));
+    debugreturn("        pit2","point on AC line",ab.pointOnLine(point));
   } else if (triangle.b.equal(triangle.c)) {
     OutlinerLine2D ab(triangle.a,triangle.b);
-    debugreturn("        pit2","point on BC line",pointOnLine2D(ab,point));
+    debugreturn("        pit2","point on BC line",ab.pointOnLine(point));
   }
   
   // Not a special case. For the general case, we take the algorithm
@@ -859,7 +820,6 @@ OutlinerMath::mathTests(void) {
   utilityTests();
   vectorTests();
   detTests();
-  lineTests();
   lineIntersectionTests();
   triangleTests();
   boundingBoxTests();
@@ -1023,61 +983,6 @@ OutlinerMath::boundingBoxIntersectionTests(void) {
   assert(!ans);
 
   infof("bounding box intersection tests ok");
-}
-
-void
-OutlinerMath::lineTests(void) {
-
-  debugf("line tests...");
-  
-  // Horizontal
-  {
-    OutlinerVector2D a(0,0);
-    OutlinerVector2D b(1,0);
-    OutlinerLine2D ab(a,b);
-    OutlinerVector2D c(2,0);
-    OutlinerLine2D ac(a,c);
-    OutlinerVector2D d(0.5,2);
-    bool ans = pointOnLine2D(ac,d);
-    assert(ans == 0);
-    ans = pointOnLine2D(ab,c);
-    assert(ans == 0);
-    ans = pointOnLine2D(ac,b);
-    assert(ans == 1);
-  }
-  
-  // Vertical
-  {
-    OutlinerVector2D a(0,0);
-    OutlinerVector2D b(0,1);
-    OutlinerLine2D ab(a,b);
-    OutlinerVector2D c(0,2);
-    OutlinerLine2D ac(a,c);
-    OutlinerVector2D d(0.5,1);
-    bool ans = pointOnLine2D(ac,d);
-    assert(ans == 0);
-    ans = pointOnLine2D(ab,c);
-    assert(ans == 0);
-    ans = pointOnLine2D(ac,b);
-    assert(ans == 1);
-  }
-  
-  // Sloping line
-  {
-    OutlinerVector2D a(0,0);
-    OutlinerVector2D b(1,1);
-    OutlinerLine2D ab(a,b);
-    OutlinerVector2D c(2,2);
-    OutlinerLine2D ac(a,c);
-    OutlinerVector2D d(1,2);
-    bool ans = pointOnLine2D(ac,d);
-    assert(ans == 0);
-    ans = pointOnLine2D(ab,c);
-    assert(ans == 0);
-    ans = pointOnLine2D(ac,b);
-    assert(ans == 1);
-  }
-
 }
 
 void

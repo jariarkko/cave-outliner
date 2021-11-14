@@ -146,6 +146,9 @@ public:
   /// Assignment.
   OutlinerLine2D& operator=(const OutlinerLine2D& in) { start = in.start; end = in.end; return(*this); }
   
+  /// Is a given point on a line?
+  bool pointOnLine(const OutlinerVector2D& point) const;
+  
   /// Is the line horizontal (along x axis)?
   bool horizontal() const { return(start.y == end.y); }
   

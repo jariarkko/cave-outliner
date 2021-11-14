@@ -97,10 +97,6 @@ public:
   static bool boundingBoxesIntersect3D(const OutlinerBox3D& boundingBox1,
                                        const OutlinerBox3D& boundingBox2);
 
-  /// Is a given point on a line?
-  static bool pointOnLine2D(const OutlinerLine2D& line,
-                            const OutlinerVector2D& point);
-  
   /// Does a line intersect a vertical line?
   static bool lineIntersectsVerticalLine2D(const OutlinerLine2D& line,
                                            const OutlinerLine2D& verticalLine,
@@ -130,7 +126,6 @@ private:
   static void boundingBoxIntersectionTests(void);
   static void triangleBoundingBoxTests(void);
   static void pointTests(void);
-  static void lineTests(void);
   static void lineIntersectionTests(void);
   static void triangleTests(void);
   static void sortVectorsX2D(const OutlinerVector2D* a,

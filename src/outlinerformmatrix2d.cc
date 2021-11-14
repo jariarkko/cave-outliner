@@ -70,7 +70,7 @@ FormMatrix2D::setForm(unsigned int xIndex,
 # define formMatrixNibbleIndex(x,y)       (((y)*yIndexSize)+((x)))
 # define formMatrixCharIndex(ni)          ((ni)>>1)
 # define formMatrixShift(ni)              (((ni)&0x1) != 0 ? 4 : 0)
-  assert(form < outlinerform_max);
+  assert(form <= outlinerform_max);
   assert(data != 0);
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
@@ -98,7 +98,7 @@ FormMatrix2D::getForm(unsigned int xIndex,
   assert(charIndex < fullSizeChars);
   const uint8_t baseValue = data[charIndex];
   outlinerform form = (baseValue >> shift);
-  assert(form < outlinerform_max);
+  assert(form <= outlinerform_max);
   return(form);
 }
 
@@ -118,7 +118,7 @@ FormMatrix2D::test(void) {
   assert(form == outlinerform_mainform_empty);
   matrix.setForm(5,6,outlinerform_mainform_complex);
   matrix.setForm(5,5,outlinerform_mainform_tunnel);
-  matrix.setForm(5,4,outlinerform_mainform_tunnel|outlinerform_extraform_stalac);
+  matrix.setForm(5,4,outlinerform_mainform_tunnel_stalac);
   form = matrix.getForm(1,3);
   assert(form == outlinerform_mainform_empty);
   form = matrix.getForm(5,7);
@@ -128,7 +128,7 @@ FormMatrix2D::test(void) {
   form = matrix.getForm(5,5);
   assert(form == outlinerform_mainform_tunnel);
   form = matrix.getForm(5,4);
-  assert(form == (outlinerform_mainform_tunnel|outlinerform_extraform_stalac));
+  assert(form == (outlinerform_mainform_tunnel_stalac));
   infof("form matrix test ok");
 }
 

@@ -21,8 +21,20 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
+#include "outlinerconstants.hh"
+#include "outlinertypes.hh"
 #include "outlinerhighprecision.hh"
 #include "outlinerdebug.hh"
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Debugs /////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+  
+# define  debugreturn(f,why,x) {                                             \
+    bool drv = (x);                                                          \
+    deepdeepdebugf("%s returns %u due to %s", (f), drv, (why));              \
+    return(drv);                                                             \
+ }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // OutlinerVector2D Functions /////////////////////////////////////////////////////////////////
@@ -68,8 +80,95 @@ OutlinerVector3D::test(void) {
 // OutlinerLine2D Functions ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+bool
+OutlinerLine2D::pointOnLine(const OutlinerVector2D& point) const {
+  
+  // Debugs
+  deepdeepdebugf("          pointOnLine2D high precision (%.2f,%.2f)-(%.2f,%.2f) vs. (%.2f,%.2f)",
+                 start.x, start.y, end.x, end.y,
+                 point.x, point.y);
+  
+  // Check for a special case: line points are equal, resulting in
+  // comparing to a point, not a line.
+  
+  if (start.equal(end))  {
+    debugreturn("          pol2","line points equal",start.equal(point));
+  }
+
+  // Check for a special case: line is horizontal
+  if (start.y == end.y) {
+    if (point.y != start.y) debugreturn("          pol","horizontal y diff",0);
+    debugreturn("          pol2","line is horizontal",outlinerbetweenanyorderepsilon(start.x,point.x,end.x));
+  }
+  
+  // Check for a special case: line is vertical
+  if (start.x == end.x) {
+    if (point.x != start.x) debugreturn("          pol2","vertical x diff",0);
+    debugreturn("          pol2","line is vertical",outlinerbetweenanyorderepsilon(start.y,point.y,end.y));
+  }
+  
+  // Not a special case. Run the general check, taking algorithm from
+  // https://stackoverflow.com/questions/17692922/check-is-a-point-x-y-is-between-two-points-drawn-on-a-straight-line
+
+  float alpha1 = (point.x - start.x) / (end.x - start.x);
+  float alpha2 = (point.y - start.y) / (end.y - start.y);
+  if (alpha1 != alpha2) debugreturn("          pol2","alpha diff",0);
+  if (alpha1 < 0) debugreturn("          pol2","alpha neg",0);
+  if (alpha1 > 1) debugreturn("          pol2","alpha above one",0);
+  debugreturn("          pol2","fallthrough",1);
+}
+
 void
 OutlinerLine2D::test(void) {
+  debugf("line tests...");
+  
+  // Horizontal
+  {
+    OutlinerVector2D a(0,0);
+    OutlinerVector2D b(1,0);
+    OutlinerLine2D ab(a,b);
+    OutlinerVector2D c(2,0);
+    OutlinerLine2D ac(a,c);
+    OutlinerVector2D d(0.5,2);
+    bool ans = ac.pointOnLine(d);
+    assert(ans == 0);
+    ans = ab.pointOnLine(c);
+    assert(ans == 0);
+    ans = ac.pointOnLine(b);
+    assert(ans == 1);
+  }
+  
+  // Vertical
+  {
+    OutlinerVector2D a(0,0);
+    OutlinerVector2D b(0,1);
+    OutlinerLine2D ab(a,b);
+    OutlinerVector2D c(0,2);
+    OutlinerLine2D ac(a,c);
+    OutlinerVector2D d(0.5,1);
+    bool ans = ac.pointOnLine(d);
+    assert(ans == 0);
+    ans = ab.pointOnLine(c);
+    assert(ans == 0);
+    ans = ac.pointOnLine(b);
+    assert(ans == 1);
+  }
+  
+  // Sloping line
+  {
+    OutlinerVector2D a(0,0);
+    OutlinerVector2D b(1,1);
+    OutlinerLine2D ab(a,b);
+    OutlinerVector2D c(2,2);
+    OutlinerLine2D ac(a,c);
+    OutlinerVector2D d(1,2);
+    bool ans = ac.pointOnLine(d);
+    assert(ans == 0);
+    ans = ab.pointOnLine(c);
+    assert(ans == 0);
+    ans = ac.pointOnLine(b);
+    assert(ans == 1);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

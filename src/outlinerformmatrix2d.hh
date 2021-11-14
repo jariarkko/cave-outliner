@@ -26,16 +26,17 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 #define outlinerform                   uint8_t // 4 bits
-#define outlinerform_mainform              0x3
+#define outlinerform_mainform              0x7
 #define outlinerform_mainform_empty          0 // No material at all
 #define outlinerform_mainform_tunnel         1 // Regular tunnel, i.e.,
                                                // roof and air and floor
-#define outlinerform_mainform_degenerate     2 // Some material, but only one
+#define outlinerform_mainform_tunnel_stalac  2 // Regular tunnel, with a detected 
+                                               // stalactite or stalagmite
+#define outlinerform_mainform_degenerate     3 // Some material, but only one
                                                // block of material (exit, border, etc)
-#define outlinerform_mainform_complex        3 // More than two layers of material
+#define outlinerform_mainform_complex        4 // More than two layers of material
                                                // and air (complex cave, multi-level tunnels, ...)
-#define outlinerform_extraform_stalac      0x4 // Detected stalactite or stalagmite
-#define outlinerform_max                    16
+#define outlinerform_max                  0x04
 
 ///
 /// This object represents a quantized 3D view into a 3D cave
