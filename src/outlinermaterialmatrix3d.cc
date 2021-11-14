@@ -153,6 +153,55 @@ MaterialMatrix3D::filledPercentage(unsigned int& memory,
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+// Model processing -- coordinate conversions /////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+unsigned int
+MaterialMatrix3D::coordinateXToIndex(outlinerreal x) const {
+  outlinerreal xStart = boundingBox.start.x;
+  outlinerreal xEnd = boundingBox.end.x;
+  assert(outlinergeepsilon(x,xStart));
+  assert(outlinerleepsilon(x,xEnd));
+  return((x - xStart)/stepx);
+}
+
+unsigned int
+MaterialMatrix3D::coordinateYToIndex(outlinerreal y) const {
+  outlinerreal yStart = boundingBox.start.y;
+  outlinerreal yEnd = boundingBox.end.y;
+  assert(outlinergeepsilon(y,yStart));
+  assert(outlinerleepsilon(y,yEnd));
+  return((y - yStart)/stepy);
+}
+
+unsigned int
+MaterialMatrix3D::coordinateZToIndex(outlinerreal z) const {
+  outlinerreal zStart = boundingBox.start.z;
+  outlinerreal zEnd = boundingBox.end.z;
+  assert(outlinergeepsilon(z,zStart));
+  assert(outlinerleepsilon(z,zEnd));
+  return((z - zStart)/stepz);
+}
+
+outlinerreal
+MaterialMatrix3D::indexToCoordinateX(unsigned int xIndex) const {
+  outlinerreal xStart = boundingBox.start.x;
+  return(xStart + stepx * xIndex);
+}
+
+outlinerreal
+MaterialMatrix3D::indexToCoordinateY(unsigned int yIndex) const {
+  outlinerreal yStart = boundingBox.start.y;
+  return(yStart + stepy * yIndex);
+}
+
+outlinerreal
+MaterialMatrix3D::indexToCoordinateZ(unsigned int zIndex) const {
+  outlinerreal zStart = boundingBox.start.z;
+  return(zStart + stepz * zIndex);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 // Unit tests for this module /////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 

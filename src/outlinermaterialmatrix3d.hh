@@ -52,6 +52,10 @@ class MaterialMatrix3D {
 
 public:
 
+  //
+  // Construction and destruction
+  //
+  
   /// Create a MaterialMatrix3D object.
   MaterialMatrix3D(const OutlinerBox3D& boundingbox,
                    const outlinerreal stepxIn,
@@ -61,6 +65,10 @@ public:
   /// Destruct the material matrix.
   ~MaterialMatrix3D();
 
+  //
+  // Basic operations to set and read the matrix contents
+  //
+  
   /// Set the flag indicating that there is material in a given (x,y)
   /// index in the matrix.
   void setMaterialMatrix(const unsigned int xIndex,
@@ -77,6 +85,32 @@ public:
   bool getMaterialMatrix(const unsigned int xIndex,
                          const unsigned int yIndex,
                          const unsigned int zIndex) const;
+
+  //
+  // Coordinate operations
+  //
+  
+  /// Map an actual coordinate value to an index.
+  unsigned int coordinateXToIndex(outlinerreal x) const;
+  
+  /// Map an actual coordinate value to an index.
+  unsigned int coordinateYToIndex(outlinerreal y) const;
+  
+  /// Map an actual coordinate value to an index.
+  unsigned int coordinateZToIndex(outlinerreal z) const;
+  
+  /// Map a coordinate index to an actual coordinate value.
+  outlinerreal indexToCoordinateX(unsigned int xIndex) const;
+  
+  /// Map a coordinate index to an actual coordinate value.
+  outlinerreal indexToCoordinateY(unsigned int yIndex) const;
+  
+  /// Map a coordinate index to an actual coordinate value.
+  outlinerreal indexToCoordinateZ(unsigned int zIndex) const;
+
+  //
+  // Statistics
+  //
   
   /// Count the number of matrix elements with flags on.
   unsigned int count(void) const;
@@ -85,12 +119,20 @@ public:
   /// consumes no memory).
   outlinerreal filledPercentage(unsigned int& memory,
                                 unsigned int& theoretical) const;
+
+  //
+  // Testing
+  //
   
   /// Run unit tests for this module.
   static void test(void);
 
+  //
+  // Public variables
+  //
+  
   // Matrix bounding box in the actual coordinates
-   const OutlinerBox3D boundingBox;
+  const OutlinerBox3D boundingBox;
   
   /// Matrix size in x-coordinate direction.
   const unsigned int xIndexSize;
@@ -102,6 +144,10 @@ public:
   const unsigned int zIndexSize;
   
 private:
+  
+  //
+  // Private variables
+  //
   
   const outlinerreal stepx;
   const outlinerreal stepy;

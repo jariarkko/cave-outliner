@@ -162,7 +162,7 @@ MaterialMatrix2D::count(void) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 unsigned int
-MaterialMatrix2D::coordinateXToIndex(outlinerreal x) {
+MaterialMatrix2D::coordinateXToIndex(outlinerreal x) const {
   outlinerreal xStart = boundingBox.start.x;
   outlinerreal xEnd = boundingBox.end.x;
   assert(outlinergeepsilon(x,xStart));
@@ -171,7 +171,7 @@ MaterialMatrix2D::coordinateXToIndex(outlinerreal x) {
 }
 
 unsigned int
-MaterialMatrix2D::coordinateYToIndex(outlinerreal y) {
+MaterialMatrix2D::coordinateYToIndex(outlinerreal y) const {
   outlinerreal yStart = boundingBox.start.y;
   outlinerreal yEnd = boundingBox.end.y;
   assert(outlinergeepsilon(y,yStart));
@@ -180,13 +180,13 @@ MaterialMatrix2D::coordinateYToIndex(outlinerreal y) {
 }
 
 outlinerreal
-MaterialMatrix2D::indexToCoordinateX(unsigned int xIndex) {
+MaterialMatrix2D::indexToCoordinateX(unsigned int xIndex) const {
   outlinerreal xStart = boundingBox.start.x;
   return(xStart + stepx * xIndex);
 }
 
 outlinerreal
-MaterialMatrix2D::indexToCoordinateY(unsigned int yIndex) {
+MaterialMatrix2D::indexToCoordinateY(unsigned int yIndex) const {
   outlinerreal yStart = boundingBox.start.y;
   return(yStart + stepy * yIndex);
 }

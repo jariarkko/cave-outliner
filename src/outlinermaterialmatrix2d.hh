@@ -45,6 +45,10 @@ class MaterialMatrix2D {
 
 public:
 
+  //
+  // Construction and destruction
+  //
+  
   /// Create a MaterialMatrix2D object.
   MaterialMatrix2D(const OutlinerBox2D& boundingBoxIn,
                    const outlinerreal stepxIn,
@@ -53,6 +57,10 @@ public:
   /// Destruct the material matrix.
   ~MaterialMatrix2D();
 
+  //
+  // Basic operations to set and read the matrix contents
+  //
+  
   /// Set the flag indicating that there is material in a given (x,y)
   /// index in the matrix.
   void setMaterialMatrix(unsigned int xIndex,
@@ -68,27 +76,46 @@ public:
                           unsigned int& yIndexFrom,
                           unsigned int& yIndexTo);
   
+  //
+  // Coordinate management
+  //
+  
   /// Calculate size needed to represent from...to with increments of
   /// size step.
   static unsigned int calculateSize(outlinerreal from,
                                     outlinerreal to,
                                     outlinerreal step);
   
-  //
-  // Coordinate management
-  //
+  /// Map an actual coordinate value to an index.
+  unsigned int coordinateXToIndex(outlinerreal x) const;
   
-  unsigned int coordinateXToIndex(outlinerreal x);
-  unsigned int coordinateYToIndex(outlinerreal y);
-  outlinerreal indexToCoordinateX(unsigned int xIndex);
-  outlinerreal indexToCoordinateY(unsigned int yIndex);
+  /// Map an actual coordinate value to an index.
+  unsigned int coordinateYToIndex(outlinerreal y) const;
+  
+  /// Map a coordinate index to an actual coordinate value.
+  outlinerreal indexToCoordinateX(unsigned int xIndex) const;
+  
+  /// Map a coordinate index to an actual coordinate value.
+  outlinerreal indexToCoordinateY(unsigned int yIndex) const;
+  
+  //
+  // Statistics
+  //
   
   /// Count the number of matrix elements with flags on.
   unsigned int count(void);
 
+  //
+  // Tests
+  //
+  
   /// Run unit tests for this module.
   static void test(void);
 
+  //
+  //  Accessible variables
+  //
+  
   // Matrix bounding box in the actual coordinates
   const OutlinerBox2D boundingBox;
   
@@ -100,6 +127,10 @@ public:
   
 private:
 
+  //
+  // Private variables
+  //
+  
   const outlinerreal stepx;
   const outlinerreal stepy;
   const unsigned int nBits;
