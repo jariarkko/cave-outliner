@@ -43,11 +43,58 @@ class ProcessorForms {
 
 public:
   
-  ProcessorForms();
+  ProcessorForms(const OutlinerBox3D& boundingBoxIn,
+                 const enum outlinerdirection directionIn,
+                 const OutlinerBox2D& planviewBoundingBoxIn,
+                 const outlinerreal stepxIn,
+                 const outlinerreal stepyIn,
+                 const outlinerreal stepzIn,
+                 const outlinerreal formCondenseIn,
+                 const MaterialMatrix2D& matrix2In,
+                 class Processor& procIn);
   ~ProcessorForms();
 
+  //
+  // Form analysis main functions
+  //
+  
+  bool performFormAnalysis(const aiScene* scene);
+  OutlinerSvgStyle formToColor(const unsigned int xIndex,
+                               const unsigned int yIndex) const;
+  
 private:
   
+  const OutlinerBox3D boundingBox;
+  const enum outlinerdirection direction;
+  const OutlinerBox2D planviewBoundingBox;
+  const outlinerreal stepx;
+  const outlinerreal stepy;
+  const outlinerreal stepz;
+  const outlinerreal formCondense;
+  const outlinerreal stepxCondensed;
+  const outlinerreal stepyCondensed;
+  const outlinerreal stepzCondensed;
+  const MaterialMatrix2D& matrix2; // Processor's main plan-view matrix
+  MaterialMatrix3D matrix3; // Form analysis 3D view matrix
+  FormMatrix2D forms;
+  class Processor& proc;
+  
+  //
+  // Internal functions
+  //
+  
+  bool performFormAnalysisSlicing(const aiScene* scene);
+  bool performFormAnalysisOneSlice(const aiScene* scene,
+                                   unsigned int xIndex);
+  bool performFormAnalysisAnalyze(void);
+  bool performFormAnalysisAnalyzeOnePixel(const unsigned int matrix3xIndex,
+                                          const unsigned int matrix3yIndex,
+                                          const unsigned int matrix2xIndexStart,
+                                          const unsigned int matrix2yIndexStart,
+                                          const unsigned int matrix2xIndexEnd,
+                                          const unsigned int matrix2yIndexEnd);
+  unsigned int formAnalysisCountLayers(const unsigned int matrix3xIndex,
+                                       const unsigned int matrix3yIndex) const;
 };
 
 #endif // PROCESSORFORMS_HH

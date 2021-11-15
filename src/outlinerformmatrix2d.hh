@@ -71,6 +71,14 @@ public:
                const unsigned int yIndex,
                const outlinerform form);
 
+  /// Set the flag indicating that there is material in a given
+  /// (xStart,yStart) - (xEnd,yEnd) rectangle/range in the matrix.
+  void setForm(const unsigned int xIndexStart,
+               const unsigned int yIndexStart,
+               const unsigned int xIndexEnd,
+               const unsigned int yIndexEnd,
+               const outlinerform form);
+
   /// Get the flag indicating whether there is material in a given
   /// (x,y) index in the matrix.
   outlinerform getForm(const unsigned int xIndex,

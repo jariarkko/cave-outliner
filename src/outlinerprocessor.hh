@@ -115,16 +115,11 @@ private:
   const unsigned int lineHolethreshold;
   const bool labels;
   const bool formAnalysis;
-  const outlinerreal formCondense;
-  const outlinerreal stepxCondensed;
-  const outlinerreal stepyCondensed;
-  const outlinerreal stepzCondensed;
   const bool dimensions;
   const OutlinerBox2D originalPlanviewBoundingBox;
   const OutlinerBox2D planviewBoundingBox;
   MaterialMatrix2D matrix2; // Plan view matrix
-  MaterialMatrix3D matrix3; // A 3D view matrix
-  FormMatrix2D forms;
+  ProcessorForms formAnalyzer;
   const unsigned int nCrossSections;
   const struct ProcessorCrossSectionInfo* crossSections;
   IndexedMesh& indexed;
@@ -263,27 +258,7 @@ private:
 
   bool preprocessSceneAlgorithmDraw(const aiScene* scene);
   bool processSceneAlgorithmDraw(const aiScene* scene);
-  bool performFormAnalysis(const aiScene* scene);
 
-  //
-  // Form analysis
-  //
-  
-  bool performFormAnalysisSlicing(const aiScene* scene);
-  bool performFormAnalysisOneSlice(const aiScene* scene,
-                                   unsigned int xIndex);
-  bool performFormAnalysisAnalyze(void);
-  bool performFormAnalysisAnalyzeOnePixel(const unsigned int matrix3xIndex,
-                                          const unsigned int matrix3yIndex,
-                                          const unsigned int matrix2xIndexStart,
-                                          const unsigned int matrix2yIndexStart,
-                                          const unsigned int matrix2xIndexEnd,
-                                          const unsigned int matrix2yIndexEnd);
-  unsigned int formAnalysisCountLayers(const unsigned int matrix3xIndex,
-                                       const unsigned int matrix3yIndex) const;
-  OutlinerSvgStyle formToColor(const unsigned int xIndex,
-                               const unsigned int yIndex) const;
-  
   //
   // Image drawing
   //

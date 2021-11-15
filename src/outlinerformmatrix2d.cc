@@ -82,6 +82,27 @@ FormMatrix2D::setForm(const unsigned int xIndex,
   data[charIndex] = baseValue;
 }
 
+void
+FormMatrix2D::setForm(const unsigned int xIndexStart,
+                      const unsigned int yIndexStart,
+                      const unsigned int xIndexEnd,
+                      const unsigned int yIndexEnd,
+                      const outlinerform form) {
+  assert(xIndexStart < xIndexSize);
+  assert(yIndexStart < yIndexSize);
+  for (unsigned int xIndex = xIndexStart;
+       xIndex <= xIndexEnd && xIndex < xIndexSize;
+       xIndex++) {
+    for (unsigned int yIndex = yIndexStart;
+         yIndex <= yIndexEnd && yIndex < yIndexSize;
+         yIndex++) {
+      assert(xIndex < xIndexSize);
+      assert(yIndex < yIndexSize);
+      setForm(xIndex,yIndex,form);
+    }
+  }
+}
+
 outlinerform
 FormMatrix2D::getForm(const unsigned int xIndex,
                       const unsigned int yIndex) const {
