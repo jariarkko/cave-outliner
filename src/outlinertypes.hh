@@ -42,6 +42,8 @@ enum outlineralgorithm {
   alg_pixel,
   alg_pixelform,
   alg_triangle,
+  alg_depthmap,
+  alg_depthdiffmap,
   alg_borderpixel,
   alg_borderline,
   alg_borderactual

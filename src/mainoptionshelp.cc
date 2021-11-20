@@ -60,6 +60,9 @@ MainOptions::processHelp(void) {
   std::cout << "  --pixelform              Same as --pixel, but color pixels based form analysis.\n";
   std::cout << "  --triangle               Use the triangle output drawing algorithm (draws model faces\n";
   std::cout << "                           in plan view).\n";
+  std::cout << "  --depthmap               Same as --pixel, but color pixels based on their height.\n";
+  std::cout << "  --depthdiffmap           Same as --pixel, but color pixels based on their height\n";
+  std::cout << "                           difference from neighbouring pixels.\n";
   std::cout << "  --borderpixel            Use the border-only drawing algorithm, draws only the cave\n";
   std::cout << "                           walls, with pixels.\n";
   std::cout << "  --borderline             Use the border-only drawing algorithm, draws only the cave\n";

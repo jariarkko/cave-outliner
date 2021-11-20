@@ -180,6 +180,64 @@ OutlinerLine3D::test(void) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+// OutlinerBox1D Functions ////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+bool
+OutlinerBox1D::equal(const OutlinerBox1D& box2) const {
+  return(start == box2.start &&
+         end == box2.end);
+}
+
+bool
+OutlinerBox1D::pointInside(const outlinerreal point) const {
+  return(point >= start && point <= end);
+}
+
+bool
+OutlinerBox1D::doesIntersect(const OutlinerBox1D& boundingBox2) const {
+  return(outlineroverlapepsilon(start,end,boundingBox2.start,boundingBox2.end));
+}
+
+void
+OutlinerBox1D::intersection(const OutlinerBox1D& box2,
+                            OutlinerBox1D& resultBox) const {
+  resultBox.start = start;
+  resultBox.end = end;
+  if (box2.start > resultBox.start) resultBox.start = box2.start;
+  if (box2.end < resultBox.end) resultBox.end = box2.end;
+}
+
+void
+OutlinerBox1D::boxUnion(const OutlinerBox1D& box2,
+                        OutlinerBox1D& resultBox) const {
+  resultBox.start = start;
+  resultBox.end = end;
+  if (box2.start < resultBox.start) resultBox.start = box2.start;
+  if (box2.end > resultBox.end) resultBox.end = box2.end;
+}
+
+void
+OutlinerBox1D::test(void) {
+  OutlinerBox1D range1(1,2);
+  assert(!range1.pointInside(0));
+  assert(range1.pointInside(1));
+  assert(range1.pointInside(1.5));
+  assert(range1.pointInside(2));
+  assert(!range1.pointInside(3));
+  OutlinerBox1D range2(2,3);
+  assert(range1.equal(range1));
+  assert(!range1.equal(range2));
+  OutlinerBox1D range3;
+  range1.intersection(range2,range3);
+  assert(range3.start == 2);
+  assert(range3.end == 2);
+  range1.boxUnion(range2,range3);
+  assert(range3.start == 1);
+  assert(range3.end == 3);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 // OutlinerBox2D Functions ////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 

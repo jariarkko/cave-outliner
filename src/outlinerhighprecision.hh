@@ -204,6 +204,48 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ///
+/// This object represents a 1-dimensional "bounding box", i.e., a numeric range.
+///
+
+class OutlinerBox1D {
+  
+public:
+
+  OutlinerBox1D() : start(0), end(0) { }
+  
+  OutlinerBox1D(outlinerreal from,
+                outlinerreal to) : start(from), end(to) { }
+  
+  /// Assignment
+  OutlinerBox1D& operator=(const OutlinerBox1D& in) { start = in.start; end = in.end; return(*this); }
+
+  /// Test for equality.
+  bool equal(const OutlinerBox1D& box2) const;
+  
+  /// Is a given point inside a bounding box (in 2-dimension model)?
+  bool pointInside(const outlinerreal point) const;
+  
+  /// Does a bounding box intersect another one?
+  bool doesIntersect(const OutlinerBox1D& boundingBox2) const;
+  
+  /// Take an intersection of this and another box, placing the
+  /// resulting bounding box in "resultBox".
+  void intersection(const OutlinerBox1D& box2,
+                    OutlinerBox1D& resultBox) const;
+  
+  /// Take a union of this and another box, placing the resulting
+  /// bounding box in "resultBox".
+  void boxUnion(const OutlinerBox1D& box2,
+                OutlinerBox1D& resultBox) const;
+  
+  /// Run unit tests associated with this class.
+  static void test(void);
+  
+  outlinerreal start;
+  outlinerreal end;
+};
+
+///
 /// This object represents a "bounding box", a rectangular area in 2D space.
 ///
 

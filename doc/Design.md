@@ -123,7 +123,7 @@ See the detailed description of the vector objects [Class OutlinerVector2D API](
 
 See the detailed description of the line objects [Class OutlinerLine2D API](class_outliner_line2_d.md) and [Class OutlinerLine3D API](class_outliner_line3_d.md). 
 
-See the detailed description of the bounding box objects [Class OutlinerBox2D API](class_outliner_box2_d.md) and [Class OutlinerBox3D API](class_outliner_box3_d.md). 
+See the detailed description of the bounding box objects [Class OutlinerBox1D API](class_outliner_box1_d.md), [Class OutlinerBox2D API](class_outliner_box2_d.md) and [Class OutlinerBox3D API](class_outliner_box3_d.md). 
 
 See the detailed description of the triangle objects [Class OutlinerTriangle2D API](class_outliner_triangle2_d.md) and [Class OutlinerTriangle3D API](class_outliner_triangle3_d.md). 
 

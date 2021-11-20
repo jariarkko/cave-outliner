@@ -74,10 +74,10 @@ private:
   const outlinerreal stepxCondensed;
   const outlinerreal stepyCondensed;
   const outlinerreal stepzCondensed;
-  const MaterialMatrix2D& matrix2; // Processor's main plan-view matrix
-  MaterialMatrix3D matrix3; // Form analysis 3D view matrix
-  FormMatrix2D forms;
-  class Processor& proc;
+  const MaterialMatrix2D& matrix2;     // Processor's main plan-view matrix
+  MaterialMatrix3D matrix3;            // Form analysis 3D view matrix
+  FormMatrix2D forms;                  // Form analysis results
+  class Processor& proc;               // Reference to the main processor object
   
   //
   // Internal functions
@@ -87,14 +87,28 @@ private:
   bool performFormAnalysisOneSlice(const aiScene* scene,
                                    unsigned int xIndex);
   bool performFormAnalysisAnalyze(void);
-  bool performFormAnalysisAnalyzeOnePixel(const unsigned int matrix3xIndex,
-                                          const unsigned int matrix3yIndex,
-                                          const unsigned int matrix2xIndexStart,
-                                          const unsigned int matrix2yIndexStart,
-                                          const unsigned int matrix2xIndexEnd,
-                                          const unsigned int matrix2yIndexEnd);
+  bool performFormAnalysisAnalyzeOnePixelPhase1(const unsigned int matrix3xIndex,
+                                                const unsigned int matrix3yIndex,
+                                                const unsigned int matrix2xIndexStart,
+                                                const unsigned int matrix2yIndexStart,
+                                                const unsigned int matrix2xIndexEnd,
+                                                const unsigned int matrix2yIndexEnd);
+  bool performFormAnalysisAnalyzeOnePixelPhase2(const unsigned int matrix3xIndex,
+                                                const unsigned int matrix3yIndex,
+                                                const unsigned int matrix2xIndexStart,
+                                                const unsigned int matrix2yIndexStart,
+                                                const unsigned int matrix2xIndexEnd,
+                                                const unsigned int matrix2yIndexEnd);
   unsigned int formAnalysisCountLayers(const unsigned int matrix3xIndex,
                                        const unsigned int matrix3yIndex) const;
+  bool entranceAnalysis(const unsigned int matrix3xIndex,
+                        const unsigned int matrix3yIndex,
+                        const int xDirection,
+                        const int yDirection,
+                        const unsigned int matrix2xIndexStart,
+                        const unsigned int matrix2xStep,
+                        const unsigned int matrix2yIndexStart,
+                        const unsigned int matrix2yStep) const;
 };
 
 #endif // PROCESSORFORMS_HH

@@ -32,6 +32,7 @@
 #include "outlinermaterialmatrix2d.hh"
 #include "outlinermaterialmatrix3d.hh"
 #include "outlinerformmatrix2d.hh"
+#include "outlinerdepthmap.hh"
 #include "outlinermath.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +56,7 @@ MainTest::test(void) {
   OutlinerVector3D::test();
   OutlinerLine2D::test();
   OutlinerLine3D::test();
+  OutlinerBox1D::test();
   OutlinerBox2D::test();
   OutlinerBox3D::test();
   OutlinerTriangle2D::test();
@@ -63,6 +65,7 @@ MainTest::test(void) {
   MaterialMatrix2D::test();
   MaterialMatrix3D::test();
   FormMatrix2D::test();
+  DepthMap::test();
   infof("tests ok");
 }
 

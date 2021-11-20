@@ -26,6 +26,10 @@
 *.a
 *.lib
 
+# Mac
+.DS_Store
+.DS_store
+
 # Document temporary files
 ._*
 

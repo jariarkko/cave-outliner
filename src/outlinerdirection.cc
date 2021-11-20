@@ -59,7 +59,7 @@ DirectionOperations::toString(enum outlinerdirection direction) {
   }
 }
 
-float
+outlinerreal
 DirectionOperations::outputx(enum outlinerdirection direction,
                              const aiVector3D& point) {
   switch (direction) {
@@ -75,7 +75,7 @@ DirectionOperations::outputx(enum outlinerdirection direction,
   }
 }
 
-float
+outlinerreal
 DirectionOperations::outputx(enum outlinerdirection direction,
                              const OutlinerVector3D& point) {
   switch (direction) {
@@ -91,7 +91,7 @@ DirectionOperations::outputx(enum outlinerdirection direction,
   }
 }
 
-float
+outlinerreal
 DirectionOperations::outputy(enum outlinerdirection direction,
                              const aiVector3D& point) {
   switch (direction) {
@@ -107,7 +107,7 @@ DirectionOperations::outputy(enum outlinerdirection direction,
   }
 }
 
-float
+outlinerreal
 DirectionOperations::outputy(enum outlinerdirection direction,
                              const OutlinerVector3D& point) {
   switch (direction) {
@@ -123,7 +123,7 @@ DirectionOperations::outputy(enum outlinerdirection direction,
   }
 }
 
-float
+outlinerreal
 DirectionOperations::outputz(enum outlinerdirection direction,
                              const aiVector3D& point) {
   switch (direction) {
@@ -139,7 +139,7 @@ DirectionOperations::outputz(enum outlinerdirection direction,
   }
 }
 
-float
+outlinerreal
 DirectionOperations::outputz(enum outlinerdirection direction,
                              const OutlinerVector3D& point) {
   switch (direction) {

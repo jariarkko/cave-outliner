@@ -69,28 +69,28 @@ public:
 
   /// Return the planview x coordinate in a vector, given a
   /// user-specified direction for the plan view.
-  static float outputx(enum outlinerdirection direction,
-                       const aiVector3D& point);
+  static outlinerreal outputx(enum outlinerdirection direction,
+                              const aiVector3D& point);
   /// Return the planview x coordinate in a vector, given a
   /// user-specified direction for the plan view.
-  static float outputx(enum outlinerdirection direction,
-                       const OutlinerVector3D& point);
+  static outlinerreal outputx(enum outlinerdirection direction,
+                              const OutlinerVector3D& point);
   /// Return the planview y coordinate in a vector, given a
   /// user-specified direction for the plan view.
-  static float outputy(enum outlinerdirection direction,
-                       const aiVector3D& point);
+  static outlinerreal outputy(enum outlinerdirection direction,
+                              const aiVector3D& point);
   /// Return the planview y coordinate in a vector, given a
   /// user-specified direction for the plan view.
-  static float outputy(enum outlinerdirection direction,
-                       const OutlinerVector3D& point);
+  static outlinerreal outputy(enum outlinerdirection direction,
+                              const OutlinerVector3D& point);
   /// Return the planview invisible z coordinate in a vector, 
   /// given a user-specified direction for the plan view.
-  static float outputz(enum outlinerdirection direction,
-                       const aiVector3D& point);
+  static outlinerreal outputz(enum outlinerdirection direction,
+                              const aiVector3D& point);
   /// Return the planview invisible z coordinate in a vector, 
   /// given a user-specified direction for the plan view.
-  static float outputz(enum outlinerdirection direction,
-                       const OutlinerVector3D& point);
+  static outlinerreal outputz(enum outlinerdirection direction,
+                              const OutlinerVector3D& point);
 
 };
 

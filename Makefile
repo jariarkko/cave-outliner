@@ -29,6 +29,7 @@ OBJS=	$(OBJDIR)/main.o \
 	$(OBJDIR)/outlinermaterialmatrix2d.o \
 	$(OBJDIR)/outlinermaterialmatrix3d.o \
 	$(OBJDIR)/outlinerformmatrix2d.o \
+	$(OBJDIR)/outlinerdepthmap.o \
 	$(OBJDIR)/outlinerdescribe.o \
 	$(OBJDIR)/outlinerboundingboxer.o \
 	$(OBJDIR)/outlinerdebug.o \
@@ -52,6 +53,7 @@ HDRS=	src/main.hh \
 	src/outlinermaterialmatrix2d.hh \
 	src/outlinermaterialmatrix3d.hh \
 	src/outlinerformmatrix2d.hh \
+	src/outlinerdepthmap.hh \
 	src/outlinerdescribe.hh \
 	src/outlinerboundingboxer.hh \
 	src/outlinermath.hh \
@@ -72,6 +74,7 @@ SRCS=	src/main.cc \
 	src/outlinermaterialmatrix2d.cc \
 	src/outlinermaterialmatrix3d.cc \
 	src/outlinerformmatrix2d.cc \
+	src/outlinerdepthmap.cc \
 	src/outlinerdescribe.cc \
 	src/outlinerboundingboxer.cc \
 	src/outlinermath.cc \
@@ -110,6 +113,7 @@ CLASSMARKDOWNS=	doc/class_outliner_math.md \
 		doc/class_material_matrix2_d.md \
 		doc/class_material_matrix3_d.md \
 		doc/class_form_matrix2_d.md \
+		doc/class_depth_map.md \
 		doc/class_outliner_box2_d.md \
 		doc/class_outliner_box3_d.md \
 		doc/class_outliner_line2_d.md \
@@ -168,6 +172,9 @@ $(OBJDIR)/outlinermaterialmatrix3d.o:	src/outlinermaterialmatrix3d.cc $(HDRS)
 
 $(OBJDIR)/outlinerformmatrix2d.o:	src/outlinerformmatrix2d.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerformmatrix2d.o
+
+$(OBJDIR)/outlinerdepthmap.o:	src/outlinerdepthmap.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerdepthmap.o
 
 $(OBJDIR)/outlinerdescribe.o:	src/outlinerdescribe.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerdescribe.o
@@ -266,7 +273,9 @@ cave-tests:	cave1-test \
 		cave1-line-test \
 		cave1-x-cross-section-test \
 		cave1-x-cross-section-width-test \
-		cave1-y-cross-section-test
+		cave1-y-cross-section-test \
+		cave1-depthmap-test \
+		cave1-depthdiffmap-test
 
 failing-tests:	failing-tests-note \
 		cave1-form-analysis-test \
@@ -478,6 +487,16 @@ cave1-y-cross-section-test:
 	@./cave-outliner --quiet --label --borderline --multiplier 5 --crosssections y 1 test/cave1-y-cross-section-%.svg --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-y-cross-section.svg
 	@diff -q test/cave1-y-cross-section.svg test/cave1-y-cross-section.svg.expected
 	@diff -q test/cave1-y-cross-section-0.svg test/cave1-y-cross-section-0.svg.expected
+
+cave1-depthmap-test:
+	@echo 'Running test case cave1-depthmap-test...'
+	@./cave-outliner --quiet --depthmap --step 0.2 --holethreshold 10 test/cave1.stl test/cave1-depthmap.svg
+	@diff -q test/cave1-depthmap.svg test/cave1-depthmap.svg.expected
+
+cave1-depthdiffmap-test:
+	@echo 'Running test case cave1-depthdiffmap-test...'
+	@./cave-outliner --quiet --depthdiffmap --step 0.1 --holethreshold 10 test/cave1.stl test/cave1-depthdiffmap.svg
+	@diff -q test/cave1-depthdiffmap.svg test/cave1-depthdiffmap.svg.expected
 
 cave1-form-analysis-test:
 	@echo 'Running test case cave1-form-analysis-test...'

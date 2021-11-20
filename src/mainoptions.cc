@@ -86,6 +86,10 @@ MainOptions::processCommandLineOptions(int& argc,
       config.algorithm = alg_pixelform;
     } else if (strcmp(argv[1],"--triangle") == 0) {
       config.algorithm = alg_triangle;
+    } else if (strcmp(argv[1],"--depthmap") == 0) {
+      config.algorithm = alg_depthmap;
+    } else if (strcmp(argv[1],"--depthdiffmap") == 0) {
+      config.algorithm = alg_depthdiffmap;
     } else if (strcmp(argv[1],"--borderpixel") == 0) {
       config.algorithm = alg_borderpixel;
     } else if (strcmp(argv[1],"--borderline") == 0) {

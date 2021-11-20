@@ -87,6 +87,11 @@ Processor::Processor(const char* fileNameIn,
   matrix2(planviewBoundingBox,
           stepx,
           stepy),
+  depthMap((algorithm == alg_depthmap || algorithm == alg_depthdiffmap) ?
+           new DepthMap(matrix2.xIndexSize,
+                        matrix2.yIndexSize,
+                        matrix2) :
+           0),
   formAnalyzer(boundingBox,
                direction,
                planviewBoundingBox,
@@ -134,6 +139,10 @@ Processor::Processor(const char* fileNameIn,
 
 Processor::~Processor() {
   svgDone();
+  if (depthMap != 0) {
+    delete depthMap;
+    depthMap = 0;
+  }
 }
 
 void
@@ -249,6 +258,8 @@ Processor::processSceneAlgorithmDraw(const aiScene* scene) {
   case alg_borderpixel:
   case alg_borderline:
   case alg_borderactual:
+  case alg_depthmap:
+  case alg_depthdiffmap:
     
     // Now there's a matrix filled with a flag for each coordinate,
     // whether there was material or not. And small holes have been filled per above.
@@ -272,7 +283,7 @@ Processor::processSceneAlgorithmDraw(const aiScene* scene) {
       return(0);
     }
     break;
-    
+
   default:
     errf("Invalid algorithm %u", algorithm);
     return(0);
@@ -322,9 +333,30 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
       } else {
         deepdebugf("checking (%.2f,%.2f)",x,y);
       }
-      if (sceneHasMaterial(scene,indexed,x,y)) {
+      struct ProcessorRangeInfo rangeInfo;
+      rangeInfo.needed = (algorithm == alg_depthmap || algorithm == alg_depthdiffmap);
+      rangeInfo.set = 0;
+      if (sceneHasMaterial(scene,indexed,x,y,rangeInfo)) {
         debugf("  material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
         matrix2.setMaterialMatrix(xIndex,yIndex);
+        if (rangeInfo.needed) {
+          assert(rangeInfo.set);
+          outlinerreal depth = rangeInfo.zRange.end;
+          outlinerreal start = DirectionOperations::outputz(direction,boundingBox.start);
+          outlinerreal end = DirectionOperations::outputz(direction,boundingBox.end);
+          outlinerreal normalizedDepth;
+          if (depth < start) normalizedDepth = 0;
+          else if (depth > end) normalizedDepth = 255;
+          else if (start == end) normalizedDepth = 128;
+          else normalizedDepth = (255 * (depth - start)) / (end - start);
+          outlinerdepth normalizedDepthInt = (outlinerdepth)floor(normalizedDepth);
+          depthMap->setDepth(xIndex,yIndex,normalizedDepthInt);
+          infof("  setting depth at (%u,%u) to %u based on %.2f (%.2f..%.2f)",
+                xIndex, yIndex,
+                normalizedDepthInt,
+                depth,
+                start, end);
+        }
       }
       
       yIndex++;
@@ -534,7 +566,8 @@ Processor::faceToTrianglesSvg(const aiScene* scene,
   assert(scene != 0);
   assert(mesh != 0);
   OutlinerTriangle2D t;
-  faceGetVertices2D(mesh,face,direction,t);
+  OutlinerBox1D dummy;
+  faceGetVertices2D(mesh,face,direction,t,dummy);
   if (OutlinerMath::boundingBoxIntersectsTriangle2D(t,trianglesBoundingBox)) {
     theSvg->triangle(t);
   }
@@ -575,8 +608,22 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
           theSvg->pixel(x,y);
           break;
         case alg_pixelform:
-          debugf("pixelform alg %u,%u from %.2f,%.2f", xIndex, yIndex, x, y);
+          infof("pixelform alg %u,%u from %.2f,%.2f", xIndex, yIndex, x, y);
           theSvg->pixel(x,y,formAnalyzer.formToColor(xIndex,yIndex));
+          break;
+        case alg_depthmap:
+          {
+            OutlinerSvgStyle style = depthMap->depthToColor(xIndex,yIndex);
+            infof("pixel depthmap alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
+            theSvg->pixel(x,y,style);
+          }
+          break;
+        case alg_depthdiffmap:
+          {
+            OutlinerSvgStyle style = depthMap->depthDiffToColor(xIndex,yIndex,*this);
+            infof("pixel depthdiffmap alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
+            theSvg->pixel(x,y,style);
+          }
           break;
         case alg_triangle:
           errf("Invalid algorithm for matrix-based operation");
@@ -629,10 +676,11 @@ bool
 Processor::sceneHasMaterial(const aiScene* scene,
                             IndexedMesh& indexed,
                             outlinerreal x,
-                            outlinerreal y) {
+                            outlinerreal y,
+                            struct ProcessorRangeInfo& range) {
   assert(scene != 0);
   deepdeepdebugf("checking for material at (%.2f,%.2f)", x, y);
-  return(nodeHasMaterial(scene,scene->mRootNode,indexed,x,y));
+  return(nodeHasMaterial(scene,scene->mRootNode,indexed,x,y,range));
 }
 
 bool
@@ -640,7 +688,8 @@ Processor::nodeHasMaterial(const aiScene* scene,
                            const aiNode* node,
                            IndexedMesh& indexed,
                            outlinerreal x,
-                           outlinerreal y) {
+                           outlinerreal y,
+                           struct ProcessorRangeInfo& range) {
   assert(scene != 0);
   assert(node != 0);
   if (!node->mTransformation.IsIdentity()) {
@@ -648,12 +697,12 @@ Processor::nodeHasMaterial(const aiScene* scene,
     exit(1);
   }
   for (unsigned int j = 0; j < node->mNumMeshes; j++) {
-    if (meshHasMaterial(scene,scene->mMeshes[node->mMeshes[j]],indexed,x,y)) {
+    if (meshHasMaterial(scene,scene->mMeshes[node->mMeshes[j]],indexed,x,y,range)) {
       return(1);
     }
   }
   for (unsigned int i = 0; i < node->mNumChildren; i++) {
-    if (nodeHasMaterial(scene,node->mChildren[i],indexed,x,y)) {
+    if (nodeHasMaterial(scene,node->mChildren[i],indexed,x,y,range)) {
       return(1);
     }
   }
@@ -665,7 +714,8 @@ Processor::meshHasMaterial(const aiScene* scene,
                            const aiMesh* mesh,
                            IndexedMesh& indexed,
                            outlinerreal x,
-                           outlinerreal y) {
+                           outlinerreal y,
+                           struct ProcessorRangeInfo& range) {
   assert(scene != 0);
   assert(mesh != 0);
   unsigned int nFaces = 0;
@@ -673,7 +723,7 @@ Processor::meshHasMaterial(const aiScene* scene,
   indexed.getFaces(mesh,x,y,&nFaces,&faces);
   deepdebugf("meshHasMaterial normally %u faces but on this tile %u faces", mesh->mNumFaces,nFaces);
   for (unsigned int f = 0; f < nFaces; f++) {
-    if (faceHasMaterial(scene,mesh,faces[f],x,y)) {
+    if (faceHasMaterial(scene,mesh,faces[f],x,y,range)) {
       return(1);
     }
   }
@@ -684,7 +734,8 @@ void
 Processor::faceGetVertices2D(const aiMesh* mesh,
                              const aiFace* face,
                              enum outlinerdirection thisDirection,
-                             OutlinerTriangle2D& t) {
+                             OutlinerTriangle2D& t,
+                             OutlinerBox1D& depthRange) {
   OutlinerTriangle3D ft;
   faceGetVertices3D(mesh,face,ft);
   aiVector2D aOne(DirectionOperations::outputx(thisDirection,ft.a),DirectionOperations::outputy(thisDirection,ft.a));
@@ -693,6 +744,12 @@ Processor::faceGetVertices2D(const aiMesh* mesh,
   t.a = aOne;
   t.b = bOne;
   t.c = cOne;
+  depthRange.start = outlinermin3(DirectionOperations::outputz(thisDirection,ft.a),
+                                  DirectionOperations::outputz(thisDirection,ft.b),
+                                  DirectionOperations::outputz(thisDirection,ft.c));
+  depthRange.end = outlinermax3(DirectionOperations::outputz(thisDirection,ft.a),
+                                DirectionOperations::outputz(thisDirection,ft.b),
+                                DirectionOperations::outputz(thisDirection,ft.c));
 }
 
 void
@@ -729,11 +786,13 @@ Processor::faceHasMaterial(const aiScene* scene,
                            const aiMesh* mesh,
                            const aiFace* face,
                            outlinerreal x,
-                           outlinerreal y) {
+                           outlinerreal y,
+                           struct ProcessorRangeInfo& range) {
   assert(scene != 0);
   assert(mesh != 0);
   OutlinerTriangle2D t;
-  faceGetVertices2D(mesh,face,direction,t);
+  OutlinerBox1D depthRange;
+  faceGetVertices2D(mesh,face,direction,t,depthRange);
   OutlinerVector2D point(x,y);
   OutlinerVector2D stepBoundingBox(x+stepx-2*outlinerepsilon,y+stepy-2*outlinerepsilon);
   OutlinerBox2D thisBox(point,stepBoundingBox);
@@ -742,6 +801,15 @@ Processor::faceHasMaterial(const aiScene* scene,
     OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
     debugf("    found out that (%.2f..%.2f,%.2f..%.2f) is hitting a face %s",
            thisBox.start.x,thisBox.end.x,thisBox.start.y,thisBox.end.y,buf);
+    if (range.needed) {
+      if (!range.set) {
+        range.set = 1;
+        range.zRange = depthRange;
+      } else {
+        OutlinerBox1D old = range.zRange;
+        old.boxUnion(depthRange,range.zRange);
+      }
+    }
     return(1);
   }
   return(0);
@@ -757,8 +825,8 @@ Processor::getNeighbours(unsigned int xIndex,
                          unsigned int& n,
                          unsigned int tableSize,
                          unsigned int* tableX,
-                         unsigned int* tableY) {
-  assert(tableSize <= 8);
+                         unsigned int* tableY) const {
+  assert(tableSize >= 8);
   n = 0;
 
   // Order is important, callers want the neighbors so that the
@@ -766,19 +834,19 @@ Processor::getNeighbours(unsigned int xIndex,
   
   // Left and right neighbors at the same level
   if (xIndex > 0)                                                     { tableX[n] = xIndex-1; tableY[n] = yIndex;   n++; }
-  if (xIndex < matrix2.xIndexSize-1)                                   { tableX[n] = xIndex+1; tableY[n] = yIndex;   n++; }
+  if (xIndex < matrix2.xIndexSize-1)                                  { tableX[n] = xIndex+1; tableY[n] = yIndex;   n++; }
   
   // Top and bottom neighbours
   if (yIndex > 0)                                                     { tableX[n] = xIndex;   tableY[n] = yIndex-1; n++; }
-  if (yIndex < matrix2.yIndexSize-1)                                   { tableX[n] = xIndex;   tableY[n] = yIndex+1; n++; }
+  if (yIndex < matrix2.yIndexSize-1)                                  { tableX[n] = xIndex;   tableY[n] = yIndex+1; n++; }
   
   // Left side corner neighbours
   if (xIndex > 0 && yIndex > 0)                                       { tableX[n] = xIndex-1; tableY[n] = yIndex-1; n++; }
-  if (xIndex > 0 && yIndex < matrix2.yIndexSize-1)                     { tableX[n] = xIndex-1; tableY[n] = yIndex+1; n++; }
+  if (xIndex > 0 && yIndex < matrix2.yIndexSize-1)                    { tableX[n] = xIndex-1; tableY[n] = yIndex+1; n++; }
 
   // Right side corner neighbours
-  if (xIndex < matrix2.xIndexSize-1 && yIndex > 0)                     { tableX[n] = xIndex+1; tableY[n] = yIndex-1; n++; }
-  if (xIndex < matrix2.xIndexSize-1 && yIndex < matrix2.yIndexSize-1)   { tableX[n] = xIndex+1; tableY[n] = yIndex+1; n++; }
+  if (xIndex < matrix2.xIndexSize-1 && yIndex > 0)                    { tableX[n] = xIndex+1; tableY[n] = yIndex-1; n++; }
+  if (xIndex < matrix2.xIndexSize-1 && yIndex < matrix2.yIndexSize-1) { tableX[n] = xIndex+1; tableY[n] = yIndex+1; n++; }
   
   // Done
   assert(n <= tableSize);
@@ -808,7 +876,7 @@ Processor::closerNeighborExists(const unsigned int thisX,
                                 const unsigned int yIndex,
                                 const unsigned int nNeighbors,
                                 const unsigned int* neighborTableX,
-                                const unsigned int* neighborTableY) {
+                                const unsigned int* neighborTableY) const {
   if (thisX == xIndex || thisY == yIndex) return(0);
   for (unsigned int n = 0; n < nNeighbors; n++) {
     unsigned int neighX = neighborTableX[n];
@@ -827,7 +895,7 @@ Processor::isBorder(unsigned int xIndex,
                     unsigned int borderTableSize,
                     bool* borderTablePrev,
                     unsigned int* borderTableX,
-                    unsigned int* borderTableY) {
+                    unsigned int* borderTableY) const {
   assert(borderTableSize <= maxNeighbors);
   assert(borderTableSize == 0 || borderTableX != 0);
   assert(borderTableSize == 0 || borderTableY != 0);

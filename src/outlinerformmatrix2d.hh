@@ -32,9 +32,10 @@
                                                // roof and air and floor
 #define outlinerform_mainform_tunnel_stalac  2 // Regular tunnel, with a detected 
                                                // stalactite or stalagmite
-#define outlinerform_mainform_degenerate     3 // Some material, but only one
+#define outlinerform_mainform_dripline       3 // Entrance
+#define outlinerform_mainform_degenerate     4 // Some material, but only one
                                                // block of material (exit, border, etc)
-#define outlinerform_mainform_complex        4 // More than two layers of material
+#define outlinerform_mainform_complex        5 // More than two layers of material
                                                // and air (complex cave, multi-level tunnels, ...)
 #define outlinerform_max                  0x07
 

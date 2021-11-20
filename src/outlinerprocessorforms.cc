@@ -96,18 +96,22 @@ ProcessorForms::performFormAnalysis(const aiScene* scene) {
 OutlinerSvgStyle
 ProcessorForms::formToColor(const unsigned int xIndex,
                             const unsigned int yIndex) const {
+  assert(forms.xIndexSize == matrix2.xIndexSize);
+  assert(forms.yIndexSize == matrix2.yIndexSize);
   outlinerform form = forms.getForm(xIndex,yIndex);
   uint8_t mainform = (form & outlinerform_mainform);
   deepdebugf("    mainform = %u", mainform);
   switch (mainform) {
   case outlinerform_mainform_empty:
-    return(outlinersvgstyle_grey);
+    return(outlinersvgstyle_greyval(128));
   case outlinerform_mainform_tunnel:
     return(outlinersvgstyle_none);
   case outlinerform_mainform_tunnel_stalac:
     return(outlinersvgstyle_red);
   case outlinerform_mainform_degenerate:
     return(outlinersvgstyle_blue);
+  case outlinerform_mainform_dripline:
+    return(outlinersvgstyle_yellow);
   case outlinerform_mainform_complex:
     return(outlinersvgstyle_green);
   default:
@@ -184,56 +188,235 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
   infof("  form matrix2 box %s", buf);
   OutlinerMath::boxDescribe(matrix3.boundingBox,buf,sizeof(buf),1);
   infof("  form matrix3 box %s", buf);
+
+  // Phase 1
+  infof("Form analysis phase 1...");
   for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
     outlinerreal x = matrix3.indexToCoordinateX(xIndex);
     unsigned int matrix2xIndexStart = matrix2.coordinateXToIndex(x);
-    unsigned int matrix2xIndexEnd = matrix2xIndexStart + (unsigned int)ceil(formCondense);
+    unsigned int matrix2xIndexEnd = matrix2xIndexStart + ((unsigned int)ceil(formCondense)) - 1;
     for (unsigned int yIndex = 0; yIndex < matrix3.yIndexSize - 2; yIndex++) {
       outlinerreal y = matrix3.indexToCoordinateY(yIndex);
-      infof("    analyze %u,%u: %.2f,%.2f", xIndex, yIndex, x, y);
       unsigned int matrix2yIndexStart = matrix2.coordinateYToIndex(y);
-      unsigned int matrix2yIndexEnd = matrix2yIndexStart + (unsigned int)ceil(formCondense);
-      performFormAnalysisAnalyzeOnePixel(xIndex,yIndex,
-                                         matrix2xIndexStart,matrix2yIndexStart,
-                                         matrix2xIndexEnd,matrix2yIndexEnd);
+      unsigned int matrix2yIndexEnd = matrix2yIndexStart + ((unsigned int)ceil(formCondense)) - 1;
+      infof("    analyze phase 1 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
+            xIndex, yIndex, x, y,
+            matrix2xIndexStart, matrix2yIndexStart,
+            matrix2xIndexEnd, matrix2yIndexEnd);
+      assert(matrix2xIndexStart <= matrix2xIndexEnd);
+      assert(matrix2yIndexStart <= matrix2yIndexEnd);
+      performFormAnalysisAnalyzeOnePixelPhase1(xIndex,yIndex,
+                                               matrix2xIndexStart,matrix2yIndexStart,
+                                               matrix2xIndexEnd,matrix2yIndexEnd);
     }
   }
+
+  // Phase2
+  infof("Form analysis phase 2...");
+  for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
+    outlinerreal x = matrix3.indexToCoordinateX(xIndex);
+    unsigned int matrix2xIndexStart = matrix2.coordinateXToIndex(x);
+    unsigned int matrix2xIndexEnd = matrix2xIndexStart + ((unsigned int)ceil(formCondense)) - 1;
+    for (unsigned int yIndex = 0; yIndex < matrix3.yIndexSize - 2; yIndex++) {
+      outlinerreal y = matrix3.indexToCoordinateY(yIndex);
+      unsigned int matrix2yIndexStart = matrix2.coordinateYToIndex(y);
+      unsigned int matrix2yIndexEnd = matrix2yIndexStart + ((unsigned int)ceil(formCondense)) - 1;
+      infof("    analyze phase 2 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
+            xIndex, yIndex, x, y,
+            matrix2xIndexStart, matrix2yIndexStart,
+            matrix2xIndexEnd, matrix2yIndexEnd);
+      assert(matrix2xIndexStart <= matrix2xIndexEnd);
+      assert(matrix2yIndexStart <= matrix2yIndexEnd);
+      performFormAnalysisAnalyzeOnePixelPhase2(xIndex,yIndex,
+                                               matrix2xIndexStart,matrix2yIndexStart,
+                                               matrix2xIndexEnd,matrix2yIndexEnd);
+    }
+  }
+
+  // Done
   return(1);
 }
 
 bool
-ProcessorForms::performFormAnalysisAnalyzeOnePixel(const unsigned int matrix3xIndex,
-                                                   const unsigned int matrix3yIndex,
-                                                   const unsigned int matrix2xIndexStart,
-                                                   const unsigned int matrix2yIndexStart,
-                                                   const unsigned int matrix2xIndexEnd,
-                                                   const unsigned int matrix2yIndexEnd) {
+ProcessorForms::performFormAnalysisAnalyzeOnePixelPhase1(const unsigned int matrix3xIndex,
+                                                         const unsigned int matrix3yIndex,
+                                                         const unsigned int matrix2xIndexStart,
+                                                         const unsigned int matrix2yIndexStart,
+                                                         const unsigned int matrix2xIndexEnd,
+                                                         const unsigned int matrix2yIndexEnd) {
+  outlinerform form = outlinerform_mainform_empty;
+
+  // Find out if there's any material.
   if (!matrix2.getMaterialMatrix(matrix2xIndexStart,
                                  matrix2yIndexStart,
                                  matrix2xIndexEnd,
                                  matrix2yIndexEnd)) {
-    forms.setForm(matrix2xIndexStart,matrix2yIndexStart,
-                  matrix2xIndexEnd,matrix2yIndexEnd,
-                  outlinerform_mainform_empty);
+
+    //  If not, just the form as no material (empty).
+    infof("    no material");
+    form = outlinerform_mainform_empty;
+    
   } else {
+
+    // Otherwise, make a decision based on how many layers of material
+    // there are
     unsigned int materialLayers = formAnalysisCountLayers(matrix3xIndex,matrix3yIndex);
-    infof("  layers = %u", materialLayers);
+    infof("   layers = %u", materialLayers);
     switch (materialLayers) {
     case 0:
-      forms.setForm(matrix3xIndex,matrix3yIndex,outlinerform_mainform_empty);
+      form = outlinerform_mainform_empty;
       break;
     case 1:
-      forms.setForm(matrix3xIndex,matrix3yIndex,outlinerform_mainform_degenerate);
+      form = outlinerform_mainform_degenerate;
       break;
     case 2:
-      forms.setForm(matrix3xIndex,matrix3yIndex,outlinerform_mainform_tunnel);
+      form = outlinerform_mainform_tunnel;
       break;
     default:
-      forms.setForm(matrix3xIndex,matrix3yIndex,outlinerform_mainform_complex);
+      form = outlinerform_mainform_complex;
       break;
     }
   }
+
+  // Found out what form we should use. Update the matrix.
+  forms.setForm(matrix2xIndexStart,
+                matrix2yIndexStart,
+                matrix2xIndexEnd,
+                matrix2yIndexEnd,
+                form);
   return(1);
+}
+
+bool
+ProcessorForms::performFormAnalysisAnalyzeOnePixelPhase2(const unsigned int matrix3xIndex,
+                                                         const unsigned int matrix3yIndex,
+                                                         const unsigned int matrix2xIndexStart,
+                                                         const unsigned int matrix2yIndexStart,
+                                                         const unsigned int matrix2xIndexEnd,
+                                                         const unsigned int matrix2yIndexEnd) {
+  // If there's no material or only one layer, check to see if we are
+  // potentially at an entrance. An entrance is defined as a place
+  // where the model stops, i.e., there is no material for a sideways
+  // or from the top entry, and you can get underneath a form space
+  // that is marked as a proper tunnel.
+
+  unsigned int matrix2xStep = matrix2xIndexEnd - matrix2xIndexStart + 1;
+  unsigned int matrix2yStep = matrix2yIndexEnd - matrix2yIndexStart + 1;
+  outlinerform form = forms.getForm(matrix2xIndexStart,matrix2yIndexStart);
+  
+  switch (form) {
+  case outlinerform_mainform_empty:
+  case outlinerform_mainform_degenerate:
+    if (entranceAnalysis(matrix3xIndex,matrix3yIndex, 1, 0, matrix2xIndexStart,matrix2xStep,matrix2yIndexStart,matrix2yStep) ||
+        entranceAnalysis(matrix3xIndex,matrix3yIndex, 0, 1, matrix2xIndexStart,matrix2xStep,matrix2yIndexStart,matrix2yStep) ||
+        entranceAnalysis(matrix3xIndex,matrix3yIndex,-1, 0, matrix2xIndexStart,matrix2xStep,matrix2yIndexStart,matrix2yStep) ||
+        entranceAnalysis(matrix3xIndex,matrix3yIndex, 0,-1, matrix2xIndexStart,matrix2xStep,matrix2yIndexStart,matrix2yStep)) {
+      
+      infof("found an entrance hit at %u,%u", matrix3xIndex,matrix3yIndex);
+      forms.setForm(matrix2xIndexStart,
+                    matrix2yIndexStart,
+                    matrix2xIndexEnd,
+                    matrix2yIndexEnd,
+                    outlinerform_mainform_dripline);
+      
+    }
+    break;
+  default:
+    break;
+  }
+
+  // Done
+  return(1);
+}
+
+bool
+ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
+                                 const unsigned int matrix3yIndex,
+                                 const int xDirection,
+                                 const int yDirection,
+                                 const unsigned int matrix2xIndexStart,
+                                 const unsigned int matrix2xStep,
+                                 const unsigned int matrix2yIndexStart,
+                                 const unsigned int matrix2yStep) const {
+  
+  const outlinerreal minimumTunnelPath = 0.5;
+  const outlinerreal minimumTunnelHeight = 0.4;
+  outlinerreal pathSoFar = 0.0;
+  outlinerreal pathHeightSoFar = 0.0;
+  unsigned int matrix3zIndexSearch = matrix3.zIndexSize - 2;
+  unsigned int matrix3zIndexSearchStart = matrix3zIndexSearch;
+  
+  do {
+
+    unsigned int matrix3xIndexSearch = matrix3xIndex;
+    unsigned int matrix3yIndexSearch = matrix3yIndex;
+    unsigned int matrix2xIndex = matrix2xIndexStart;
+    unsigned int matrix2yIndex = matrix2yIndexStart;
+
+    // Check if our starting point has material at the given z
+    // height. If so, this isn't an entrance.
+    bool materialAtPointIn3D = matrix3.getMaterialMatrix(matrix3xIndex,matrix3yIndex,matrix3zIndexSearch);
+    if (materialAtPointIn3D && matrix3zIndexSearch > 0) {
+      matrix3zIndexSearch--;
+      continue;
+    }
+    
+    do {
+      
+      // Did we reach an border in the image? If so, bail out and
+      // conclude the result is inconclusive :-)
+      if (matrix3zIndexSearch == 0) return(0);
+      if (xDirection < 0 && matrix3xIndexSearch == 0) return(0);
+      if (yDirection < 0 && matrix3yIndexSearch == 0) return(0);
+      if (xDirection > 0 && matrix3xIndexSearch >= matrix3.xIndexSize - 2) return(0);
+      if (yDirection > 0 && matrix3yIndexSearch >= matrix3.yIndexSize - 2) return(0);
+      
+      // Otherwise, advance the search
+      matrix3xIndexSearch += xDirection;
+      matrix3yIndexSearch += yDirection;
+      matrix3zIndexSearch--;
+      matrix2xIndex += xDirection * matrix2xStep;
+      matrix2yIndex += yDirection * matrix2yStep;
+      
+      // And then see if we can find the right type of material at
+      // this xy-position and empty space at level z in the
+      // xyz-matrix.
+      outlinerform neighborForm = forms.getForm(matrix2xIndex,matrix2yIndex);
+      bool materialIn3D = matrix3.getMaterialMatrix(matrix3xIndexSearch,matrix3yIndexSearch,matrix3zIndexSearch);
+      if ((neighborForm != outlinerform_mainform_tunnel &&
+           neighborForm != outlinerform_mainform_tunnel_stalac) ||
+          materialIn3D) {
+        pathSoFar = pathHeightSoFar = 0.0;
+        matrix3xIndexSearch = matrix3xIndex;
+        matrix3yIndexSearch = matrix3yIndex;
+        matrix2xIndex = matrix2xIndexStart;
+        matrix2yIndex = matrix2yIndexStart;
+        matrix3zIndexSearchStart = matrix3zIndexSearch - 1;
+        continue;
+      }
+
+      // So far so good, lets increase the length we have searched to
+      // see if this is enough
+      if (xDirection != 0) pathSoFar += stepxCondensed;
+      else if (yDirection != 0) pathSoFar += stepyCondensed;
+      pathHeightSoFar += stepzCondensed;
+
+      // See if we can declare a win
+      if (pathSoFar >= minimumTunnelPath && pathHeightSoFar >= minimumTunnelHeight) {
+        infof("Found entrance at %u,%u => %u,%u (level %u from %u, path length %.2f height %.2f)",
+              matrix3xIndex,matrix3yIndex,
+              matrix3xIndexSearch,matrix3yIndexSearch,
+              matrix3zIndexSearch,matrix3zIndexSearch,
+              pathSoFar, pathHeightSoFar);
+        return(1);
+      }
+      
+    } while (1);
+    
+  } while (matrix3zIndexSearch > 0);
+  
+  // Nothing found
+  return(0);
 }
 
 unsigned int

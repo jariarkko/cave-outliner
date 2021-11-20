@@ -35,20 +35,24 @@
 #define OutlinerSvgMaxLineSegments  511
 #define OutlinerSvgMaxLinePoints    (OutlinerSvgMaxLineSegments+1)
 
-#define OutlinerSvgStyle            uint8_t
-#define outlinersvgstyle_none       0x00
-#define outlinersvgstyle_dashed     0x01
-#define outlinersvgstyle_ends       0x02
-#define outlinersvgstyle_grey       0x04
-#define outlinersvgstyle_red        0x08
-#define outlinersvgstyle_blue       0x10
-#define outlinersvgstyle_green      0x20
-#define outlinersvgstyle_legal      (outlinersvgstyle_dashed + \
-                                     outlinersvgstyle_ends +   \
-                                     outlinersvgstyle_grey +   \
-                                     outlinersvgstyle_red +    \
-                                     outlinersvgstyle_blue +   \
-                                     outlinersvgstyle_green)
+#define OutlinerSvgStyle            uint16_t
+#define outlinersvgstyle_none       0x0000
+#define outlinersvgstyle_dashed     0x0100
+#define outlinersvgstyle_ends       0x0200
+#define outlinersvgstyle_grey       0x0400
+#define outlinersvgstyle_greyval(x) (outlinersvgstyle_grey+((x)&0xff))
+#define outlinersvgstyle_red        0x0800
+#define outlinersvgstyle_blue       0x1000
+#define outlinersvgstyle_green      0x2000
+#define outlinersvgstyle_yellow     0x4000
+#define outlinersvgstyle_legal      (outlinersvgstyle_dashed +  \
+                                     outlinersvgstyle_ends +    \
+                                     outlinersvgstyle_grey + \
+                                     outlinersvgstyle_red +     \
+                                     outlinersvgstyle_blue +    \
+                                     outlinersvgstyle_green +   \
+                                     outlinersvgstyle_yellow)
+#define outlinersvgstyle_basemask   0xff00
 #define outlinersvgstyle_illegal    (~(outlinersvgstyle_legal))
 
 struct OutlinerSvgCoord {

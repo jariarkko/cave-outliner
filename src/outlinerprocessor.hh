@@ -34,6 +34,7 @@
 #include "outlinermaterialmatrix2d.hh"
 #include "outlinermaterialmatrix3d.hh"
 #include "outlinerformmatrix2d.hh"
+#include "outlinerdepthmap.hh"
 #include "outlinerprocessorforms.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,6 +48,12 @@ struct ProcessorCrossSectionInfo {
   OutlinerLine2D line;
   outlinerreal width; // in units of one step
   const char* label; // 0 if no label desired
+};
+
+struct ProcessorRangeInfo {
+  bool needed;
+  bool set;
+  OutlinerBox1D zRange;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,6 +103,8 @@ public:
 private:
 
   friend class ProcessorCrossSection;
+  friend class DepthMap;
+  
   const char* fileName;
   const unsigned int multiplier;
   const bool smooth;
@@ -119,6 +128,7 @@ private:
   const OutlinerBox2D originalPlanviewBoundingBox;
   const OutlinerBox2D planviewBoundingBox;
   MaterialMatrix2D matrix2; // Plan view matrix
+  DepthMap* depthMap;
   ProcessorForms formAnalyzer;
   const unsigned int nCrossSections;
   const struct ProcessorCrossSectionInfo* crossSections;
@@ -146,14 +156,14 @@ private:
                      unsigned int& n,
                      unsigned int tableSize,
                      unsigned int* tableX,
-                     unsigned int* tableY);
+                     unsigned int* tableY) const;
   bool closerNeighborExists(const unsigned int thisX,
                             const unsigned int thisY,
                             const unsigned int xIndex,
                             const unsigned int yIndex,
                             const unsigned int nNeighbors,
                             const unsigned int* neighborTableX,
-                            const unsigned int* neighborTableY);
+                            const unsigned int* neighborTableY) const;
   bool isBorder(unsigned int xIndex,
                 unsigned int yIndex,
                 MaterialMatrix2D* theMatrix,
@@ -161,7 +171,7 @@ private:
                 unsigned int borderTableSize,
                 bool* borderTablePrev,
                 unsigned int* boderTableX,
-                unsigned int* borderTableY);
+                unsigned int* borderTableY) const;
 
   //
   // Hole removal
@@ -186,26 +196,31 @@ private:
   bool sceneHasMaterial(const aiScene* scene,
                         IndexedMesh& indexed,
                         outlinerreal x,
-                        outlinerreal y);
+                        outlinerreal y,
+                        struct ProcessorRangeInfo& range);
   bool nodeHasMaterial(const aiScene* scene,
                        const aiNode* node,
                        IndexedMesh& indexed,
                        outlinerreal x,
-                       outlinerreal y);
+                       outlinerreal y,
+                       struct ProcessorRangeInfo& range);
   bool meshHasMaterial(const aiScene* scene,
                        const aiMesh* mesh,
                        IndexedMesh& indexed,
                        outlinerreal x,
-                       outlinerreal y);
+                       outlinerreal y,
+                       struct ProcessorRangeInfo& range);
   bool faceHasMaterial(const aiScene* scene,
                        const aiMesh* mesh,
                        const aiFace* face,
                        outlinerreal x,
-                       outlinerreal y);
+                       outlinerreal y,
+                       struct ProcessorRangeInfo& range);
   void faceGetVertices2D(const aiMesh* mesh,
                          const aiFace* face,
                          enum outlinerdirection thisDirection,
-                         OutlinerTriangle2D& t);
+                         OutlinerTriangle2D& t,
+                         OutlinerBox1D& depthRange);
   void faceGetVertices3D(const aiMesh* mesh,
                          const aiFace* face,
                          OutlinerTriangle3D& t);

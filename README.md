@@ -44,6 +44,9 @@ Options:
     --pixelform              Same as --pixel, but color pixels based form analysis.
     --triangle               Use the triangle output drawing algorithm (draws model faces
                              in plan view).
+    --depthmap               Same as --pixel, but color pixels based on their height.                   
+    --depthdiffmap           Same as --pixel, but color pixels based on their height
+                             difference from neighbouring pixels.
     --borderpixel            Use the border-only drawing algorithm, draws only the cave
                              walls, with pixels.
     --borderline             Use the border-only drawing algorithm, draws only the cave
