@@ -267,7 +267,11 @@ basic-tests:	cave-outliner \
 		cube-cross-section-label-test \
 		cube-cross-section-highres-label-test \
 		cube-cross-section-multiplier-label-test \
-		house-cross-section-test
+		house-cross-section-test \
+		steps-test \
+		steps-cross-section-test \
+		steps-depthmap-test \
+		steps-depthdiffmap-test
 
 cave-tests:	cave1-test \
 		cave1-line-test \
@@ -275,6 +279,7 @@ cave-tests:	cave1-test \
 		cave1-x-cross-section-width-test \
 		cave1-y-cross-section-test \
 		cave1-depthmap-test \
+		cave1-depthmap-highres-test \
 		cave1-depthdiffmap-test
 
 failing-tests:	failing-tests-note \
@@ -488,10 +493,36 @@ cave1-y-cross-section-test:
 	@diff -q test/cave1-y-cross-section.svg test/cave1-y-cross-section.svg.expected
 	@diff -q test/cave1-y-cross-section-0.svg test/cave1-y-cross-section-0.svg.expected
 
+steps-test:
+	@echo 'Running test case steps-test...'
+	@./cave-outliner --quiet --pixel --step 0.1 --holethreshold 10 test/steps.stl test/steps.svg
+	@diff -q test/steps.svg test/steps.svg.expected
+
+steps-cross-section-test:
+	@echo 'Running test case steps-cross-section test...'
+	@./cave-outliner --quiet --label --dimensions --pixel --crosssections x 1 test/steps-cross-section-%.svg --step 0.1 --holethreshold 10 test/steps.stl test/steps-cross-section.svg
+	@diff -q test/steps-cross-section.svg test/steps-cross-section.svg.expected
+	@diff -q test/steps-cross-section-0.svg test/steps-cross-section-0.svg.expected
+
+steps-depthmap-test:
+	@echo 'Running test case steps-depthmap-test...'
+	@./cave-outliner --quiet --depthmap --step 0.5 --holethreshold 10 test/steps.stl test/steps-depthmap.svg
+	@diff -q test/steps-depthmap.svg test/steps-depthmap.svg.expected
+
+steps-depthdiffmap-test:
+	@echo 'Running test case steps-depthdiffmap-test...'
+	@./cave-outliner --quiet --depthdiffmap --step 0.2 --holethreshold 10 test/steps.stl test/steps-depthdiffmap.svg
+	@diff -q test/steps-depthdiffmap.svg test/steps-depthdiffmap.svg.expected
+
 cave1-depthmap-test:
 	@echo 'Running test case cave1-depthmap-test...'
 	@./cave-outliner --quiet --depthmap --step 0.2 --holethreshold 10 test/cave1.stl test/cave1-depthmap.svg
 	@diff -q test/cave1-depthmap.svg test/cave1-depthmap.svg.expected
+
+cave1-depthmap-highres-test:
+	@echo 'Running test case cave1-depthmap-highres-test...'
+	@./cave-outliner --quiet --depthmap --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-depthmap-highres.svg
+	@diff -q test/cave1-depthmap-highres.svg test/cave1-depthmap-highres.svg.expected
 
 cave1-depthdiffmap-test:
 	@echo 'Running test case cave1-depthdiffmap-test...'

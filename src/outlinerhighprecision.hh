@@ -213,6 +213,8 @@ public:
 
   OutlinerBox1D() : start(0), end(0) { }
   
+  OutlinerBox1D(const OutlinerBox1D& from) : start(from.start), end(from.end) { }
+  
   OutlinerBox1D(outlinerreal from,
                 outlinerreal to) : start(from), end(to) { }
   

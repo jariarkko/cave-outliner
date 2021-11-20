@@ -328,17 +328,14 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
         debugf("processScene %u,%u/%u,%u", xIndex, yIndex, matrix2.xIndexSize, matrix2.yIndexSize);
       }
       assert(yIndex < matrix2.yIndexSize);
-      if (x > -0.605 && x < -0.595) {
-        debugf("checking (%.2f,%.2f) or (%u,%u)",x,y,xIndex,yIndex);
-      } else {
-        deepdebugf("checking (%.2f,%.2f)",x,y);
-      }
+      deepdebugf("checking (%.2f,%.2f)",x,y);
       struct ProcessorRangeInfo rangeInfo;
       rangeInfo.needed = (algorithm == alg_depthmap || algorithm == alg_depthdiffmap);
       rangeInfo.set = 0;
       if (sceneHasMaterial(scene,indexed,x,y,rangeInfo)) {
         debugf("  material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
         matrix2.setMaterialMatrix(xIndex,yIndex);
+        assert(rangeInfo.needed == rangeInfo.set);
         if (rangeInfo.needed) {
           assert(rangeInfo.set);
           outlinerreal depth = rangeInfo.zRange.end;
@@ -350,12 +347,12 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
           else if (start == end) normalizedDepth = 128;
           else normalizedDepth = (255 * (depth - start)) / (end - start);
           outlinerdepth normalizedDepthInt = (outlinerdepth)floor(normalizedDepth);
-          depthMap->setDepth(xIndex,yIndex,normalizedDepthInt);
           infof("  setting depth at (%u,%u) to %u based on %.2f (%.2f..%.2f)",
                 xIndex, yIndex,
                 normalizedDepthInt,
                 depth,
                 start, end);
+          depthMap->setDepth(xIndex,yIndex,normalizedDepthInt);
         }
       }
       
@@ -696,17 +693,20 @@ Processor::nodeHasMaterial(const aiScene* scene,
     errf("Cannot handle transformations yet");
     exit(1);
   }
+  bool found = 0;
   for (unsigned int j = 0; j < node->mNumMeshes; j++) {
     if (meshHasMaterial(scene,scene->mMeshes[node->mMeshes[j]],indexed,x,y,range)) {
-      return(1);
+      if (range.needed) { found = 1; continue; }
+      else return(1);
     }
   }
   for (unsigned int i = 0; i < node->mNumChildren; i++) {
     if (nodeHasMaterial(scene,node->mChildren[i],indexed,x,y,range)) {
-      return(1);
+      if (range.needed) { found = 1; continue; }
+      else return(1);
     }
   }
-  return(0);
+  return(found);
 }
 
 bool
@@ -722,12 +722,14 @@ Processor::meshHasMaterial(const aiScene* scene,
   const aiFace** faces = 0;
   indexed.getFaces(mesh,x,y,&nFaces,&faces);
   deepdebugf("meshHasMaterial normally %u faces but on this tile %u faces", mesh->mNumFaces,nFaces);
+  bool found = 0;
   for (unsigned int f = 0; f < nFaces; f++) {
     if (faceHasMaterial(scene,mesh,faces[f],x,y,range)) {
-      return(1);
+      if (range.needed) { found = 1; continue; }
+      else return(1);
     }
   }
-  return(0);
+  return(found);
 }
 
 void
@@ -804,10 +806,20 @@ Processor::faceHasMaterial(const aiScene* scene,
     if (range.needed) {
       if (!range.set) {
         range.set = 1;
+        infof("  initial pixel range set to %.2f..%.2f in coordinates %.2f,%.2f (uninit range %.2f..%.2f)",
+              depthRange.start, depthRange.end,
+              x, y,
+              range.zRange.start, range.zRange.end);
         range.zRange = depthRange;
       } else {
-        OutlinerBox1D old = range.zRange;
-        old.boxUnion(depthRange,range.zRange);
+        OutlinerBox1D old(range.zRange);
+        OutlinerBox1D result;
+        old.boxUnion(depthRange,result);
+        infof("  have to merge depth ranges %.2f..%.2f and %.2f..%.2f => %.2f..%.2f",
+              range.zRange.start, range.zRange.end,
+              depthRange.start, depthRange.end,
+              result.start, result.end);
+        range.zRange = result;
       }
     }
     return(1);
@@ -1145,13 +1157,21 @@ Processor::objectHoleRemoval(unsigned int& holeMinSize,
           unsigned int n;
           unsigned int holeXtable[outlinermaxholethreshold];
           unsigned int holeYtable[outlinermaxholethreshold];
-          if (objectHoleIsEqualOrSmallerThan(xIndex,yIndex,holethreshold,n,outlinermaxholethreshold,holeXtable,holeYtable)) {
+          unsigned int nonHoleX;
+          unsigned int nonHoleY;
+          if (objectHoleIsEqualOrSmallerThan(xIndex,yIndex,holethreshold,n,outlinermaxholethreshold,
+                                             holeXtable,holeYtable,
+                                             nonHoleX,nonHoleY)) {
             debugf("  correcting a hole of %u pixels at (%u,%u)", n, xIndex, yIndex);
             holes++;
             if (holeMinSize > n) holeMinSize = n;
             if (holeMaxSize < n) holeMaxSize = n;
             for (unsigned int i = 0; i < n; i++) {
               matrix2.setMaterialMatrix(holeXtable[i],holeYtable[i]);
+              if (algorithm == alg_depthmap || algorithm == alg_depthdiffmap) {
+                depthMap->setDepth(holeXtable[i],holeYtable[i],
+                                   depthMap->getDepth(nonHoleX,nonHoleY));
+              }
             }
           }
         }
@@ -1175,10 +1195,13 @@ Processor::objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
                                           unsigned int& n,
                                           unsigned int tableSize,
                                           unsigned int* holeXtable,
-                                          unsigned int* holeYtable) {
+                                          unsigned int* holeYtable,
+                                          unsigned int& nonHoleX,
+                                          unsigned int& nonHoleY) {
   assert(tableSize <= outlinermaxholethreshold);
   assert(holethreshold <= outlinermaxholethreshold);
   assert(!matrix2.getMaterialMatrix(xIndex,yIndex));
+  bool nonHole = 0;
   unsigned int nInvestigate = 1;
   const unsigned int maxInvestigate = 2 * outlinermaxholethreshold;
   unsigned int investigateXtable[maxInvestigate];
@@ -1198,7 +1221,14 @@ Processor::objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
     nInvestigate--;
     
     // Does the entry have material? If yes, we don't need to consider it further.
-    if (matrix2.getMaterialMatrix(xIndex,yIndex)) continue;
+    if (matrix2.getMaterialMatrix(xIndex,yIndex)) {
+      if (!nonHole) {
+        nonHole = 1;
+        nonHoleX = xIndex;
+        nonHoleY = yIndex;
+      }
+      continue;
+    }
 
     // Otherwise, this entry is in the hole. But is the hole already too large?
     if (n == holethreshold) return(0);
@@ -1233,6 +1263,13 @@ Processor::objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
       nInvestigate++;
     }
   }
+
+  // Check if there was some material around. If not, we don't fill this either.
+  if (!nonHole) {
+    return(0);
+  }
+  
+  // All good now. Hole found and was of right size.
   return(1);
 }
 

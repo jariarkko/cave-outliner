@@ -92,8 +92,13 @@ private:
 
   const unsigned int fullSize;
   outlinerdepth* data;
+  bool rangeSet;
+  outlinerdepth rangeMin;
+  outlinerdepth rangeMax;
+  unsigned int nEntries;
   const MaterialMatrix2D& materialMatrix;
   
+  outlinerdepth normalize(outlinerdepth input) const;
 };
 
 #endif // OUTLINERDEPTHMAP_HH

@@ -185,7 +185,9 @@ private:
                                       unsigned int& n,
                                       unsigned int tableSize,
                                       unsigned int* holeXtable,
-                                      unsigned int* holeYtable);
+                                      unsigned int* holeYtable,
+                                      unsigned int& nonHoleX,
+                                      unsigned int& nonHoleY);
   unsigned int lineHoleRemoval(unsigned int& holeMinSize,
                                unsigned int& holeMaxSize);
 

@@ -28,6 +28,7 @@
 #define outlinermaxholethreshold                                                      50
 #define outlinermaxlineholethreshold                                                  20
 #define outlinermaxcrosssections                                                     100
+#define outlinerunusablegreyscale                                                      8
 #define outlinerdefaultlinewidth                                                     1.0
 #define outlinerdefaultfont                                                           16
 #define outlinerdefaultfontxsize                                                     5.6

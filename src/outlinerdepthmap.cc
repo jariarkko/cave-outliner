@@ -45,7 +45,12 @@ DepthMap::DepthMap(const unsigned int xIndexSizeIn,
   yIndexSize(yIndexSizeIn),
   fullSize(xIndexSize * yIndexSize),
   data(0),
+  rangeSet(0),
+  rangeMin(0),
+  rangeMax(0),
+  nEntries(0),
   materialMatrix(materialMatrixIn) {
+
   assert(xIndexSize > 0);
   assert(yIndexSize > 0);
   data = new outlinerdepth[fullSize];
@@ -57,6 +62,9 @@ DepthMap::DepthMap(const unsigned int xIndexSizeIn,
 }
 
 DepthMap::~DepthMap() {
+  infof("depth map %u/%u entries, range %u..%u",
+        nEntries, fullSize,
+        rangeMin, rangeMax);
   if (data != 0) {
     free((void*)data);
     data = 0;
@@ -74,7 +82,17 @@ DepthMap::setDepth(const unsigned int xIndex,
   assert(materialMatrix.getMaterialMatrix(xIndex,yIndex));
   const unsigned int index = depthMatrixIndex(xIndex,yIndex);
   assert(index < fullSize);
+  outlinerdepth prev = data[index];
   data[index] = depth;
+  if (!rangeSet) {
+    rangeMin = rangeMax = depth;
+    rangeSet = 1;
+  } else {
+    if (depth < rangeMin) rangeMin = depth;
+    if (depth > rangeMax) rangeMax = depth;
+  }
+  if (prev == 0) nEntries++;
+  infof("      set depth to %u (%u..%u)", depth, rangeMin, rangeMax);
 }
 
 outlinerdepth
@@ -89,6 +107,7 @@ DepthMap::getDepth(const unsigned int xIndex,
   return(data[index]);
 }
 
+
 OutlinerSvgStyle
 DepthMap::depthToColor(const unsigned int xIndex,
                        const unsigned int yIndex) const {
@@ -96,12 +115,17 @@ DepthMap::depthToColor(const unsigned int xIndex,
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
   assert(materialMatrix.getMaterialMatrix(xIndex,yIndex));
-  outlinerdepth depth = getDepth(xIndex,yIndex);
-  if (depth == 0) return(outlinersvgstyle_greyval(254));
-  else if (depth == 255) return(outlinersvgstyle_greyval(1));
-  else return(outlinersvgstyle_greyval(255 - depth));
+  outlinerdepth input = getDepth(xIndex,yIndex);
+  outlinerdepth depth = normalize(input);
+  outlinerdepth rgbval = 255 - depth;
+  outlinerdepth finalval;
+  if (rgbval < outlinerunusablegreyscale) finalval = outlinerunusablegreyscale;
+  else if (rgbval > 255-outlinerunusablegreyscale) finalval = 255-outlinerunusablegreyscale;
+  else finalval = rgbval;
+  infof("    depth %u => %u => %u => %u", input, depth, rgbval,finalval);
+  return(outlinersvgstyle_greyval(finalval));
 }
-  
+
 OutlinerSvgStyle
 DepthMap::depthDiffToColor(const unsigned int xIndex,
                            const unsigned int yIndex,
@@ -110,7 +134,7 @@ DepthMap::depthDiffToColor(const unsigned int xIndex,
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
   assert(materialMatrix.getMaterialMatrix(xIndex,yIndex));
-  outlinerdepth depth = getDepth(xIndex,yIndex);
+  outlinerdepth depth = normalize(getDepth(xIndex,yIndex));
   unsigned int n;
   const unsigned int tableSize = 20;
   unsigned int tableX[tableSize];
@@ -121,32 +145,68 @@ DepthMap::depthDiffToColor(const unsigned int xIndex,
                      tableSize,
                      tableX,
                      tableY);
-  outlinerreal present = 0.0;
-  outlinerreal sum = 0.0;
+  //outlinerreal present = 0.0;
+  //outlinerreal sum = 0.0;
+  unsigned int present = 0;
+  outlinerdepth minval = 0;
   for (unsigned int i = 0; i < n; i++) {
     unsigned int neighXIndex = tableX[i];
     unsigned int neighYIndex = tableY[i];
     if (materialMatrix.getMaterialMatrix(neighXIndex,neighYIndex)) {
+      outlinerdepth x = normalize(getDepth(neighXIndex,neighYIndex));
+      if (present == 0) minval = x;
+      else if (minval > x) minval = x;
       present++;
-      sum += getDepth(neighXIndex,neighYIndex);
     }
   }
+  infof("  neighbor depths %u min %u, own %u", present, minval, depth);
   if (present == 0) {
     return(outlinersvgstyle_greyval(128));
   } else {
-    outlinerreal avg = sum / present;
-    outlinerdepth avgInt = (outlinerdepth)floor(avg);
-    outlinerdepth diff = (avgInt < depth) ? (depth-avgInt) : (avgInt-depth);
-    outlinerdepth normalizeddiff = diff/2;
-    assert(normalizeddiff <= 128);
-    if (avgInt == depth) {
-      return(outlinersvgstyle_greyval(128));
-    } else if (avgInt < depth) {
-      return(outlinersvgstyle_greyval(128-normalizeddiff));
+    //outlinerreal avg = sum / present;
+    //outlinerdepth avgInt = (outlinerdepth)floor(avg);
+    outlinerdepth avgInt = minval;
+    if (depth <= avgInt) {
+      return(outlinersvgstyle_greyval(255-outlinerunusablegreyscale));
     } else {
-      return(outlinersvgstyle_greyval(128+normalizeddiff));
+      outlinerdepth diff = depth-avgInt;
+      outlinerdepth val  = 255-diff;
+      outlinerdepth finalval;
+      if (val < outlinerunusablegreyscale) finalval = outlinerunusablegreyscale;
+      if (val > 255 - outlinerunusablegreyscale) finalval = 255 - outlinerunusablegreyscale;
+      else finalval = val;
+      infof("  depth diff %u from %u = %u => %u => %u", depth, avgInt, diff, val, finalval);
+      return(outlinersvgstyle_greyval(finalval));
     }
   }
+}
+
+outlinerdepth
+DepthMap::normalize(outlinerdepth input) const {
+  assert(rangeSet);
+  if (input < rangeMin || input > rangeMax) {
+    infof("    normalize depth %u (%u..%u)", input, rangeMin, rangeMax);
+  }
+  assert(input >= rangeMin);
+  assert(input <= rangeMax);
+  outlinerdepth range = rangeMax - rangeMin;
+  outlinerdepth base = 0;
+  outlinerdepth factor = 1;
+  outlinerdepth halfFactor = 0;
+  if      (range <   8) { base = rangeMin; factor = 32; halfFactor = 0; }
+  else if (range <  16) { base = rangeMin; factor = 16; halfFactor = 0; }
+  else if (range <  32) { base = rangeMin; factor =  8; halfFactor = 0; }
+  else if (range <  64) { base = rangeMin; factor =  4; halfFactor = 0; }
+  else if (range < 128) { base = rangeMin; factor =  2; halfFactor = 0; }
+  else if (range < 196) { base = rangeMin; factor =  1; halfFactor = 1; }
+  outlinerdepth preval = input - base;
+  outlinerdepth result = preval * factor + (preval/2) * halfFactor;
+  if (base != 0 || factor != 1 || halfFactor != 0) {
+    infof("  normalizing depth %u to %u via %ux 0.5*%ux sub %u",
+          input, result,
+          factor, halfFactor, base);
+  }
+  return(result);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
