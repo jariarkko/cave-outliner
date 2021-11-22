@@ -199,6 +199,8 @@ MainOptions::processCommandLineOptions(int& argc,
       config.smooth = 1;
     } else if (strcmp(argv[1],"--jagged") == 0) {
       config.smooth = 0;
+    } else if (strcmp(argv[1],"--svgyreverse") == 0) {
+      config.svgYSwap = 0;
     } else if (strcmp(argv[1],"--holethreshold") == 0 && argc > 2) {
       int num = atoi(argv[2]);
       if (num < 0 || num > 100) {

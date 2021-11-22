@@ -221,7 +221,7 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
       outlinerreal y = matrix3.indexToCoordinateY(yIndex);
       unsigned int matrix2yIndexStart = matrix2.coordinateYToIndex(y);
       unsigned int matrix2yIndexEnd = matrix2yIndexStart + ((unsigned int)ceil(formCondense)) - 1;
-      infof("    analyze phase 2 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
+      infof("  analyze phase 2 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
             xIndex, yIndex, x, y,
             matrix2xIndexStart, matrix2yIndexStart,
             matrix2xIndexEnd, matrix2yIndexEnd);
@@ -312,7 +312,7 @@ ProcessorForms::performFormAnalysisAnalyzeOnePixelPhase2(const unsigned int matr
         entranceAnalysis(matrix3xIndex,matrix3yIndex,-1, 0, matrix2xIndexStart,matrix2xStep,matrix2yIndexStart,matrix2yStep) ||
         entranceAnalysis(matrix3xIndex,matrix3yIndex, 0,-1, matrix2xIndexStart,matrix2xStep,matrix2yIndexStart,matrix2yStep)) {
       
-      infof("found an entrance hit at %u,%u", matrix3xIndex,matrix3yIndex);
+      infof("  found an entrance hit at %u,%u", matrix3xIndex,matrix3yIndex);
       forms.setForm(matrix2xIndexStart,
                     matrix2yIndexStart,
                     matrix2xIndexEnd,
@@ -329,6 +329,8 @@ ProcessorForms::performFormAnalysisAnalyzeOnePixelPhase2(const unsigned int matr
   return(1);
 }
 
+#define dirstring(d)    (((d) == 0) ? "" : ((d) < 0 ? "--" : "++"))
+
 bool
 ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
                                  const unsigned int matrix3yIndex,
@@ -339,6 +341,9 @@ ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
                                  const unsigned int matrix2yIndexStart,
                                  const unsigned int matrix2yStep) const {
   
+  infof("  entrance analysis from %u%s,%u%s",
+        matrix3xIndex, dirstring(xDirection),
+        matrix3yIndex, dirstring(yDirection));
   const outlinerreal minimumTunnelPath = 0.5;
   const outlinerreal minimumTunnelHeight = 0.4;
   outlinerreal pathSoFar = 0.0;
@@ -350,30 +355,48 @@ ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
 
     unsigned int matrix3xIndexSearch = matrix3xIndex;
     unsigned int matrix3yIndexSearch = matrix3yIndex;
+    unsigned int matrix3xIndexSearchReverse = matrix3xIndex;
+    unsigned int matrix3yIndexSearchReverse = matrix3yIndex;
     unsigned int matrix2xIndex = matrix2xIndexStart;
     unsigned int matrix2yIndex = matrix2yIndexStart;
 
     // Check if our starting point has material at the given z
     // height. If so, this isn't an entrance.
     bool materialAtPointIn3D = matrix3.getMaterialMatrix(matrix3xIndex,matrix3yIndex,matrix3zIndexSearch);
+    infof("    outer loop %u,%u level %u (3d material = %u)", 
+          matrix3xIndexSearch, matrix3yIndexSearch, matrix3zIndexSearch,
+          materialAtPointIn3D);
     if (materialAtPointIn3D && matrix3zIndexSearch > 0) {
+      infof("    continue main loop due to material at level %u", matrix3zIndexSearch);
+      pathSoFar = pathHeightSoFar = 0.0;
       matrix3zIndexSearch--;
       continue;
     }
-    
+
     do {
+      
+      infof("      inner loop %u,%u (reverse %u,%u, path so far %.2f, %.2f)",
+            matrix3xIndexSearch, matrix3yIndexSearch,
+            matrix3xIndexSearchReverse, matrix3yIndexSearchReverse,
+            pathSoFar, pathHeightSoFar);
       
       // Did we reach an border in the image? If so, bail out and
       // conclude the result is inconclusive :-)
-      if (matrix3zIndexSearch == 0) return(0);
-      if (xDirection < 0 && matrix3xIndexSearch == 0) return(0);
-      if (yDirection < 0 && matrix3yIndexSearch == 0) return(0);
-      if (xDirection > 0 && matrix3xIndexSearch >= matrix3.xIndexSize - 2) return(0);
-      if (yDirection > 0 && matrix3yIndexSearch >= matrix3.yIndexSize - 2) return(0);
+      if (matrix3zIndexSearch == 0) { infof("    z limit"); return(0); }
+      if (xDirection < 0 && matrix3xIndexSearch == 0) { infof("    x limit"); return(0); }
+      if (yDirection < 0 && matrix3yIndexSearch == 0) { infof("    y limit"); return(0); }
+      if (xDirection > 0 && matrix3xIndexSearch >= matrix3.xIndexSize - 2) { infof("    x limit"); return(0); }
+      if (yDirection > 0 && matrix3yIndexSearch >= matrix3.yIndexSize - 2) { infof("    y limit"); return(0); }
+      if (xDirection > 0 && matrix3xIndexSearchReverse == 0) matrix3xIndexSearchReverse += xDirection;
+      if (yDirection > 0 && matrix3yIndexSearchReverse == 0) matrix3yIndexSearchReverse += yDirection;
+      if (xDirection < 0 && matrix3xIndexSearchReverse >= matrix3.xIndexSize - 2) matrix3xIndexSearchReverse -= xDirection;
+      if (yDirection < 0 && matrix3yIndexSearchReverse >= matrix3.yIndexSize - 2) matrix3yIndexSearchReverse -= yDirection;
       
       // Otherwise, advance the search
       matrix3xIndexSearch += xDirection;
       matrix3yIndexSearch += yDirection;
+      matrix3xIndexSearchReverse -= xDirection;
+      matrix3yIndexSearchReverse -= yDirection;
       matrix3zIndexSearch--;
       matrix2xIndex += xDirection * matrix2xStep;
       matrix2yIndex += yDirection * matrix2yStep;
@@ -383,12 +406,22 @@ ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
       // xyz-matrix.
       outlinerform neighborForm = forms.getForm(matrix2xIndex,matrix2yIndex);
       bool materialIn3D = matrix3.getMaterialMatrix(matrix3xIndexSearch,matrix3yIndexSearch,matrix3zIndexSearch);
+       bool materialIn3Dreverse = matrix3.getMaterialMatrix(matrix3xIndexSearchReverse,matrix3yIndexSearchReverse,matrix3zIndexSearch);
+      infof("      inner investigation %u,%u (reverse %u,%u): nf %u mat %u revmat %u",
+            matrix3xIndexSearch, matrix3yIndexSearch,
+            matrix3xIndexSearchReverse, matrix3yIndexSearchReverse,
+            neighborForm,
+            materialIn3D,
+            materialIn3Dreverse);
       if ((neighborForm != outlinerform_mainform_tunnel &&
            neighborForm != outlinerform_mainform_tunnel_stalac) ||
-          materialIn3D) {
+          materialIn3D ||
+          materialIn3Dreverse) {
+        infof("      inner loop continue due to neighbor or material content %u %u %u",
+              neighborForm, materialIn3D, materialIn3Dreverse);
         pathSoFar = pathHeightSoFar = 0.0;
-        matrix3xIndexSearch = matrix3xIndex;
-        matrix3yIndexSearch = matrix3yIndex;
+        matrix3xIndexSearch = matrix3xIndexSearchReverse = matrix3xIndex;
+        matrix3yIndexSearch = matrix3yIndexSearchReverse = matrix3yIndex;
         matrix2xIndex = matrix2xIndexStart;
         matrix2yIndex = matrix2yIndexStart;
         matrix3zIndexSearchStart = matrix3zIndexSearch - 1;
@@ -403,19 +436,24 @@ ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
 
       // See if we can declare a win
       if (pathSoFar >= minimumTunnelPath && pathHeightSoFar >= minimumTunnelHeight) {
-        infof("Found entrance at %u,%u => %u,%u (level %u from %u, path length %.2f height %.2f)",
+        infof("    found entrance at %u,%u => %u,%u (level %u from %u, path length %.2f height %.2f)",
               matrix3xIndex,matrix3yIndex,
               matrix3xIndexSearch,matrix3yIndexSearch,
               matrix3zIndexSearch,matrix3zIndexSearch,
               pathSoFar, pathHeightSoFar);
         return(1);
       }
+
+      infof("      inner loop next cycle");
       
     } while (1);
+    
+    infof("    outer loop next cycle");
     
   } while (matrix3zIndexSearch > 0);
   
   // Nothing found
+  infof("  z limit");
   return(0);
 }
 

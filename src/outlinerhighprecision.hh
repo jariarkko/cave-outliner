@@ -262,7 +262,7 @@ public:
   OutlinerVector2D end;
 
   /// Create an empty object, all values initialized to zero.
-  OutlinerBox2D() {}
+  OutlinerBox2D() { start.x = start.y = 0; end.x = end.y = 0; }
   
   /// Make an exact copy of another similar object.
   OutlinerBox2D(const OutlinerLine2D& in) : start(in.start), end(in.end) {}
@@ -333,7 +333,7 @@ public:
   OutlinerVector3D end;
 
   /// Create an empty object, all values initialized to zero.
-  OutlinerBox3D() {}
+  OutlinerBox3D() { start.x = start.y = start.z = 0; end.x = end.y = end.z = 0; }
   
   /// Make an exact copy of another similar object.
   OutlinerBox3D(const OutlinerBox3D& in) : start(in.start), end(in.end) {}

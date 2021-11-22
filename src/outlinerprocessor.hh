@@ -76,6 +76,7 @@ public:
             const bool smoothIn,
             const bool mergedLinesIn,
             const float linewidthIn,
+            const bool svgYSwapIn,
             const OutlinerBox3D& originalBoundingBoxIn,
             const OutlinerBox3D& boundingBoxIn,
             const outlinerreal stepxIn,
@@ -110,6 +111,7 @@ private:
   const bool smooth;
   const bool mergedLines;
   const float linewidth;
+  const bool svgYSwap;
   SvgCreator* svg;
   const unsigned int maxNeighbors = 8;
   const OutlinerBox3D originalBoundingBox;

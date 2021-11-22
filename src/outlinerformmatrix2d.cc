@@ -75,8 +75,8 @@ FormMatrix2D::setForm(const unsigned int xIndex,
   const unsigned int charIndex = formMatrixCharIndex(nibbleIndex);
   const unsigned int shift = formMatrixShift(nibbleIndex);
   deepdeepdebugf("setForm(%u,%u)=%x index %u %u shift %u fs %u\n", xIndex, yIndex, form, nibbleIndex, charIndex, shift, fullSizeChars);
-  infof("          setForm(%u,%u)=%x",
-        xIndex, yIndex, form);
+  debugf("          setForm(%u,%u)=%x",
+         xIndex, yIndex, form);
   assert(charIndex < fullSizeChars);
   assert(shift == 0 || shift == 4);
   uint8_t baseValue = data[charIndex];

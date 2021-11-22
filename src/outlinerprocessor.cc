@@ -42,6 +42,7 @@ Processor::Processor(const char* fileNameIn,
                      const bool smoothIn,
                      const bool mergedLinesIn,
                      const float linewidthIn,
+                     const bool svgYSwapIn,
                      const OutlinerBox3D& originalBoundingBoxIn,
                      const OutlinerBox3D& boundingBoxIn,
                      const outlinerreal stepxIn,
@@ -63,6 +64,7 @@ Processor::Processor(const char* fileNameIn,
   smooth(smoothIn),
   mergedLines(mergedLinesIn),
   linewidth(linewidthIn),
+  svgYSwap(svgYSwapIn),
   svg(0),
   originalBoundingBox(originalBoundingBoxIn),
   boundingBox(boundingBoxIn),
@@ -605,8 +607,11 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
           theSvg->pixel(x,y);
           break;
         case alg_pixelform:
-          infof("pixelform alg %u,%u from %.2f,%.2f", xIndex, yIndex, x, y);
-          theSvg->pixel(x,y,formAnalyzer.formToColor(xIndex,yIndex));
+          {
+            OutlinerSvgStyle style = formAnalyzer.formToColor(xIndex,yIndex);
+            infof("pixelform alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
+            theSvg->pixel(x,y,style);
+          }
           break;
         case alg_depthmap:
           {
@@ -995,7 +1000,8 @@ Processor::createSvg(const char* svgFileName,
                                       xOutputStart,yOutputStart,
                                       xFactor,yFactor,
                                       smooth,mergedLines,
-                                      linewidth);
+                                      linewidth,
+                                      svgYSwap);
   
   // Check for allocation success
   deepdebugf("svg allocated");

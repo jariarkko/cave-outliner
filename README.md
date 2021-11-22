@@ -70,6 +70,8 @@ Options:
     --multiplier n           Multiply image size by n (default 1).
     --smooth                 Set the line drawings use smooth curves.\n";
     --jagged                 Set the line drawings use hard lines (default).\n";
+    --svgyreverse            Reverse Y axis in the SVG (to maintain same Y coordinate
+                             direction as in the model)
     --holethreshold n        Ignore holes in the model if they are n or less pixels.
     --lineholethreshold n    Ignore holes in cross-section  lines if they are n or less pixels.
     --tiling n               Optimize search process with n x n tiles. Default is 30,

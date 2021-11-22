@@ -52,6 +52,7 @@ MainConfig::MainConfig() :
   multiplier(1),
   smooth(0),
   mergedLines(1),
+  svgYSwap(1),
   tiles(outlinertiledivision),
   holethreshold(0),
   lineholethreshold(0),

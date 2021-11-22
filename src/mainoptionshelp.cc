@@ -86,6 +86,8 @@ MainOptions::processHelp(void) {
   std::cout << "                           decimal number.\n";
   std::cout << "  --smooth                 Set the line drawings use smooth curves.\n";
   std::cout << "  --jagged                 Set the line drawings use hard lines (default).\n";
+  std::cout << "  --svgyreverse            Reverse Y axis in the SVG (to maintain same Y coordinate\n";
+  std::cout << "                           direction as in the model)\n";
   std::cout << "  --holethreshold n        Ignore holes in the model if they are n or less pixels.\n";
   std::cout << "  --lineholethreshold n    Ignore holes in cross-section  lines if they are n or less pixels.\n";
   std::cout << "  --tiling n               Optimize search process with n x n tiles. ";

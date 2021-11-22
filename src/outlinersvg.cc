@@ -31,32 +31,35 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 SvgCreator::SvgCreator(const char* fileName,
-                       unsigned int xSize,
-                       unsigned int ySize,
-                       unsigned int multiplier,
-                       outlinerreal xStart,
-                       outlinerreal yStart,
-                       outlinerreal xFactor,
-                       outlinerreal yFactor,
-                       bool smooth,
-                       bool mergedLines,
-                       outlinerreal linewidth) {
+                       const unsigned int xSizeIn,
+                       const unsigned int ySizeIn,
+                       const unsigned int multiplierIn,
+                       const outlinerreal xStartIn,
+                       const outlinerreal yStartIn,
+                       const outlinerreal xFactorIn,
+                       const outlinerreal yFactorIn,
+                       const bool smoothIn,
+                       const bool mergedLinesIn,
+                       const outlinerreal linewidthIn,
+                       const bool ySwapIn) :
+  xSize(xSizeIn),
+  ySize(ySizeIn),
+  multiplier(multiplierIn),
+  xSizeMultiplied(xSize*multiplierIn),
+  ySizeMultiplied(ySize*multiplierIn),
+  xStart(xStartIn),
+  yStart(yStartIn),
+  xFactor(xFactorIn),
+  yFactor(yFactorIn),
+  smooth(smoothIn),
+  mergedLines(mergedLinesIn),
+  linewidth(linewidthIn),
+  ySwap(ySwapIn) {
+
   assert(xSize > 0);
   assert(ySize > 0);
   assert(linewidth > 0.0);
-  this->file.open(fileName);
-  this->xSize = xSize;
-  this->ySize = ySize;
-  this->multiplier = multiplier;
-  this->xSizeMultiplied = xSize*multiplier;
-  this->ySizeMultiplied = ySize*multiplier;
-  this->xStart = xStart;
-  this->yStart = yStart;
-  this->xFactor = xFactor;
-  this->yFactor = yFactor;
-  this->smooth = smooth;
-  this->mergedLines = mergedLines;
-  this->linewidth = linewidth;
+  file.open(fileName);
   pixels = 0;
   originalLines = 0;
   finalLines = 0;
@@ -415,8 +418,10 @@ SvgCreator::coordinateNormalization(outlinerreal x,
                                     unsigned int& yInt) {
   outlinerreal xNormalized = (x - xStart) * xFactor;
   outlinerreal yNormalized = (y - yStart) * yFactor;
-  if (xNormalized > (outlinerreal)xSize) xInt = xSizeMultiplied; else xInt = (xNormalized*multiplier);
-  if (yNormalized > ySize) yInt = ySizeMultiplied; else yInt = ySizeMultiplied - (yNormalized*multiplier);
+  if (xNormalized > (outlinerreal)xSize) xInt = xSizeMultiplied;
+  else xInt = (xNormalized*multiplier);
+  if (yNormalized > (outlinerreal)ySize) yInt = ySwap ? 0 : ySizeMultiplied;
+  else yInt = ySwap ? (ySizeMultiplied - (yNormalized*multiplier)) : yNormalized*multiplier;
   deepdebugf("coordinate normalization (%.2f,%.2f) to (%u,%u) with yNormalized %.2f ySize %u yStart %.2f and yFactor %.2f",
              x, y,
              xInt, yInt,

@@ -230,6 +230,7 @@ main(int argc, char** argv) {
                       config.smooth,
                       config.mergedLines,
                       config.linewidth,
+                      config.svgYSwap,
                       originalBoundingBox,
                       config.boundingBox,
                       config.stepx,
