@@ -366,17 +366,19 @@ ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
     infof("    outer loop %u,%u level %u (3d material = %u)", 
           matrix3xIndexSearch, matrix3yIndexSearch, matrix3zIndexSearch,
           materialAtPointIn3D);
-    if (materialAtPointIn3D && matrix3zIndexSearch > 0) {
-      infof("    continue main loop due to material at level %u", matrix3zIndexSearch);
+    if (materialAtPointIn3D) {
+      if (matrix3zIndexSearch == 0) { infof("    z bottom limit"); return(0); }
       pathSoFar = pathHeightSoFar = 0.0;
       matrix3zIndexSearch--;
+      matrix3zIndexSearchStart = matrix3zIndexSearch;
+      infof("    continue main loop due to material at level %u", matrix3zIndexSearch);
       continue;
     }
-
+    
     do {
       
-      infof("      inner loop %u,%u (reverse %u,%u, path so far %.2f, %.2f)",
-            matrix3xIndexSearch, matrix3yIndexSearch,
+      infof("      inner loop %u,%u level %u (reverse %u,%u, path so far %.2f, %.2f)",
+            matrix3xIndexSearch, matrix3yIndexSearch, matrix3zIndexSearch,
             matrix3xIndexSearchReverse, matrix3yIndexSearchReverse,
             pathSoFar, pathHeightSoFar);
       
@@ -397,22 +399,50 @@ ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
       matrix3yIndexSearch += yDirection;
       matrix3xIndexSearchReverse -= xDirection;
       matrix3yIndexSearchReverse -= yDirection;
-      matrix3zIndexSearch--;
       matrix2xIndex += xDirection * matrix2xStep;
       matrix2yIndex += yDirection * matrix2yStep;
       
       // And then see if we can find the right type of material at
       // this xy-position and empty space at level z in the
-      // xyz-matrix.
+      // xyz-matrix. There's two cases:
+      //
+      //   1) We are first level (path height = 0): then we MUST have
+      //      empty here, material in next slot to the direction we're
+      //      looking at (inside the cave), empty in the other
+      //      direction. Otherwise we might be looking for an entrance
+      //      above the cave.
+      //
+      //   2) Otherwise, we must have empty in the next slot(s)
+      //   towards the inside of the cave and empty on the other
+      //   direction. And still empty in the position we are in.
+      //
       outlinerform neighborForm = forms.getForm(matrix2xIndex,matrix2yIndex);
       bool materialIn3D = matrix3.getMaterialMatrix(matrix3xIndexSearch,matrix3yIndexSearch,matrix3zIndexSearch);
-       bool materialIn3Dreverse = matrix3.getMaterialMatrix(matrix3xIndexSearchReverse,matrix3yIndexSearchReverse,matrix3zIndexSearch);
-      infof("      inner investigation %u,%u (reverse %u,%u): nf %u mat %u revmat %u",
+      bool materialIn3Dreverse = matrix3.getMaterialMatrix(matrix3xIndexSearchReverse,matrix3yIndexSearchReverse,matrix3zIndexSearch);
+      infof("      inner investigation center %u,%u search %u,%u (reverse %u,%u): nf %u mat %u revmat %u level %u path height %.2f",
+            matrix3xIndex, matrix3yIndex,
             matrix3xIndexSearch, matrix3yIndexSearch,
             matrix3xIndexSearchReverse, matrix3yIndexSearchReverse,
             neighborForm,
             materialIn3D,
-            materialIn3Dreverse);
+            materialIn3Dreverse,
+            matrix3zIndexSearch,
+            pathHeightSoFar);
+      
+      if (pathHeightSoFar == 0.0 &&
+          (!materialIn3D || materialIn3Dreverse)) {
+        infof("      inner loop must go down, not hitting material at level %u", matrix3zIndexSearch);
+        pathSoFar = pathHeightSoFar = 0.0;
+        matrix3xIndexSearch = matrix3xIndexSearchReverse = matrix3xIndex;
+        matrix3yIndexSearch = matrix3yIndexSearchReverse = matrix3yIndex;
+        matrix2xIndex = matrix2xIndexStart;
+        matrix2yIndex = matrix2yIndexStart;
+        if (matrix3zIndexSearch == 0) return(0);
+        matrix3zIndexSearch--;
+        matrix3zIndexSearchStart = matrix3zIndexSearch;
+        goto continueOuterLoop;
+      }
+      
       if ((neighborForm != outlinerform_mainform_tunnel &&
            neighborForm != outlinerform_mainform_tunnel_stalac) ||
           materialIn3D ||
@@ -424,31 +454,46 @@ ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
         matrix3yIndexSearch = matrix3yIndexSearchReverse = matrix3yIndex;
         matrix2xIndex = matrix2xIndexStart;
         matrix2yIndex = matrix2yIndexStart;
-        matrix3zIndexSearchStart = matrix3zIndexSearch - 1;
-        continue;
+        if (matrix3zIndexSearch == 0) return(0);
+        matrix3zIndexSearch--;
+        matrix3zIndexSearchStart = matrix3zIndexSearch;
+        goto continueOuterLoop;
       }
 
       // So far so good, lets increase the length we have searched to
       // see if this is enough
       if (xDirection != 0) pathSoFar += stepxCondensed;
       else if (yDirection != 0) pathSoFar += stepyCondensed;
-      pathHeightSoFar += stepzCondensed;
-
-      // See if we can declare a win
-      if (pathSoFar >= minimumTunnelPath && pathHeightSoFar >= minimumTunnelHeight) {
-        infof("    found entrance at %u,%u => %u,%u (level %u from %u, path length %.2f height %.2f)",
+      
+      // See if we can declare a tentative win at this level
+      if (pathSoFar >= minimumTunnelPath) {
+        infof("    level looks like an entrance at %u,%u => %u,%u (level %u from %u, path length %.2f height %.2f)",
               matrix3xIndex,matrix3yIndex,
               matrix3xIndexSearch,matrix3yIndexSearch,
               matrix3zIndexSearch,matrix3zIndexSearch,
               pathSoFar, pathHeightSoFar);
-        return(1);
+        break;
       }
-
+      
       infof("      inner loop next cycle");
       
     } while (1);
+
+    // See if we can declare a win
+    if (pathHeightSoFar >= minimumTunnelHeight) {
+      infof("    found entrance at %u,%u (level %u from %u, path height %.2f)",
+            matrix3xIndex,matrix3yIndex,
+            matrix3zIndexSearch,matrix3zIndexSearchStart,
+            pathHeightSoFar);
+      return(1);
+    }
     
+    matrix3zIndexSearch--;
+    pathHeightSoFar += stepzCondensed;
     infof("    outer loop next cycle");
+
+  continueOuterLoop:
+    infof("    continuing outer loop");
     
   } while (matrix3zIndexSearch > 0);
   

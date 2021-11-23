@@ -26,11 +26,17 @@
 // Class definition ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-struct VerticalMatrix {
+class VerticalMatrix {
+
+public:
+  
   OutlinerBox2D matrixBoundingBox;
   unsigned int yIndexOffset;
   unsigned int zIndexOffset;
   MaterialMatrix2D* matrix;
+  
+  VerticalMatrix();
+  ~VerticalMatrix();
 };
 
 ///
@@ -153,7 +159,7 @@ private:
   const outlinerreal stepx;
   const outlinerreal stepy;
   const outlinerreal stepz;
-  struct VerticalMatrix* verticalMatrixes;
+  class VerticalMatrix* verticalMatrixes;
 };
 
 #endif // OUTLINERMATERIALMATRIX3D_HH

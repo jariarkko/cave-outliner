@@ -52,7 +52,6 @@ MaterialMatrix3D::MaterialMatrix3D(const OutlinerBox3D& boundingBoxIn,
     errf("Cannot allocate %u vertical matrixes", xIndexSize);
     exit(1);
   }
-  memset(verticalMatrixes,0,xIndexSize*sizeof(VerticalMatrix));
 }
 
 MaterialMatrix3D::~MaterialMatrix3D() {
@@ -363,4 +362,14 @@ MaterialMatrix3D::test(void) {
   infof("material matrix test ok");
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// VerticalMatrix objects /////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+        
+VerticalMatrix::VerticalMatrix() :
+  yIndexOffset(0), zIndexOffset(0), matrix(0) {
+}
+
+VerticalMatrix::~VerticalMatrix() {
+}
 
