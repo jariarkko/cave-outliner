@@ -85,6 +85,9 @@ public:
   outlinerform getForm(const unsigned int xIndex,
                        const unsigned int yIndex) const;
   
+  /// Convert a form to a descriptive character.
+  char getFormChar(const outlinerform form) const;
+  
   /// Run unit tests for this module.
   static void test(void);
 

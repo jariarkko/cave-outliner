@@ -133,6 +133,21 @@ FormMatrix2D::getForm(const unsigned int xIndex,
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+char
+FormMatrix2D::getFormChar(const outlinerform form) const {
+  switch (form) {
+  case outlinerform_mainform_empty: return(' ');
+  case outlinerform_mainform_tunnel: return('T');
+  case outlinerform_mainform_tunnel_stalac: return('S');
+  case outlinerform_mainform_dripline: return('E');
+  case outlinerform_mainform_degenerate: return('D');
+  case outlinerform_mainform_complex: return('C');
+  default: return('U');
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 // Unit tests for this module /////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -88,7 +88,7 @@ public:
             const unsigned int lineHolethresholdIn,
             const bool labelsIn,
             const bool formAnalysisIn,
-            const outlinerreal formCondenseIn,
+            const unsigned int formCondenseIn,
             const bool dimensionsIn,
             unsigned int nCrossSectionsIn,
             struct ProcessorCrossSectionInfo* crossSectionsIn,

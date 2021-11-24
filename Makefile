@@ -531,7 +531,7 @@ cave1-depthdiffmap-test:
 
 cave1-form-analysis-test:
 	@echo 'Running test case cave1-form-analysis-test...'
-	@./cave-outliner --quiet --svgyreverse --formanalysis 1.0 --pixelform --step 0.1 --holethreshold 10 test/cave1.stl test/cave1-form-analysis.svg
+	@./cave-outliner --quiet --svgyreverse --formanalysis 2 --pixelform --step 0.1 --holethreshold 10 test/cave1.stl test/cave1-form-analysis.svg
 	@diff -q test/cave1-form-analysis.svg test/cave1-form-analysis.svg.expected
 
 updateversion:

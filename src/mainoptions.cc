@@ -167,8 +167,8 @@ MainOptions::processCommandLineOptions(int& argc,
       config.crossSectionWidth = num;
       argc--;argv++;
     } else if (strcmp(argv[1],"--formanalysis") == 0 && argc > 2) {
-      float num = atof(argv[2]);
-      if (num < 1.0) {
+      int num = atoi(argv[2]);
+      if (num < 1) {
         errf("Form compression value needs to be larger than or equal to 1, %s given", argv[2]);
         return(0);
       }

@@ -39,6 +39,12 @@
 // Class interface ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Data types /////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef bool (*ProcessorFormChecker)(outlinerform form);
+
 class ProcessorForms {
 
 public:
@@ -49,7 +55,7 @@ public:
                  const outlinerreal stepxIn,
                  const outlinerreal stepyIn,
                  const outlinerreal stepzIn,
-                 const outlinerreal formCondenseIn,
+                 const unsigned int formCondenseIn,
                  const MaterialMatrix2D& matrix2In,
                  class Processor& procIn);
   ~ProcessorForms();
@@ -70,7 +76,7 @@ private:
   const outlinerreal stepx;
   const outlinerreal stepy;
   const outlinerreal stepz;
-  const outlinerreal formCondense;
+  const unsigned int formCondense;
   const outlinerreal stepxCondensed;
   const outlinerreal stepyCondensed;
   const outlinerreal stepzCondensed;
@@ -109,6 +115,49 @@ private:
                         const unsigned int matrix2xStep,
                         const unsigned int matrix2yIndexStart,
                         const unsigned int matrix2yStep) const;
+  bool potentialEntranceAnalysis(const unsigned int matrix3xIndex,
+                                 const unsigned int matrix3yIndex,
+                                 const unsigned int matrix3zIndex,
+                                 const int xDirection,
+                                 const int yDirection) const;
+  static bool isEmptyOrDegenerate(outlinerform form);
+  static bool isTunnel(outlinerform form);
+  bool checkForm(ProcessorFormChecker checkFunction,
+                 const unsigned int matrix2xIndex,
+                 const unsigned int matrix2yIndex) const;
+  bool checkFormRange(ProcessorFormChecker checkFunction,
+                      const unsigned int matrix2xIndex,
+                      const unsigned int matrix2yIndex,
+                      const int xDirection,
+                      const int yDirection,
+                      const unsigned int steps,
+                      const bool okToRunToModelEnd) const;
+  bool check3DMaterial(const unsigned int matrix3xIndex,
+                       const unsigned int matrix3yIndex,
+                       const unsigned int matrix3zIndex) const;
+  bool check3DMaterialDown(const unsigned int matrix3xIndex,
+                           const unsigned int matrix3yIndex,
+                           const unsigned int matrix3zIndex) const;
+  unsigned int check3DMaterialRangeHorizontal(const bool expectedMaterial,
+                                              const unsigned int matrix3xIndex,
+                                              const unsigned int matrix3yIndex,
+                                              const unsigned int matrix3zIndex,
+                                              const int xDirection,
+                                              const int yDirection,
+                                              const unsigned int steps,
+                                              unsigned int& furthestPointX,
+                                              unsigned int& furthestPointY,
+                                              unsigned int& furthestPointZ) const;
+  bool canIncreaseIndex(const unsigned int matrix2xIndex,
+                        const unsigned int matrix2yIndex,
+                        const int xDirection,
+                        const int yDirection) const;
+  void condensedXIndexToIndex(const unsigned int matrix3xIndex,
+                              unsigned int& matrix2xIndexStart,
+                              unsigned int& matrix2xIndexEnd) const;
+  void condensedYIndexToIndex(const unsigned int matrix3yIndex,
+                              unsigned int& matrix2yIndexStart,
+                              unsigned int& matrix2yIndexEnd) const;
 };
 
 #endif // PROCESSORFORMS_HH

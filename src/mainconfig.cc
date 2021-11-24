@@ -64,7 +64,7 @@ MainConfig::MainConfig() :
   crossSectionWidth(1.0),
   labelCrossSections(0),
   formAnalysis(0),
-  formCondense(1.0),
+  formCondense(1),
   dimensions(0),
   crossSectionLabelCount(0) {
 }

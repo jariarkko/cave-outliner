@@ -78,7 +78,7 @@ MainOptions::processHelp(void) {
   std::cout << "                           one step.\n";
   std::cout << "  --formanalysis f         Analyze cave forms, e.g., entrances, stones, stalactites, etc.\n";
   std::cout << "                           Factor f specifies how much the analysis compresses pixels,\n";
-  std::cout << "                           value of 1.0 implies no compression.\n";
+  std::cout << "                           value of 1 implies no compression.\n";
   std::cout << "  --label                  Label cross sections.\n";
   std::cout << "  --dimensions             Show dimensions of each cave plan view and cross section.\n";
   std::cout << "  --multiplier n           Multiply image size by n (default 1).\n";

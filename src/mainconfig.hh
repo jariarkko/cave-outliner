@@ -157,7 +157,7 @@ public:
 
   /// If forms are analysed, what's the compression factor with
   /// respect to the picture size?
-  outlinerreal formCondense;
+  unsigned int formCondense;
   
   /// Should we show dimensions?
   bool dimensions;

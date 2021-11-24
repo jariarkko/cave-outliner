@@ -99,11 +99,11 @@ MaterialMatrix3D::setMaterialMatrixSlice(const unsigned int xIndex,
   verticalMatrixes[xIndex].zIndexOffset = zDiff / stepz;
   verticalMatrixes[xIndex].matrixBoundingBox = sliceBoundingBox;
   verticalMatrixes[xIndex].matrix = sliceMatrix;
-  infof("set slice yoffset %u (%.2f..%.2f) zoffset %u (%2.f..%.2f)",
-        verticalMatrixes[xIndex].yIndexOffset,
-        verticalMatrixes[xIndex].matrixBoundingBox.start.x, verticalMatrixes[xIndex].matrixBoundingBox.end.x,
-        verticalMatrixes[xIndex].zIndexOffset,
-        verticalMatrixes[xIndex].matrixBoundingBox.start.y, verticalMatrixes[xIndex].matrixBoundingBox.end.y);
+  debugf("set slice yoffset %u (%.2f..%.2f) zoffset %u (%2.f..%.2f)",
+         verticalMatrixes[xIndex].yIndexOffset,
+         verticalMatrixes[xIndex].matrixBoundingBox.start.x, verticalMatrixes[xIndex].matrixBoundingBox.end.x,
+         verticalMatrixes[xIndex].zIndexOffset,
+         verticalMatrixes[xIndex].matrixBoundingBox.start.y, verticalMatrixes[xIndex].matrixBoundingBox.end.y);
 }
 
 bool
@@ -334,11 +334,11 @@ MaterialMatrix3D::test(void) {
     }
     
     // Add some non-uniform content
-    infof("non-uniform 1"); matrix3.setMaterialMatrix(1,2,3);
-    infof("non-uniform 2"); matrix3.setMaterialMatrix(4,5,6);
-    infof("non-uniform 3"); matrix3.setMaterialMatrix(90,55,51);
-    infof("non-uniform 4"); matrix3.setMaterialMatrix(0,10,10);
-    infof("non-uniform 5"); matrix3.setMaterialMatrix(60,61,59);
+    matrix3.setMaterialMatrix(1,2,3);
+    matrix3.setMaterialMatrix(4,5,6);
+    matrix3.setMaterialMatrix(90,55,51);
+    matrix3.setMaterialMatrix(0,10,10);
+    matrix3.setMaterialMatrix(60,61,59);
     
     // Verify contents
     infof("non-uniform verify");

@@ -108,12 +108,12 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   
   // Determine the bounding box of what we see in the cross section
   getSliceVerticalBoundingBox(scene,sliceVerticalBoundingBox);
-  infof("  cross section bounding box (%.2f,%.2f) to (%.2f,%.2f)",
-        sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
-        sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y);
+  debugf("  cross section bounding box (%.2f,%.2f) to (%.2f,%.2f)",
+         sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
+         sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y);
   debugf("cross section bounding box (%.2f,%.2f) to (%.2f,%.2f)",
-        sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
-        sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y);
+         sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
+         sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y);
   debugf("steps %.2f and %.2f", stepy, stepz);
   
   // Increase bounding box to each side for the actual image
