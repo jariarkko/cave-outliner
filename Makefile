@@ -224,19 +224,19 @@ doc/Design-Structure-Small.jpg:	doc/Design-Structure.jpg Makefile
 	convert -quality 0.97 -resize 1400x doc/Design-Structure.jpg doc/Design-Structure-Small.jpg
 
 doc/example1-model-small.jpg:	doc/example1-model.jpg Makefile
-	convert -quality 0.97 -resize 700x doc/example1-model.jpg doc/example1-model-small.jpg
+	convert -quality 0.97 -resize 800x doc/example1-model.jpg doc/example1-model-small.jpg
 
 doc/example1-planview-small.jpg:	doc/example1-planview.jpg Makefile
-	convert -quality 0.97 -resize 700x doc/example1-planview.jpg doc/example1-planview-small.jpg
+	convert -quality 0.97 -resize 800x doc/example1-planview.jpg doc/example1-planview-small.jpg
 
 doc/example1-crosssection-small.jpg:	doc/example1-crosssection.jpg Makefile
 	convert -quality 0.97 -resize 400x doc/example1-crosssection.jpg doc/example1-crosssection-small.jpg
 
 doc/example1-longplanview-small.jpg:	doc/example1-longplanview.jpg Makefile
-	convert -quality 0.97 -resize 700x doc/example1-longplanview.jpg doc/example1-longplanview-small.jpg
+	convert -quality 0.97 -resize 800x doc/example1-longplanview.jpg doc/example1-longplanview-small.jpg
 
 doc/example1-longcrosssection-small.jpg:	doc/example1-longcrosssection.jpg Makefile
-	convert -quality 0.97 -resize 400x doc/example1-longcrosssection.jpg doc/example1-longcrosssection-small.jpg
+	convert -quality 0.97 -resize 800x doc/example1-longcrosssection.jpg doc/example1-longcrosssection-small.jpg
 
 test:	cave-outliner \
 	unit-tests \
