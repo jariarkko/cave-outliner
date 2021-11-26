@@ -99,6 +99,26 @@ MaterialMatrix2D::setMaterialMatrix(const unsigned int xIndex,
   bitMatrix[charpart] |= bitMask;
 }
 
+void
+MaterialMatrix2D::unsetMaterialMatrix(const unsigned int xIndex,
+                                      const unsigned int yIndex) {
+  if (xIndex >= xIndexSize || yIndex >= yIndexSize)
+    debugf("  setMaterialMatrix(%u/%u,%u/%u)",
+           xIndex, xIndexSize, yIndex, yIndexSize);
+  assert(xIndex < xIndexSize);
+  assert(yIndex < yIndexSize);
+  unsigned int index = xIndex * yIndexSize + yIndex;
+  unsigned int charpart = index / 8;
+  unsigned int bitpart = index % 8;
+  unsigned char bitMask = (1 << bitpart);
+  //deepdebugf("      setting material matrix %u/%u (%u/%u,%u/%u) elem %u/%u with mask %x",
+  //           index, nBits, xIndex, xIndexSize, yIndex, yIndexSize, charpart, nChars, bitMask);
+  assert(index < nBits);
+  assert(charpart < nChars);
+  assert(bitpart < 8);
+  bitMatrix[charpart] &= ~bitMask;
+}
+
 bool
 MaterialMatrix2D::getMaterialMatrix(const unsigned int xIndex,
                                     const unsigned int yIndex) const {
@@ -241,6 +261,12 @@ MaterialMatrix2D::test(void) {
     debugf("test1 sizes %u and %u", xSize, ySize);
     unsigned int n = test1.count();
     debugf("test1 initial count = %u", n);
+    assert(n == 0);
+    test1.setMaterialMatrix(5,5);
+    n = test1.count();
+    assert(n == 1);
+    test1.unsetMaterialMatrix(5,5);
+    n = test1.count();
     assert(n == 0);
     test1.setMaterialMatrix(5,5);
     n = test1.count();

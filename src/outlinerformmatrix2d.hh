@@ -87,6 +87,9 @@ public:
   
   /// Convert a form to a descriptive character.
   char getFormChar(const outlinerform form) const;
+
+  /// Print the entire matrix
+  void print(unsigned int step = 1) const;
   
   /// Run unit tests for this module.
   static void test(void);

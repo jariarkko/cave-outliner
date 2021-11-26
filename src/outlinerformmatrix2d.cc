@@ -133,6 +133,8 @@ FormMatrix2D::getForm(const unsigned int xIndex,
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+// Debug outputs //////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 char
 FormMatrix2D::getFormChar(const outlinerform form) const {
@@ -144,6 +146,23 @@ FormMatrix2D::getFormChar(const outlinerform form) const {
   case outlinerform_mainform_degenerate: return('D');
   case outlinerform_mainform_complex: return('C');
   default: return('U');
+  }
+}
+
+void
+FormMatrix2D::print(unsigned int step) const {
+  assert(step < yIndexSize);
+  unsigned int yIndex = yIndexSize - step;
+  for (;;) {
+    char buf[200];
+    unsigned int bufCnt = 0;
+    memset(buf,0,sizeof(buf));
+    for (unsigned int xIndex = 0; xIndex < xIndexSize && bufCnt < sizeof(buf)-1; xIndex += step) {
+      buf[bufCnt++] = getFormChar(getForm(xIndex,yIndex));
+    }
+    infof("%3u: %s", yIndex, buf);
+    if (yIndex < step) break;
+    yIndex -= step;
   }
 }
 

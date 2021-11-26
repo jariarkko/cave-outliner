@@ -62,6 +62,7 @@ enum outlineralgorithm {
 #define outlinermin3(a,b,c)  (outlinermin((a),outlinermin((b),(c))))
 #define outlinermax3(a,b,c)  (outlinermax((a),outlinermax((b),(c))))
 #define outlinersaneindex(x) ((x) < (2U*1000U*1000U*1000U))
+#define outlinerabs(x)       ((x) < 0 ? -(x) : (x))
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Math common utilities //////////////////////////////////////////////////////////////////////

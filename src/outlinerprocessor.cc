@@ -842,28 +842,36 @@ Processor::getNeighbours(unsigned int xIndex,
                          unsigned int& n,
                          unsigned int tableSize,
                          unsigned int* tableX,
-                         unsigned int* tableY) const {
+                         unsigned int* tableY,
+                         unsigned int step,
+                         unsigned int xSize,
+                         unsigned int ySize) const {
   assert(tableSize >= 8);
+  assert(step >= 1);
+
+  if (xSize == 0) xSize = matrix2.xIndexSize;
+  if (ySize == 0) ySize = matrix2.yIndexSize;
+  
   n = 0;
 
   // Order is important, callers want the neighbors so that the
   // immediate connecting (non-diagonal) neighbors are first.
   
   // Left and right neighbors at the same level
-  if (xIndex > 0)                                                     { tableX[n] = xIndex-1; tableY[n] = yIndex;   n++; }
-  if (xIndex < matrix2.xIndexSize-1)                                  { tableX[n] = xIndex+1; tableY[n] = yIndex;   n++; }
+  if (xIndex >= step)                                    { tableX[n] = xIndex-step; tableY[n] = yIndex;      n++; }
+  if (xIndex < xSize-step)                               { tableX[n] = xIndex+step; tableY[n] = yIndex;      n++; }
   
   // Top and bottom neighbours
-  if (yIndex > 0)                                                     { tableX[n] = xIndex;   tableY[n] = yIndex-1; n++; }
-  if (yIndex < matrix2.yIndexSize-1)                                  { tableX[n] = xIndex;   tableY[n] = yIndex+1; n++; }
+  if (yIndex >= step)                                    { tableX[n] = xIndex;      tableY[n] = yIndex-step; n++; }
+  if (yIndex < ySize-step)                               { tableX[n] = xIndex;      tableY[n] = yIndex+step; n++; }
   
   // Left side corner neighbours
-  if (xIndex > 0 && yIndex > 0)                                       { tableX[n] = xIndex-1; tableY[n] = yIndex-1; n++; }
-  if (xIndex > 0 && yIndex < matrix2.yIndexSize-1)                    { tableX[n] = xIndex-1; tableY[n] = yIndex+1; n++; }
+  if (xIndex >= step && yIndex >= step)                  { tableX[n] = xIndex-step; tableY[n] = yIndex-step; n++; }
+  if (xIndex >= step && yIndex < ySize-step)             { tableX[n] = xIndex-step; tableY[n] = yIndex+step; n++; }
 
   // Right side corner neighbours
-  if (xIndex < matrix2.xIndexSize-1 && yIndex > 0)                    { tableX[n] = xIndex+1; tableY[n] = yIndex-1; n++; }
-  if (xIndex < matrix2.xIndexSize-1 && yIndex < matrix2.yIndexSize-1) { tableX[n] = xIndex+1; tableY[n] = yIndex+1; n++; }
+  if (xIndex < xSize-step && yIndex >= step)             { tableX[n] = xIndex+step; tableY[n] = yIndex-step; n++; }
+  if (xIndex < xSize-step && yIndex < ySize-step)        { tableX[n] = xIndex+step; tableY[n] = yIndex+step; n++; }
   
   // Done
   assert(n <= tableSize);

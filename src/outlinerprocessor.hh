@@ -104,6 +104,7 @@ public:
 private:
 
   friend class ProcessorCrossSection;
+  friend class ProcessorForms;
   friend class DepthMap;
   
   const char* fileName;
@@ -158,7 +159,10 @@ private:
                      unsigned int& n,
                      unsigned int tableSize,
                      unsigned int* tableX,
-                     unsigned int* tableY) const;
+                     unsigned int* tableY,
+                     unsigned int step = 1,
+                     unsigned int xSize = 0,
+                     unsigned int ySize = 0) const;
   bool closerNeighborExists(const unsigned int thisX,
                             const unsigned int thisY,
                             const unsigned int xIndex,

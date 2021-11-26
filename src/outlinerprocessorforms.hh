@@ -56,7 +56,7 @@ public:
                  const outlinerreal stepyIn,
                  const outlinerreal stepzIn,
                  const unsigned int formCondenseIn,
-                 const MaterialMatrix2D& matrix2In,
+                 MaterialMatrix2D& matrix2In,
                  class Processor& procIn);
   ~ProcessorForms();
 
@@ -80,10 +80,14 @@ private:
   const outlinerreal stepxCondensed;
   const outlinerreal stepyCondensed;
   const outlinerreal stepzCondensed;
-  const MaterialMatrix2D& matrix2;     // Processor's main plan-view matrix
+  MaterialMatrix2D& matrix2;           // Processor's main plan-view matrix
   MaterialMatrix3D matrix3;            // Form analysis 3D view matrix
   FormMatrix2D forms;                  // Form analysis results
   class Processor& proc;               // Reference to the main processor object
+  static const unsigned int maxClearedMaterial = 20 * 1024;
+  unsigned int nClearedMaterial;
+  unsigned int clearedMaterialX[maxClearedMaterial];
+  unsigned int clearedMaterialY[maxClearedMaterial];
   
   //
   // Internal functions
@@ -114,14 +118,19 @@ private:
                         const unsigned int matrix2xIndexStart,
                         const unsigned int matrix2xStep,
                         const unsigned int matrix2yIndexStart,
-                        const unsigned int matrix2yStep) const;
+                        const unsigned int matrix2yStep,
+                        const bool entranceNearby);
   bool potentialEntranceAnalysis(const unsigned int matrix3xIndex,
                                  const unsigned int matrix3yIndex,
                                  const unsigned int matrix3zIndex,
                                  const int xDirection,
-                                 const int yDirection) const;
+                                 const int yDirection,
+                                 const bool entranceNearby) const;
+  static bool isEmpty(outlinerform form);
+  static bool isDegenerate(outlinerform form);
   static bool isEmptyOrDegenerate(outlinerform form);
   static bool isTunnel(outlinerform form);
+  static bool isEntrance(outlinerform form);
   bool checkForm(ProcessorFormChecker checkFunction,
                  const unsigned int matrix2xIndex,
                  const unsigned int matrix2yIndex) const;
@@ -132,6 +141,38 @@ private:
                       const int yDirection,
                       const unsigned int steps,
                       const bool okToRunToModelEnd) const;
+  void collectMaterialToClear(ProcessorFormChecker checkFunction,
+                              ProcessorFormChecker terminationCheckFunction,
+                              const unsigned int matrix2xIndex,
+                              const unsigned int matrix2yIndex,
+                              const int xDirection,
+                              const int yDirection,
+                              const bool neighbors,
+                              unsigned int& n,
+                              const unsigned int tableSize,
+                              unsigned int* tableX,
+                              unsigned int* tableY);
+  bool hasSideNeighbor(const unsigned int xIndex,
+                       const unsigned int yIndex,
+                       const int xDirection,
+                       const int yDirection,
+                       const bool firstSide,
+                       unsigned int& neighX,
+                       unsigned int& neighY) const;
+  void addToTable(const unsigned int x,
+                  const unsigned int y,
+                  unsigned int& n,
+                  const unsigned int tableSize,
+                  unsigned int* tableX,
+                  unsigned int* tableY);
+  void clearMaterial(const unsigned int n,
+                     unsigned int* tableX,
+                     unsigned int* tableY);
+  bool checkFormNearby(ProcessorFormChecker checkFunction,
+                       const unsigned int matrix2xIndex,
+                       const unsigned int matrix2yIndex,
+                       const unsigned int oneStep,
+                       const unsigned int steps) const;
   bool check3DMaterial(const unsigned int matrix3xIndex,
                        const unsigned int matrix3yIndex,
                        const unsigned int matrix3zIndex) const;

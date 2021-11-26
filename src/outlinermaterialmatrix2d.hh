@@ -66,6 +66,11 @@ public:
   void setMaterialMatrix(const unsigned int xIndex,
                          const unsigned int yIndex);
 
+  /// Unset (reset) the flag indicating that there is material in a
+  /// given (x,y) index in the matrix.
+  void unsetMaterialMatrix(const unsigned int xIndex,
+                           const unsigned int yIndex);
+
   /// Get the flag indicating whether there is material in a given
   /// (x,y) index in the matrix.
   bool getMaterialMatrix(const unsigned int xIndex,
