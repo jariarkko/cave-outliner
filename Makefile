@@ -208,7 +208,9 @@ cave-outliner:	$(OBJS)
 docs:	doc/Design-Structure-Small.jpg \
 	doc/example1-model-small.jpg \
 	doc/example1-planview-small.jpg \
-	doc/example1-crosssection-small.jpg
+	doc/example1-crosssection-small.jpg \
+	doc/example1-longplanview-small.jpg \
+	doc/example1-longcrosssection-small.jpg
 
 docs-generation:	$(CLASSMARKDOWNS)
 
@@ -229,6 +231,12 @@ doc/example1-planview-small.jpg:	doc/example1-planview.jpg Makefile
 
 doc/example1-crosssection-small.jpg:	doc/example1-crosssection.jpg Makefile
 	convert -quality 0.97 -resize 400x doc/example1-crosssection.jpg doc/example1-crosssection-small.jpg
+
+doc/example1-longplanview-small.jpg:	doc/example1-longplanview.jpg Makefile
+	convert -quality 0.97 -resize 700x doc/example1-longplanview.jpg doc/example1-longplanview-small.jpg
+
+doc/example1-longcrosssection-small.jpg:	doc/example1-longcrosssection.jpg Makefile
+	convert -quality 0.97 -resize 400x doc/example1-longcrosssection.jpg doc/example1-longcrosssection-small.jpg
 
 test:	cave-outliner \
 	unit-tests \

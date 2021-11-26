@@ -10,11 +10,14 @@ Here's an example. We start from a 3D model of cave, in this case from the small
 With the help of the cave-outliner tool, we can read this model and convert it to a plan view and some cross-section views. We use the following command:
 
     cave-outliner --label --dimensions --borderline \
-                  --multiplier 2 --step 0.05 --holethreshold 10 \
+                  --multiplier 4 --step 0.05 --holethreshold 10 --formanalysis 1 \
                   --crosssectionwidth 3 --crosssections x 3 cross%.svg \
                   test/cave1.stl planview.svg
 
-The first line of options specifies that we'd like to show cave dimensions, label cross sections, and show the borderline of the cave in the views. The second line of options is some parameters that adjust the accuracy and size of the resulting images, and allows some small holes (recording imperfections) in the model to be "filled in" to avoid seeing them in the plan view. The third line of options requests three cross sections to be drawn. Finally, the fourth line has the input file (in STL format) and output image file (in SVG format).
+The first line of options specifies that we'd like to show cave dimensions, label cross sections, and show the borderline of the cave in the views. The second line of options is some parameters that adjust the accuracy and size of the resulting images, and allows some small holes (recording imperfections) in the model to be "filled in" to avoid seeing them in the plan view. The form analysis option asks the tool to analyze all cave shapes, e.g., for entrances or stalactices. If your model processing takes a long time, try first without this option, as it will significantly increase the processing load.
+
+The third line of options requests three cross sections to be drawn. Finally, the fourth line has the input file (in STL format) and output image file (in SVG format).
+
 This is the resulting plan view:
 
 ![planview](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-planview-small.jpg)
@@ -25,6 +28,18 @@ And this is one of the three resulting cross-section views:
 
 We might also take a cross-section along the length axis, like this:
 
+    cave-outliner --label --dimensions --borderline \
+                  --multiplier 4 --step 0.05 --holethreshold 10 --formanalysis 1 \
+		  --crosssectionwidth 3 --crosssections y 1 long-cross.svg \
+                  test/cave1.stl long-planview.svg
+
+Here the parameters on the third line are slightly different, as we are drawing a cross section at a point in y axis. Here's the resulting cross section:
+
+![long crosssection](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-longcrosssection-small.jpg)
+
+The plan view also changed, as it shows where the cross sections are:
+
+![long planview](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-longplanview-small.jpg)
 
 # Usage
 
