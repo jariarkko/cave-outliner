@@ -705,25 +705,50 @@ ProcessorForms::hasSideNeighbor(const unsigned int xIndex,
                                 const unsigned int yIndex,
                                 const int xDirection,
                                 const int yDirection,
-                                const bool firstSide,
+                                const unsigned int sideCounter, // 0..5
                                 unsigned int& neighX,
                                 unsigned int& neighY) const {
   assert(xDirection != 0 || yDirection != 0);
+  assert(sideCounter < 6);
   int sideXDirection;
   int sideYDirection;
   if (xDirection != 0 && yDirection == 0) {
+    if (sideCounter > 1) return(0);
     sideXDirection = 0;
-    sideYDirection = firstSide ? xDirection : -xDirection;
+    sideYDirection = sideCounter == 0 ? xDirection : -xDirection;
   } else if (xDirection == 0 && yDirection != 0) {
-    sideXDirection = firstSide ? yDirection : -yDirection;
+    if (sideCounter > 1) return(0);
+    sideXDirection = sideCounter == 0 ? yDirection : -yDirection;
     sideYDirection = 0;
   } else {
-    if (firstSide) {
+    switch (sideCounter) {
+    case 0:
       sideXDirection = -xDirection;
       sideYDirection = yDirection;
-    } else {
+      break;
+    case 1:
       sideXDirection = xDirection;
       sideYDirection = -yDirection;
+      break;
+    case 2:
+      sideXDirection = -xDirection;
+      sideYDirection = 0;
+      break;
+    case 3:
+      sideXDirection = xDirection;
+      sideYDirection = 0;
+      break;
+    case 4:
+      sideXDirection = 0;
+      sideYDirection = yDirection;
+      break;
+    case 5:
+      sideXDirection = 0;
+      sideYDirection = -yDirection;
+      break;
+    default:
+      errf("invalid side counter");
+      exit(1);
     }
   }
   
@@ -802,11 +827,10 @@ ProcessorForms::collectMaterialToClear(ProcessorFormChecker checkFunction,
     if (neighbors) {
       unsigned int neighX;
       unsigned int neighY;
-      if (hasSideNeighbor(matrix2xIndexIter,matrix2yIndexIter,xDirection,yDirection,0,neighX,neighY)) {
-        addToTable(neighX,neighY,n,tableSize,tableX,tableY);
-      }
-      if (hasSideNeighbor(matrix2xIndexIter,matrix2yIndexIter,xDirection,yDirection,1,neighX,neighY)) {
-        addToTable(neighX,neighY,n,tableSize,tableX,tableY);
+      for (unsigned int side = 0; side < 6; side++) {
+        if (hasSideNeighbor(matrix2xIndexIter,matrix2yIndexIter,xDirection,yDirection,side,neighX,neighY)) {
+          if ((*checkFunction)(getForm(neighX,neighY))) addToTable(neighX,neighY,n,tableSize,tableX,tableY);
+        }
       }
     }
     

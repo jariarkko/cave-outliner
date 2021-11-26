@@ -235,29 +235,32 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
     emitStubsLine(line);
     return;
   }
+
+  // Handle smoothing
+  if (smooth) {
+    struct OutlinerSvgLine smoothedLine = line;
+    smoothLine(smoothedLine);
+    emitLineAux(smoothedLine);
+    return;
+  }
   
+  // Do the actual drawing
+  emitLineAux(line);
+}
+
+void
+SvgCreator::emitLineAux(const struct OutlinerSvgLine& line) {
+
   // Basic line drawing
   if (line.nPoints == 2) {
     file << "<line x1=\"" << line.points[0].x << "\" y1=\"" << line.points[0].y << "\"";
     file << " x2=\"" << line.points[1].x << "\" y2=\"" << line.points[1].y << "\"";
   } else {
-    if (smooth) {
-      file << "<path d=\"";
-    } else {
-      file << "<polyline points=\"";
-    }
+    file << "<polyline points=\"";
     for (unsigned int i = 0; i < line.nPoints; i++) {
       unsigned int x = line.points[i].x;
       unsigned int y = line.points[i].y;
-      if (smooth) {
-        if (i == 0) {
-          file << x << " " << y <<  " ";
-        } else {
-          file << "S" << x << " " << y <<  " ";
-        }
-      } else {
-        file << x << "," << y <<  " ";
-      }
+      file << x << "," << y <<  " ";
     }
     file << "\"";
   }
@@ -269,11 +272,7 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
   }
   
   // Handle smoothing
-  if (smooth) {
-    file << " fill=\"none\" stroke=\"" << color << "\" ";
-  } else {
-    file << " fill=\"none\" stroke=\"" << color << "\" ";
-  }
+  file << " fill=\"none\" stroke=\"" << color << "\" ";
   
   // Handle styles
   if ((line.style & outlinersvgstyle_illegal) != 0) {

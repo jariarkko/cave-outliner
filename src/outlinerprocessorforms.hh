@@ -166,7 +166,7 @@ private:
                        const unsigned int yIndex,
                        const int xDirection,
                        const int yDirection,
-                       const bool firstSide,
+                       const unsigned int sideCounter, // 0..5
                        unsigned int& neighX,
                        unsigned int& neighY) const;
   void addToTable(const unsigned int x,

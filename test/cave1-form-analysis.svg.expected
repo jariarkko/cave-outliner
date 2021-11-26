@@ -19,6 +19,7 @@
 <rect x="2" y="27" width="1" height="1" fill="blue" stroke-width="0" stroke="blue" />
 <rect x="2" y="30" width="1" height="1" fill="blue" stroke-width="0" stroke="blue" />
 <rect x="2" y="31" width="1" height="1" fill="blue" stroke-width="0" stroke="blue" />
+<rect x="3" y="15" width="1" height="1" fill="rgb(128,128,128)" stroke-width="0" stroke="rgb(128,128,128)" />
 <rect x="3" y="16" width="1" height="1" fill="yellow" stroke-width="0" stroke="yellow" />
 <rect x="3" y="17" width="1" height="1" fill="yellow" stroke-width="0" stroke="yellow" />
 <rect x="3" y="18" width="1" height="1" fill="yellow" stroke-width="0" stroke="yellow" />
@@ -37,8 +38,6 @@
 <rect x="3" y="31" width="1" height="1" fill="blue" stroke-width="0" stroke="blue" />
 <rect x="3" y="32" width="1" height="1" fill="rgb(128,128,128)" stroke-width="0" stroke="rgb(128,128,128)" />
 <rect x="3" y="33" width="1" height="1" fill="rgb(128,128,128)" stroke-width="0" stroke="rgb(128,128,128)" />
-<rect x="4" y="14" width="1" height="1" fill="yellow" stroke-width="0" stroke="yellow" />
-<rect x="4" y="15" width="1" height="1" fill="yellow" stroke-width="0" stroke="yellow" />
 <rect x="4" y="16" width="1" height="1" fill="yellow" stroke-width="0" stroke="yellow" />
 <rect x="4" y="17" width="1" height="1" fill="yellow" stroke-width="0" stroke="yellow" />
 <rect x="4" y="18" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
@@ -58,8 +57,6 @@
 <rect x="4" y="32" width="1" height="1" fill="rgb(128,128,128)" stroke-width="0" stroke="rgb(128,128,128)" />
 <rect x="4" y="33" width="1" height="1" fill="rgb(128,128,128)" stroke-width="0" stroke="rgb(128,128,128)" />
 <rect x="5" y="11" width="1" height="1" fill="rgb(128,128,128)" stroke-width="0" stroke="rgb(128,128,128)" />
-<rect x="5" y="14" width="1" height="1" fill="yellow" stroke-width="0" stroke="yellow" />
-<rect x="5" y="15" width="1" height="1" fill="yellow" stroke-width="0" stroke="yellow" />
 <rect x="5" y="16" width="1" height="1" fill="yellow" stroke-width="0" stroke="yellow" />
 <rect x="5" y="17" width="1" height="1" fill="yellow" stroke-width="0" stroke="yellow" />
 <rect x="5" y="18" width="1" height="1" fill="black" stroke-width="0" stroke="black" />

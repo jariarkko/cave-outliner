@@ -52,6 +52,7 @@ Processor::Processor(const char* fileNameIn,
                      const enum outlineralgorithm algorithmIn,
                      const unsigned int holethresholdIn,
                      const unsigned int lineHolethresholdIn,
+                     const unsigned int dustThresholdIn,
                      const bool labelsIn,
                      const bool formAnalysisIn,
                      const unsigned int formCondenseIn,
@@ -75,6 +76,7 @@ Processor::Processor(const char* fileNameIn,
   algorithm(algorithmIn),
   holethreshold(holethresholdIn),
   lineHolethreshold(lineHolethresholdIn),
+  dustThreshold(dustThresholdIn),
   labels(labelsIn),
   formAnalysis(formAnalysisIn),
   dimensions(dimensionsIn),
@@ -182,8 +184,11 @@ Processor::processScene(const aiScene* scene) {
   // Figure out if we need to analyse cave forms
   if (formAnalysis) {
     formAnalyzer.performFormAnalysis(scene);
+    // Redo some preprocessing. See if we can also filter out any small specks of material
+    // spread in the model
+    dustRemovingPass();
   }
-  
+
   // Draw the basic plan view
   if (!processSceneAlgorithmDraw(scene)) {
     return(0);
@@ -211,6 +216,43 @@ Processor::processScene(const aiScene* scene) {
   return(1);
 }
 
+void
+Processor::holeFillingPass(void) {
+  if (holethreshold > 0) {
+    unsigned int holeMinSize;
+    unsigned int holeMaxSize;
+    unsigned int holes = objectHoleRemoval(1,holeMinSize,holeMaxSize);
+      if (holes > 0) {
+        infof("  removed %u holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
+      }
+  }
+}
+
+void
+Processor::lineHoleFillingPass(void) {
+  if (lineHolethreshold > 0) {
+    unsigned int holeMinSize;
+    unsigned int holeMaxSize;
+    unsigned int holes = lineHoleRemoval(holeMinSize,holeMaxSize);
+    if (holes > 0) {
+      infof("  removed %u line holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
+    }
+  }
+}
+
+void
+Processor::dustRemovingPass(void) {
+  infof("Dust removing pass...");
+  if (dustThreshold > 0) {
+    unsigned int dustMinSize;
+    unsigned int dustMaxSize;
+    unsigned int dustParticles = objectHoleRemoval(0,dustMinSize,dustMaxSize);
+    if (dustParticles > 0) {
+      infof("  removed %u dust material particles of size %u..%u pixels", dustParticles, dustMinSize, dustMaxSize);
+    }
+  }
+}
+
 bool
 Processor::preprocessSceneAlgorithmDraw(const aiScene* scene) {
   if (algorithm != alg_triangle) {
@@ -221,29 +263,19 @@ Processor::preprocessSceneAlgorithmDraw(const aiScene* scene) {
     if (!sceneToMaterialMatrix(scene)) {
       return(0);
     }
-    
+
     // Now there's a matrix filled with a flag for each coordinate,
     // whether there was material or not. Determine if we want to fill
     // small imperfections, removing small holes.
-    if (holethreshold > 0) {
-      unsigned int holeMinSize;
-      unsigned int holeMaxSize;
-      unsigned int holes = objectHoleRemoval(holeMinSize,holeMaxSize);
-      if (holes > 0) {
-        infof("  removed %u holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
-      }
-    }
-    
+    holeFillingPass();
+
     // Similarly, see if we can fill holes in lines
-    if (lineHolethreshold > 0) {
-      unsigned int holeMinSize;
-      unsigned int holeMaxSize;
-      unsigned int holes = lineHoleRemoval(holeMinSize,holeMaxSize);
-      if (holes > 0) {
-        infof("  removed %u line holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
-      }
-    }
+    lineHoleFillingPass();
     
+    // See if we can also filter out any small specks of material
+    // spread in the model
+    dustRemovingPass();
+        
   }
 
   // Done
@@ -1161,23 +1193,26 @@ Processor::hasHorizontalCrossSections(void) {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 unsigned int
-Processor::objectHoleRemoval(unsigned int& holeMinSize,
+Processor::objectHoleRemoval(const bool lookForHoles,
+                             unsigned int& holeMinSize,
                              unsigned int& holeMaxSize) {
+  const unsigned int threshold = lookForHoles ? holethreshold : dustThreshold;
   unsigned int holes = 0;
   holeMinSize = 9999;
   holeMaxSize = 0;
-  if (holethreshold > 0) {
-    infof("filtering holes...");
-     for (unsigned int xIndex = 1; xIndex < matrix2.xIndexSize; xIndex++) {
+  if (threshold > 0) {
+    infof("filtering %s...", lookForHoles ? "holes" : "dust");
+    for (unsigned int xIndex = 1; xIndex < matrix2.xIndexSize; xIndex++) {
       for (unsigned int yIndex = 0; yIndex < matrix2.yIndexSize; yIndex++) {
-        if (!matrix2.getMaterialMatrix(xIndex-1,yIndex)) continue;
-        if (!matrix2.getMaterialMatrix(xIndex,yIndex)) {
+        if (lookForHoles == !matrix2.getMaterialMatrix(xIndex-1,yIndex)) continue;
+        if (lookForHoles == !matrix2.getMaterialMatrix(xIndex,yIndex)) {
           unsigned int n;
           unsigned int holeXtable[outlinermaxholethreshold];
           unsigned int holeYtable[outlinermaxholethreshold];
           unsigned int nonHoleX;
           unsigned int nonHoleY;
-          if (objectHoleIsEqualOrSmallerThan(xIndex,yIndex,holethreshold,n,outlinermaxholethreshold,
+          if (objectHoleIsEqualOrSmallerThan(lookForHoles,
+                                             xIndex,yIndex,threshold,n,outlinermaxholethreshold,
                                              holeXtable,holeYtable,
                                              nonHoleX,nonHoleY)) {
             debugf("  correcting a hole of %u pixels at (%u,%u)", n, xIndex, yIndex);
@@ -1185,7 +1220,8 @@ Processor::objectHoleRemoval(unsigned int& holeMinSize,
             if (holeMinSize > n) holeMinSize = n;
             if (holeMaxSize < n) holeMaxSize = n;
             for (unsigned int i = 0; i < n; i++) {
-              matrix2.setMaterialMatrix(holeXtable[i],holeYtable[i]);
+              if (lookForHoles) matrix2.setMaterialMatrix(holeXtable[i],holeYtable[i]);
+              else matrix2.unsetMaterialMatrix(holeXtable[i],holeYtable[i]);
               if (algorithm == alg_depthmap || algorithm == alg_depthdiffmap) {
                 depthMap->setDepth(holeXtable[i],holeYtable[i],
                                    depthMap->getDepth(nonHoleX,nonHoleY));
@@ -1207,9 +1243,10 @@ Processor::lineHoleRemoval(unsigned int& holeMinSize,
 }
 
 bool
-Processor::objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
+Processor::objectHoleIsEqualOrSmallerThan(const bool lookForHoles,
+                                          unsigned int xIndex,
                                           unsigned int yIndex,
-                                          unsigned int holethreshold,
+                                          unsigned int threshold,
                                           unsigned int& n,
                                           unsigned int tableSize,
                                           unsigned int* holeXtable,
@@ -1217,8 +1254,8 @@ Processor::objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
                                           unsigned int& nonHoleX,
                                           unsigned int& nonHoleY) {
   assert(tableSize <= outlinermaxholethreshold);
-  assert(holethreshold <= outlinermaxholethreshold);
-  assert(!matrix2.getMaterialMatrix(xIndex,yIndex));
+  assert(threshold <= outlinermaxholethreshold);
+  assert(lookForHoles == !matrix2.getMaterialMatrix(xIndex,yIndex));
   bool nonHole = 0;
   unsigned int nInvestigate = 1;
   const unsigned int maxInvestigate = 2 * outlinermaxholethreshold;
@@ -1239,7 +1276,7 @@ Processor::objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
     nInvestigate--;
     
     // Does the entry have material? If yes, we don't need to consider it further.
-    if (matrix2.getMaterialMatrix(xIndex,yIndex)) {
+    if (lookForHoles == matrix2.getMaterialMatrix(xIndex,yIndex)) {
       if (!nonHole) {
         nonHole = 1;
         nonHoleX = xIndex;
@@ -1249,7 +1286,7 @@ Processor::objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
     }
 
     // Otherwise, this entry is in the hole. But is the hole already too large?
-    if (n == holethreshold) return(0);
+    if (n == threshold) return(0);
     
     // Move the entry to the list of coordinates that are in the hole
     assert(n < outlinermaxholethreshold);

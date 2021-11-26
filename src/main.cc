@@ -240,6 +240,7 @@ main(int argc, char** argv) {
                       config.algorithm,
                       config.holethreshold,
                       config.lineholethreshold,
+                      config.dustThreshold,
                       (config.labelCrossSections && config.nCrossSections > 0),
                       config.formAnalysis,
                       config.formCondense,

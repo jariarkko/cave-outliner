@@ -90,8 +90,10 @@ MainOptions::processHelp(void) {
   std::cout << "                           direction as in the model)\n";
   std::cout << "  --holethreshold n        Ignore holes in the model if they are n or less pixels.\n";
   std::cout << "  --lineholethreshold n    Ignore holes in cross-section  lines if they are n or less pixels.\n";
-  std::cout << "  --tiling n               Optimize search process with n x n tiles. ";
-  std::cout <<                            "Default is " << outlinertiledivision << ",\n";
+  std::cout << "  --dustthreshold n        Ignore small amount of material if not connected and less\n";
+  std::cout << "                           than or equal to n pixels.\n";
+  std::cout << "  --tiling n               Optimize search process with n x n tiles.\n";
+  std::cout << "                           Default is " << outlinertiledivision << ",\n";
   std::cout << "                           and --tiling 1 implies no optimization.\n";
   std::cout << "  --quiet                  Turn on informative messages (default is they are on).\n";
   std::cout << "  --debug                  Turn on debugging messages (level 0, least)\n";

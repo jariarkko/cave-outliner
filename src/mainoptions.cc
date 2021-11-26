@@ -217,6 +217,14 @@ MainOptions::processCommandLineOptions(int& argc,
       }
       config.lineholethreshold = num;
       argc--;argv++;
+    } else if (strcmp(argv[1],"--dustthreshold") == 0 && argc > 2) {
+      int num = atoi(argv[2]);
+      if (num < 0 || num > 100) {
+        errf("Dust threshold value needs to be non-negative and max 100, %s given", argv[2]);
+        return(0);
+      }
+      config.dustThreshold = num;
+      argc--;argv++;
     } else if (strcmp(argv[1],"--step") == 0 && argc > 2) {
       config.stepz = config.stepx = config.stepy = atof(argv[2]);
       if (config.stepx < 0.0001) {

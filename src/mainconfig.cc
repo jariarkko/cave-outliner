@@ -56,6 +56,7 @@ MainConfig::MainConfig() :
   tiles(outlinertiledivision),
   holethreshold(0),
   lineholethreshold(0),
+  dustThreshold(10),
   automaticCrossSections(0),
   automaticCrossSectionsDirection(dir_x),
   nAutomaticCrossSections(0),

@@ -234,6 +234,7 @@ test:	cave-outliner \
 	unit-tests \
 	basic-tests \
 	cave-tests \
+	example-tests \
 	failing-tests
 
 unit-tests:	cave-outliner
@@ -283,7 +284,8 @@ cave-tests:	cave1-test \
 		cave1-depthdiffmap-test \
 		cave1-form-analysis-test \
 		cave1-form-analysis-pixel-test \
-		cave1-form-analysis-line-test
+		cave1-form-analysis-line-test \
+		cave1-form-analysis-smooth-line-test
 
 failing-tests:	failing-tests-note \
 		house-cross-section-side-test \
@@ -292,7 +294,7 @@ failing-tests:	failing-tests-note \
 
 failing-tests-note:
 	@echo ''
-	@echo 'Note: The subsequent tests mail fail'
+	@echo 'Note: The subsequent tests may fail'
 	@echo ''
 
 cube-pixel-test:
@@ -393,7 +395,7 @@ house-cross-section-highres-test:
 
 cube-cross-section-simple-test:
 	@echo 'Running test case cube-cross-section-simple-test...'
-	@./cave-outliner --quiet --pixel --crosssections x 1 test/cube-cross-section-simple-%.svg --step 1 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-simple.svg
+	@./cave-outliner --quiet --pixel --dustthreshold 0 --crosssections x 1 test/cube-cross-section-simple-%.svg --step 1 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-cross-section-simple.svg
 	@diff -q test/cube-cross-section-simple.svg test/cube-cross-section-simple.svg.expected
 	@diff -q test/cube-cross-section-simple-0.svg test/cube-cross-section-simple-0.svg.expected
 
@@ -545,6 +547,46 @@ cave1-form-analysis-line-test:
 	@echo 'Running test case cave1-form-analysis-line-test...'
 	@./cave-outliner --quiet --multiplier 5 --formanalysis 2 --borderline --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-form-analysis-line.svg
 	@diff -q test/cave1-form-analysis-line.svg test/cave1-form-analysis-line.svg.expected
+
+cave1-form-analysis-smooth-line-test:
+	@echo 'Running test case cave1-form-analysis-smooth-line-test...'
+	@./cave-outliner --quiet --multiplier 5 --smooth --formanalysis 2 --borderline --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-form-analysis-smooth-line.svg
+	@diff -q test/cave1-form-analysis-smooth-line.svg test/cave1-form-analysis-smooth-line.svg.expected
+
+example-tests:	cave1-example-orig-test \
+		cave1-example-form-test \
+		cave1-example-form-long-test
+
+cave1-example-orig-test:
+	@echo 'Running test case cave1-example-orig-test...'
+	@./cave-outliner --label --dimensions --borderline \
+                  --multiplier 2 --step 0.05 --holethreshold 10 \
+                  --crosssectionwidth 3 --crosssections x 3 test/cave1-example-orig-cross%.svg \
+                  test/cave1.stl test/cave1-example-orig-planview.svg > test/cave1-example-orig.out
+	@diff -q test/cave1-example-orig-planview.svg test/cave1-example-orig-planview.svg.expected
+	@diff -q test/cave1-example-orig-cross0.svg test/cave1-example-orig-cross0.svg.expected
+	@diff -q test/cave1-example-orig-cross1.svg test/cave1-example-orig-cross1.svg.expected
+	@diff -q test/cave1-example-orig-cross2.svg test/cave1-example-orig-cross2.svg.expected
+
+cave1-example-form-test:
+	@echo 'Running test case cave1-example-form-test...'
+	@./cave-outliner --label --dimensions --borderline \
+                  --multiplier 4 --step 0.05 --holethreshold 10 --formanalysis 1 \
+		  --crosssectionwidth 3 --crosssections x 3 test/cave1-example-form-cross%.svg \
+                  test/cave1.stl test/cave1-example-form-planview.svg > test/cave1-example-form.out
+	@diff -q test/cave1-example-form-planview.svg test/cave1-example-form-planview.svg.expected
+	@diff -q test/cave1-example-form-cross0.svg test/cave1-example-form-cross0.svg.expected
+	@diff -q test/cave1-example-form-cross1.svg test/cave1-example-form-cross1.svg.expected
+	@diff -q test/cave1-example-form-cross2.svg test/cave1-example-form-cross2.svg.expected
+
+cave1-example-form-long-test:
+	@echo 'Running test case cave1-example-form-long-test...'
+	@./cave-outliner --label --dimensions --borderline \
+                  --multiplier 4 --step 0.05 --holethreshold 10 --formanalysis 1 \
+		  --crosssectionwidth 3 --crosssections y 1 test/cave1-example-form-long-cross%.svg \
+                  test/cave1.stl test/cave1-example-form-long-planview.svg > test/cave1-example-form-long.out
+	@diff -q test/cave1-example-form-long-planview.svg test/cave1-example-form-long-planview.svg.expected
+	@diff -q test/cave1-example-form-long-cross0.svg test/cave1-example-form-long-cross0.svg.expected
 
 updateversion:
 	@echo This makefile target updates one software source file based on tags in GitHub,

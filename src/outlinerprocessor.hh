@@ -86,6 +86,7 @@ public:
             const enum outlineralgorithm algorithmIn,
             const unsigned int holethresholdIn,
             const unsigned int lineHolethresholdIn,
+            const unsigned int dustTresholdIn,
             const bool labelsIn,
             const bool formAnalysisIn,
             const unsigned int formCondenseIn,
@@ -125,6 +126,7 @@ private:
   const enum outlineralgorithm algorithm;
   const unsigned int holethreshold;
   const unsigned int lineHolethreshold;
+  const unsigned int dustThreshold;
   const bool labels;
   const bool formAnalysis;
   const bool dimensions;
@@ -183,11 +185,16 @@ private:
   // Hole removal
   //
 
-  unsigned int objectHoleRemoval(unsigned int& holeMinSize,
+  void holeFillingPass(void);
+  void lineHoleFillingPass(void);
+  void dustRemovingPass(void);
+  unsigned int objectHoleRemoval(const bool lookForHoles,
+                                 unsigned int& holeMinSize,
                                  unsigned int& holeMaxSize);
-  bool objectHoleIsEqualOrSmallerThan(unsigned int xIndex,
+  bool objectHoleIsEqualOrSmallerThan(const bool lookForHoles,
+                                      unsigned int xIndex,
                                       unsigned int yIndex,
-                                      unsigned int holethreshold,
+                                      unsigned int threshold,
                                       unsigned int& n,
                                       unsigned int tableSize,
                                       unsigned int* holeXtable,

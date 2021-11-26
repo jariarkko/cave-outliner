@@ -5,37 +5,35 @@
      width="1175" height="370">
 <rect x="0" y="0" width="1175" height="370" fill="white" stroke="white" stroke-width="0"/>
 <polyline points="60,25 65,25 65,20 " fill="none" stroke="black" stroke-width="1" />
-<polyline points="15,155 15,150 15,145 15,145 10,145 10,140 5,140 5,135 5,130 5,125 5,120 5,115 10,115 15,115 15,110 15,105 15,100 15,95 20,95 25,95 30,95 30,90 35,90 35,85 35,80 35,80 30,80 30,75 30,70 30,70 25,70 25,65 20,65 20,60 20,55 25,55 25,50 30,50 30,45 30,40 35,40 40,40 40,35 45,35 45,30 50,30 50,25 55,25 60,25 60,20 65,20 " fill="none" stroke="black" stroke-width="1" />
+<polyline points="25,155 20,155 15,155 15,150 15,145 15,145 10,145 10,140 5,140 5,135 5,130 5,125 5,120 5,115 10,115 15,115 15,110 15,105 15,100 15,95 20,95 25,95 30,95 30,90 35,90 35,85 35,80 35,80 30,80 30,75 30,70 30,70 25,70 25,65 20,65 20,60 20,55 25,55 25,50 30,50 30,45 30,40 35,40 40,40 40,35 45,35 45,30 50,30 50,25 55,25 60,25 60,20 65,20 " fill="none" stroke="black" stroke-width="1" />
 <polyline points="65,25 70,25 75,25 80,25 85,25 85,20 90,20 95,20 100,20 105,20 110,20 115,20 120,20 125,20 130,20 135,20 135,15 140,15 145,15 150,15 150,10 155,10 160,10 160,5 165,5 170,5 175,5 180,5 180,10 185,10 190,10 190,15 195,15 195,20 200,20 200,25 205,25 205,30 210,30 210,35 215,35 220,35 220,40 225,40 225,45 230,45 230,50 235,50 240,50 245,50 250,50 250,45 255,45 255,40 260,40 265,40 265,35 270,35 " fill="none" stroke="black" stroke-width="1" />
-<line x1="15" y1="155" x2="25" y2="155" fill="none" stroke="black" stroke-width="1" />
-<line x1="20" y1="155" x2="20" y2="149" fill="none" stroke="black" stroke-width="1" />
+<line x1="25" y1="155" x2="35" y2="155" fill="none" stroke="black" stroke-width="1" />
+<line x1="30" y1="155" x2="30" y2="149" fill="none" stroke="black" stroke-width="1" />
 <line x1="100" y1="260" x2="97" y2="250" fill="none" stroke="black" stroke-width="1" />
 <line x1="98" y1="255" x2="103" y2="254" fill="none" stroke="black" stroke-width="1" />
 <line x1="94" y1="244" x2="91" y2="240" fill="none" stroke="black" stroke-width="1" />
 <line x1="92" y1="242" x2="97" y2="239" fill="none" stroke="black" stroke-width="1" />
-<line x1="87" y1="236" x2="83" y2="232" fill="none" stroke="black" stroke-width="1" />
-<line x1="85" y1="234" x2="88" y2="231" fill="none" stroke="black" stroke-width="1" />
-<line x1="79" y1="228" x2="75" y2="224" fill="none" stroke="black" stroke-width="1" />
-<line x1="77" y1="226" x2="80" y2="223" fill="none" stroke="black" stroke-width="1" />
-<line x1="71" y1="220" x2="67" y2="216" fill="none" stroke="black" stroke-width="1" />
-<line x1="69" y1="218" x2="72" y2="215" fill="none" stroke="black" stroke-width="1" />
-<line x1="63" y1="211" x2="60" y2="206" fill="none" stroke="black" stroke-width="1" />
-<line x1="61" y1="208" x2="66" y2="205" fill="none" stroke="black" stroke-width="1" />
-<line x1="57" y1="200" x2="54" y2="194" fill="none" stroke="black" stroke-width="1" />
-<line x1="55" y1="197" x2="61" y2="194" fill="none" stroke="black" stroke-width="1" />
-<line x1="51" y1="189" x2="48" y2="183" fill="none" stroke="black" stroke-width="1" />
-<line x1="49" y1="186" x2="55" y2="183" fill="none" stroke="black" stroke-width="1" />
-<line x1="45" y1="177" x2="42" y2="172" fill="none" stroke="black" stroke-width="1" />
-<line x1="43" y1="174" x2="48" y2="171" fill="none" stroke="black" stroke-width="1" />
-<line x1="39" y1="168" x2="35" y2="164" fill="none" stroke="black" stroke-width="1" />
-<line x1="37" y1="166" x2="40" y2="163" fill="none" stroke="black" stroke-width="1" />
-<line x1="31" y1="159" x2="30" y2="155" fill="none" stroke="black" stroke-width="1" />
-<line x1="30" y1="157" x2="35" y2="156" fill="none" stroke="black" stroke-width="1" />
+<line x1="86" y1="236" x2="81" y2="233" fill="none" stroke="black" stroke-width="1" />
+<line x1="83" y1="234" x2="85" y2="230" fill="none" stroke="black" stroke-width="1" />
+<line x1="75" y1="230" x2="70" y2="226" fill="none" stroke="black" stroke-width="1" />
+<line x1="72" y1="228" x2="75" y2="225" fill="none" stroke="black" stroke-width="1" />
+<line x1="67" y1="220" x2="64" y2="214" fill="none" stroke="black" stroke-width="1" />
+<line x1="65" y1="217" x2="71" y2="214" fill="none" stroke="black" stroke-width="1" />
+<line x1="61" y1="210" x2="57" y2="206" fill="none" stroke="black" stroke-width="1" />
+<line x1="59" y1="208" x2="62" y2="205" fill="none" stroke="black" stroke-width="1" />
+<line x1="53" y1="201" x2="50" y2="196" fill="none" stroke="black" stroke-width="1" />
+<line x1="51" y1="198" x2="56" y2="195" fill="none" stroke="black" stroke-width="1" />
+<line x1="47" y1="190" x2="44" y2="184" fill="none" stroke="black" stroke-width="1" />
+<line x1="45" y1="187" x2="51" y2="184" fill="none" stroke="black" stroke-width="1" />
+<line x1="41" y1="179" x2="40" y2="171" fill="none" stroke="black" stroke-width="1" />
+<line x1="40" y1="175" x2="46" y2="175" fill="none" stroke="black" stroke-width="1" />
+<line x1="40" y1="163" x2="40" y2="155" fill="none" stroke="black" stroke-width="1" />
+<line x1="40" y1="159" x2="47" y2="159" fill="none" stroke="black" stroke-width="1" />
 <polyline points="265,40 270,40 270,35 " fill="none" stroke="black" stroke-width="1" />
 <polyline points="270,40 275,40 280,40 285,40 290,40 295,40 300,40 305,40 305,35 310,35 315,35 315,30 320,30 320,25 325,25 325,20 330,20 330,15 335,15 " fill="none" stroke="black" stroke-width="1" />
 <polyline points="330,20 335,20 335,15 " fill="none" stroke="black" stroke-width="1" />
 <polyline points="335,20 340,20 345,20 350,20 355,20 360,20 365,20 370,20 370,15 375,15 " fill="none" stroke="black" stroke-width="1" />
-<polyline points="80,300 85,300 85,295 85,290 85,285 85,280 90,280 90,275 90,270 95,270 100,270 100,265 100,260 " fill="none" stroke="black" stroke-width="1" />
+<polyline points="80,300 85,300 85,295 85,290 85,285 85,280 90,280 90,275 90,270 90,265 90,260 95,260 100,260 " fill="none" stroke="black" stroke-width="1" />
 <polyline points="75,290 80,285 80,280 85,280 " fill="none" stroke="black" stroke-width="1" />
 <line x1="80" y1="285" x2="85" y2="285" fill="none" stroke="black" stroke-width="1" />
 <polyline points="70,295 75,295 75,300 80,300 80,295 85,295 " fill="none" stroke="black" stroke-width="1" />

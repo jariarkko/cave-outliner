@@ -23,6 +23,9 @@ And this is one of the three resulting cross-section views:
 
 ![crosssection](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-crosssection-small.jpg)
 
+We might also take a cross-section along the length axis, like this:
+
+
 # Usage
 
 Here's a more detailed description of the command and its options:
@@ -68,12 +71,14 @@ Options:
     --linewidth n            Set the width of the lines in output picture. The value can be a
                              decimal number.
     --multiplier n           Multiply image size by n (default 1).
-    --smooth                 Set the line drawings use smooth curves.\n";
-    --jagged                 Set the line drawings use hard lines (default).\n";
+    --smooth                 Set the line drawings use smooth curves.
+    --jagged                 Set the line drawings use hard lines (default).
     --svgyreverse            Reverse Y axis in the SVG (to maintain same Y coordinate
-                             direction as in the model)
+                             direction as in the model).
     --holethreshold n        Ignore holes in the model if they are n or less pixels.
     --lineholethreshold n    Ignore holes in cross-section  lines if they are n or less pixels.
+    --dustthreshold n        Ignore small amount of material if not connected and less
+                             than or equal to n pixels.
     --tiling n               Optimize search process with n x n tiles. Default is 30,
                              and --tiling 1 implies no optimization.
     --quiet                  Turn on informative messages (default is they are on).

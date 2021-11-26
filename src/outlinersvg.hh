@@ -188,6 +188,7 @@ class SvgCreator {
                unsigned int y2,
                OutlinerSvgStyle style);
   void emitLine(const struct OutlinerSvgLine& line);
+  void emitLineAux(const struct OutlinerSvgLine& line);
   void emitStubsLine(const struct OutlinerSvgLine& line);
   void smoothPoint(const unsigned int pointIndex,
                    struct OutlinerSvgLine& line) const;
