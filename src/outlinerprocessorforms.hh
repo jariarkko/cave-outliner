@@ -67,6 +67,8 @@ public:
   bool performFormAnalysis(const aiScene* scene);
   OutlinerSvgStyle formToColor(const unsigned int xIndex,
                                const unsigned int yIndex) const;
+  outlinerform getForm(const unsigned int xIndex,
+                       const unsigned int yIndex) const;
   
 private:
   

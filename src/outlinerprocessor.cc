@@ -650,7 +650,11 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
                   outlinerreal otherX = matrix2.indexToCoordinateX(borderTableX[b]);
                   outlinerreal otherY = matrix2.indexToCoordinateY(borderTableY[b]);
                   deepdeepdebugf("calling theSvg->line");
-                  theSvg->line(otherX,otherY,x,y);
+                  OutlinerSvgStyle style = outlinersvgstyle_none;
+                  if (formAnalysis && formAnalyzer.getForm(xIndex,yIndex) == outlinerform_mainform_dripline) {
+                    style = outlinersvgstyle_stubs;
+                  }
+                  theSvg->line(otherX,otherY,x,y,style);
                 }
               }
             }

@@ -280,10 +280,12 @@ cave-tests:	cave1-test \
 		cave1-y-cross-section-test \
 		cave1-depthmap-test \
 		cave1-depthmap-highres-test \
-		cave1-depthdiffmap-test
+		cave1-depthdiffmap-test \
+		cave1-form-analysis-test \
+		cave1-form-analysis-pixel-test \
+		cave1-form-analysis-line-test
 
 failing-tests:	failing-tests-note \
-		cave1-form-analysis-test \
 		house-cross-section-side-test \
 		house-cross-section-another-side-test \
 		house-cross-section-highres-test
@@ -533,6 +535,16 @@ cave1-form-analysis-test:
 	@echo 'Running test case cave1-form-analysis-test...'
 	@./cave-outliner --quiet --svgyreverse --formanalysis 2 --pixelform --step 0.1 --holethreshold 10 test/cave1.stl test/cave1-form-analysis.svg
 	@diff -q test/cave1-form-analysis.svg test/cave1-form-analysis.svg.expected
+
+cave1-form-analysis-pixel-test:
+	@echo 'Running test case cave1-form-analysis-pixel-test...'
+	@./cave-outliner --quiet --formanalysis 2 --pixel --step 0.1 --holethreshold 10 test/cave1.stl test/cave1-form-analysis-pixel.svg
+	@diff -q test/cave1-form-analysis-pixel.svg test/cave1-form-analysis-pixel.svg.expected
+
+cave1-form-analysis-line-test:
+	@echo 'Running test case cave1-form-analysis-line-test...'
+	@./cave-outliner --quiet --multiplier 5 --formanalysis 2 --borderline --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-form-analysis-line.svg
+	@diff -q test/cave1-form-analysis-line.svg test/cave1-form-analysis-line.svg.expected
 
 updateversion:
 	@echo This makefile target updates one software source file based on tags in GitHub,

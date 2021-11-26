@@ -38,16 +38,18 @@
 #define OutlinerSvgStyle            uint16_t
 #define outlinersvgstyle_none       0x0000
 #define outlinersvgstyle_dashed     0x0100
-#define outlinersvgstyle_ends       0x0200
-#define outlinersvgstyle_grey       0x0400
+#define outlinersvgstyle_stubs      0x0200
+#define outlinersvgstyle_ends       0x0400
+#define outlinersvgstyle_grey       0x0800
 #define outlinersvgstyle_greyval(x) (outlinersvgstyle_grey+((x)&0xff))
-#define outlinersvgstyle_red        0x0800
-#define outlinersvgstyle_blue       0x1000
-#define outlinersvgstyle_green      0x2000
-#define outlinersvgstyle_yellow     0x4000
+#define outlinersvgstyle_red        0x1000
+#define outlinersvgstyle_blue       0x2000
+#define outlinersvgstyle_green      0x4000
+#define outlinersvgstyle_yellow     0x8000
 #define outlinersvgstyle_legal      (outlinersvgstyle_dashed +  \
+                                     outlinersvgstyle_stubs +   \
                                      outlinersvgstyle_ends +    \
-                                     outlinersvgstyle_grey + \
+                                     outlinersvgstyle_grey +    \
                                      outlinersvgstyle_red +     \
                                      outlinersvgstyle_blue +    \
                                      outlinersvgstyle_green +   \

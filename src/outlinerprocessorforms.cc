@@ -94,6 +94,15 @@ ProcessorForms::performFormAnalysis(const aiScene* scene) {
   return(1);
 }
 
+outlinerform
+ProcessorForms::getForm(const unsigned int xIndex,
+                        const unsigned int yIndex) const {
+  assert(forms.xIndexSize == matrix2.xIndexSize);
+  assert(forms.yIndexSize == matrix2.yIndexSize);
+  outlinerform form = forms.getForm(xIndex,yIndex);
+  return(form);
+}
+
 OutlinerSvgStyle
 ProcessorForms::formToColor(const unsigned int xIndex,
                             const unsigned int yIndex) const {

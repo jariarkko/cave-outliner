@@ -258,6 +258,9 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
 
   // Handle color
   const char* color = colorBasedOnStyle(line.style);
+  if ((line.style & outlinersvgstyle_stubs) != 0) {
+    file << " stroke-dasharray=\"1 1\" ";
+  }
   
   // Handle smoothing
   if (smooth) {
@@ -279,7 +282,9 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
   file << "stroke-width=\"" << linewidth << "\" />\n";
 
   // Styles that add something beyond the line itself
-  if ((line.style & outlinersvgstyle_ends) != 0) {
+  if ((line.style & outlinersvgstyle_stubs) != 0) {
+    // ...
+  } else if ((line.style & outlinersvgstyle_ends) != 0) {
 
     unsigned int notch = 1 + multiplier/2;
     unsigned int xDiff;
