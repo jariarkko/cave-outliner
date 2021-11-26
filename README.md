@@ -22,7 +22,7 @@ This is the resulting plan view:
 
 ![planview](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-planview-small.jpg)
 
-And this is one of the three resulting cross-section views:
+Notice the entrance on the left end of the cave. And this is one of the three resulting cross-section views:
 
 ![crosssection](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-crosssection-small.jpg)
 
