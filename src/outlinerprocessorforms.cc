@@ -103,6 +103,18 @@ ProcessorForms::getForm(const unsigned int xIndex,
   return(form);
 }
 
+bool
+ProcessorForms::formIsEntrance(const unsigned int xIndex,
+                               const unsigned int yIndex) const {
+  assert(forms.xIndexSize == matrix2.xIndexSize);
+  assert(forms.yIndexSize == matrix2.yIndexSize);
+  assert(xIndex < forms.xIndexSize);
+  assert(yIndex < forms.yIndexSize);
+  if (forms.getForm(xIndex,yIndex) == outlinerform_mainform_dripline) return(1);
+  else if (checkFormNearby(isEntrance,xIndex,yIndex,formCondense,1)) return(1);
+  else return(0);
+}
+
 OutlinerSvgStyle
 ProcessorForms::formToColor(const unsigned int xIndex,
                             const unsigned int yIndex) const {
@@ -316,7 +328,7 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
       outlinerreal y = matrix3.indexToCoordinateY(yIndex);
       unsigned int matrix2yIndexStart = matrix2.coordinateYToIndex(y);
       unsigned int matrix2yIndexEnd = matrix2yIndexStart + formCondense - 1;
-      infof("  analyze phase 2 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
+      infof("  analyze phase 3 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
             xIndex, yIndex, x, y,
             matrix2xIndexStart, matrix2yIndexStart,
             matrix2xIndexEnd, matrix2yIndexEnd);
@@ -335,6 +347,27 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
                   clearedMaterialX,
                   clearedMaterialY);
     nClearedMaterial = 0;
+  }
+  
+  infof("Form analysis phase 5...");
+  for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
+    outlinerreal x = matrix3.indexToCoordinateX(xIndex);
+    unsigned int matrix2xIndexStart = matrix2.coordinateXToIndex(x);
+    unsigned int matrix2xIndexEnd = matrix2xIndexStart + formCondense - 1;
+    for (unsigned int yIndex = 0; yIndex < matrix3.yIndexSize - 2; yIndex++) {
+      outlinerreal y = matrix3.indexToCoordinateY(yIndex);
+      unsigned int matrix2yIndexStart = matrix2.coordinateYToIndex(y);
+      unsigned int matrix2yIndexEnd = matrix2yIndexStart + formCondense - 1;
+      infof("  analyze phase 5 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
+            xIndex, yIndex, x, y,
+            matrix2xIndexStart, matrix2yIndexStart,
+            matrix2xIndexEnd, matrix2yIndexEnd);
+      assert(matrix2xIndexStart <= matrix2xIndexEnd);
+      assert(matrix2yIndexStart <= matrix2yIndexEnd);
+      performFormAnalysisAnalyzeOnePixelPhase5(xIndex,yIndex,
+                                               matrix2xIndexStart,matrix2yIndexStart,
+                                               matrix2xIndexEnd,matrix2yIndexEnd);
+    }
   }
   
   // Done
@@ -439,6 +472,48 @@ ProcessorForms::performFormAnalysisAnalyzeOnePixelPhase2(const unsigned int matr
   // Done
   return(1);
 }
+
+bool
+ProcessorForms::performFormAnalysisAnalyzeOnePixelPhase5(const unsigned int matrix3xIndex,
+                                                         const unsigned int matrix3yIndex,
+                                                         const unsigned int matrix2xIndexStart,
+                                                         const unsigned int matrix2yIndexStart,
+                                                         const unsigned int matrix2xIndexEnd,
+                                                         const unsigned int matrix2yIndexEnd) {
+
+  //
+  // Do we have an entrance form here?
+  //
+
+  if (getForm(matrix2xIndexStart,matrix2yIndexStart) != outlinerform_mainform_dripline) return(1);
+  
+  //
+  // We do. Are there other entrance forms nearby? 
+  //
+  
+  if (checkFormNearby(isEntrance,
+                      matrix2xIndexStart,matrix2yIndexStart,
+                      formCondense,
+                      1)) return(1);
+
+  //
+  // If not, remove this one too as spurious.
+  //
+
+  infof("Removing spurious entrance form marking...");
+  forms.setForm(matrix2xIndexStart,
+                matrix2yIndexStart,
+                matrix2xIndexEnd,
+                matrix2yIndexEnd,
+                outlinerform_mainform_degenerate);
+  
+  //
+  // Done
+  //
+
+  return(1);
+}
+
 
 #define dirstring(d)    (((d) == 0) ? "" : ((d) < 0 ? "--" : "++"))
 #define debugreturn(w,v) { bool val = (v); infof("%s: returning %u", w, val); return(val); }
@@ -852,6 +927,15 @@ ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
                                maxClearedMaterial,
                                clearedMaterialX,
                                clearedMaterialY);
+#if 0
+        infof("  setting one unit inside entrance also to be an entrance");
+        forms.setForm(matrix2xIndexStart + xDirection*formCondense,
+                      matrix2yIndexStart + yDirection*formCondense,
+                      matrix2xIndexStart + matrix2xStep + xDirection*formCondense,
+                      matrix2yIndexStart + matrix2yStep + yDirection*formCondense,
+                      outlinerform_mainform_dripline);
+#endif
+        
         debugreturn("  found an entrance point",1);
       }
     }

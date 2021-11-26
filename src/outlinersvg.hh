@@ -35,26 +35,30 @@
 #define OutlinerSvgMaxLineSegments  511
 #define OutlinerSvgMaxLinePoints    (OutlinerSvgMaxLineSegments+1)
 
-#define OutlinerSvgStyle            uint16_t
-#define outlinersvgstyle_none       0x0000
-#define outlinersvgstyle_dashed     0x0100
-#define outlinersvgstyle_stubs      0x0200
-#define outlinersvgstyle_ends       0x0400
-#define outlinersvgstyle_grey       0x0800
+#define OutlinerSvgStyle            uint32_t
+#define outlinersvgstyle_none       0x00000
+#define outlinersvgstyle_dashed     0x00100
+#define outlinersvgstyle_stubs      0x00200
+#define outlinersvgstyle_stubs_dirl 0x00400
+#define outlinersvgstyle_stubs_dird 0x00800
+#define outlinersvgstyle_ends       0x01000
+#define outlinersvgstyle_grey       0x02000
 #define outlinersvgstyle_greyval(x) (outlinersvgstyle_grey+((x)&0xff))
-#define outlinersvgstyle_red        0x1000
-#define outlinersvgstyle_blue       0x2000
-#define outlinersvgstyle_green      0x4000
-#define outlinersvgstyle_yellow     0x8000
-#define outlinersvgstyle_legal      (outlinersvgstyle_dashed +  \
-                                     outlinersvgstyle_stubs +   \
-                                     outlinersvgstyle_ends +    \
-                                     outlinersvgstyle_grey +    \
-                                     outlinersvgstyle_red +     \
-                                     outlinersvgstyle_blue +    \
-                                     outlinersvgstyle_green +   \
+#define outlinersvgstyle_red        0x04000
+#define outlinersvgstyle_blue       0x08000
+#define outlinersvgstyle_green      0x10000
+#define outlinersvgstyle_yellow     0x20000
+#define outlinersvgstyle_legal      (outlinersvgstyle_dashed +       \
+                                     outlinersvgstyle_stubs +        \
+                                     outlinersvgstyle_stubs_dirl +   \
+                                     outlinersvgstyle_stubs_dird +   \
+                                     outlinersvgstyle_ends +         \
+                                     outlinersvgstyle_grey +         \
+                                     outlinersvgstyle_red +          \
+                                     outlinersvgstyle_blue +         \
+                                     outlinersvgstyle_green +        \
                                      outlinersvgstyle_yellow)
-#define outlinersvgstyle_basemask   0xff00
+#define outlinersvgstyle_basemask   0x000fff00
 #define outlinersvgstyle_illegal    (~(outlinersvgstyle_legal))
 
 struct OutlinerSvgCoord {
@@ -141,6 +145,9 @@ class SvgCreator {
 
   /// Verify that image creation and file write was successful.
   bool ok();
+
+  /// Unit tests
+  static void test(void);
   
  private:
 
@@ -181,7 +188,11 @@ class SvgCreator {
                unsigned int y2,
                OutlinerSvgStyle style);
   void emitLine(const struct OutlinerSvgLine& line);
-
+  void emitStubsLine(const struct OutlinerSvgLine& line);
+  void smoothPoint(const unsigned int pointIndex,
+                   struct OutlinerSvgLine& line) const;
+  void smoothLine(struct OutlinerSvgLine& line) const;
+  
   void lineTableInit(void);
   void lineTableDeinit(void);
   struct OutlinerSvgLine* matchingLine(unsigned int x1,
@@ -224,6 +235,8 @@ class SvgCreator {
                               unsigned int y);
   void lineTableOutput(void);
   void lineTableInfos(void);
+
+  void smoothingTest(void);
  };
 
 #endif // SVG_HH

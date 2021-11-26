@@ -229,7 +229,13 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
   // Debugs and sanity checks
   deepdebugf("SvgCreator::emitLine");
   assert(line.nPoints >= 2);
-
+  
+  // Handle entrance lines
+  if ((line.style & outlinersvgstyle_stubs) != 0) {
+    emitStubsLine(line);
+    return;
+  }
+  
   // Basic line drawing
   if (line.nPoints == 2) {
     file << "<line x1=\"" << line.points[0].x << "\" y1=\"" << line.points[0].y << "\"";
@@ -282,9 +288,8 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
   file << "stroke-width=\"" << linewidth << "\" />\n";
 
   // Styles that add something beyond the line itself
-  if ((line.style & outlinersvgstyle_stubs) != 0) {
-    // ...
-  } else if ((line.style & outlinersvgstyle_ends) != 0) {
+  assert((line.style & outlinersvgstyle_stubs) == 0);
+  if ((line.style & outlinersvgstyle_ends) != 0) {
 
     unsigned int notch = 1 + multiplier/2;
     unsigned int xDiff;
@@ -326,6 +331,100 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
 
   // Update statistics
   finalLines++;
+}
+
+void
+SvgCreator::smoothPoint(const unsigned int pointIndex,
+                        struct OutlinerSvgLine& line) const {
+  assert(pointIndex > 0);
+  assert(pointIndex + 1 < line.nPoints);
+  unsigned int prevPoint = pointIndex - 1;
+  unsigned int nextPoint = pointIndex + 1;
+  line.points[pointIndex].x = outlineravg3(line.points[prevPoint].x,
+                                           line.points[pointIndex].x,
+                                           line.points[nextPoint].x);
+  line.points[pointIndex].y = outlineravg3(line.points[prevPoint].y,
+                                           line.points[pointIndex].y,
+                                           line.points[nextPoint].y);
+}
+
+void
+SvgCreator::smoothLine(struct OutlinerSvgLine& line) const {
+  for (unsigned int pointIndex = 1; pointIndex + 1 < line.nPoints; pointIndex += 2) smoothPoint(pointIndex,line);
+  for (unsigned int pointIndex = 2; pointIndex + 1 < line.nPoints; pointIndex += 2) smoothPoint(pointIndex,line);
+}
+
+void
+SvgCreator::emitStubsLine(const struct OutlinerSvgLine& line) {
+
+  //
+  // Debugs
+  //
+
+  infof("emitStubsLine with %u points", line.nPoints);
+  assert(line.nPoints >= 2);
+
+  //
+  // First apply some smoothing on points 2...n-1
+  //
+
+  OutlinerSvgLine newLine = line;
+  smoothLine(newLine);
+  smoothLine(newLine);
+  smoothLine(newLine);
+  smoothLine(newLine);
+  smoothLine(newLine);
+  
+  //
+  // Break up the longer line into segments, also skipping every
+  // second entry to smooth it out. For every resulting two segments,
+  // one will be a dash line and the stub, one will be the empty space
+  // between dashes.
+  //
+
+  for (unsigned int segmentStart = 0; segmentStart + 2 < newLine.nPoints; segmentStart += 4) {
+
+    // Emit one segment
+    unsigned int segmentOther = segmentStart + 2;
+    struct OutlinerSvgLine segment;
+    segment.refCount = 1;
+    segment.style = (newLine.style & ~(outlinersvgstyle_stubs+outlinersvgstyle_stubs_dirl+outlinersvgstyle_stubs_dird));
+    segment.printed = 0;
+    segment.nPoints = 2;
+    segment.points[0] = newLine.points[segmentStart];
+    segment.points[1] = newLine.points[segmentOther];
+    emitLine(segment);
+
+    // Emit the stub line that is perpendicular to the segment
+    struct OutlinerSvgLine stub;
+    unsigned int stubLength = 1 + multiplier/1;
+    stub.refCount = 1;
+    stub.style = (newLine.style & ~(outlinersvgstyle_stubs+outlinersvgstyle_stubs_dirl+outlinersvgstyle_stubs_dird));
+    //stub.style |= outlinersvgstyle_red;
+    stub.printed = 0;
+    stub.nPoints = 2;
+    unsigned int stubstartx = (newLine.points[segmentStart].x + newLine.points[segmentOther].x)/2;
+    unsigned int stubstarty = (newLine.points[segmentStart].y + newLine.points[segmentOther].y)/2;
+    unsigned int xdiff = outlinerunsignedabsdiff(newLine.points[segmentOther].x,newLine.points[segmentStart].x);
+    unsigned int ydiff = outlinerunsignedabsdiff(newLine.points[segmentOther].y,newLine.points[segmentStart].y);
+    unsigned int diffsum = xdiff + ydiff;
+    outlinerreal xportion = (1.0*xdiff) / (1.0*diffsum);
+    outlinerreal yportion = (1.0*ydiff) / (1.0*diffsum);
+    if (xportion < 0.25) stubLength += stubLength/4;
+    else if (xportion < 0.50) stubLength += stubLength/2;
+    else if (xportion < 0.75) stubLength += stubLength/4;
+    if ((newLine.style & outlinersvgstyle_stubs_dirl)) xportion = -xportion;
+    if ((newLine.style & outlinersvgstyle_stubs_dird)) yportion = -yportion;
+    int stubx = stubLength * yportion;
+    int stuby = stubLength * -xportion;
+    infof("stub diffs %u %u => portions %.2f %.2f => stub %d %d",
+          xdiff, ydiff, xportion, yportion, stubx, stuby);
+    stub.points[0].x = stubstartx;
+    stub.points[0].y = stubstarty;
+    stub.points[1].x = stubstartx + stubx;
+    stub.points[1].y = stubstarty + stuby;
+    emitLine(stub);
+  }
 }
 
 void
@@ -1163,3 +1262,55 @@ SvgCreator::lineTableOutput(void) {
   deepdebugf("line table output done");
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Unit tests /////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+SvgCreator::test(void) {
+  SvgCreator svg("/tmp/foo.svg",
+                 10,10,
+                 2,
+                 0,0,
+                 1,1,
+                 0,1,1,0);
+  svg.smoothingTest();
+}
+
+void
+SvgCreator::smoothingTest(void) {
+  
+  // Smoothing that should not affect anything
+  struct OutlinerSvgLine line1;
+  line1.refCount = 1;
+  line1.style = 0;
+  line1.printed = 0;
+  line1.nPoints = 3;
+  line1.points[0].x = 0;
+  line1.points[0].y = 0;
+  line1.points[1].x = 1;
+  line1.points[1].y = 1;
+  line1.points[2].x = 2;
+  line1.points[2].y = 2;
+  smoothLine(line1);
+  infof("smoothing 1st result %u,%u", line1.points[1].x, line1.points[1].y);
+  assert(line1.points[1].x == 1);
+  assert(line1.points[1].y == 1);
+  
+  // Smoothing that should have an effect
+  struct OutlinerSvgLine line2;
+  line2.refCount = 1;
+  line2.style = 0;
+  line2.printed = 0;
+  line2.nPoints = 3;
+  line2.points[0].x = 0;
+  line2.points[0].y = 0;
+  line2.points[1].x = 0;
+  line2.points[1].y = 2;
+  line2.points[2].x = 2;
+  line2.points[2].y = 2;
+  smoothLine(line2);
+  infof("smoothing 2nd result %u,%u", line2.points[1].x, line2.points[1].y);
+  assert(line2.points[1].x == 2/3);
+  assert(line2.points[1].y == 4/3);
+}

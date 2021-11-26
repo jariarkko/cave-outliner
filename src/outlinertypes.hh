@@ -56,13 +56,16 @@ enum outlineralgorithm {
 // Common macros //////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-#define outlinerisnumber(s)  ((isdigit(*(s)) || (*(s) == '-' && isdigit(*((s)+1))) || (*(s) == '+' && isdigit(*((s)+1))) ))
-#define outlinermin(a,b)     (((a) < (b)) ? (a) : (b))
-#define outlinermax(a,b)     (((a) > (b)) ? (a) : (b))
-#define outlinermin3(a,b,c)  (outlinermin((a),outlinermin((b),(c))))
-#define outlinermax3(a,b,c)  (outlinermax((a),outlinermax((b),(c))))
-#define outlinersaneindex(x) ((x) < (2U*1000U*1000U*1000U))
-#define outlinerabs(x)       ((x) < 0 ? -(x) : (x))
+#define outlinerisnumber(s)            ((isdigit(*(s)) || (*(s) == '-' && isdigit(*((s)+1))) || (*(s) == '+' && isdigit(*((s)+1))) ))
+#define outlinermin(a,b)               (((a) < (b)) ? (a) : (b))
+#define outlinermax(a,b)               (((a) > (b)) ? (a) : (b))
+#define outlinermin3(a,b,c)            (outlinermin((a),outlinermin((b),(c))))
+#define outlinermax3(a,b,c)            (outlinermax((a),outlinermax((b),(c))))
+#define outlinersaneindex(x)           ((x) < (2U*1000U*1000U*1000U))
+#define outlinerabs(x)                 ((x) < 0 ? -(x) : (x))
+#define outlineravg(a,b)               (((a)+(b))/2.0)
+#define outlineravg3(a,b,c)            (((a)+(b)+(c))/3.0)
+#define outlinerunsignedabsdiff(a,b)   ((a) < (b) ? (b)-(a) : (a)-(b))
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Math common utilities //////////////////////////////////////////////////////////////////////

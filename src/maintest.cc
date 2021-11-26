@@ -33,6 +33,7 @@
 #include "outlinermaterialmatrix3d.hh"
 #include "outlinerformmatrix2d.hh"
 #include "outlinerdepthmap.hh"
+#include "outlinersvg.hh"
 #include "outlinermath.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,6 +67,7 @@ MainTest::test(void) {
   MaterialMatrix3D::test();
   FormMatrix2D::test();
   DepthMap::test();
+  SvgCreator::test();
   infof("tests ok");
 }
 

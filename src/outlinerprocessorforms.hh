@@ -67,6 +67,8 @@ public:
   bool performFormAnalysis(const aiScene* scene);
   OutlinerSvgStyle formToColor(const unsigned int xIndex,
                                const unsigned int yIndex) const;
+  bool formIsEntrance(const unsigned int xIndex,
+                      const unsigned int yIndex) const;
   outlinerform getForm(const unsigned int xIndex,
                        const unsigned int yIndex) const;
   
@@ -106,6 +108,12 @@ private:
                                                 const unsigned int matrix2xIndexEnd,
                                                 const unsigned int matrix2yIndexEnd);
   bool performFormAnalysisAnalyzeOnePixelPhase2(const unsigned int matrix3xIndex,
+                                                const unsigned int matrix3yIndex,
+                                                const unsigned int matrix2xIndexStart,
+                                                const unsigned int matrix2yIndexStart,
+                                                const unsigned int matrix2xIndexEnd,
+                                                const unsigned int matrix2yIndexEnd);
+  bool performFormAnalysisAnalyzeOnePixelPhase5(const unsigned int matrix3xIndex,
                                                 const unsigned int matrix3yIndex,
                                                 const unsigned int matrix2xIndexStart,
                                                 const unsigned int matrix2yIndexStart,
