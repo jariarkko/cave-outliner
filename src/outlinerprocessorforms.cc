@@ -173,12 +173,12 @@ ProcessorForms::performFormAnalysisOneSlice(const aiScene* scene,
     outlinerreal yFrom = matrix2.indexToCoordinateY(yIndexFrom);
     outlinerreal yTo = matrix2.indexToCoordinateY(yIndexTo);
     OutlinerLine2D sliceLine(x,yFrom,x,yTo);
-    infof("  slice %u: x = %.2f, y = %.2f..%.2f (%u..%u, in a matrix of %ux%u)",
-          xIndex, x,
-          yFrom, yTo,
-          yIndexFrom,
-          yIndexTo,
-          matrix2.xIndexSize, matrix2.yIndexSize);
+    debugf("  slice %u: x = %.2f, y = %.2f..%.2f (%u..%u, in a matrix of %ux%u)",
+           xIndex, x,
+           yFrom, yTo,
+           yIndexFrom,
+           yIndexTo,
+           matrix2.xIndexSize, matrix2.yIndexSize);
     ProcessorCrossSection csproc(0, // no image
                                  0, // no labels
                                  DirectionOperations::screenx(direction),
@@ -229,9 +229,9 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
         matrix3.xIndexSize, matrix3.yIndexSize);
   char buf[50];
   OutlinerMath::boxDescribe(matrix2.boundingBox,buf,sizeof(buf),1);
-  infof("  form matrix2 box %s", buf);
+  debugf("  form matrix2 box %s", buf);
   OutlinerMath::boxDescribe(matrix3.boundingBox,buf,sizeof(buf),1);
-  infof("  form matrix3 box %s", buf);
+  debugf("  form matrix3 box %s", buf);
 
   // Phase 1
   infof("Form analysis phase 1...");
@@ -243,10 +243,10 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
       unsigned int matrix2yIndexStart;
       unsigned int matrix2yIndexEnd;
       condensedYIndexToIndex(yIndex,matrix2yIndexStart,matrix2yIndexEnd);
-      infof("    analyze phase 1 %u,%u: (matrix2 %u,%u .. %u,%u)",
-            xIndex, yIndex, 
-            matrix2xIndexStart, matrix2yIndexStart,
-            matrix2xIndexEnd, matrix2yIndexEnd);
+      debugf("    analyze phase 1 %u,%u: (matrix2 %u,%u .. %u,%u)",
+             xIndex, yIndex, 
+             matrix2xIndexStart, matrix2yIndexStart,
+             matrix2xIndexEnd, matrix2yIndexEnd);
       assert(matrix2xIndexStart <= matrix2xIndexEnd);
       assert(matrix2yIndexStart <= matrix2yIndexEnd);
       performFormAnalysisAnalyzeOnePixelPhase1(xIndex,yIndex,
@@ -256,18 +256,18 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
   }
 
   // Debugs
-  infof("Form matrix after phase 1 (all)");
+  debugf("Form matrix after phase 1 (all)");
   forms.print();
-  infof("Form matrix after phase 1 (condensed)");
+  debugf("Form matrix after phase 1 (condensed)");
   forms.print(formCondense);
   for (unsigned int i = 0; i < 150 && i < matrix3.xIndexSize - 2; i++) {
-    infof("Slice %u:", i);
+    debugf("Slice %u:", i);
     char buf[120];
     memset(buf,0,sizeof(buf));
     for (unsigned int c = 0; c < matrix3.yIndexSize - 2 && c < 80; c++) {
       snprintf(buf+strlen(buf),sizeof(buf)-1-strlen(buf),"%u", c%10);
     }
-    infof(buf);
+    debugf(buf);
     memset(buf,0,sizeof(buf));
     unsigned int matrix2xIndexStart;
     unsigned int matrix2xIndexEnd;
@@ -280,7 +280,7 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
       char representativeChar = forms.getFormChar(form);
       snprintf(buf+strlen(buf),sizeof(buf)-1-strlen(buf),"%c", representativeChar);
     }
-    infof(buf);
+    debugf(buf);
     for (unsigned int zIndex = matrix3.zIndexSize - 2; zIndex >= 0 && zIndex < matrix3.zIndexSize; zIndex--) {
       memset(buf,0,sizeof(buf));
       for (unsigned int yIndex = 0; yIndex < matrix3.yIndexSize && yIndex < 80; yIndex++) {
@@ -291,9 +291,9 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
         }
       }
       snprintf(buf+strlen(buf),sizeof(buf)-1-strlen(buf)," %2u", zIndex);
-      infof(buf);
+      debugf(buf);
     }
-    infof("");
+    debugf("");
   }
   
   // Phase 2
@@ -306,10 +306,10 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
       outlinerreal y = matrix3.indexToCoordinateY(yIndex);
       unsigned int matrix2yIndexStart = matrix2.coordinateYToIndex(y);
       unsigned int matrix2yIndexEnd = matrix2yIndexStart + formCondense - 1;
-      infof("  analyze phase 2 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
-            xIndex, yIndex, x, y,
-            matrix2xIndexStart, matrix2yIndexStart,
-            matrix2xIndexEnd, matrix2yIndexEnd);
+      debugf("  analyze phase 2 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
+             xIndex, yIndex, x, y,
+             matrix2xIndexStart, matrix2yIndexStart,
+             matrix2xIndexEnd, matrix2yIndexEnd);
       assert(matrix2xIndexStart <= matrix2xIndexEnd);
       assert(matrix2yIndexStart <= matrix2yIndexEnd);
       performFormAnalysisAnalyzeOnePixelPhase2(xIndex,yIndex,
@@ -328,10 +328,10 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
       outlinerreal y = matrix3.indexToCoordinateY(yIndex);
       unsigned int matrix2yIndexStart = matrix2.coordinateYToIndex(y);
       unsigned int matrix2yIndexEnd = matrix2yIndexStart + formCondense - 1;
-      infof("  analyze phase 3 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
-            xIndex, yIndex, x, y,
-            matrix2xIndexStart, matrix2yIndexStart,
-            matrix2xIndexEnd, matrix2yIndexEnd);
+      debugf("  analyze phase 3 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
+             xIndex, yIndex, x, y,
+             matrix2xIndexStart, matrix2yIndexStart,
+             matrix2xIndexEnd, matrix2yIndexEnd);
       assert(matrix2xIndexStart <= matrix2xIndexEnd);
       assert(matrix2yIndexStart <= matrix2yIndexEnd);
       performFormAnalysisAnalyzeOnePixelPhase2(xIndex,yIndex,
@@ -342,7 +342,7 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
   
   infof("Form analysis phase 4...");
   if (nClearedMaterial > 0) {
-    infof("Clearing %u elements...", nClearedMaterial);
+    debugf("Clearing %u elements...", nClearedMaterial);
     clearMaterial(nClearedMaterial,
                   clearedMaterialX,
                   clearedMaterialY);
@@ -516,12 +516,12 @@ ProcessorForms::performFormAnalysisAnalyzeOnePixelPhase5(const unsigned int matr
 
 
 #define dirstring(d)    (((d) == 0) ? "" : ((d) < 0 ? "--" : "++"))
-#define debugreturn(w,v) { bool val = (v); infof("%s: returning %u", w, val); return(val); }
-#define debugreturn1(w,a,v) { bool val = (v); infof(w ": returning %u", a, val); return(val); }
-#define debugreturn2(w,a,b,v) { bool val = (v); infof(w ": returning %u", a, b, val); return(val); }
-#define debugreturn3(w,a,b,c,v) { bool val = (v); infof(w ": returning %u", a, b, c, val); return(val); }
-#define debugreturn4(w,a,b,c,d,v) { bool val = (v); infof(w ": returning %u", a, b, c, d, val); return(val); }
-#define debugreturn5(w,a,b,c,d,e,v) { bool val = (v); infof(w ": returning %u", a, b, c, d, e, val); return(val); }
+#define debugreturn(w,v) { bool val = (v); debugf("%s: returning %u", w, val); return(val); }
+#define debugreturn1(w,a,v) { bool val = (v); debugf(w ": returning %u", a, val); return(val); }
+#define debugreturn2(w,a,b,v) { bool val = (v); debugf(w ": returning %u", a, b, val); return(val); }
+#define debugreturn3(w,a,b,c,v) { bool val = (v); debugf(w ": returning %u", a, b, c, val); return(val); }
+#define debugreturn4(w,a,b,c,d,v) { bool val = (v); debugf(w ": returning %u", a, b, c, d, val); return(val); }
+#define debugreturn5(w,a,b,c,d,e,v) { bool val = (v); debugf(w ": returning %u", a, b, c, d, e, val); return(val); }
 
 bool
 ProcessorForms::isEmpty(outlinerform form) {
@@ -592,7 +592,7 @@ ProcessorForms::checkFormRange(ProcessorFormChecker checkFunction,
   assert(matrix2yIndex < forms.yIndexSize);
   unsigned int matrix2xIndexIter = matrix2xIndex;
   unsigned int matrix2yIndexIter = matrix2yIndex;
-  infof("    check form range %u,%u %d,%d and %u steps",
+  debugf("    check form range %u,%u %d,%d and %u steps",
         matrix2xIndex, matrix2yIndex,
         xDirection,
         yDirection,
@@ -609,7 +609,7 @@ ProcessorForms::checkFormRange(ProcessorFormChecker checkFunction,
       if (canIncreaseIndex(matrix2xIndexIter,matrix2yIndexIter,xDirection,yDirection)) {
         matrix2xIndexIter += xDirection;
         matrix2yIndexIter += yDirection;
-        infof("      increased check form range to %u,%u", matrix2xIndexIter,matrix2yIndexIter);
+        debugf("      increased check form range to %u,%u", matrix2xIndexIter,matrix2yIndexIter);
       } else {
         debugreturn("    check range runs to matrix ends",okToRunToModelEnd);
       }
@@ -654,7 +654,7 @@ ProcessorForms::checkFormNearby(ProcessorFormChecker checkFunction,
   //
   
   for (unsigned int i = 0; i < n; i++) {
-    infof("      neighbor %u/%u: %u,%u", i, n, xTable[i],yTable[i]);
+    debugf("      neighbor %u/%u: %u,%u", i, n, xTable[i],yTable[i]);
     outlinerform form = forms.getForm(xTable[i],yTable[i]);
     bool val = (*checkFunction)(form);
     if (val) debugreturn("    found neighbor with matching form",1);
@@ -676,7 +676,7 @@ ProcessorForms::clearMaterial(const unsigned int n,
     unsigned int yIndex = tableY[i];
     for (unsigned int xIndexExtra = xIndex; xIndexExtra < xIndex + formCondense; xIndexExtra++) {
       for (unsigned int yIndexExtra = yIndex; yIndexExtra < yIndex + formCondense; yIndexExtra++) {
-        infof("        clearing %u,%", xIndexExtra,yIndexExtra);
+        debugf("        clearing %u,%", xIndexExtra,yIndexExtra);
         forms.setForm(xIndexExtra,yIndexExtra,outlinerform_mainform_empty);
         matrix2.unsetMaterialMatrix(xIndexExtra,yIndexExtra);
       }
@@ -788,7 +788,7 @@ ProcessorForms::collectMaterialToClear(ProcessorFormChecker checkFunction,
   unsigned int beginN = n;
   unsigned int matrix2xIndexIter = matrix2xIndex;
   unsigned int matrix2yIndexIter = matrix2yIndex;
-  infof("    clear material %u,%u %d,%d",
+  debugf("    clear material %u,%u %d,%d",
         matrix2xIndex, matrix2yIndex,
         xDirection,
         yDirection);
@@ -801,14 +801,14 @@ ProcessorForms::collectMaterialToClear(ProcessorFormChecker checkFunction,
     outlinerform form = forms.getForm(matrix2xIndexIter,matrix2yIndexIter);
     bool val = (*checkFunction)(form);
     if (!val) {
-      infof("    clear material ends %u,%u (%u,%u) for form %u",
+      debugf("    clear material ends %u,%u (%u,%u) for form %u",
             matrix2xIndexIter,matrix2yIndexIter,
             matrix2xIndexIter/formCondense,matrix2yIndexIter/formCondense,
             form);
       if ((*terminationCheckFunction)(form)) {
-        infof("    clearing colletion ended well, keeping %u", n - beginN);
+        debugf("    clearing colletion ended well, keeping %u", n - beginN);
       } else {
-        infof("    clearing colletion ended badly, not keeping %u", n - beginN);
+        debugf("    clearing colletion ended badly, not keeping %u", n - beginN);
         n = beginN;
       }
       return;
@@ -841,9 +841,9 @@ ProcessorForms::collectMaterialToClear(ProcessorFormChecker checkFunction,
     if (canIncreaseIndex(matrix2xIndexIter,matrix2yIndexIter,xDirection,yDirection)) {
       matrix2xIndexIter += xDirection;
       matrix2yIndexIter += yDirection;
-      infof("      increased clear material to %u,%u", matrix2xIndexIter,matrix2yIndexIter);
+      debugf("      increased clear material to %u,%u", matrix2xIndexIter,matrix2yIndexIter);
     } else {
-      infof("    clear material runs to matrix ends");
+      debugf("    clear material runs to matrix ends");
       return;
     }
   }
@@ -869,9 +869,9 @@ ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
   // Debugs
   //
   
-  infof("  entrance analysis from %u%s,%u%s",
-        matrix3xIndex, dirstring(xDirection),
-        matrix3yIndex, dirstring(yDirection));
+  debugf("  entrance analysis from %u%s,%u%s",
+         matrix3xIndex, dirstring(xDirection),
+         matrix3yIndex, dirstring(yDirection));
 
   //
   // Preliminary variables
@@ -932,16 +932,16 @@ ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
   // tunnel (ceiling).
   //
 
-  infof("  find right z level at %u,%u", matrix3xIndex, matrix3yIndex);
+  debugf("  find right z level at %u,%u", matrix3xIndex, matrix3yIndex);
   for (unsigned int matrix3zIndexSearch = matrix3.zIndexSize - 2; 1; matrix3zIndexSearch--) {
 
-    infof("  find right z level at %u,%u now level %u", matrix3xIndex, matrix3yIndex, matrix3zIndexSearch);
+    debugf("  find right z level at %u,%u now level %u", matrix3xIndex, matrix3yIndex, matrix3zIndexSearch);
     if (matrix3zIndexSearch > 0 &&
         check3DMaterial(matrix3xIndex + xDirection,matrix3yIndex + yDirection,matrix3zIndexSearch)) {
       if (potentialEntranceAnalysis(matrix3xIndex, matrix3yIndex, matrix3zIndexSearch - 1,
                                     xDirection, yDirection,
                                     entranceNearby)) {
-        infof("  found an entrance at %u,%u, clearing degenerates from nearby", matrix3xIndex, matrix3yIndex);
+        debugf("  found an entrance at %u,%u, clearing degenerates from nearby", matrix3xIndex, matrix3yIndex);
         collectMaterialToClear(isDegenerate,
                                isEmpty,
                                matrix2xIndexStart - xDirection*formCondense,matrix2yIndexStart - yDirection*formCondense,
@@ -952,7 +952,7 @@ ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
                                clearedMaterialX,
                                clearedMaterialY);
 #if 0
-        infof("  setting one unit inside entrance also to be an entrance");
+        debugf("  setting one unit inside entrance also to be an entrance");
         forms.setForm(matrix2xIndexStart + xDirection*formCondense,
                       matrix2yIndexStart + yDirection*formCondense,
                       matrix2xIndexStart + matrix2xStep + xDirection*formCondense,
@@ -1035,7 +1035,7 @@ ProcessorForms::potentialEntranceAnalysis(const unsigned int matrix3xIndex,
     // entrance.
     //
     
-    infof("  tunnel check at %u,%u level %u", matrix3xIndex, matrix3yIndex, matrix3zIndexSearch);
+    debugf("  tunnel check at %u,%u level %u", matrix3xIndex, matrix3yIndex, matrix3zIndexSearch);
     if (check3DMaterial(matrix3xIndex,matrix3yIndex,matrix3zIndexSearch)) {
       debugreturn("  hit material here on z search",0);
     }
@@ -1090,9 +1090,9 @@ ProcessorForms::potentialEntranceAnalysis(const unsigned int matrix3xIndex,
   // the entrance.
   //
 
-  infof("  underneath check at %u,%u furthest %u,%u,%u",
-        matrix3xIndex, matrix3yIndex,
-        furthestPointX,furthestPointY,furthestPointZ);
+  debugf("  underneath check at %u,%u furthest %u,%u,%u",
+         matrix3xIndex, matrix3yIndex,
+         furthestPointX,furthestPointY,furthestPointZ);
   bool materialUnder = 0;
   while (!materialUnder) {
     if (check3DMaterialDown(furthestPointX,furthestPointY,furthestPointZ)) {
@@ -1111,9 +1111,9 @@ ProcessorForms::potentialEntranceAnalysis(const unsigned int matrix3xIndex,
   // Success!
   //
 
-  infof("  entrance at %u,%u",
-        matrix3xIndex,
-        matrix3yIndex);
+  debugf("  entrance at %u,%u",
+         matrix3xIndex,
+         matrix3yIndex);
   debugreturn("  found an entrance",1);
 }
 
@@ -1185,16 +1185,16 @@ ProcessorForms::formAnalysisCountLayers(const unsigned int matrix3xIndex,
                                         const unsigned int matrix3yIndex) const {
   unsigned int count = 0;
   bool layerOn = 0;
-  infof("  count layers %u,%u", matrix3xIndex, matrix3yIndex);
+  debugf("  count layers %u,%u", matrix3xIndex, matrix3yIndex);
   for (unsigned int matrix3zIndex = 0; matrix3zIndex < matrix3.zIndexSize -2; matrix3zIndex++) {
-    infof("  iter count %u,%u,%u", matrix3xIndex, matrix3yIndex, matrix3zIndex);
+    debugf("  iter count %u,%u,%u", matrix3xIndex, matrix3yIndex, matrix3zIndex);
     bool material = matrix3.getMaterialMatrix(matrix3xIndex,matrix3yIndex,matrix3zIndex);
     if (layerOn && material) continue;
     else if (!layerOn && !material) continue;
     else if (!layerOn && material) { layerOn = 1; count++; continue; }
     else if (layerOn && !material) { layerOn = 0; continue; }
   }
-  infof("  count done %u", count);
+  debugf("  count done %u", count);
   return(count);
 }
 

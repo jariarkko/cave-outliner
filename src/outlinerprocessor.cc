@@ -381,11 +381,11 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
           else if (start == end) normalizedDepth = 128;
           else normalizedDepth = (255 * (depth - start)) / (end - start);
           outlinerdepth normalizedDepthInt = (outlinerdepth)floor(normalizedDepth);
-          infof("  setting depth at (%u,%u) to %u based on %.2f (%.2f..%.2f)",
-                xIndex, yIndex,
-                normalizedDepthInt,
-                depth,
-                start, end);
+          debugf("  setting depth at (%u,%u) to %u based on %.2f (%.2f..%.2f)",
+                 xIndex, yIndex,
+                 normalizedDepthInt,
+                 depth,
+                 start, end);
           depthMap->setDepth(xIndex,yIndex,normalizedDepthInt);
         }
       }
@@ -499,7 +499,7 @@ Processor::addDimensionLines(SvgCreator* theSvg,
   memset(bufX,0,sizeof(bufX));
   snprintf(bufX,sizeof(bufX)-1,"%.2fm",diffX);
   bottomTextStartX -= (((strlen(bufX) / 2.0) * outlinersmallfontxsize) * thisStepX) / multiplier;
-  infof("addDimensionLines bottom text %s at %.2f %.2f", bufX, bottomTextStartX, bottomTextStartY);
+  debugf("addDimensionLines bottom text %s at %.2f %.2f", bufX, bottomTextStartX, bottomTextStartY);
   theSvg->text(bottomTextStartX,bottomTextStartY,bufX,outlinersmallfont);
   
   // Right side line
@@ -515,18 +515,18 @@ Processor::addDimensionLines(SvgCreator* theSvg,
     rightDimensionLabelingStartX +
     outlinerdimensionlinespace * thisStepX;
   outlinerreal rightTextStartY = (objectBoundingBox.end.y + objectBoundingBox.start.y) / 2.0;
-  infof("right text y %.2f from %.2f+%.2f/2",
-        rightTextStartY,
-        objectBoundingBox.end.y, objectBoundingBox.start.y);
+  debugf("right text y %.2f from %.2f+%.2f/2",
+         rightTextStartY,
+         objectBoundingBox.end.y, objectBoundingBox.start.y);
   outlinerreal diffY = objectBoundingBox.end.y - objectBoundingBox.start.y;
   char bufY[20];
   memset(bufY,0,sizeof(bufY));
   snprintf(bufY,sizeof(bufY)-1,"%.2fm",diffY);
-  infof("addDimensionLines right text now at %.2f %.2f", rightTextStartX, rightTextStartY);
+  debugf("addDimensionLines right text now at %.2f %.2f", rightTextStartX, rightTextStartY);
   rightTextStartY += (((strlen(bufY) / 2.0) * outlinersmallfontxsize) * thisStepY) / multiplier;
-  infof("addDimensionLines right text %s at %.2f %.2f (string %u fontxsize %.2f thisstepy %.2f)",
-        bufY, rightTextStartX, rightTextStartY,
-        strlen(bufY), outlinersmallfontxsize, thisStepY);
+  debugf("addDimensionLines right text %s at %.2f %.2f (string %u fontxsize %.2f thisstepy %.2f)",
+         bufY, rightTextStartX, rightTextStartY,
+         strlen(bufY), outlinersmallfontxsize, thisStepY);
   theSvg->text(rightTextStartX,rightTextStartY,bufY,outlinersmallfont,90);
 }
 
@@ -641,21 +641,21 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
         case alg_pixelform:
           {
             OutlinerSvgStyle style = formAnalyzer.formToColor(xIndex,yIndex);
-            infof("pixelform alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
+            debugf("pixelform alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
             theSvg->pixel(x,y,style);
           }
           break;
         case alg_depthmap:
           {
             OutlinerSvgStyle style = depthMap->depthToColor(xIndex,yIndex);
-            infof("pixel depthmap alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
+            debugf("pixel depthmap alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
             theSvg->pixel(x,y,style);
           }
           break;
         case alg_depthdiffmap:
           {
             OutlinerSvgStyle style = depthMap->depthDiffToColor(xIndex,yIndex,*this);
-            infof("pixel depthdiffmap alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
+            debugf("pixel depthdiffmap alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
             theSvg->pixel(x,y,style);
           }
           break;
@@ -847,19 +847,19 @@ Processor::faceHasMaterial(const aiScene* scene,
     if (range.needed) {
       if (!range.set) {
         range.set = 1;
-        infof("  initial pixel range set to %.2f..%.2f in coordinates %.2f,%.2f (uninit range %.2f..%.2f)",
-              depthRange.start, depthRange.end,
-              x, y,
-              range.zRange.start, range.zRange.end);
+        debugf("  initial pixel range set to %.2f..%.2f in coordinates %.2f,%.2f (uninit range %.2f..%.2f)",
+               depthRange.start, depthRange.end,
+               x, y,
+               range.zRange.start, range.zRange.end);
         range.zRange = depthRange;
       } else {
         OutlinerBox1D old(range.zRange);
         OutlinerBox1D result;
         old.boxUnion(depthRange,result);
-        infof("  have to merge depth ranges %.2f..%.2f and %.2f..%.2f => %.2f..%.2f",
-              range.zRange.start, range.zRange.end,
-              depthRange.start, depthRange.end,
-              result.start, result.end);
+        debugf("  have to merge depth ranges %.2f..%.2f and %.2f..%.2f => %.2f..%.2f",
+               range.zRange.start, range.zRange.end,
+               depthRange.start, depthRange.end,
+               result.start, result.end);
         range.zRange = result;
       }
     }
@@ -1154,9 +1154,9 @@ Processor::addCrossSectionLine(const char* label,
   svg->line(actualLine.start.x,actualLine.start.y,
             actualLine.end.x,actualLine.end.y,
             outlinersvgstyle_dashed);
-  infof("    process cross-section line text %.2f - font %.2f * 0.5 * pixelXSize %.2f = %.2f",
-        actualLine.end.x, outlinerdefaultfontxsizelarge, svg->getPixelXSize(),
-        actualLine.end.x - outlinerdefaultfontxsizelarge * 0.5 * svg->getPixelXSize());
+  debugf("    process cross-section line text %.2f - font %.2f * 0.5 * pixelXSize %.2f = %.2f",
+         actualLine.end.x, outlinerdefaultfontxsizelarge, svg->getPixelXSize(),
+         actualLine.end.x - outlinerdefaultfontxsizelarge * 0.5 * svg->getPixelXSize());
   if (actualLine.horizontal()) {
     svg->text(actualLine.end.x + outlinerdefaultfontxsize * 0.2 * svg->getPixelXSize(),
               actualLine.end.y - outlinerdefaultfontysizelarge * 0.3 * svg->getPixelYSize(),

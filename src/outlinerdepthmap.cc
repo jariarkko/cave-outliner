@@ -92,7 +92,7 @@ DepthMap::setDepth(const unsigned int xIndex,
     if (depth > rangeMax) rangeMax = depth;
   }
   if (prev == 0) nEntries++;
-  infof("      set depth to %u (%u..%u)", depth, rangeMin, rangeMax);
+  debugf("      set depth to %u (%u..%u)", depth, rangeMin, rangeMax);
 }
 
 outlinerdepth
@@ -122,7 +122,7 @@ DepthMap::depthToColor(const unsigned int xIndex,
   if (rgbval < outlinerunusablegreyscale) finalval = outlinerunusablegreyscale;
   else if (rgbval > 255-outlinerunusablegreyscale) finalval = 255-outlinerunusablegreyscale;
   else finalval = rgbval;
-  infof("    depth %u => %u => %u => %u", input, depth, rgbval,finalval);
+  debugf("    depth %u => %u => %u => %u", input, depth, rgbval,finalval);
   return(outlinersvgstyle_greyval(finalval));
 }
 
@@ -159,7 +159,7 @@ DepthMap::depthDiffToColor(const unsigned int xIndex,
       present++;
     }
   }
-  infof("  neighbor depths %u min %u, own %u", present, minval, depth);
+  debugf("  neighbor depths %u min %u, own %u", present, minval, depth);
   if (present == 0) {
     return(outlinersvgstyle_greyval(128));
   } else {
@@ -175,7 +175,7 @@ DepthMap::depthDiffToColor(const unsigned int xIndex,
       if (val < outlinerunusablegreyscale) finalval = outlinerunusablegreyscale;
       if (val > 255 - outlinerunusablegreyscale) finalval = 255 - outlinerunusablegreyscale;
       else finalval = val;
-      infof("  depth diff %u from %u = %u => %u => %u", depth, avgInt, diff, val, finalval);
+      debugf("  depth diff %u from %u = %u => %u => %u", depth, avgInt, diff, val, finalval);
       return(outlinersvgstyle_greyval(finalval));
     }
   }
@@ -202,9 +202,9 @@ DepthMap::normalize(outlinerdepth input) const {
   outlinerdepth preval = input - base;
   outlinerdepth result = preval * factor + (preval/2) * halfFactor;
   if (base != 0 || factor != 1 || halfFactor != 0) {
-    infof("  normalizing depth %u to %u via %ux 0.5*%ux sub %u",
-          input, result,
-          factor, halfFactor, base);
+    debugf("  normalizing depth %u to %u via %ux 0.5*%ux sub %u",
+           input, result,
+           factor, halfFactor, base);
   }
   return(result);
 }

@@ -810,7 +810,7 @@ SvgCreator::colorBasedOnStyle(OutlinerSvgStyle style) const {
   const char* color = "black";
   if ((style & outlinersvgstyle_grey) != 0) {
     color = greyscale[(style & 0x00FF)];
-    infof("      grey %s from %04x", color, style);
+    debugf("      grey %s from %04x", color, style);
   } else if ((style & outlinersvgstyle_red) != 0) {
     color = "red";
   } else if ((style & outlinersvgstyle_green) != 0) {

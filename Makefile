@@ -288,6 +288,7 @@ cave-tests:	cave1-test \
 		cave1-x-cross-section-width-test \
 		cave1-y-cross-section-test \
 		cave1-depthmap-test \
+		cave1-depthmap-cut-test \
 		cave1-depthmap-highres-test \
 		cave1-depthdiffmap-test \
 		cave1-form-analysis-test \
@@ -530,6 +531,11 @@ cave1-depthmap-test:
 	@echo 'Running test case cave1-depthmap-test...'
 	@./cave-outliner --quiet --depthmap --step 0.2 --holethreshold 10 test/cave1.stl test/cave1-depthmap.svg
 	@diff -q test/cave1-depthmap.svg test/cave1-depthmap.svg.expected
+
+cave1-depthmap-cut-test:
+	@echo 'Running test case cave1-depthmap-ut-test...'
+	@./cave-outliner --quiet --depthmap --step 0.05 --bounding 0.4 12.6 -0.06 3.7 0 0.8 --holethreshold 10 test/cave1.stl test/cave1-depthmap-cut.svg
+	@diff -q test/cave1-depthmap-cut.svg test/cave1-depthmap-cut.svg.expected
 
 cave1-depthmap-highres-test:
 	@echo 'Running test case cave1-depthmap-highres-test...'
