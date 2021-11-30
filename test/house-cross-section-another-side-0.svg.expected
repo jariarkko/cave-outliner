@@ -5,5 +5,11 @@
      width="13" height="10">
 <rect x="0" y="0" width="13" height="10" fill="white" stroke="white" stroke-width="0"/>
 <rect x="2" y="6" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="3" y="6" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="4" y="3" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="4" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="5" y="3" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="5" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 <rect x="6" y="3" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
+<rect x="6" y="2" width="1" height="1" fill="black" stroke-width="0" stroke="black" />
 </svg>
