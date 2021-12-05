@@ -1025,9 +1025,9 @@ ProcessorForms::potentialEntranceAnalysis(const unsigned int matrix3xIndex,
 
   if (matrix3zIndex == 0) debugreturn("too close to bottom",0);
   unsigned int matrix3zIndexSearch = matrix3zIndex - 1;
-  unsigned int furthestPointX;
-  unsigned int furthestPointY;
-  unsigned int furthestPointZ;
+  unsigned int furthestPointX = 0;
+  unsigned int furthestPointY = 0;
+  unsigned int furthestPointZ = 0;
   while (heightSoFar < minimumTunnelHeightCondensed || pathSoFar < minimumTunnelPathCondensed) {
     
     //
@@ -1044,9 +1044,9 @@ ProcessorForms::potentialEntranceAnalysis(const unsigned int matrix3xIndex,
     // How far inside can we go at this level?
     //
     
-    unsigned int thisFurthestPointX;
-    unsigned int thisFurthestPointY;
-    unsigned int thisFurthestPointZ;
+    unsigned int thisFurthestPointX = 0;
+    unsigned int thisFurthestPointY = 0;
+    unsigned int thisFurthestPointZ = 0;
     unsigned int far = check3DMaterialRangeHorizontal(0,
                                                       matrix3xIndex,matrix3yIndex,matrix3zIndexSearch,
                                                       xDirection,yDirection,
