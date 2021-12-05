@@ -241,6 +241,7 @@ main(int argc, char** argv) {
                       config.holethreshold,
                       config.lineholethreshold,
                       config.dustThreshold,
+                      (config.formAnalysis && config.tunnelSpine),
                       (config.labelCrossSections && config.nCrossSections > 0),
                       config.formAnalysis,
                       config.formCondense,

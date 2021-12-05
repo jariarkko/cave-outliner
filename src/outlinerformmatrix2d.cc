@@ -75,15 +75,15 @@ FormMatrix2D::setForm(const unsigned int xIndex,
   const unsigned int charIndex = formMatrixCharIndex(nibbleIndex);
   const unsigned int shift = formMatrixShift(nibbleIndex);
   deepdeepdebugf("setForm(%u,%u)=%x index %u %u shift %u fs %u\n", xIndex, yIndex, form, nibbleIndex, charIndex, shift, fullSizeChars);
-  debugf("          setForm(%u,%u)=%x",
-         xIndex, yIndex, form);
+  deepdebugf("          setForm(%u,%u)=%x",
+             xIndex, yIndex, form);
   assert(charIndex < fullSizeChars);
   assert(shift == 0 || shift == 4);
   uint8_t baseValue = data[charIndex];
-  debugf("            original base = %02x (shift %u)", baseValue, shift);
+  deepdebugf("            original base = %02x (shift %u)", baseValue, shift);
   baseValue &= ~(0x0F << shift);
   baseValue |= (form << shift);
-  debugf("            new base = %02x", baseValue);
+  deepdebugf("            new base = %02x", baseValue);
   data[charIndex] = baseValue;
 }
 
@@ -95,9 +95,9 @@ FormMatrix2D::setForm(const unsigned int xIndexStart,
                       const outlinerform form) {
   assert(xIndexStart < xIndexSize);
   assert(yIndexStart < yIndexSize);
-  debugf("        setForm(%u,%u..%u,%u)",
-         xIndexStart, yIndexStart,
-         xIndexEnd, yIndexEnd);
+  deepdebugf("        setForm(%u,%u..%u,%u)",
+             xIndexStart, yIndexStart,
+             xIndexEnd, yIndexEnd);
   for (unsigned int xIndex = xIndexStart;
        xIndex <= xIndexEnd && xIndex < xIndexSize;
        xIndex++) {
@@ -123,10 +123,10 @@ FormMatrix2D::getForm(const unsigned int xIndex,
   assert(charIndex < fullSizeChars);
   const uint8_t baseValue = data[charIndex];
   outlinerform form = ((baseValue >> shift) & 0x0F);
-  debugf("getForm(%u,%u)=%x base %02x index %u %u shift %u fs %u\n",
-         xIndex, yIndex, form,
-         baseValue,
-         nibbleIndex, charIndex, shift, fullSizeChars);
+  deepdebugf("getForm(%u,%u)=%x base %02x index %u %u shift %u fs %u\n",
+             xIndex, yIndex, form,
+             baseValue,
+             nibbleIndex, charIndex, shift, fullSizeChars);
   assert(form <= outlinerform_max);
   assert(shift == 0 || shift == 4);
   return(form);
@@ -160,7 +160,7 @@ FormMatrix2D::print(unsigned int step) const {
     for (unsigned int xIndex = 0; xIndex < xIndexSize && bufCnt < sizeof(buf)-1; xIndex += step) {
       buf[bufCnt++] = getFormChar(getForm(xIndex,yIndex));
     }
-    infof("%3u: %s", yIndex, buf);
+    debugf("%3u: %s", yIndex, buf);
     if (yIndex < step) break;
     yIndex -= step;
   }

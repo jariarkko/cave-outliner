@@ -28,6 +28,7 @@
 #define outlinermaxholethreshold                                                      50
 #define outlinermaxlineholethreshold                                                  20
 #define outlinermaxcrosssections                                                     100
+#define outlinermaxtunnelsinoneslice                                                  16
 #define outlinerunusablegreyscale                                                      8
 #define outlinerdefaultlinewidth                                                     1.0
 #define outlinerdefaultfont                                                           16
@@ -53,6 +54,7 @@
 #define outlinerepsilon                                                         0.000001 // ppm
 
 #define OUTLINER_PROG                                                    "cave-outliner"
+#define OUTLINER_WARNPREFIX                                  OUTLINER_PROG ": Warning: "
 #define OUTLINER_ERRPREFIX                                     OUTLINER_PROG ": Error: "
 #define OUTLINER_INFOPREFIX                                     OUTLINER_PROG ": Info: "
 #define OUTLINER_DEBUGPREFIX                                   OUTLINER_PROG ": Debug: "

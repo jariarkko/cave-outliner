@@ -38,6 +38,9 @@
 #define outlinerform_mainform_complex        5 // More than two layers of material
                                                // and air (complex cave, multi-level tunnels, ...)
 #define outlinerform_max                  0x07
+#define outlinerform_istunnel(form)       (((form) == outlinerform_mainform_tunnel) || \
+                                           ((form) == outlinerform_mainform_tunnel_stalac) || \
+                                           ((form) == outlinerform_mainform_dripline))
 
 ///
 /// This object represents a quantized 3D view into a 3D cave

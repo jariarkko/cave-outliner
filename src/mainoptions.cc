@@ -175,6 +175,8 @@ MainOptions::processCommandLineOptions(int& argc,
       config.formAnalysis = 1;
       config.formCondense = num;
       argc--;argv++;
+    } else if (strcmp(argv[1],"--tunnelspine") == 0) {
+      config.tunnelSpine = 1;
     } else if (strcmp(argv[1],"--label") == 0) {
       config.labelCrossSections = 1;
     } else if (strcmp(argv[1],"--dimensions") == 0) {

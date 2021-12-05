@@ -34,6 +34,8 @@
 #include "outlinermaterialmatrix2d.hh"
 #include "outlinermaterialmatrix3d.hh"
 #include "outlinerformmatrix2d.hh"
+#include "outlineroutlineanalyzer.hh"
+#include "outlinershaperecognizer.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Class interface ////////////////////////////////////////////////////////////////////////////
@@ -71,8 +73,29 @@ public:
                       const unsigned int yIndex) const;
   outlinerform getForm(const unsigned int xIndex,
                        const unsigned int yIndex) const;
+  void drawSpines(SvgCreator& svg) const;
+  
+  //
+  // Coordinate transformations
+  //
+
+  void condensedXIndexToIndex(const unsigned int matrix3xIndex,
+                              unsigned int& matrix2xIndexStart,
+                              unsigned int& matrix2xIndexEnd) const;
+  void condensedYIndexToIndex(const unsigned int matrix3yIndex,
+                              unsigned int& matrix2yIndexStart,
+                              unsigned int& matrix2yIndexEnd) const;
+  void condensedIndexesToIndexes(const unsigned int matrix3xIndex,
+                                 const unsigned int matrix3yIndex,
+                                 unsigned int& matrix2xIndexStart,
+                                 unsigned int& matrix2yIndexStart,
+                                 unsigned int& matrix2xIndexEnd,
+                                 unsigned int& matrix2yIndexEnd) const;
+  void condensedIndexIncrease(unsigned int& matrix2Index) const;
   
 private:
+  
+  friend class OutlineAnalyzer;
   
   const OutlinerBox3D boundingBox;
   const enum outlinerdirection direction;
@@ -87,6 +110,8 @@ private:
   MaterialMatrix2D& matrix2;           // Processor's main plan-view matrix
   MaterialMatrix3D matrix3;            // Form analysis 3D view matrix
   FormMatrix2D forms;                  // Form analysis results
+  OutlineAnalyzer outlineAnalyzer;     // Outline analyzer
+  ShapeRecognizer recognizer;          // Recognize stalactites etc.
   class Processor& proc;               // Reference to the main processor object
   static const unsigned int maxClearedMaterial = 20 * 1024;
   unsigned int nClearedMaterial;
@@ -94,13 +119,20 @@ private:
   unsigned int clearedMaterialY[maxClearedMaterial];
   
   //
-  // Internal functions
+  // Internal functions, main functions
+  //
+  
+  bool performFormAnalysisAnalyze(void);
+  bool performFormAnalysisOutline(void);
+  bool performFormAnalysisInsideAnalyze(void);
+
+  //
+  // Internal functions, basic form analysis
   //
   
   bool performFormAnalysisSlicing(const aiScene* scene);
   bool performFormAnalysisOneSlice(const aiScene* scene,
                                    unsigned int xIndex);
-  bool performFormAnalysisAnalyze(void);
   bool performFormAnalysisAnalyzeOnePixelPhase1(const unsigned int matrix3xIndex,
                                                 const unsigned int matrix3yIndex,
                                                 const unsigned int matrix2xIndexStart,
@@ -203,12 +235,7 @@ private:
                         const unsigned int matrix2yIndex,
                         const int xDirection,
                         const int yDirection) const;
-  void condensedXIndexToIndex(const unsigned int matrix3xIndex,
-                              unsigned int& matrix2xIndexStart,
-                              unsigned int& matrix2xIndexEnd) const;
-  void condensedYIndexToIndex(const unsigned int matrix3yIndex,
-                              unsigned int& matrix2yIndexStart,
-                              unsigned int& matrix2yIndexEnd) const;
+
 };
 
 #endif // PROCESSORFORMS_HH

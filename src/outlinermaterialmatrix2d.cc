@@ -144,7 +144,7 @@ MaterialMatrix2D::getMaterialMatrix(const unsigned int xIndexStart,
                                     const unsigned int yIndexStart,
                                     const unsigned int xIndexEnd,
                                     const unsigned int yIndexEnd) const {
-  infof("      multi-get-mm %u..%u x %u..%u", xIndexStart, xIndexEnd, yIndexStart, yIndexEnd);
+  deepdebugf("      multi-get-mm %u..%u x %u..%u", xIndexStart, xIndexEnd, yIndexStart, yIndexEnd);
   assert(xIndexStart < xIndexSize);
   assert(yIndexStart < yIndexSize);
   for (unsigned int xIndex = xIndexStart;
@@ -156,14 +156,14 @@ MaterialMatrix2D::getMaterialMatrix(const unsigned int xIndexStart,
       assert(xIndex < xIndexSize);
       assert(yIndex < yIndexSize);
       if (getMaterialMatrix(xIndex,yIndex)) {
-        infof("      multi-get-mm found");
+        deepdebugf("      multi-get-mm found");
         return(1);
       }
     }
   }
   
   // Not found
-  infof("      multi-get-mm not found");
+  deepdebugf("      multi-get-mm not found");
   return(0);
 }
 

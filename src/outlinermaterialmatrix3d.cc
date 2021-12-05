@@ -123,13 +123,13 @@ MaterialMatrix3D::getMaterialMatrix(const unsigned int xIndex,
   } else {
     unsigned int sliceYIndex = yIndex - verticalMatrixes[xIndex].yIndexOffset;
     unsigned int sliceZIndex = zIndex - verticalMatrixes[xIndex].zIndexOffset;
-    debugf("      3d getmm %u,%u,%u slice yz %u %u (offsets %u %u maxes %u %u)",
-           xIndex,yIndex,zIndex,
-           sliceYIndex, sliceZIndex,
-           verticalMatrixes[xIndex].yIndexOffset,
-           verticalMatrixes[xIndex].zIndexOffset,
-           sliceMatrix->xIndexSize,
-           sliceMatrix->yIndexSize);
+    deepdebugf("      3d getmm %u,%u,%u slice yz %u %u (offsets %u %u maxes %u %u)",
+               xIndex,yIndex,zIndex,
+               sliceYIndex, sliceZIndex,
+               verticalMatrixes[xIndex].yIndexOffset,
+               verticalMatrixes[xIndex].zIndexOffset,
+               sliceMatrix->xIndexSize,
+               sliceMatrix->yIndexSize);
     if (sliceYIndex >= sliceMatrix->xIndexSize) {
       return(0);
     } else if (sliceZIndex >= sliceMatrix->yIndexSize) {

@@ -345,9 +345,9 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
   outlinerreal xEnd = outlinermin(elementFlatBoundingBox.end.x,viewBoundingBox.end.x);
   outlinerreal yStart = outlinermax(viewBoundingBox.start.y,elementFlatBoundingBox.start.y);
   outlinerreal yEnd = outlinermin(elementFlatBoundingBox.end.y,viewBoundingBox.end.y);
-  debugf("placing a face bounding box (%f..%f) x (%f..%f) to tiles",
-         xStart, xEnd,
-         yStart, yEnd);
+  deepdebugf("placing a face bounding box (%f..%f) x (%f..%f) to tiles",
+             xStart, xEnd,
+             yStart, yEnd);
   for (outlinerreal x = xStart; outlinerleepsilon(x,xEnd); x += halfTileSizeX) {
     for (outlinerreal y = yStart; outlinerleepsilon(y,yEnd); y += halfTileSizeY) {
       unsigned int tileX;
@@ -400,7 +400,7 @@ IndexedMesh::addToTile(struct IndexedMeshOneMesh& shadow,
   // Check to see if the face is already on the table. If yes, exit.
   for (unsigned int i = 0; i < tile->nFaces; i++) {
     if (tile->faces[i] == face) {
-      debugf("face is already in the table");
+      deepdebugf("face is already in the table");
       return;
     }
   }
@@ -460,9 +460,6 @@ IndexedMesh::getFaces(const aiMesh* mesh,
                tileY,
                p_nFaces,
                p_faces);
-  if (x > -0.605 && x < -0.595) {
-    debugf("getFaces(%.2f,%.2f) tile (%u,%u) has %u faces", x, y, tileX, tileY, *p_nFaces);
-  }
 }
 
 void
@@ -477,7 +474,7 @@ IndexedMesh::getFacesTile(struct IndexedMeshOneMesh& shadow,
   assert(shadow.mesh == mesh);
   assert(mesh != 0);
   if (tileX >= subdivisions || tileY >= subdivisions) {
-    debugf("getFacesTile(%u,%u)", tileX, tileY);
+    deepdebugf("getFacesTile(%u,%u)", tileX, tileY);
   }
   assert(tileX < subdivisions);
   assert(tileY < subdivisions);
@@ -520,9 +517,9 @@ IndexedMesh::coordsToTile(outlinerreal x,
   tileY = yInView / tileSizeY;
   assert(tileY <= subdivisions);
   if (tileY == subdivisions) tileY = subdivisions - 1;
-  deepdebugf("      coordinate (%f,%f) tile is (%u,%u)",
-             x, y,
-             tileX, tileY);
+  deepdeepdebugf("      coordinate (%f,%f) tile is (%u,%u)",
+                 x, y,
+                 tileX, tileY);
 }
 
 IndexedMesh::~IndexedMesh() {

@@ -53,6 +53,7 @@ Processor::Processor(const char* fileNameIn,
                      const unsigned int holethresholdIn,
                      const unsigned int lineHolethresholdIn,
                      const unsigned int dustThresholdIn,
+                     const bool tunnelSpineIn,
                      const bool labelsIn,
                      const bool formAnalysisIn,
                      const unsigned int formCondenseIn,
@@ -77,6 +78,7 @@ Processor::Processor(const char* fileNameIn,
   holethreshold(holethresholdIn),
   lineHolethreshold(lineHolethresholdIn),
   dustThreshold(dustThresholdIn),
+  tunnelSpine(tunnelSpineIn),
   labels(labelsIn),
   formAnalysis(formAnalysisIn),
   dimensions(dimensionsIn),
@@ -192,6 +194,11 @@ Processor::processScene(const aiScene* scene) {
   // Draw the basic plan view
   if (!processSceneAlgorithmDraw(scene)) {
     return(0);
+  }
+
+  // Add tunnel spines (midpoints) if requested
+  if (tunnelSpine) {
+    formAnalyzer.drawSpines(*svg);
   }
   
   // Add dimension lines, if any
@@ -367,7 +374,7 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
       rangeInfo.needed = (algorithm == alg_depthmap || algorithm == alg_depthdiffmap);
       rangeInfo.set = 0;
       if (sceneHasMaterial(scene,indexed,x,y,rangeInfo)) {
-        debugf("  material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
+        deepdebugf("  material at (%.2f,%.2f) ie. %u,%u",x,y,xIndex,yIndex);
         matrix2.setMaterialMatrix(xIndex,yIndex);
         assert(rangeInfo.needed == rangeInfo.set);
         if (rangeInfo.needed) {
@@ -842,24 +849,24 @@ Processor::faceHasMaterial(const aiScene* scene,
   if (OutlinerMath::boundingBoxIntersectsTriangle2D(t,thisBox)) {
     char buf[150];
     OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
-    debugf("    found out that (%.2f..%.2f,%.2f..%.2f) is hitting a face %s",
-           thisBox.start.x,thisBox.end.x,thisBox.start.y,thisBox.end.y,buf);
+    deepdebugf("    found out that (%.2f..%.2f,%.2f..%.2f) is hitting a face %s",
+               thisBox.start.x,thisBox.end.x,thisBox.start.y,thisBox.end.y,buf);
     if (range.needed) {
       if (!range.set) {
         range.set = 1;
-        debugf("  initial pixel range set to %.2f..%.2f in coordinates %.2f,%.2f (uninit range %.2f..%.2f)",
-               depthRange.start, depthRange.end,
-               x, y,
-               range.zRange.start, range.zRange.end);
+        deepdebugf("  initial pixel range set to %.2f..%.2f in coordinates %.2f,%.2f (uninit range %.2f..%.2f)",
+                   depthRange.start, depthRange.end,
+                   x, y,
+                   range.zRange.start, range.zRange.end);
         range.zRange = depthRange;
       } else {
         OutlinerBox1D old(range.zRange);
         OutlinerBox1D result;
         old.boxUnion(depthRange,result);
-        debugf("  have to merge depth ranges %.2f..%.2f and %.2f..%.2f => %.2f..%.2f",
-               range.zRange.start, range.zRange.end,
-               depthRange.start, depthRange.end,
-               result.start, result.end);
+        deepdebugf("  have to merge depth ranges %.2f..%.2f and %.2f..%.2f => %.2f..%.2f",
+                   range.zRange.start, range.zRange.end,
+                   depthRange.start, depthRange.end,
+                   result.start, result.end);
         range.zRange = result;
       }
     }

@@ -474,7 +474,7 @@ ProcessorCrossSection::drawCrossSectionMesh(const aiScene* scene,
     }
     unsigned int nFaces = 0;
     const aiFace** faces = 0;
-    debugf("  cross section line iterator step %u (starting from %u)", iter.step, firstStepInBoundingBox);
+    deepdebugf("  cross section line iterator step %u (starting from %u)", iter.step, firstStepInBoundingBox);
     proc.indexed.getFaces(mesh,iter.point.x,iter.point.y,&nFaces,&faces);
     if (nFaces > 0) {
       deepdebugf("  drawCrossSectionMesh: got %u cross section faces from (%.2f,%.2f)",
@@ -483,11 +483,11 @@ ProcessorCrossSection::drawCrossSectionMesh(const aiScene* scene,
       for  (outlinerreal z = sliceVerticalBoundingBox.start.y;
             outlinerle(z,sliceVerticalBoundingBox.end.y);
             z += stepz) {
-        debugf("    z step %u (%.2f..%.2f) while x (%.2f..%.2f) and y (%.2f..%.2f)",
-              zStep,
-              z, z+ stepz,
-              iter.point.x, iter.point.x+lineStepY,
-              iter.point.y, iter.point.y+lineStepY);
+        deepdebugf("    z step %u (%.2f..%.2f) while x (%.2f..%.2f) and y (%.2f..%.2f)",
+                   zStep,
+                   z, z+ stepz,
+                   iter.point.x, iter.point.x+lineStepY,
+                   iter.point.y, iter.point.y+lineStepY);
         deepdebugf("  drawCrossSectionMesh: z iterator step (%.2f,%.2f,%.2f)",
                    iter.point.x, iter.point.y, z);
         for (unsigned int f = 0; f < nFaces; f++) {
@@ -529,15 +529,15 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
            t.a.z, t.b.z, t.c.z);
   }
   if (OutlinerMath::boundingBoxIntersectsTriangle3D(t,thisBox)) {
-    debugf("    face match at %u,%u (%.2f,%.2f,%.2f) for face %s",
-           xyStep, zStep, x, y, z, buf);
+    deepdebugf("    face match at %u,%u (%.2f,%.2f,%.2f) for face %s",
+               xyStep, zStep, x, y, z, buf);
     deepdebugf("    face xyz match at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) triangle %s => matrix %u,%u",
                x, thisBox.end.x, y, thisBox.end.y, z, thisBox.end.z,
                buf, xyStep, zStep);
     matrix->setMaterialMatrix(xyStep,zStep);
   } else {
-    debugf("     no   match at %u,%u (%.2f,%.2f,%.2f) for face %s",
-           xyStep, zStep, x, y, z, buf);
+    deepdebugf("     no   match at %u,%u (%.2f,%.2f,%.2f) for face %s",
+               xyStep, zStep, x, y, z, buf);
     if (xyStep == 0 && zStep == 10) {
       OutlinerMath::triangleDescribe(t,buf,sizeof(buf),1);
       debugf("      full triangle %s", buf);
@@ -616,8 +616,8 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxMesh(const aiScene* scene,
         nActualFaces++;
       }
     }
-    debugf("cross section iteration step %u at %.2f,%.2f: hits %u tiled faces, %u actual faces",
-           iter.step, iter.point.x, iter.point.y, nFaces, nActualFaces);
+    deepdebugf("cross section iteration step %u at %.2f,%.2f: hits %u tiled faces, %u actual faces",
+               iter.step, iter.point.x, iter.point.y, nFaces, nActualFaces);
   }
 }
 
@@ -637,12 +637,12 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
   OutlinerTriangle2D t2(a,b,c);
   OutlinerBox2D thisBox(x,y,x+boxStepX,y+boxStepY);
   if (OutlinerMath::boundingBoxIntersectsTriangle2D(t2,thisBox)) {
-    debugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) hits step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
-           mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
-           mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
-           mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
-           thisBox.start.x, thisBox.start.y,
-           thisBox.end.x, thisBox.end.y);
+    deepdebugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) hits step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
+               mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
+               mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
+               mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
+               thisBox.start.x, thisBox.start.y,
+               thisBox.end.x, thisBox.end.y);
     deepdeepdebugf("cross section direction %s and %s",
                    DirectionOperations::toString(proc.direction),
                    DirectionOperations::toString(sliceDirection));
@@ -697,16 +697,16 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
     
   } else {
     
-    debugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) "
-           "for direction %s (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) does NOT hit "
-           "step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
-           mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
-           mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
-           mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
-           DirectionOperations::toString(proc.direction),
-           t2.a.x, t2.a.y, t2.b.x, t2.b.y, t2.c.x, t2.c.y,
-           thisBox.start.x, thisBox.start.y,
-           thisBox.end.x, thisBox.end.y);
+    deepdebugf("cross section face (%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f)-(%.2f,%.2f,%.2f) "
+               "for direction %s (%.2f,%.2f)-(%.2f,%.2f)-(%.2f,%.2f) does NOT hit "
+               "step bounding box (%.2f,%.2f)-(%.2f,%.2f)",
+               mesh->mVertices[face->mIndices[0]].x,mesh->mVertices[face->mIndices[0]].y,mesh->mVertices[face->mIndices[0]].z,
+               mesh->mVertices[face->mIndices[1]].x,mesh->mVertices[face->mIndices[1]].y,mesh->mVertices[face->mIndices[1]].z,
+               mesh->mVertices[face->mIndices[2]].x,mesh->mVertices[face->mIndices[2]].y,mesh->mVertices[face->mIndices[2]].z,
+               DirectionOperations::toString(proc.direction),
+               t2.a.x, t2.a.y, t2.b.x, t2.b.y, t2.c.x, t2.c.y,
+               thisBox.start.x, thisBox.start.y,
+               thisBox.end.x, thisBox.end.y);
     return(0);
     
   }

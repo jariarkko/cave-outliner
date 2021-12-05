@@ -87,6 +87,18 @@ This is the module inside of the Core module that performs the analysis of what 
 
 See the detailed description of the [Class ProcessorForms API](software/class_processor_forms.md). 
 
+#### Outlineroutlineanalyzer
+
+This is the module inside of the Core module that performs the analysis where cave tunnels are what direction they running, where is the roof vs. floor, and so on. 
+
+See the detailed description of the [Class OutlineAnalyzer API](software/class_outline_analyzer.md). 
+
+#### Outlinershaperecognizer
+
+This is the module inside of the Core module that performs the actual analysis of inside-the-cave features such a stalactites. It uses an external software to do the actual generic AI processing, using a tool called Tensorflow. This tool is specifically trained in Cave Outliner to recognise the types of cave features that we are looking at, however, so the training data comes from Cave Outliner.
+
+See the detailed description of the [Class ShapeRecognizer API](software/class_shape_recognizer.md). 
+
 ### Outlinersvg
 
 This module can be used to output SVG images to a file. For a description of what an SVG image format is, see https://www.w3schools.com/graphics/svg_intro.asp. 

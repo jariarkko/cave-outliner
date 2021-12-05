@@ -87,6 +87,7 @@ public:
             const unsigned int holethresholdIn,
             const unsigned int lineHolethresholdIn,
             const unsigned int dustTresholdIn,
+            const bool tunnelSpineIn,
             const bool labelsIn,
             const bool formAnalysisIn,
             const unsigned int formCondenseIn,
@@ -127,6 +128,7 @@ private:
   const unsigned int holethreshold;
   const unsigned int lineHolethreshold;
   const unsigned int dustThreshold;
+  const bool tunnelSpine;
   const bool labels;
   const bool formAnalysis;
   const bool dimensions;

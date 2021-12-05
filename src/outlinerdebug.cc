@@ -128,6 +128,25 @@ deepdeepdebugf(const char* format, ...) {
 
 __attribute__((__format__ (__printf__, 1, 0)))
 void
+warnf(const char* format, ...) {
+
+  assert(format != 0);
+
+  va_list args;
+  char buf[500];
+  memset(buf,0,sizeof(buf));
+  va_start (args, format);
+  vsnprintf(buf,sizeof(buf)-1,format,args);
+  va_end (args);
+  std::cerr << OUTLINER_WARNPREFIX;
+  std::cerr << buf;
+  std::cerr << " -- exit\n";
+  std::cerr.flush();
+  
+}
+
+__attribute__((__format__ (__printf__, 1, 0)))
+void
 errf(const char* format, ...) {
 
   assert(format != 0);

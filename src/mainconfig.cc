@@ -63,6 +63,7 @@ MainConfig::MainConfig() :
   automaticCrossSectionFilenamePattern(0),
   nCrossSections(0),
   crossSectionWidth(1.0),
+  tunnelSpine(0),
   labelCrossSections(0),
   formAnalysis(0),
   formCondense(1),

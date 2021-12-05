@@ -25,6 +25,8 @@ OBJS=	$(OBJDIR)/main.o \
 	$(OBJDIR)/outlinerprocessor.o \
 	$(OBJDIR)/outlinerprocessorcrosssection.o \
 	$(OBJDIR)/outlinerprocessorforms.o \
+	$(OBJDIR)/outlineroutlineanalyzer.o \
+	$(OBJDIR)/outlinershaperecognizer.o \
 	$(OBJDIR)/outlinerindexedmesh.o \
 	$(OBJDIR)/outlinermaterialmatrix2d.o \
 	$(OBJDIR)/outlinermaterialmatrix3d.o \
@@ -49,6 +51,8 @@ HDRS=	src/main.hh \
 	src/outlinerprocessor.hh \
 	src/outlinerprocessorcrosssection.hh \
 	src/outlinerprocessorforms.hh \
+	src/outlineroutlineanalyzer.hh \
+	src/outlinershaperecognizer.hh \
 	src/outlinerindexedmesh.hh \
 	src/outlinermaterialmatrix2d.hh \
 	src/outlinermaterialmatrix3d.hh \
@@ -70,6 +74,8 @@ SRCS=	src/main.cc \
 	src/outlinerprocessor.cc \
 	src/outlinerprocessorcrosssection.cc \
 	src/outlinerprocessorforms.cc \
+	src/outlineroutlineanalyzer.cc \
+	src/outlinershaperecognizer.cc \
 	src/outlinerindexedmesh.cc \
 	src/outlinermaterialmatrix2d.cc \
 	src/outlinermaterialmatrix3d.cc \
@@ -102,6 +108,8 @@ CLASSES=outliner_math \
 	processor \
 	processor_cross_section \
 	processor_forms \
+	outline_analyzer \
+	shape_recognizer \
 	svg_creator
 CLASSMARKDOWNS=	doc/software/class_outliner_math.md \
 		doc/software/class_main_config.md \
@@ -125,6 +133,8 @@ CLASSMARKDOWNS=	doc/software/class_outliner_math.md \
 		doc/software/class_processor.md \
 		doc/software/class_processor_cross_section.md \
 		doc/software/class_processor_forms.md \
+		doc/software/class_outline_analyzer.md \
+		doc/software/class_shape_recognizer.md \
 		doc/software/class_svg_creator.md
 TOOLS=	doc/tools/markdowncleanup.sh
 SUPP=	Makefile $(TOOLS)
@@ -160,6 +170,12 @@ $(OBJDIR)/outlinerprocessorcrosssection.o:	src/outlinerprocessorcrosssection.cc 
 
 $(OBJDIR)/outlinerprocessorforms.o:	src/outlinerprocessorforms.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerprocessorforms.o
+
+$(OBJDIR)/outlineroutlineanalyzer.o:	src/outlineroutlineanalyzer.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlineroutlineanalyzer.o
+
+$(OBJDIR)/outlinershaperecognizer.o:	src/outlinershaperecognizer.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinershaperecognizer.o
 
 $(OBJDIR)/outlinerindexedmesh.o:	src/outlinerindexedmesh.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerindexedmesh.o
@@ -294,7 +310,8 @@ cave-tests:	cave1-test \
 		cave1-form-analysis-test \
 		cave1-form-analysis-pixel-test \
 		cave1-form-analysis-line-test \
-		cave1-form-analysis-smooth-line-test
+		cave1-form-analysis-smooth-line-test \
+		cave1-spine-test
 
 failing-tests:	failing-tests-note \
 		house-cross-section-side-test \
@@ -566,6 +583,11 @@ cave1-form-analysis-smooth-line-test:
 	@echo 'Running test case cave1-form-analysis-smooth-line-test...'
 	@./cave-outliner --quiet --multiplier 5 --smooth --formanalysis 2 --borderline --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-form-analysis-smooth-line.svg
 	@diff -q test/cave1-form-analysis-smooth-line.svg test/cave1-form-analysis-smooth-line.svg.expected
+
+cave1-spine-test:
+	@echo 'Running test case cave1-spine-test...'
+	@./cave-outliner --quiet --tunnelspine --multiplier 5 --formanalysis 1 --borderline --step 0.2 --holethreshold 10 test/cave1.stl test/cave1-spine.svg
+	@diff -q test/cave1-spine.svg test/cave1-spine.svg.expected
 
 example-tests:	cave1-example-orig-test \
 		cave1-example-form-test \
