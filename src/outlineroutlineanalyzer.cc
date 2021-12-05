@@ -132,7 +132,9 @@ OutlineAnalyzer::analyzeOneTunnelSlice(struct OutlineSliceTunnelDescriptor& tunn
   // Add more information to the tunnel descriptor
   //
 
-  bool ans = findZMidPointAlternatives(matrix3xIndex,matrix3yIndex,matrix3yIndex+1,tunnel.startZ);
+  bool ans = ((matrix3yIndex < matrix3.yIndexSize - 1) ?
+              findZMidPointAlternatives(matrix3xIndex,matrix3yIndex,matrix3yIndex+1,tunnel.startZ) :
+              findZMidPoint(matrix3xIndex,matrix3yIndex,tunnel.startZ));
   if (!ans) {
     infof("  Failed to find begin z at %u", matrix3xIndex);
     nFailedZScans++;
@@ -192,7 +194,9 @@ OutlineAnalyzer::analyzeOneTunnelSlice(struct OutlineSliceTunnelDescriptor& tunn
 
   tunnel.yIndexRange.end = matrix3yIndex-1;
   tunnel.yMidPoint = (tunnel.yIndexRange.start + tunnel.yIndexRange.end) / 2;
-  ans = findZMidPointAlternatives(matrix3xIndex,matrix3yIndex,matrix3yIndex-1,tunnel.endZ);
+  ans = ((matrix3yIndex > 0) ?
+         findZMidPointAlternatives(matrix3xIndex,matrix3yIndex,matrix3yIndex-1,tunnel.endZ) :
+         findZMidPoint(matrix3xIndex,matrix3yIndex,tunnel.endZ));
   if (!ans) {
     infof("  Failed to find end z at %u", matrix3xIndex);
     nFailedZScans++;

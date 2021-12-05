@@ -175,6 +175,12 @@ MainOptions::processCommandLineOptions(int& argc,
       config.formAnalysis = 1;
       config.formCondense = num;
       argc--;argv++;
+    } else if (strcmp(argv[1],"--floordepthmap") == 0 && argc > 2) {
+      config.floorDepthMap = argv[2];
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--roofdepthmap") == 0 && argc > 2) {
+      config.roofDepthMap = argv[2];
+      argc--;argv++;
     } else if (strcmp(argv[1],"--tunnelspine") == 0) {
       config.tunnelSpine = 1;
     } else if (strcmp(argv[1],"--label") == 0) {
@@ -275,7 +281,7 @@ MainOptions::processCommandLineOptions(int& argc,
       processVersion();
       return(0);
     } else if (strcmp(argv[1],"--help") == 0) {
-      processHelp();
+       processHelp();
       return(0);
     } else {
       errf("Unrecognised option: %s", argv[1]);

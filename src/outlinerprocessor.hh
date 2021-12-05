@@ -87,6 +87,8 @@ public:
             const unsigned int holethresholdIn,
             const unsigned int lineHolethresholdIn,
             const unsigned int dustTresholdIn,
+            const char* floorDepthMapIn,
+            const char* roofDepthMapIn,
             const bool tunnelSpineIn,
             const bool labelsIn,
             const bool formAnalysisIn,
@@ -128,6 +130,8 @@ private:
   const unsigned int holethreshold;
   const unsigned int lineHolethreshold;
   const unsigned int dustThreshold;
+  const char* floorDepthMap;
+  const char* roofDepthMap;
   const bool tunnelSpine;
   const bool labels;
   const bool formAnalysis;

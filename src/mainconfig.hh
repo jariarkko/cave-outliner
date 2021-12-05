@@ -150,6 +150,12 @@ public:
   /// Width of cross sections (in unit of one step, e.g., 2.0 means
   /// analysis of a cross slice looks at two steps of 3D model data).
   outlinerreal crossSectionWidth;
+
+  /// Should we output the cave floor depth map to a separate file?
+  const char* floorDepthMap;
+  
+  /// Should we output the cave roof depth map to a separate file?
+  const char* roofDepthMap;
   
   /// Should we show tunnel 'spines', i.e., tunnel midpoints?
   bool tunnelSpine;

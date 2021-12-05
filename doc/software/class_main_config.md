@@ -430,42 +430,78 @@ MainConfig Class Reference
 <tr class="odd separator:add8090a6f001d2f1c954ae69f5951ae4">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="even memitem:a903dc0119ec4155627ce8bb3531f4d86">
+<tr class="even memitem:a3a9a13ec687319ca5101f0b03c9aa680">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a3a9a13ec687319ca5101f0b03c9aa680"></span> const char * </td>
+<td class="memItemRight" data-valign="bottom"><strong>floorDepthMap</strong></td>
+</tr>
+<tr class="odd memdesc:a3a9a13ec687319ca5101f0b03c9aa680">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Should we output the cave floor depth map to a separate file?<br />
+</td>
+</tr>
+<tr class="even separator:a3a9a13ec687319ca5101f0b03c9aa680">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:aafeb8c4c5864c28ee688d2825f3a71d5">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aafeb8c4c5864c28ee688d2825f3a71d5"></span> const char * </td>
+<td class="memItemRight" data-valign="bottom"><strong>roofDepthMap</strong></td>
+</tr>
+<tr class="even memdesc:aafeb8c4c5864c28ee688d2825f3a71d5">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Should we output the cave roof depth map to a separate file?<br />
+</td>
+</tr>
+<tr class="odd separator:aafeb8c4c5864c28ee688d2825f3a71d5">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="even memitem:a3d0661ecb055ca1128553ecdfbead687">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a3d0661ecb055ca1128553ecdfbead687"></span> bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>tunnelSpine</strong></td>
+</tr>
+<tr class="odd memdesc:a3d0661ecb055ca1128553ecdfbead687">
+<td class="mdescLeft"> </td>
+<td class="mdescRight">Should we show tunnel 'spines', i.e., tunnel midpoints?<br />
+</td>
+</tr>
+<tr class="even separator:a3d0661ecb055ca1128553ecdfbead687">
+<td colspan="2" class="memSeparator"> </td>
+</tr>
+<tr class="odd memitem:a903dc0119ec4155627ce8bb3531f4d86">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a903dc0119ec4155627ce8bb3531f4d86"></span> bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>labelCrossSections</strong></td>
 </tr>
-<tr class="odd memdesc:a903dc0119ec4155627ce8bb3531f4d86">
+<tr class="even memdesc:a903dc0119ec4155627ce8bb3531f4d86">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Should we label cross sections in the images?<br />
 </td>
 </tr>
-<tr class="even separator:a903dc0119ec4155627ce8bb3531f4d86">
+<tr class="odd separator:a903dc0119ec4155627ce8bb3531f4d86">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:ade3b2a5c0fdcf0498e926504267bdb47">
+<tr class="even memitem:ade3b2a5c0fdcf0498e926504267bdb47">
 <td style="text-align: right;" class="memItemLeft" data-valign="top">bool </td>
 <td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_main_config.md#ade3b2a5c0fdcf0498e926504267bdb47" class="el">formAnalysis</a></td>
 </tr>
-<tr class="even separator:ade3b2a5c0fdcf0498e926504267bdb47">
+<tr class="odd separator:ade3b2a5c0fdcf0498e926504267bdb47">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a61daa40a3788ca081f7b506c35842062">
+<tr class="even memitem:a61daa40a3788ca081f7b506c35842062">
 <td style="text-align: right;" class="memItemLeft" data-valign="top">unsigned int </td>
 <td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_main_config.md#a61daa40a3788ca081f7b506c35842062" class="el">formCondense</a></td>
 </tr>
-<tr class="even separator:a61daa40a3788ca081f7b506c35842062">
+<tr class="odd separator:a61daa40a3788ca081f7b506c35842062">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
-<tr class="odd memitem:a1525af4e5fd0a285c25bc7ca4471e8ed">
+<tr class="even memitem:a1525af4e5fd0a285c25bc7ca4471e8ed">
 <td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a1525af4e5fd0a285c25bc7ca4471e8ed"></span> bool </td>
 <td class="memItemRight" data-valign="bottom"><strong>dimensions</strong></td>
 </tr>
-<tr class="even memdesc:a1525af4e5fd0a285c25bc7ca4471e8ed">
+<tr class="odd memdesc:a1525af4e5fd0a285c25bc7ca4471e8ed">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Should we show dimensions?<br />
 </td>
 </tr>
-<tr class="odd separator:a1525af4e5fd0a285c25bc7ca4471e8ed">
+<tr class="even separator:a1525af4e5fd0a285c25bc7ca4471e8ed">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 </tbody>

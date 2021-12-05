@@ -27,16 +27,16 @@ Processor Class Reference
 <tr class="odd heading">
 <td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
 </tr>
-<tr class="even memitem:aa8f1bb7b2ff061aa20926db570fbd5ab">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aa8f1bb7b2ff061aa20926db570fbd5ab"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>Processor</strong> (const char *fileNameIn, const unsigned int multiplierIn, const bool smoothIn, const bool mergedLinesIn, const float linewidthIn, const bool svgYSwapIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;originalBoundingBoxIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBoxIn, const outlinerreal stepxIn, const outlinerreal stepyIn, const outlinerreal stepzIn, const enum outlinerdirection directionIn, const enum outlineralgorithm algorithmIn, const unsigned int holethresholdIn, const unsigned int lineHolethresholdIn, const unsigned int dustTresholdIn, const bool labelsIn, const bool formAnalysisIn, const unsigned int formCondenseIn, const bool dimensionsIn, unsigned int nCrossSectionsIn, struct <a href="struct_processor_cross_section_info.md" class="el">ProcessorCrossSectionInfo</a> *crossSectionsIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_indexed_mesh.md" class="el">IndexedMesh</a> &amp;indexedIn)</td>
+<tr class="even memitem:a8693db0777045e91b1b18e4d211720ea">
+<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a8693db0777045e91b1b18e4d211720ea"></span>  </td>
+<td class="memItemRight" data-valign="bottom"><strong>Processor</strong> (const char *fileNameIn, const unsigned int multiplierIn, const bool smoothIn, const bool mergedLinesIn, const float linewidthIn, const bool svgYSwapIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;originalBoundingBoxIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_box3_d.md" class="el">OutlinerBox3D</a> &amp;boundingBoxIn, const outlinerreal stepxIn, const outlinerreal stepyIn, const outlinerreal stepzIn, const enum outlinerdirection directionIn, const enum outlineralgorithm algorithmIn, const unsigned int holethresholdIn, const unsigned int lineHolethresholdIn, const unsigned int dustTresholdIn, const char *floorDepthMapIn, const char *roofDepthMapIn, const bool tunnelSpineIn, const bool labelsIn, const bool formAnalysisIn, const unsigned int formCondenseIn, const bool dimensionsIn, unsigned int nCrossSectionsIn, struct <a href="struct_processor_cross_section_info.md" class="el">ProcessorCrossSectionInfo</a> *crossSectionsIn, <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_indexed_mesh.md" class="el">IndexedMesh</a> &amp;indexedIn)</td>
 </tr>
-<tr class="odd memdesc:aa8f1bb7b2ff061aa20926db570fbd5ab">
+<tr class="odd memdesc:a8693db0777045e91b1b18e4d211720ea">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Create a <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_processor.md" class="el">Processor</a>.<br />
 </td>
 </tr>
-<tr class="even separator:aa8f1bb7b2ff061aa20926db570fbd5ab">
+<tr class="even separator:a8693db0777045e91b1b18e4d211720ea">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:acf37952c5b420d4e903a512571678692">

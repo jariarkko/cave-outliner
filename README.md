@@ -81,6 +81,9 @@ Options:
     --formanalysis f         Analyze cave forms, e.g., entrances, stones, stalactites, etc.
                              Factor f specifies how much the analysis compresses pixels,
                              value of 1 implies no compression.
+    --floordepthmap file     Output cave tunnel floor depth map to given file.
+    --roofdepthmap file      Output cave tunnel roof depth map to given file.
+    --tunnelspine            Mark cave tunnel centerpoints.
     --label                  Label cross sections
     --dimensions             Show dimensions of each cave plan view and cross section.
     --linewidth n            Set the width of the lines in output picture. The value can be a
