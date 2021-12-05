@@ -103,30 +103,30 @@ CLASSES=outliner_math \
 	processor_cross_section \
 	processor_forms \
 	svg_creator
-CLASSMARKDOWNS=	doc/class_outliner_math.md \
-		doc/class_main_config.md \
-		doc/class_main_options.md \
-		doc/class_bounding_boxer.md \
-		doc/class_describer.md \
-		doc/class_direction_operations.md \
-		doc/class_indexed_mesh.md \
-		doc/class_material_matrix2_d.md \
-		doc/class_material_matrix3_d.md \
-		doc/class_form_matrix2_d.md \
-		doc/class_depth_map.md \
-		doc/class_outliner_box2_d.md \
-		doc/class_outliner_box3_d.md \
-		doc/class_outliner_line2_d.md \
-		doc/class_outliner_line3_d.md \
-		doc/class_outliner_triangle2_d.md \
-		doc/class_outliner_triangle3_d.md \
-		doc/class_outliner_vector2_d.md \
-		doc/class_outliner_vector3_d.md \
-		doc/class_processor.md \
-		doc/class_processor_cross_section.md \
-		doc/class_processor_forms.md \
-		doc/class_svg_creator.md
-TOOLS=	doc/markdowncleanup.sh
+CLASSMARKDOWNS=	doc/software/class_outliner_math.md \
+		doc/software/class_main_config.md \
+		doc/software/class_main_options.md \
+		doc/software/class_bounding_boxer.md \
+		doc/software/class_describer.md \
+		doc/software/class_direction_operations.md \
+		doc/software/class_indexed_mesh.md \
+		doc/software/class_material_matrix2_d.md \
+		doc/software/class_material_matrix3_d.md \
+		doc/software/class_form_matrix2_d.md \
+		doc/software/class_depth_map.md \
+		doc/software/class_outliner_box2_d.md \
+		doc/software/class_outliner_box3_d.md \
+		doc/software/class_outliner_line2_d.md \
+		doc/software/class_outliner_line3_d.md \
+		doc/software/class_outliner_triangle2_d.md \
+		doc/software/class_outliner_triangle3_d.md \
+		doc/software/class_outliner_vector2_d.md \
+		doc/software/class_outliner_vector3_d.md \
+		doc/software/class_processor.md \
+		doc/software/class_processor_cross_section.md \
+		doc/software/class_processor_forms.md \
+		doc/software/class_svg_creator.md
+TOOLS=	doc/tools/markdowncleanup.sh
 SUPP=	Makefile $(TOOLS)
 CPPFLAGS=-O3 -Wall -std=c++11 `pkg-config --cflags assimp`
 #ISYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.0.sdk 
@@ -205,20 +205,20 @@ $(OBJS): $(HDRS)
 cave-outliner:	$(OBJS)
 	$(CPPCOMPILER) $(LDFLAGS) -o cave-outliner $(OBJS) $(LDLIBS)
 
-docs:	doc/Design-Structure-Small.jpg \
-	doc/example1-model-small.jpg \
-	doc/example1-planview-small.jpg \
-	doc/example1-crosssection-small.jpg \
-	doc/example1-longplanview-small.jpg \
-	doc/example1-longcrosssection-small.jpg
+docs:	doc/images/Design-Structure-Small.jpg \
+	doc/images/example1-model-small.jpg \
+	doc/images/example1-planview-small.jpg \
+	doc/images/example1-crosssection-small.jpg \
+	doc/images/example1-longplanview-small.jpg \
+	doc/images/example1-longcrosssection-small.jpg
 
 docs-generation:	$(CLASSMARKDOWNS)
 
 $(CLASSMARKDOWNS):	$(HDRS) Makefile $(TOOLS)
-	-rm -rf doc/xml doc/html doc/search.json doc/index.html doc/latex
-	doxygen doc/doxygen.cfg
-	for x in $(CLASSES); do pandoc doc/html/class_$$x.html -f html -t markdown_strict -o /tmp/gen.md; sh doc/markdowncleanup.sh /tmp/gen.md doc/class_$$x.md; done
-	-rm -rf doc/xml doc/html doc/search.json doc/index.html doc/latex
+	-rm -rf doc/software/xml doc/software/html doc/software/search.json doc/software/index.html doc/software/latex
+	doxygen doc/tools/doxygen.cfg
+	for x in $(CLASSES); do pandoc doc/software/html/class_$$x.html -f html -t markdown_strict -o /tmp/gen.md; sh doc/tools/markdowncleanup.sh /tmp/gen.md doc/software/class_$$x.md; done
+	-rm -rf doc/software/xml doc/software/html doc/software/search.json doc/software/index.html doc/software/latex
 
 doc/Design-Structure-Small.jpg:	doc/Design-Structure.jpg Makefile
 	convert -quality 0.97 -resize 1400x doc/Design-Structure.jpg doc/Design-Structure-Small.jpg

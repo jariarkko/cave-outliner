@@ -5,7 +5,7 @@
 
 The structure of the software is shown in the below figure:
 
-![structure](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/Design-Structure-Small.jpg)
+![structure](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/images/Design-Structure-Small.jpg)
 
 Overall, the system consists of six major parts:
 
@@ -22,7 +22,7 @@ Overall, the system consists of six major parts:
 
 This is the main program, which lives in src/main.cc. However, bulk of the functionality is in associated classes.
 
-See the detailed description of the [Class MainConfig API](class_main_config.md), [Class MainOptions API](class_main_options.md), and [Class MainTest API](class_main_test.md).
+See the detailed description of the [Class MainConfig API](software/class_main_config.md), [Class MainOptions API](software/class_main_options.md), and [Class MainTest API](software/class_main_test.md).
 
 ### Assimp
 
@@ -43,7 +43,7 @@ This object represents an optimized index to the mesh faces contained in an impo
 
 The number of tiles is configurable with the --tiling option of the cave-outliner program.
 
-See the detailed description of the [Class IndexedMesh API](class_indexed_mesh.md). 
+See the detailed description of the [Class IndexedMesh API](software/class_indexed_mesh.md). 
 
 #### Outlinermaterialmatrix2d
 
@@ -51,7 +51,7 @@ This object represents a quantized 2D view into a 3D cave model. Given a desired
 
 Note that the material matrix resolution is not the same as tile resolution in the indexed mesh object. Typically, the indexed mesh has low resolution, just sufficient for fast searches, while the material matrix needs to support the desired high resolution of the output.
 
-See the detailed description of the [Class MaterialMatrix2D API](class_material_matrix2_d.md). 
+See the detailed description of the [Class MaterialMatrix2D API](software/class_material_matrix2_d.md). 
 
 #### Outlinermaterialmatrix3d
 
@@ -59,7 +59,7 @@ This object represents a quantized 3D view into a 3D cave model. Given a desired
 
 Note that the material matrix resolution is not the same as tile resolution in the indexed mesh object. Typically, the indexed mesh has low resolution, just sufficient for fast searches, while the material matrix needs to support the desired high resolution of the output.
 
-See the detailed description of the [Class MaterialMatrix3D API](class_material_matrix3_d.md). 
+See the detailed description of the [Class MaterialMatrix3D API](software/class_material_matrix3_d.md). 
 
 #### Outlinerformmatrix2d
 
@@ -67,43 +67,43 @@ This object represents a semantic 2D view into a 3D cave model. Given a desired 
 
 Note that the form matrix resolution is not the same as tile resolution in the indexed mesh object. Typically, the indexed mesh has low resolution, just sufficient for fast searches, while the material matrix needs to support the desired high resolution of the output.
 
-See the detailed description of the [Class MaterialMatrix2D API](class_material_matrix2_d.md). 
+See the detailed description of the [Class MaterialMatrix2D API](software/class_material_matrix2_d.md). 
 
 #### Outlinerprocessor
 
 This is the main program of the Core module, it performs the actual mapping from a given model and indexed mesh to an SVG image. It creates a material matrix as part of the process.
 
-See the detailed description of the [Class Processor API](class_processor.md). 
+See the detailed description of the [Class Processor API](software/class_processor.md). 
 
 #### Outlinerprocessorcrosssection
 
 This is the module inside of the Core module that performs the drawing of cross sections.
 
-See the detailed description of the [Class ProcessorCrossSection API](class_processor_cross_section.md). 
+See the detailed description of the [Class ProcessorCrossSection API](software/class_processor_cross_section.md). 
 
 #### Outlinerprocessorforms
 
 This is the module inside of the Core module that performs the analysis of what cave shapes and forms there are. These include entrances, stones, drops, stalactites, etc.
 
-See the detailed description of the [Class ProcessorForms API](class_processor_forms.md). 
+See the detailed description of the [Class ProcessorForms API](software/class_processor_forms.md). 
 
 ### Outlinersvg
 
 This module can be used to output SVG images to a file. For a description of what an SVG image format is, see https://www.w3schools.com/graphics/svg_intro.asp. 
 
-See the detailed description of the [Class SvgCreator API](class_svg_creator.md). 
+See the detailed description of the [Class SvgCreator API](software/class_svg_creator.md). 
 
 ### Outlinerdesribe
 
 This module outputs information about a 3D model read into the memory. It is only used for debugging.
 
-See the detailed description of the [Class Describer API](class_describer.md). 
+See the detailed description of the [Class Describer API](software/class_describer.md). 
 
 ### Outlinerboundingboxer
 
 This module determines the size of the model, i.e., the bounding box the 3D model fits in.
 
-See the detailed description of the [Class BoundingBoxer API](class_bounding_boxer.md). 
+See the detailed description of the [Class BoundingBoxer API](software/class_bounding_boxer.md). 
 
 ### Utilities
 
@@ -113,25 +113,25 @@ This module is a collection of small submodules that provide utility functions f
 
 This module provides a number of math routines that the Core parts of the software need, such as a function for calculating when a point is inside a triangle.
 
-See the detailed description of the [Class OutlinerMath API](class_outliner_math.md). 
+See the detailed description of the [Class OutlinerMath API](software/class_outliner_math.md). 
 
 #### Outlinerhighprecision
 
 This module defines high-precision 2D and 3D vector types.
 
-See the detailed description of the vector objects [Class OutlinerVector2D API](class_outliner_vector2_d.md) and [Class OutlinerVector3D API](class_outliner_vector3_d.md). 
+See the detailed description of the vector objects [Class OutlinerVector2D API](software/class_outliner_vector2_d.md) and [Class OutlinerVector3D API](software/class_outliner_vector3_d.md). 
 
-See the detailed description of the line objects [Class OutlinerLine2D API](class_outliner_line2_d.md) and [Class OutlinerLine3D API](class_outliner_line3_d.md). 
+See the detailed description of the line objects [Class OutlinerLine2D API](software/class_outliner_line2_d.md) and [Class OutlinerLine3D API](software/class_outliner_line3_d.md). 
 
-See the detailed description of the bounding box objects [Class OutlinerBox1D API](class_outliner_box1_d.md), [Class OutlinerBox2D API](class_outliner_box2_d.md) and [Class OutlinerBox3D API](class_outliner_box3_d.md). 
+See the detailed description of the bounding box objects [Class OutlinerBox1D API](software/class_outliner_box1_d.md), [Class OutlinerBox2D API](software/class_outliner_box2_d.md) and [Class OutlinerBox3D API](software/class_outliner_box3_d.md). 
 
-See the detailed description of the triangle objects [Class OutlinerTriangle2D API](class_outliner_triangle2_d.md) and [Class OutlinerTriangle3D API](class_outliner_triangle3_d.md). 
+See the detailed description of the triangle objects [Class OutlinerTriangle2D API](software/class_outliner_triangle2_d.md) and [Class OutlinerTriangle3D API](software/class_outliner_triangle3_d.md). 
 
 #### Outlinerdirection
 
 This module defines a direction enumerated type, which is used to represent the direction of view for the desired plan view. There's also an associated class that helps perform mappings between coordinates from a given direction.
 
-See the detailed description of the [Class DirectionOperations API](class_direction_operations.md). 
+See the detailed description of the [Class DirectionOperations API](software/class_direction_operations.md). 
 
 #### Outlinertypes
 

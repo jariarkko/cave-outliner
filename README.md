@@ -5,7 +5,7 @@ The input is in the form a Standard Triangle Language (STL) file. The output is 
 
 Here's an example. We start from a 3D model of cave, in this case from the small Grottberget cave in Siuntio, Finland:
 
-![model](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-model-small.jpg)
+![model](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/images/example1-model-small.jpg)
 
 With the help of the cave-outliner tool, we can read this model and convert it to a plan view and some cross-section views. We use the following command:
 
@@ -20,11 +20,11 @@ The third line of options requests three cross sections to be drawn. Finally, th
 
 This is the resulting plan view:
 
-![planview](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-planview-small.jpg)
+![planview](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/images/example1-planview-small.jpg)
 
 Notice the entrance on the left end of the cave. And this is one of the three resulting cross-section views:
 
-![crosssection](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-crosssection-small.jpg)
+![crosssection](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/images/example1-crosssection-small.jpg)
 
 We might also take a cross-section along the length axis, like this:
 
@@ -35,11 +35,11 @@ We might also take a cross-section along the length axis, like this:
 
 Here the parameters on the third line are slightly different, as we are drawing a cross section at a point in y axis. Here's the resulting cross section:
 
-![long crosssection](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-longcrosssection-small.jpg)
+![long crosssection](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/images/example1-longcrosssection-small.jpg)
 
 The plan view also changed, as it shows where the cross sections are:
 
-![long planview](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/example1-longplanview-small.jpg)
+![long planview](https://raw.githubusercontent.com/jariarkko/cave-outliner/main/doc/images/example1-longplanview-small.jpg)
 
 # Usage
 
@@ -109,7 +109,7 @@ Please read the [installation guide](https://github.com/jariarkko/cave-outliner/
 
 # Algorithms
 
-Algorithms for drawing plan and other views based on a 3D are discussed in the [paper](https://github.com/jariarkko/cave-outliner/blob/master/doc/Paper.md).
+Algorithms for drawing plan and other views based on a 3D are discussed in the [paper](https://github.com/jariarkko/cave-outliner/blob/master/doc/papers/Paper.md).
 
 # Design
 
