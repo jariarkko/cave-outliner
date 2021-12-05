@@ -570,8 +570,8 @@ ProcessorForms::canIncreaseIndex(const unsigned int matrix2xIndex,
                                  const unsigned int matrix2yIndex,
                                  const int xDirection,
                                  const int yDirection) const {
-  const int xAbs = outlinerabs(xDirection);
-  const int yAbs = outlinerabs(yDirection);
+  const unsigned int xAbs = outlinerabs(xDirection);
+  const unsigned int yAbs = outlinerabs(yDirection);
   if (matrix2xIndex < xAbs && xDirection < 0) debugreturn("      can increase runs to matrix x start",0);
   if (matrix2yIndex < yAbs && yDirection < 0) debugreturn("      can increase runs to matrix y start",0);
   if (matrix2xIndex >= forms.xIndexSize - 1 - xAbs && xDirection > 0) debugreturn("      can increase runs to matrix x end",0);
