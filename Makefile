@@ -266,6 +266,8 @@ unit-tests:	cave-outliner
 	@./cave-outliner --quiet --test
 
 basic-tests:	cave-outliner \
+		empty-test \
+		empty-bounding-test \
 		cube-pixel-test \
 		cube-line-test \
 		cube-pixel-defaultbounding-test \
@@ -324,6 +326,19 @@ failing-tests-note:
 	@echo ''
 	@echo 'Note: The subsequent tests may fail'
 	@echo ''
+
+empty-test:
+	@echo 'Running test case empty-test...'
+	-@./cave-outliner --quiet --borderline --formanalysis 2 --step 0.5 test/empty.stl test/empty.svg > test/empty.out 2>&1
+	@diff -q test/empty.out test/empty.out.expected
+
+empty-bounding-test:
+	@echo 'Running test case empty-bounding-test...'
+	-@./cave-outliner --quiet --borderline --label --floordepthmap test/empty-bounding-floor.svg --roofdepthmap test/empty-bounding-roof.svg --formanalysis 2 --tunnelspine --step 0.1 --bounding 5 7 5 7 5 7 test/cube.stl test/empty-bounding.svg > test/empty-bounding.out 2>&1
+	@diff -q test/empty-bounding.svg test/empty-bounding.svg.expected
+	@diff -q test/empty-bounding.out test/empty-bounding.out.expected
+	@diff -q test/empty-bounding-roof.svg test/empty-bounding-roof.svg.expected
+	@diff -q test/empty-bounding-floor.svg test/empty-bounding-floor.svg.expected
 
 cube-pixel-test:
 	@echo 'Running test case cube-pixel-test...'
