@@ -274,6 +274,7 @@ basic-tests:	cave-outliner \
 		cube-line-defaultbounding-test \
 		cube-line-bounding-test \
 		cube-triangle-test \
+		cube-full-analysis-test \
 		cube-angled-pixel-test \
 		cube-angled-line-test  \
 		cube-angled-line-linewidth-test  \
@@ -369,6 +370,13 @@ cube-triangle-test:
 	@echo 'Running test case cube-triangle-test...'
 	@./cave-outliner --quiet --triangle --multiplier 10 --step 0.5 --bounding -2 2 -2 2 -2 2 test/cube.stl test/cube-triangle.svg
 	@diff -q test/cube-triangle.svg test/cube-triangle.svg.expected
+
+cube-full-analysis-test:
+	@echo 'Running test case cube-full-analysis-test...'
+	@./cave-outliner --quiet --borderline --label --formanalysis 1 --floordepthmap test/cube-full-analysis-floor.svg --roofdepthmap test/cube-full-analysis-roof.svg --step 0.05 test/cube.stl test/cube-full-analysis.svg
+	@diff -q test/cube-full-analysis.svg test/cube-full-analysis.svg.expected
+	@diff -q test/cube-full-analysis-floor.svg test/cube-full-analysis-floor.svg.expected
+	@diff -q test/cube-full-analysis-roof.svg test/cube-full-analysis-roof.svg.expected
 
 cube-angled-pixel-test:
 	@echo 'Running test case cube-angled-pixel-test...'
