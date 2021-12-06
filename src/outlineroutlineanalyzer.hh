@@ -26,6 +26,7 @@
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
 #include "outlinerdirection.hh"
+#include "outlinerdepthmap.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Data types /////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +41,7 @@ struct OutlineSliceTunnelDescriptor {
   unsigned int xIndex;
   OutlinerIndexRange yIndexRange;
   unsigned int yMidPoint;
+  bool zFound;
   unsigned int startZ;
   unsigned int endZ;
   bool emptySpace;
@@ -55,6 +57,7 @@ class SvgCreator;
 class ProcessorForms;
 class MaterialMatrix2D;
 class MaterialMatrix3D;
+class DepthMap;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Class interface ////////////////////////////////////////////////////////////////////////////
@@ -69,6 +72,8 @@ public:
                   ProcessorForms& formAnalyzerIn);
   ~OutlineAnalyzer();
   bool analyze(void);
+  const DepthMap& getFloorDepthMap(void);
+  const DepthMap& getRoofDepthMap(void);
   void drawSpines(SvgCreator& svg) const;
   
 private:
@@ -83,6 +88,8 @@ private:
   unsigned int nTunnelSegments;
   unsigned int nFailedZScans;
   struct OutlineSliceDescriptor* descriptors;
+  DepthMap floorDepthMap;
+  DepthMap roofDepthMap;
   
   //
   // Internal functions
@@ -114,6 +121,22 @@ private:
   void deallocateTunnel(struct OutlineSliceTunnelDescriptor* tunnel,
                         struct OutlineSliceDescriptor& slice);
 
+  //
+  // Depth maps
+  //
+
+  void createDepthMaps(void);
+  void createDepthMap(DepthMap& map,
+                      const bool floor);
+  void createDepthMapTunnel(DepthMap& map,
+                            const struct OutlineSliceTunnelDescriptor& tunnel,
+                            const bool floor);
+  bool getDepth(const unsigned int xIndex,
+                const unsigned int yIndex,
+                const unsigned int zIndexFloorRoofBorder,
+                const bool floor,
+                outlinerdepth& result) const;
+  
   //
   // Drawing
   //

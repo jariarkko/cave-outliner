@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+          "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+     width="595" height="190">
+<rect x="0" y="0" width="595" height="190" fill="white" stroke="white" stroke-width="0"/>
+<rect x="0" y="75" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="10" y="75" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="20" y="135" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="20" y="65" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="30" y="155" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="30" y="75" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="40" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="50" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="60" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="70" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="80" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="90" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="100" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="110" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="120" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="130" y="185" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="130" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="140" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="150" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="160" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="170" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="180" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="190" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="200" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="210" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="220" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="230" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="240" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="250" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="260" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="270" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="280" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="290" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="300" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="310" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="320" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="330" y="85" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="340" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="350" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="360" y="95" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="370" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="380" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="390" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="400" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="410" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="420" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="430" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="440" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="450" y="115" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="460" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="470" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="480" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="490" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="500" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="510" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="520" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="530" y="105" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="540" y="115" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="550" y="115" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="560" y="115" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="570" y="115" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<rect x="580" y="125" width="5" height="5" fill="red" stroke-width="0" stroke="red" />
+<polyline points="30,15 35,15 35,10 " fill="none" stroke="black" stroke-width="1" />
+<polyline points="15,30 15,25 15,20 20,20 25,20 25,15 30,15 30,10 35,10 " fill="none" stroke="black" stroke-width="1" />
+<polyline points="35,15 40,15 45,15 45,10 50,10 55,10 60,10 65,10 70,10 75,10 75,5 80,5 85,5 90,5 95,5 95,10 100,10 100,15 105,15 105,20 110,20 115,20 115,25 120,25 125,25 130,25 130,20 135,20 140,20 145,20 150,20 155,20 160,20 160,15 165,15 165,10 170,10 175,10 180,10 185,10 190,10 195,10 195,15 200,15 205,15 210,15 215,15 215,20 220,20 225,20 230,20 230,15 235,15 235,10 240,10 240,5 245,5 250,5 250,10 255,10 260,10 265,10 270,10 275,10 280,10 280,15 285,15 290,15 295,15 300,15 305,15 310,15 315,15 320,15 325,15 325,20 330,20 335,20 340,20 340,25 345,25 345,30 350,30 355,30 355,35 360,35 365,35 365,40 370,40 375,40 380,40 385,40 385,45 390,45 395,45 400,45 405,45 410,45 415,45 420,45 425,45 430,45 435,45 440,45 440,50 445,50 450,50 455,50 455,55 460,55 465,55 470,55 475,55 480,55 485,55 490,55 495,55 500,55 500,60 505,60 510,60 515,60 520,60 525,60 " fill="none" stroke="black" stroke-width="1" />
+<polyline points="5,70 5,65 5,60 10,60 10,55 10,50 15,50 15,45 15,40 15,35 15,35 10,35 10,30 15,30 15,35 " fill="none" stroke="black" stroke-width="1" />
+<line x1="10" y1="85" x2="10" y2="75" fill="none" stroke="black" stroke-width="1" />
+<line x1="10" y1="80" x2="17" y2="80" fill="none" stroke="black" stroke-width="1" />
+<line x1="5" y1="85" x2="11" y2="88" fill="none" stroke="black" stroke-width="1" />
+<line x1="8" y1="86" x2="10" y2="82" fill="none" stroke="black" stroke-width="1" />
+<line x1="15" y1="110" x2="15" y2="100" fill="none" stroke="black" stroke-width="1" />
+<line x1="15" y1="105" x2="22" y2="105" fill="none" stroke="black" stroke-width="1" />
+<line x1="15" y1="105" x2="25" y2="105" fill="none" stroke="black" stroke-width="1" />
+<line x1="20" y1="105" x2="20" y2="99" fill="none" stroke="black" stroke-width="1" />
+<line x1="25" y1="130" x2="27" y2="120" fill="none" stroke="black" stroke-width="1" />
+<line x1="26" y1="125" x2="31" y2="124" fill="none" stroke="black" stroke-width="1" />
+<line x1="30" y1="125" x2="40" y2="125" fill="none" stroke="black" stroke-width="1" />
+<line x1="35" y1="125" x2="35" y2="119" fill="none" stroke="black" stroke-width="1" />
+<line x1="40" y1="140" x2="40" y2="130" fill="none" stroke="black" stroke-width="1" />
+<line x1="40" y1="135" x2="47" y2="135" fill="none" stroke="black" stroke-width="1" />
+<line x1="40" y1="145" x2="40" y2="140" fill="none" stroke="black" stroke-width="1" />
+<polyline points="40,150 35,150 35,145 40,145 40,150 45,150 50,150 55,150 60,150 65,150 70,150 70,155 75,155 75,160 80,160 " fill="none" stroke="black" stroke-width="1" />
+<polyline points="80,170 80,165 80,160 " fill="none" stroke="black" stroke-width="1" />
+<polyline points="585,120 585,125 580,125 580,130 575,130 575,135 570,135 565,135 560,135 555,135 550,135 545,135 540,135 535,135 535,140 530,140 525,140 520,140 515,140 510,140 510,145 505,145 500,145 495,145 490,145 485,145 480,145 475,145 470,145 465,145 465,150 460,150 455,150 455,155 450,155 450,160 445,160 440,160 435,160 430,160 425,160 420,160 415,160 410,160 405,160 400,160 395,160 395,155 395,150 395,150 390,150 385,150 380,150 375,150 370,150 365,150 360,150 355,150 350,150 345,150 340,150 340,145 335,145 330,145 325,145 320,145 315,145 310,145 305,145 300,145 295,145 290,145 290,150 285,150 280,150 280,145 275,145 270,145 270,150 265,150 260,150 255,150 250,150 245,150 245,155 245,160 240,160 235,160 230,160 225,160 225,165 220,165 215,165 210,165 210,160 205,160 200,160 200,165 195,165 190,165 185,165 180,165 175,165 170,165 165,165 160,165 160,170 155,170 150,170 150,165 145,165 140,165 135,165 130,165 125,165 125,170 125,175 125,180 120,180 115,180 110,180 105,180 100,180 95,180 90,180 85,180 80,180 80,175 75,175 75,170 80,170 80,175 " fill="none" stroke="black" stroke-width="1" />
+<line x1="125" y1="180" x2="130" y2="180" fill="none" stroke="black" stroke-width="1" />
+<polyline points="585,120 585,115 580,115 580,110 580,105 580,105 575,105 575,100 575,95 575,95 570,95 570,90 565,90 560,90 560,85 555,85 550,85 545,85 540,85 540,80 535,80 530,80 525,80 520,80 520,75 520,70 525,70 525,65 525,60 " fill="none" stroke="black" stroke-width="1" />
+<line x1="525" y1="65" x2="530" y2="65" fill="none" stroke="black" stroke-width="1" />
+<polyline points="525,70 530,70 530,65 " fill="none" stroke="black" stroke-width="1" />
+<line x1="530" y1="70" x2="535" y2="70" fill="none" stroke="black" stroke-width="1" />
+</svg>

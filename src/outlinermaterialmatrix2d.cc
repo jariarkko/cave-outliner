@@ -140,13 +140,15 @@ MaterialMatrix2D::getMaterialMatrix(const unsigned int xIndex,
 }
 
 bool
-MaterialMatrix2D::getMaterialMatrix(const unsigned int xIndexStart,
-                                    const unsigned int yIndexStart,
-                                    const unsigned int xIndexEnd,
-                                    const unsigned int yIndexEnd) const {
+MaterialMatrix2D::getMaterialMatrixRange(const unsigned int xIndexStart,
+                                         const unsigned int yIndexStart,
+                                         const unsigned int xIndexEnd,
+                                         const unsigned int yIndexEnd) const {
   deepdebugf("      multi-get-mm %u..%u x %u..%u", xIndexStart, xIndexEnd, yIndexStart, yIndexEnd);
   assert(xIndexStart < xIndexSize);
+  assert(xIndexEnd < xIndexSize);
   assert(yIndexStart < yIndexSize);
+  assert(yIndexEnd < yIndexSize);
   for (unsigned int xIndex = xIndexStart;
        xIndex <= xIndexEnd && xIndex < xIndexSize;
        xIndex++) {

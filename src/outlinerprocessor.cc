@@ -219,6 +219,17 @@ Processor::processScene(const aiScene* scene) {
   if (!processSceneCrossSections(scene,nCrossSections,crossSections)) {
     return(0);
   }
+
+  // If there was a request for depth maps for floor or roof to be
+  // written to image files, do that as well.
+  if (floorDepthMap != 0) {
+    const DepthMap& map = formAnalyzer.getFloorDepthMap();
+    map.toImage(floorDepthMap,multiplier,svgYSwap,1,*this);
+  }
+  if (roofDepthMap != 0) {
+    const DepthMap& map = formAnalyzer.getRoofDepthMap();
+    map.toImage(roofDepthMap,multiplier,svgYSwap,1,*this);
+  }
   
   // Main result (plan view) is also done, flush the image output
   svgDone();
@@ -383,21 +394,14 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
         assert(rangeInfo.needed == rangeInfo.set);
         if (rangeInfo.needed) {
           assert(rangeInfo.set);
-          outlinerreal depth = rangeInfo.zRange.end;
-          outlinerreal start = DirectionOperations::outputz(direction,boundingBox.start);
-          outlinerreal end = DirectionOperations::outputz(direction,boundingBox.end);
-          outlinerreal normalizedDepth;
-          if (depth < start) normalizedDepth = 0;
-          else if (depth > end) normalizedDepth = 255;
-          else if (start == end) normalizedDepth = 128;
-          else normalizedDepth = (255 * (depth - start)) / (end - start);
-          outlinerdepth normalizedDepthInt = (outlinerdepth)floor(normalizedDepth);
-          debugf("  setting depth at (%u,%u) to %u based on %.2f (%.2f..%.2f)",
+          outlinerdepth normalizedDepth =
+            DepthMap::calculateDepthWithinRange(rangeInfo.zRange.end,
+                                                DirectionOperations::outputz(direction,boundingBox.start),
+                                                DirectionOperations::outputz(direction,boundingBox.end));
+          debugf("  setting depth at (%u,%u) to %u",
                  xIndex, yIndex,
-                 normalizedDepthInt,
-                 depth,
-                 start, end);
-          depthMap->setDepth(xIndex,yIndex,normalizedDepthInt);
+                 normalizedDepth);
+          depthMap->setDepth(xIndex,yIndex,normalizedDepth);
         }
       }
       
@@ -410,6 +414,18 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
   }
   
   return(1);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Access analysis results ////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+bool
+Processor::getMaterialMatrix(const unsigned int xIndex,
+                             const unsigned int yIndex) const {
+  assert(xIndex < matrix2.xIndexSize);
+  assert(yIndex < matrix2.yIndexSize);
+  return(matrix2.getMaterialMatrix(xIndex,yIndex));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1065,10 +1081,10 @@ Processor::createSvg(const char* svgFileName,
     exit(1);
   }
   
-  // Check that we were able to open the file
+  // Check that we were able to open and write the file
   deepdebugf("svg initial check");
   if (!result->ok()) {
-    errf("File open for writing  to %s failed", fileName);
+    errf("File open for writing to %s failed", fileName);
     exit(1);
   }
 

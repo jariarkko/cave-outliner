@@ -78,10 +78,10 @@ public:
   
   /// Get the flag indicating whether there is material in a given
   /// (xStart,yStart)..(xEnd,yEnd) rectangle in the matrix.
-  bool getMaterialMatrix(const unsigned int xIndexStart,
-                         const unsigned int yIndexStart,
-                         const unsigned int xIndexEnd,
-                         const unsigned int yIndexEnd) const;
+  bool getMaterialMatrixRange(const unsigned int xIndexStart,
+                              const unsigned int yIndexStart,
+                              const unsigned int xIndexEnd,
+                              const unsigned int yIndexEnd) const;
   
   /// Find bounds of material at the y index range, on a given x index
   bool getMaterialYBounds(const unsigned int xIndex,

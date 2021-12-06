@@ -346,7 +346,7 @@ MaterialMatrix3D::test(void) {
       for (unsigned int y = 0; y < 100; y++) {
         for (unsigned int z = 0; z < 100; z++) {
           bool ans = matrix3.getMaterialMatrix(x,y,z);
-          debugf("  verify %u,%u,%u = %u", x, y, z, ans);
+          deepdebugf("  verify %u,%u,%u = %u", x, y, z, ans);
           if (x == 1 && y == 2 && z == 3) assert(ans);
           else if (x == 4 && y == 5 && z == 6) assert(ans);
           else if (x == 90 && y == 55 && z == 51) assert(ans);

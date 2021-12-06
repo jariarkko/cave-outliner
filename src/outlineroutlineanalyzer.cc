@@ -34,6 +34,7 @@
 #include "outlinermaterialmatrix2d.hh"
 #include "outlinermaterialmatrix3d.hh"
 #include "outlinerprocessorforms.hh"
+#include "outlinerdepthmap.hh"
 #include "outlineroutlineanalyzer.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,7 +49,13 @@ OutlineAnalyzer::OutlineAnalyzer(const MaterialMatrix2D& matrix2In,
   formAnalyzer(formAnalyzerIn),
   nTunnelSegments(0),
   nFailedZScans(0),
-  descriptors(new struct OutlineSliceDescriptor [matrix2.xIndexSize])
+  descriptors(new struct OutlineSliceDescriptor [matrix2.xIndexSize]),
+  floorDepthMap(matrix2.xIndexSize,
+                matrix2.yIndexSize,
+                matrix2),
+  roofDepthMap(matrix2.xIndexSize,
+               matrix2.yIndexSize,
+               matrix2)
 {
   if (descriptors == 0) {
     errf("Cannot allocate %u outline descriptors", matrix2.xIndexSize);
@@ -64,6 +71,20 @@ OutlineAnalyzer::~OutlineAnalyzer() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+// Functions to access results ////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+const DepthMap&
+OutlineAnalyzer::getFloorDepthMap(void) {
+  return(floorDepthMap);
+}
+
+const DepthMap&
+OutlineAnalyzer::getRoofDepthMap(void) {
+  return(roofDepthMap);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 // Outline analysis -- Main program ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -75,6 +96,7 @@ OutlineAnalyzer::analyze(void) {
   }
   infof("  outline analysis found %u tunnel segments in %u slices (and %u failed z scans)",
         nTunnelSegments, matrix3.xIndexSize, nFailedZScans);
+  createDepthMaps();
   return(1);
 }
 
@@ -96,10 +118,10 @@ OutlineAnalyzer::analyzeOneSlice(unsigned int xIndex) {
                                            matrix2yIndexStart,
                                            matrix2xIndexEnd,
                                            matrix2yIndexEnd);
-    if (matrix2.getMaterialMatrix(matrix2xIndexStart,
-                                  matrix2yIndexStart,
-                                  matrix2xIndexEnd,
-                                  matrix2yIndexEnd)) {
+    if (matrix2.getMaterialMatrixRange(matrix2xIndexStart,
+                                       matrix2yIndexStart,
+                                       matrix2xIndexEnd,
+                                       matrix2yIndexEnd)) {
       struct OutlineSliceTunnelDescriptor* tunnel = allocateTunnel(xIndex,yIndex,slice);
       if (tunnel == 0) break;
       if (!analyzeOneTunnelSlice(*tunnel,
@@ -132,13 +154,14 @@ OutlineAnalyzer::analyzeOneTunnelSlice(struct OutlineSliceTunnelDescriptor& tunn
   // Add more information to the tunnel descriptor
   //
 
+  tunnel.zFound = 1;
   bool ans = ((matrix3yIndex < matrix3.yIndexSize - 1) ?
               findZMidPointAlternatives(matrix3xIndex,matrix3yIndex,matrix3yIndex+1,tunnel.startZ) :
               findZMidPoint(matrix3xIndex,matrix3yIndex,tunnel.startZ));
   if (!ans) {
     infof("  Failed to find begin z at %u", matrix3xIndex);
     nFailedZScans++;
-    return(0);
+    tunnel.zFound = 0;
   }
   tunnel.emptySpace = 0;
   
@@ -179,10 +202,10 @@ OutlineAnalyzer::analyzeOneTunnelSlice(struct OutlineSliceTunnelDescriptor& tunn
     //
     
     assert(matrix2yIndexEndVar < matrix2.yIndexSize);
-    if (!matrix2.getMaterialMatrix(matrix2xIndexStart,
-                                   matrix2yIndexStartVar,
-                                   matrix2xIndexEnd,
-                                   matrix2yIndexEndVar)) {
+     if (!matrix2.getMaterialMatrixRange(matrix2xIndexStart,
+                                         matrix2yIndexStartVar,
+                                         matrix2xIndexEnd,
+                                         matrix2yIndexEndVar)) {
       matrix3yIndex--;
       break;
     }
@@ -192,7 +215,7 @@ OutlineAnalyzer::analyzeOneTunnelSlice(struct OutlineSliceTunnelDescriptor& tunn
   // Done. Finalize the y range in the tunnel description.
   //
 
-  tunnel.yIndexRange.end = matrix3yIndex-1;
+  tunnel.yIndexRange.end = matrix3yIndex;
   tunnel.yMidPoint = (tunnel.yIndexRange.start + tunnel.yIndexRange.end) / 2;
   ans = ((matrix3yIndex > 0) ?
          findZMidPointAlternatives(matrix3xIndex,matrix3yIndex,matrix3yIndex-1,tunnel.endZ) :
@@ -200,7 +223,7 @@ OutlineAnalyzer::analyzeOneTunnelSlice(struct OutlineSliceTunnelDescriptor& tunn
   if (!ans) {
     infof("  Failed to find end z at %u", matrix3xIndex);
     nFailedZScans++;
-    return(0);
+    tunnel.zFound = 0;
   }
   infof("  tunnel midpoint at x %u = y %u (z %u..%u)",
         matrix3xIndex, tunnel.yMidPoint,
@@ -221,8 +244,10 @@ OutlineAnalyzer::findZMidPoint(const unsigned int matrix3xIndex,
   infof("      finding a z at (%u,%u)", matrix3xIndex, matrix3yIndex);
   unsigned int zIndex = matrix3.zIndexSize - 1;
   while (!matrix3.getMaterialMatrix(matrix3xIndex,matrix3yIndex,zIndex)) {
-    infof("      no z material at (%u,%u,%u)", matrix3xIndex, matrix3yIndex, zIndex);
-    if (zIndex == 0) return(0);
+    if (zIndex == 0) {
+      infof("      no z material at (%u,%u)", matrix3xIndex, matrix3yIndex);
+      return(0);
+    }
     zIndex--;
   }
 
@@ -237,8 +262,6 @@ OutlineAnalyzer::findZMidPoint(const unsigned int matrix3xIndex,
     if (!matrix3.getMaterialMatrix(matrix3xIndex,matrix3yIndex,zIndex)) {
       zIndex++;
       break;
-    } else {
-      infof("      still z material at %u", zIndex);
     }
   }
   
@@ -247,6 +270,8 @@ OutlineAnalyzer::findZMidPoint(const unsigned int matrix3xIndex,
   //
 
   matrix3zIndex = ((zStart + zIndex) / 2);
+  infof("      z material at (%u,%u) found at level %u",
+        matrix3xIndex, matrix3yIndex, matrix3zIndex);
   return(1);
 }
 
@@ -306,6 +331,133 @@ OutlineAnalyzer::deallocateTunnel(struct OutlineSliceTunnelDescriptor* tunnel,
   assert(tunnel == &slice.tunnels[slice.nTunnels-1]);
   slice.nTunnels--;
   nTunnelSegments--;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Depth maps /////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+OutlineAnalyzer::createDepthMaps(void) {
+  infof("Creating a floor depth map...");
+  createDepthMap(floorDepthMap,1);
+  infof("Creating a roof depth map...");
+  createDepthMap(roofDepthMap,0);
+}
+
+void
+OutlineAnalyzer::createDepthMap(DepthMap& map,
+                                const bool floor) {
+  for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
+    const struct OutlineSliceDescriptor& slice = descriptors[xIndex];
+    for (unsigned int t = 0; t < slice.nTunnels; t++) {
+      const struct OutlineSliceTunnelDescriptor& tunnel = slice.tunnels[t];
+      createDepthMapTunnel(map,tunnel,floor);
+    }
+  }
+}
+
+void
+OutlineAnalyzer::createDepthMapTunnel(DepthMap& map,
+                                      const struct OutlineSliceTunnelDescriptor& tunnel,
+                                      const bool floor) {
+  outlinerdepth def = (floor ? 0 : (matrix3.yIndexSize-2));
+  outlinerreal border = tunnel.startZ;
+  outlinerreal steps = tunnel.yIndexRange.end - tunnel.yIndexRange.start;
+  outlinerreal diff = ((outlinerreal)tunnel.endZ) - ((outlinerreal)tunnel.startZ);
+  outlinerreal borderStep;
+  if (steps <= 1) {
+    borderStep = 0;
+  } else {
+    borderStep = diff / steps;
+  }
+  infof("depth map tunnel at x %u, y %u..%u (n=%.2f), border %.2f (%u..%u), step %.2f",
+        tunnel.xIndex,
+        tunnel.yIndexRange.start, tunnel.yIndexRange.end,
+        steps,
+        border,
+        tunnel.startZ, tunnel.endZ,
+        borderStep);
+  for (unsigned int yIndex = tunnel.yIndexRange.start; yIndex <= tunnel.yIndexRange.end; yIndex++, border += borderStep) {
+    unsigned int matrix2xIndexStart;
+    unsigned int matrix2yIndexStart;
+    unsigned int matrix2xIndexEnd;
+    unsigned int matrix2yIndexEnd;
+    formAnalyzer.condensedIndexesToIndexes(tunnel.xIndex,yIndex,
+                                           matrix2xIndexStart,
+                                           matrix2yIndexStart,
+                                           matrix2xIndexEnd,
+                                           matrix2yIndexEnd);
+    outlinerdepth thisDepth = def;
+    if (matrix2.getMaterialMatrixRange(matrix2xIndexStart,
+                                       matrix2yIndexStart,
+                                       matrix2xIndexEnd,
+                                       matrix2yIndexEnd)) {
+      outlinerdepth depth;
+      if (tunnel.zFound) {
+        bool succ = getDepth(tunnel.xIndex,
+                             yIndex,
+                             (unsigned int)border,
+                             floor,
+                             depth);
+        thisDepth = depth;
+        if (!succ) {
+          infof("  depth %s (%u,%u) no success, continuing",
+                floor ? "floor" : "roof", matrix2xIndexStart, matrix2yIndexStart);
+          thisDepth = def;
+        } else {
+          infof("  depth %s map tunnel border now %.2f (%u,%u) at y %u = %u",
+                floor ? "floor" : "roof",
+                border,
+                matrix2xIndexStart, matrix2yIndexStart,
+                yIndex,
+                depth);
+        }
+      } else {
+        infof("  depth %s (%u,%u) no z success earlier, continuing",
+                floor ? "floor" : "roof", matrix2xIndexStart, matrix2yIndexStart);
+        thisDepth = def;
+      }
+    } else {
+      infof("  depth %s tunnel (%u,%u) no material, continuing",
+            floor ? "floor" : "roof", matrix2xIndexStart, matrix2yIndexStart);
+    }
+    infof("  depth %s range set (%u,%u)..(%u,%u) = %u",
+          floor ? "floor" : "roof",
+          matrix2xIndexStart,
+          matrix2yIndexStart,
+          matrix2xIndexEnd,
+          matrix2yIndexEnd,
+          thisDepth);
+    map.setDepthRange(matrix2xIndexStart,
+                      matrix2yIndexStart,
+                      matrix2xIndexEnd,
+                      matrix2yIndexEnd,
+                      thisDepth);
+  }
+}
+
+bool
+OutlineAnalyzer::getDepth(const unsigned int xIndex,
+                          const unsigned int yIndex,
+                          const unsigned int zIndexFloorRoofBorder,
+                          const bool floor,
+                          outlinerdepth& result) const {
+  assert(xIndex < matrix3.xIndexSize);
+  assert(yIndex < matrix3.yIndexSize);
+  assert(zIndexFloorRoofBorder < matrix3.zIndexSize);
+
+  unsigned int zIndex = zIndexFloorRoofBorder;
+  for (;;) {
+    if (matrix3.getMaterialMatrix(xIndex,yIndex,zIndex)) { result = zIndex; return(1); }
+    if (floor) {
+      if (zIndex == 0) return(0);
+      else zIndex--;
+    } else {
+      if (zIndex >= matrix3.zIndexSize - 2) return(0);
+      else zIndex++;
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

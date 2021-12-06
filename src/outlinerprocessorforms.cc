@@ -393,10 +393,10 @@ ProcessorForms::performFormAnalysisAnalyzeOnePixelPhase1(const unsigned int matr
   outlinerform form = outlinerform_mainform_empty;
 
   // Find out if there's any material.
-  if (!matrix2.getMaterialMatrix(matrix2xIndexStart,
-                                 matrix2yIndexStart,
-                                 matrix2xIndexEnd,
-                                 matrix2yIndexEnd)) {
+  if (!matrix2.getMaterialMatrixRange(matrix2xIndexStart,
+                                      matrix2yIndexStart,
+                                      matrix2xIndexEnd,
+                                      matrix2yIndexEnd)) {
 
     //  If not, just the form as no material (empty).
     debugf("    no material");
@@ -1268,3 +1268,18 @@ bool
 ProcessorForms::performFormAnalysisInsideAnalyze(void) {
   return(1);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Functions to access results ////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+const DepthMap&
+ProcessorForms::getFloorDepthMap(void) {
+  return(outlineAnalyzer.getFloorDepthMap());
+}
+
+const DepthMap&
+ProcessorForms::getRoofDepthMap(void) {
+  return(outlineAnalyzer.getRoofDepthMap());
+}
+

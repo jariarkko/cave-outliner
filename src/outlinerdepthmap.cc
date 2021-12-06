@@ -32,6 +32,7 @@
 #include "outlinerdebug.hh"
 #include "outlinerprocessor.hh"
 #include "outlinermaterialmatrix2d.hh"
+#include "outlinersvg.hh"
 #include "outlinerdepthmap.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,6 +54,8 @@ DepthMap::DepthMap(const unsigned int xIndexSizeIn,
 
   assert(xIndexSize > 0);
   assert(yIndexSize > 0);
+  assert(xIndexSize == materialMatrix.xIndexSize);
+  assert(yIndexSize == materialMatrix.yIndexSize);
   data = new outlinerdepth[fullSize];
   if (data == 0) {
     errf("Cannot allocate depth matrix of %u bytes", fullSize * sizeof(outlinerdepth));
@@ -79,7 +82,7 @@ DepthMap::setDepth(const unsigned int xIndex,
   assert(data != 0);
   assert(xIndex < xIndexSize);
   assert(yIndex < yIndexSize);
-  assert(materialMatrix.getMaterialMatrix(xIndex,yIndex));
+  //assert(materialMatrix.getMaterialMatrix(xIndex,yIndex));
   const unsigned int index = depthMatrixIndex(xIndex,yIndex);
   assert(index < fullSize);
   outlinerdepth prev = data[index];
@@ -92,7 +95,30 @@ DepthMap::setDepth(const unsigned int xIndex,
     if (depth > rangeMax) rangeMax = depth;
   }
   if (prev == 0) nEntries++;
-  debugf("      set depth to %u (%u..%u)", depth, rangeMin, rangeMax);
+  infof("depth(%u,%u)=%u (%u..%u)", xIndex, yIndex, depth, rangeMin, rangeMax);
+}
+
+void
+DepthMap::setDepthRange(const unsigned int xIndexStart,
+                        const unsigned int yIndexStart,
+                        const unsigned int xIndexEnd,
+                        const unsigned int yIndexEnd,
+                        const outlinerdepth depth) {
+  assert(xIndexStart < xIndexSize);
+  assert(xIndexEnd < xIndexSize);
+  assert(yIndexStart < yIndexSize);
+  assert(yIndexEnd < yIndexSize);
+  for (unsigned int xIndex = xIndexStart;
+       xIndex <= xIndexEnd && xIndex < xIndexSize;
+       xIndex++) {
+    for (unsigned int yIndex = yIndexStart;
+         yIndex <= yIndexEnd && yIndex < yIndexSize;
+         yIndex++) {
+      assert(xIndex < xIndexSize);
+      assert(yIndex < yIndexSize);
+      setDepth(xIndex,yIndex,depth);
+    }
+  }
 }
 
 outlinerdepth
@@ -116,6 +142,7 @@ DepthMap::depthToColor(const unsigned int xIndex,
   assert(yIndex < yIndexSize);
   assert(materialMatrix.getMaterialMatrix(xIndex,yIndex));
   outlinerdepth input = getDepth(xIndex,yIndex);
+  infof("    depthToColor(%u,%u)=%u (%u..%u)", xIndex, yIndex, input, rangeMin, rangeMax);
   outlinerdepth depth = normalize(input);
   outlinerdepth rgbval = 255 - depth;
   outlinerdepth finalval;
@@ -209,6 +236,78 @@ DepthMap::normalize(outlinerdepth input) const {
   return(result);
 }
 
+outlinerdepth
+DepthMap::calculateDepthWithinRange(outlinerreal depth,
+                                    outlinerreal start,
+                                    outlinerreal end) {
+  outlinerreal normalizedDepth;
+  if (depth < start) normalizedDepth = 0;
+  else if (depth > end) normalizedDepth = 255;
+  else if (start == end) normalizedDepth = 128;
+  else normalizedDepth = (255 * (depth - start)) / (end - start);
+  outlinerdepth normalizedDepthInt = (outlinerdepth)floor(normalizedDepth);
+  return(normalizedDepthInt);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Image processing ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+void
+DepthMap::toImage(const char* filename,
+                  const unsigned int multiplier,
+                  const bool svgYSwap,
+                  const bool diff,
+                  const Processor& proc) const {
+
+  // Sanity checks
+  
+  assert(xIndexSize == materialMatrix.xIndexSize);
+  assert(yIndexSize == materialMatrix.yIndexSize);
+  // Allocate an image object
+  SvgCreator image(filename,
+                   xIndexSize,yIndexSize,
+                   multiplier,
+                   0,0,
+                   1,1,
+                   0,0,
+                   1,
+                   svgYSwap);
+
+  // Construct the actual image
+  infof("converting depth map to image in file %s", filename);
+  toImageAux(image,diff,proc);
+  
+  // Check that we were able to open and write the file
+  deepdebugf("svg initial check");
+  if (!image.ok()) {
+    errf("File open for writing to %s failed", filename);
+  }
+  infof("Done");
+}
+
+void
+DepthMap::toImageAux(SvgCreator& image,
+                     const bool diff,
+                     const Processor& proc) const {
+  if (!rangeSet) {
+    errf("Not enough model to draw a depth map");
+    return;
+  }
+  assert(xIndexSize == materialMatrix.xIndexSize);
+  assert(yIndexSize == materialMatrix.yIndexSize);
+  for (unsigned int xIndex = 0; xIndex < xIndexSize; xIndex++) {
+    for (unsigned int yIndex = 0; yIndex < yIndexSize; yIndex++) {
+      if (!proc.getMaterialMatrix(xIndex,yIndex)) continue;
+      OutlinerSvgStyle style =
+        (diff ?
+         depthDiffToColor(xIndex,yIndex,proc) :
+         depthToColor(xIndex,yIndex));
+      image.pixel(xIndex,yIndex,style);
+    }
+  }
+}
+  
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Unit tests for this module /////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,7 +325,7 @@ DepthMap::test(void) {
   mm.setMaterialMatrix(5,5);
   mm.setMaterialMatrix(5,4);
   mm.setMaterialMatrix(9,9);
-  DepthMap matrix(10,10,mm);
+  DepthMap matrix(mm.xIndexSize,mm.yIndexSize,mm);
   outlinerform depth = matrix.getDepth(5,5);
   assert(depth == 0);
   depth = matrix.getDepth(9,9);

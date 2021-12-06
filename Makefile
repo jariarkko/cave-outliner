@@ -311,7 +311,9 @@ cave-tests:	cave1-test \
 		cave1-form-analysis-pixel-test \
 		cave1-form-analysis-line-test \
 		cave1-form-analysis-smooth-line-test \
-		cave1-spine-test
+		cave1-spine-test \
+		cave1-floor-test \
+		cave1-floor-condense-test
 
 failing-tests:	failing-tests-note \
 		house-cross-section-side-test \
@@ -588,6 +590,20 @@ cave1-spine-test:
 	@echo 'Running test case cave1-spine-test...'
 	@./cave-outliner --quiet --tunnelspine --multiplier 5 --formanalysis 1 --borderline --step 0.2 --holethreshold 10 test/cave1.stl test/cave1-spine.svg
 	@diff -q test/cave1-spine.svg test/cave1-spine.svg.expected
+
+cave1-floor-test:
+	@echo 'Running test case cave1-floor-test...'
+	@./cave-outliner --quiet --floordepthmap test/cave1-floor-floor.svg --roofdepthmap test/cave1-floor-roof.svg --tunnelspine --multiplier 5 --formanalysis 1 --borderline --step 0.1 --holethreshold 10 test/cave1.stl test/cave1-floor.svg
+	@diff -q test/cave1-floor.svg test/cave1-floor.svg.expected
+	@diff -q test/cave1-floor-floor.svg test/cave1-floor-floor.svg.expected
+	@diff -q test/cave1-floor-roof.svg test/cave1-floor-roof.svg.expected
+
+cave1-floor-condense-test:
+	@echo 'Running test case cave1-floor-condense-test...'
+	@./cave-outliner --quiet --floordepthmap test/cave1-floor-condense-floor.svg --roofdepthmap test/cave1-floor-condense-roof.svg --tunnelspine --multiplier 5 --formanalysis 2 --borderline --step 0.1 --holethreshold 10 test/cave1.stl test/cave1-floor-condense.svg
+	@diff -q test/cave1-floor-condense.svg test/cave1-floor-condense.svg.expected
+	@diff -q test/cave1-floor-condense-floor.svg test/cave1-floor-condense-floor.svg.expected
+	@diff -q test/cave1-floor-condense-roof.svg test/cave1-floor-condense-roof.svg.expected
 
 example-tests:	cave1-example-orig-test \
 		cave1-example-form-test \

@@ -63,6 +63,14 @@ public:
                 const unsigned int yIndex,
                 const outlinerdepth depth);
 
+  /// Set the depth of the material in a given range of (x,y) indexes
+  /// in the matrix.
+  void setDepthRange(const unsigned int xIndexStart,
+                     const unsigned int yIndexStart,
+                     const unsigned int xIndexEnd,
+                     const unsigned int yIndexEnd,
+                     const outlinerdepth depth);
+
   /// Get the depth of the material in a given (x,y) index in the
   /// matrix.
   outlinerdepth getDepth(const unsigned int xIndex,
@@ -78,6 +86,18 @@ public:
   OutlinerSvgStyle depthDiffToColor(const unsigned int xIndex,
                                     const unsigned int yIndex,
                                     const Processor& proc) const;
+
+  /// Normalize a depth value.
+  static outlinerdepth calculateDepthWithinRange(outlinerreal depth,
+                                                 outlinerreal start,
+                                                 outlinerreal end);
+  
+  /// Create an image based on the map.
+  void toImage(const char* filename,
+               const unsigned int multiplier,
+               const bool svgYSwap,
+               const bool diff,
+               const Processor& proc) const;
   
   /// Run unit tests for this module.
   static void test(void);
@@ -99,6 +119,9 @@ private:
   const MaterialMatrix2D& materialMatrix;
   
   outlinerdepth normalize(outlinerdepth input) const;
+  void toImageAux(SvgCreator& image,
+                     const bool diff,
+                     const Processor& proc) const;
 };
 
 #endif // OUTLINERDEPTHMAP_HH

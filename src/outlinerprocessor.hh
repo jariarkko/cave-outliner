@@ -104,6 +104,10 @@ public:
   /// Process a plan fiew fora given scene in the processor, with a
   /// given set of (optional) cross sections.
   bool processScene(const aiScene* scene);
+
+  /// Access the built model.
+  bool getMaterialMatrix(const unsigned int xIndex,
+                         const unsigned int yIndex) const;
   
 private:
 

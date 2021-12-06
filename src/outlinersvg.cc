@@ -30,7 +30,7 @@
 // Class methods //////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-SvgCreator::SvgCreator(const char* fileName,
+SvgCreator::SvgCreator(const char* fileNameIn,
                        const unsigned int xSizeIn,
                        const unsigned int ySizeIn,
                        const unsigned int multiplierIn,
@@ -42,6 +42,7 @@ SvgCreator::SvgCreator(const char* fileName,
                        const bool mergedLinesIn,
                        const outlinerreal linewidthIn,
                        const bool ySwapIn) :
+  fileName(fileNameIn),
   xSize(xSizeIn),
   ySize(ySizeIn),
   multiplier(multiplierIn),
@@ -80,7 +81,7 @@ SvgCreator::~SvgCreator() {
   unsigned long bytes = file.tellp();
   file.close();
   infof("  image statistics");
-  infof("    file size %.1f KB", (bytes / 1000.0));
+  infof("    file %s size %.1f KB", fileName, (bytes / 1000.0));
   infof("    image has %u pixels", pixels);
   infof("    image has %u lines (from originally %u line components)", finalLines, originalLines);
   infof("    image has %u strings (%u characters)", strings, characters);

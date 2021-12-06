@@ -94,7 +94,7 @@ class SvgCreator {
  public:
 
   /// Create an SVG file with given file name and size.
-  SvgCreator(const char* fileName,
+  SvgCreator(const char* fileNameIn,
              const unsigned int xSizeIn, 
              const unsigned int ySizeIn,
              const unsigned int multiplierIn,
@@ -151,6 +151,7 @@ class SvgCreator {
   
  private:
 
+  const char* fileName;
   std::ofstream file;
   const unsigned int xSize;
   const unsigned int ySize;
