@@ -109,19 +109,19 @@ BoundingBoxer::boundingFace(const aiMesh* mesh,
   assert(face != 0);
   if (face->mNumIndices != 3) {
     errf("Cannot handle a face with %u indices", face->mNumIndices);
-    exit(1);
+    return;
   }
   if (face->mIndices[0] >= mesh->mNumVertices) {
     errf("Face points to a vertex %u that does not exist", face->mIndices[0]);
-    exit(1);
+    return;
   }
   if (face->mIndices[1] >= mesh->mNumVertices) {
     errf("Face points to a vertex %u that does not exist", face->mIndices[1]);
-    exit(1);
+    return;
   }
   if (face->mIndices[2] >= mesh->mNumVertices) {
     errf("Face points to a vertex %u that does not exist", face->mIndices[2]);
-    exit(1);
+    return;
   }
 
   // Calculate bounding box

@@ -30,6 +30,7 @@ void debuginit(bool infoSet,
 void infof(const char* format, ...);
 void warnf(const char* format, ...);
 void errf(const char* format, ...);
+void fatalf(const char* format, ...);
 void debugf(const char* format, ...);
 void deepdebugf(const char* format, ...);
 void deepdeepdebugf(const char* format, ...);

@@ -307,8 +307,8 @@ makeFilenameFromPattern(const char* pattern,
   unsigned int newFilenameLength = nFirst + maxNumLength + strlen(rest) + 1;
   char* result = (char*)malloc(newFilenameLength);
   if (result == 0) {
-    errf("Cannot allocate string of %u bytes", newFilenameLength);
-    exit(1);
+    fatalf("Cannot allocate string of %u bytes", newFilenameLength);
+    return(0);
   }
   memset(result,0,newFilenameLength);
   strncpy(result,pattern,nFirst);

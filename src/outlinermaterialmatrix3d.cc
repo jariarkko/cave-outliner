@@ -50,7 +50,7 @@ MaterialMatrix3D::MaterialMatrix3D(const OutlinerBox3D& boundingBoxIn,
   verticalMatrixes(new VerticalMatrix [xIndexSize]) {
   if (verticalMatrixes == 0) {
     errf("Cannot allocate %u vertical matrixes", xIndexSize);
-    exit(1);
+    return;
   }
 }
 
@@ -73,7 +73,7 @@ MaterialMatrix3D::setMaterialMatrix(const unsigned int xIndex,
     verticalMatrixes[xIndex].matrix = new MaterialMatrix2D(sliceBox,stepy,stepz);
     if (verticalMatrixes[xIndex].matrix == 0) {
       errf("Cannot allocate a vertical matrix");
-      exit(1);
+      return;
     }
   }
   assert(yIndex >= verticalMatrixes[xIndex].yIndexOffset);

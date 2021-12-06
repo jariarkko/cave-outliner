@@ -165,7 +165,7 @@ ProcessorForms::formToColor(const unsigned int xIndex,
     return(outlinersvgstyle_green);
   default:
     errf("Invalid form %x", form);
-    exit(1);
+    return(outlinersvgstyle_none);
   }
 }
 
@@ -694,7 +694,7 @@ ProcessorForms::addToTable(const unsigned int x,
                            unsigned int* tableY) {
   if (n == tableSize) {
     errf("Entrance blocking material table full (%u entries)", tableSize);
-    exit(1);
+    return;
   }
   tableX[n] = x;
   tableY[n] = y;
@@ -749,7 +749,7 @@ ProcessorForms::hasSideNeighbor(const unsigned int xIndex,
       break;
     default:
       errf("invalid side counter");
-      exit(1);
+      return(0);
     }
   }
   

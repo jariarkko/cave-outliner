@@ -72,7 +72,6 @@ ProcessorCrossSection::deleteSvg(void) {
     // Check that file I/O was ok
     if (!svg->ok()) {
       errf("File output to %s failed", fileName);
-      exit(1);
     }
 
     // Delete the object
@@ -279,7 +278,7 @@ ProcessorCrossSection::calculateLineEquation(void) {
   debugf("    cross section width %.2f", width);
   if (xDifference == 0 && yDifference == 0) {
     errf("Cross-section starting and ending points cannot be same");
-    exit(1);
+    return;
   }
   outlinerreal totalDifference = xDifference + yDifference;
   outlinerreal xDifferenceFraction = xDifference / totalDifference;
@@ -313,8 +312,8 @@ ProcessorCrossSection::calculateLineXBasedOnY(outlinerreal y) {
 
   // Sanity checks
   if (lineStepY == 0) {
-    errf("Cannot calculate actual line end points for a cross section that is horizontal");
-    exit(1);
+    fatalf("Cannot calculate actual line end points for a cross section that is horizontal");
+    return(0);
   }
 
   // Do the actual calculations
@@ -439,7 +438,7 @@ ProcessorCrossSection::drawCrossSectionNode(const aiScene* scene,
   assert(node != 0);
   if (!node->mTransformation.IsIdentity()) {
     errf("Cannot handle transformations yet");
-    exit(1);
+    return;
   }
   for (unsigned int j = 0; j < node->mNumMeshes; j++) {
     drawCrossSectionMesh(scene,scene->mMeshes[node->mMeshes[j]]);
@@ -579,7 +578,7 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxNode(const aiScene* scene,
   debugf("process node cross section");
   if (!node->mTransformation.IsIdentity()) {
     errf("Cannot handle transformations yet");
-    exit(1);
+    return;
   }
   for (unsigned int j = 0; j < node->mNumMeshes; j++) {
     getSliceVerticalBoundingBoxMesh(scene,scene->mMeshes[node->mMeshes[j]],

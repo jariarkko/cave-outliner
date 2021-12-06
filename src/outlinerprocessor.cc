@@ -162,7 +162,6 @@ Processor::svgDone() {
     // Check that file I/O was ok
     if (!svg->ok()) {
       errf("File output to %s failed", fileName);
-      exit(1);
     }
 
     // Delete the object
@@ -592,7 +591,7 @@ Processor::nodeToTrianglesSvg(const aiScene* scene,
   assert(node != 0);
   if (!node->mTransformation.IsIdentity()) {
     errf("Cannot handle transformations yet");
-    exit(1);
+    return;
   }
   for (unsigned int j = 0; j < node->mNumMeshes; j++) {
     meshToTrianglesSvg(scene,scene->mMeshes[node->mMeshes[j]],theSvg,indexed,trianglesBoundingBox);
@@ -688,7 +687,6 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
           break;
         case alg_triangle:
           errf("Invalid algorithm for matrix-based operation");
-          exit(1);
           break;
         case alg_borderpixel:
           debugf("borderpixel alg %u,%u", xIndex, yIndex);
@@ -759,7 +757,7 @@ Processor::nodeHasMaterial(const aiScene* scene,
   assert(node != 0);
   if (!node->mTransformation.IsIdentity()) {
     errf("Cannot handle transformations yet");
-    exit(1);
+    return(0);
   }
   bool found = 0;
   for (unsigned int j = 0; j < node->mNumMeshes; j++) {
@@ -829,19 +827,19 @@ Processor::faceGetVertices3D(const aiMesh* mesh,
   assert(face != 0);
   if (face->mNumIndices != 3) {
     errf("Cannot handle a face with %u indices", face->mNumIndices);
-    exit(1);
+    return;
   }
   if (face->mIndices[0] >= mesh->mNumVertices) {
     errf("Face points to a vertex %u that does not exist", face->mIndices[0]);
-    exit(1);
+    return;
   }
   if (face->mIndices[1] >= mesh->mNumVertices) {
     errf("Face points to a vertex %u that does not exist", face->mIndices[1]);
-    exit(1);
+    return;
   }
   if (face->mIndices[2] >= mesh->mNumVertices) {
     errf("Face points to a vertex %u that does not exist", face->mIndices[2]);
-    exit(1);
+    return;
   }
   aiVector3D* vertexA = &mesh->mVertices[face->mIndices[0]];
   aiVector3D* vertexB = &mesh->mVertices[face->mIndices[1]];
@@ -1077,15 +1075,14 @@ Processor::createSvg(const char* svgFileName,
   // Check for allocation success
   deepdebugf("svg allocated");
   if (result == 0) {
-    errf("Cannot allocate SvgCreator object");
-    exit(1);
+    fatalf("Cannot allocate SvgCreator object");
+    return(0);
   }
   
   // Check that we were able to open and write the file
   deepdebugf("svg initial check");
   if (!result->ok()) {
     errf("File open for writing to %s failed", fileName);
-    exit(1);
   }
 
   // All good. Return.

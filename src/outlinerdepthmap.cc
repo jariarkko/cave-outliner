@@ -58,8 +58,8 @@ DepthMap::DepthMap(const unsigned int xIndexSizeIn,
   assert(yIndexSize == materialMatrix.yIndexSize);
   data = new outlinerdepth[fullSize];
   if (data == 0) {
-    errf("Cannot allocate depth matrix of %u bytes", fullSize * sizeof(outlinerdepth));
-    exit(1);
+    fatalf("Cannot allocate depth matrix of %u bytes", fullSize * sizeof(outlinerdepth));
+    return;
   }
   memset(data,0,fullSize * sizeof(outlinerdepth));
 }
@@ -291,7 +291,7 @@ DepthMap::toImageAux(SvgCreator& image,
                      const bool diff,
                      const Processor& proc) const {
   if (!rangeSet) {
-    errf("Not enough model to draw a depth map");
+     errf("Not enough model to draw a depth map");
     return;
   }
   assert(xIndexSize == materialMatrix.xIndexSize);

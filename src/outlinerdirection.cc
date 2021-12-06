@@ -39,8 +39,8 @@ DirectionOperations::screenx(enum outlinerdirection direction) {
   case dir_y:
     return(dir_z);
   default:
-    errf("Invalid internal variable: direction %u", direction);
-    exit(1);
+    fatalf("Invalid internal variable: direction %u", direction);
+    return(dir_z);
   }
 }
 
@@ -54,8 +54,8 @@ DirectionOperations::toString(enum outlinerdirection direction) {
   case dir_y:
     return("y");
   default:
-    errf("Invalid internal variable: direction %u", direction);
-    exit(1);
+    fatalf("Invalid internal variable: direction %u", direction);
+    return("y");
   }
 }
 
@@ -70,8 +70,8 @@ DirectionOperations::outputx(enum outlinerdirection direction,
   case dir_y:
     return(point.x);
   default:
-    errf("Invalid internal variable: direction %u", direction);
-    exit(1);
+    fatalf("Invalid internal variable: direction %u", direction);
+    return(point.x);
   }
 }
 
@@ -86,8 +86,8 @@ DirectionOperations::outputx(enum outlinerdirection direction,
   case dir_y:
     return(point.x);
   default:
-    errf("Invalid internal variable: direction %u", direction);
-    exit(1);
+    fatalf("Invalid internal variable: direction %u", direction);
+    return(point.x);
   }
 }
 
@@ -102,8 +102,8 @@ DirectionOperations::outputy(enum outlinerdirection direction,
   case dir_y:
     return(point.z);
   default:
-    errf("Invalid internal variable: direction %u", direction);
-    exit(1);
+    fatalf("Invalid internal variable: direction %u", direction);
+    return(point.z);
   }
 }
 
@@ -118,8 +118,8 @@ DirectionOperations::outputy(enum outlinerdirection direction,
   case dir_y:
     return(point.z);
   default:
-    errf("Invalid internal variable: direction %u", direction);
-    exit(1);
+    fatalf("Invalid internal variable: direction %u", direction);
+    return(point.z);
   }
 }
 
@@ -134,8 +134,8 @@ DirectionOperations::outputz(enum outlinerdirection direction,
   case dir_y:
     return(point.y);
   default:
-    errf("Invalid internal variable: direction %u", direction);
-    exit(1);
+    fatalf("Invalid internal variable: direction %u", direction);
+    return(point.y);
   }
 }
 
@@ -150,7 +150,7 @@ DirectionOperations::outputz(enum outlinerdirection direction,
   case dir_y:
     return(point.y);
   default:
-    errf("Invalid internal variable: direction %u", direction);
-    exit(1);
+    fatalf("Invalid internal variable: direction %u", direction);
+    return(point.y);
   }
 }

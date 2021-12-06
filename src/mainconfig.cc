@@ -94,7 +94,7 @@ MainConfig::~MainConfig() {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 const char*
- MainConfig::getCrossSectionLabel(void) {
+MainConfig::getCrossSectionLabel(void) {
   
   if (labelCrossSections) {
     char buf[20];
@@ -111,8 +111,8 @@ const char*
     crossSectionLabelCount++;
     const char* result = strdup(buf);
     if (result == 0) {
-      errf("Cannot allocate a string of %u bytes", strlen(buf));
-      exit(1);
+      fatalf("Cannot allocate a string of %u bytes", strlen(buf));
+      return(0);
     }
     return(result);
   } else {

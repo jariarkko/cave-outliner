@@ -58,7 +58,7 @@ MaterialMatrix2D::MaterialMatrix2D(const OutlinerBox2D& boundingBoxIn,
         boundingBox.start.y, boundingBox.end.y);
   if (bitMatrix == 0) {
     errf("Cannot allocate bit matrix for %u bytes", nChars);
-    exit(1);
+    return;
   }
   memset(bitMatrix,0,nChars);
   debugf("created a matrix of %u x %u, nBits %u nChars %u", xIndexSize, yIndexSize, nBits, nChars);

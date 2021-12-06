@@ -47,8 +47,8 @@ FormMatrix2D::FormMatrix2D(const unsigned int xIndexSizeIn,
   assert(yIndexSize > 0);
   data = new uint8_t[fullSizeChars];
   if (data == 0) {
-    errf("Cannot allocate form matrix of %u bytes", fullSizeChars);
-    exit(1);
+    fatalf("Cannot allocate form matrix of %u bytes", fullSizeChars);
+    return;
   }
   memset(data,0,fullSizeChars);
 }

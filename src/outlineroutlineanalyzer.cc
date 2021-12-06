@@ -59,7 +59,7 @@ OutlineAnalyzer::OutlineAnalyzer(const MaterialMatrix2D& matrix2In,
 {
   if (descriptors == 0) {
     errf("Cannot allocate %u outline descriptors", matrix2.xIndexSize);
-    exit(1);
+    return;
   }
 }
 

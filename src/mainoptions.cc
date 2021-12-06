@@ -311,7 +311,7 @@ MainOptions::processCommandLineArguments(int& argc,
   config.inputFile = strdup(argv[1]);
   config.outputFile = strdup(argv[2]);
   if (config.inputFile == 0 || config.outputFile == 0) {
-    errf("Cannot allocate input/output file names");
+    fatalf("Cannot allocate input/output file names");
     return(0);
   }
   if (outlineralgorithm_generatespicture(config.algorithm)) {

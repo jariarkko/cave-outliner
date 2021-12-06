@@ -56,23 +56,23 @@ IndexedMesh::IndexedMesh(unsigned int maxMeshesIn,
   debugf("tile size %f x %f", tileSizeX, tileSizeY);
   meshes = new IndexedMeshOneMesh [maxMeshes];
   if (meshes == 0) {
-    errf("Cannot allocate %u indexed meshes", maxMeshes);
-    exit(1);
+    fatalf("Cannot allocate %u indexed meshes", maxMeshes);
+    return;
   }
   for (unsigned int i = 0; i < maxMeshes; i++) {
     meshes[i].mesh = 0;
     meshes[i].nOutsideModelBoundingBox = 0;
     meshes[i].tileMatrix = new struct IndexedMeshOneMeshOneTileFaces* [subdivisions];
     if (meshes[i].tileMatrix == 0) {
-      errf("Cannot allocate %u tile matrix", subdivisions);
-      exit(1);
+      fatalf("Cannot allocate %u tile matrix", subdivisions);
+      return;
     }
     memset(meshes[i].tileMatrix,0,sizeof(struct IndexedMeshOneMeshOneTileFaces*) * subdivisions);
     for (unsigned int j = 0; j < subdivisions; j++) {
       meshes[i].tileMatrix[j] = new struct IndexedMeshOneMeshOneTileFaces [subdivisions];
       if (meshes[i].tileMatrix[j] == 0) {
-        errf("Cannot allocate %u tile matrix second dimension", subdivisions);
-        exit(1);
+        fatalf("Cannot allocate %u tile matrix second dimension", subdivisions);
+        return;
       }
       for (unsigned int k = 0; k < subdivisions;k++) {
         meshes[i].tileMatrix[j][k].nFaces = 0;
@@ -261,8 +261,8 @@ IndexedMesh::addMesh(const aiScene* scene,
   assert(scene != 0);
   assert(mesh != 0);
   if (nMeshes == maxMeshes) {
-    errf("Cannot another mesh, already have %u", maxMeshes);
-    exit(1);
+    errf("Cannot add another mesh, already have %u", maxMeshes);
+    return;
   }
   struct IndexedMeshOneMesh& newMesh = meshes[nMeshes];
   newMesh.mesh = mesh;
@@ -298,19 +298,19 @@ IndexedMesh::addFace(struct IndexedMeshOneMesh& shadow,
   assert(face != 0);
   if (face->mNumIndices != 3) {
     errf("Cannot handle a face with %u indices", face->mNumIndices);
-    exit(1);
+    return;
   }
   if (face->mIndices[0] >= mesh->mNumVertices) {
     errf("Face points to a vertex %u that does not exist", face->mIndices[0]);
-    exit(1);
+    return;
   }
   if (face->mIndices[1] >= mesh->mNumVertices) {
     errf("Face points to a vertex %u that does not exist", face->mIndices[1]);
-    exit(1);
+    return;
   }
   if (face->mIndices[2] >= mesh->mNumVertices) {
     errf("Face points to a vertex %u that does not exist", face->mIndices[2]);
-    exit(1);
+    return;
   }
 
   // Calculate 3D bounding box
@@ -392,7 +392,7 @@ IndexedMesh::addToTile(struct IndexedMeshOneMesh& shadow,
     tile->faces = new const aiFace* [tile->maxNFaces];
     if (tile->faces == 0) {
       errf("Cannot allocate face table in tile (%u,%u)", tileX, tileY);
-      exit(1);
+      return;
     }
     memset(tile->faces,0,sizeof(const aiFace*) * tile->maxNFaces);
   }
@@ -414,7 +414,7 @@ IndexedMesh::addToTile(struct IndexedMeshOneMesh& shadow,
     if (newFaces == 0) {
       errf("Cannot expand face table in tile (%u,%u) from %u to %u",
            tileX, tileY, oldMaxNFaces, newMaxNFaces);
-      exit(1);
+      return;
     }
     debugf("Expanded face table in tile (%u,%u) from %u to %u",
            tileX, tileY, oldMaxNFaces, newMaxNFaces);

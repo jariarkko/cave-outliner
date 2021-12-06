@@ -166,6 +166,26 @@ errf(const char* format, ...) {
 
 __attribute__((__format__ (__printf__, 1, 0)))
 void
+fatalf(const char* format, ...) {
+
+  assert(format != 0);
+
+  va_list args;
+  char buf[500];
+  memset(buf,0,sizeof(buf));
+  va_start (args, format);
+  vsnprintf(buf,sizeof(buf)-1,format,args);
+  va_end (args);
+  std::cerr << OUTLINER_ERRPREFIX;
+  std::cerr << buf;
+  std::cerr << " -- exit\n";
+  std::cerr.flush();
+  exit(1);
+  
+}
+
+__attribute__((__format__ (__printf__, 1, 0)))
+void
 infof(const char* format, ...) {
 
   assert(format != 0);

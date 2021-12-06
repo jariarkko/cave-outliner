@@ -151,7 +151,7 @@ SvgCreator::addLine(unsigned int x1,
       struct OutlinerSvgLine* entry = new struct OutlinerSvgLine;
       if (entry == 0) {
         errf("Cannot allocate a line entry");
-        exit(1);
+        return;
       }
       entry->refCount = 0;
       entry->printed = 0;
@@ -278,7 +278,7 @@ SvgCreator::emitLineAux(const struct OutlinerSvgLine& line) {
   // Handle styles
   if ((line.style & outlinersvgstyle_illegal) != 0) {
     errf("Invalid line style %x", line.style);
-    exit(1);
+    return;
   }
   if ((line.style & outlinersvgstyle_dashed) != 0) {
     file << " stroke-dasharray=\"1 1\" ";
@@ -302,7 +302,7 @@ SvgCreator::emitLineAux(const struct OutlinerSvgLine& line) {
       yDiff = notch;
     } else {
       errf("Line endpoints style not supported for non-vertical/horizontal lines");
-      exit(1);
+      return;
     }
     
     struct OutlinerSvgLine end1line;
@@ -1098,7 +1098,7 @@ SvgCreator::lineTableEntryLink(struct OutlinerSvgLine* entry,
   struct OutlinerSvgLineList* listItem = new struct OutlinerSvgLineList;
   if (listItem == 0) {
     errf("Cannot allocate a list item");
-    exit(1);
+    return;
   }
   listItem->line = entry;
   listItem->next = lineTable[index];
@@ -1184,7 +1184,7 @@ SvgCreator::lineTableInit(void) {
   lineTable = new struct OutlinerSvgLineList* [lineTableSize];
   if  (lineTable == 0) {
     errf("Cannot allocate line table of size %u", lineTableSize);
-    exit(1);
+    return;
   }
   for (unsigned int i = 0; i < lineTableSize; i++) {
     lineTable[i] = 0;
