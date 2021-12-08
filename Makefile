@@ -24,6 +24,7 @@ OBJS=	$(OBJDIR)/main.o \
 	$(OBJDIR)/maintest.o \
 	$(OBJDIR)/outlinerprocessor.o \
 	$(OBJDIR)/outlinerprocessorcrosssection.o \
+	$(OBJDIR)/outlinerprocessoroptions.o \
 	$(OBJDIR)/outlinerprocessorforms.o \
 	$(OBJDIR)/outlineroutlineanalyzer.o \
 	$(OBJDIR)/outlinershaperecognizer.o \
@@ -50,6 +51,7 @@ HDRS=	src/main.hh \
 	src/outlinerdirection.hh \
 	src/outlinerprocessor.hh \
 	src/outlinerprocessorcrosssection.hh \
+	src/outlinerprocessoroptions.hh \
 	src/outlinerprocessorforms.hh \
 	src/outlineroutlineanalyzer.hh \
 	src/outlinershaperecognizer.hh \
@@ -73,6 +75,7 @@ SRCS=	src/main.cc \
 	src/outlinerdirection.cc \
 	src/outlinerprocessor.cc \
 	src/outlinerprocessorcrosssection.cc \
+	src/outlinerprocessoroptions.cc \
 	src/outlinerprocessorforms.cc \
 	src/outlineroutlineanalyzer.cc \
 	src/outlinershaperecognizer.cc \
@@ -107,6 +110,7 @@ CLASSES=outliner_math \
 	outliner_vector3_d \
 	processor \
 	processor_cross_section \
+	processor_options \
 	processor_forms \
 	outline_analyzer \
 	shape_recognizer \
@@ -132,6 +136,7 @@ CLASSMARKDOWNS=	doc/software/class_outliner_math.md \
 		doc/software/class_outliner_vector3_d.md \
 		doc/software/class_processor.md \
 		doc/software/class_processor_cross_section.md \
+		doc/software/class_processor_options.md \
 		doc/software/class_processor_forms.md \
 		doc/software/class_outline_analyzer.md \
 		doc/software/class_shape_recognizer.md \
@@ -167,6 +172,9 @@ $(OBJDIR)/outlinerprocessor.o:	src/outlinerprocessor.cc $(HDRS)
 
 $(OBJDIR)/outlinerprocessorcrosssection.o:	src/outlinerprocessorcrosssection.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerprocessorcrosssection.o
+
+$(OBJDIR)/outlinerprocessoroptions.o:	src/outlinerprocessoroptions.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerprocessoroptions.o
 
 $(OBJDIR)/outlinerprocessorforms.o:	src/outlinerprocessorforms.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerprocessorforms.o

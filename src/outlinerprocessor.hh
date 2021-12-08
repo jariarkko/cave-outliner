@@ -35,6 +35,7 @@
 #include "outlinermaterialmatrix3d.hh"
 #include "outlinerformmatrix2d.hh"
 #include "outlinerdepthmap.hh"
+#include "outlinerprocessoroptions.hh"
 #include "outlinerprocessorforms.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

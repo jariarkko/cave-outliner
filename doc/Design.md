@@ -73,7 +73,7 @@ See the detailed description of the [Class MaterialMatrix2D API](software/class_
 
 This is the main program of the Core module, it performs the actual mapping from a given model and indexed mesh to an SVG image. It creates a material matrix as part of the process.
 
-See the detailed description of the [Class Processor API](software/class_processor.md). 
+See the detailed description of the [Class Processor API](software/class_processor.md). There's also a configuration option object for the Processor, you can find it in [Class ProcessorOptions API](software/class_processor_options.md).
 
 #### Outlinerprocessorcrosssection
 
