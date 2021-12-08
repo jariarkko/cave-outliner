@@ -156,6 +156,9 @@ public:
   
   /// Should we output the cave roof depth map to a separate file?
   const char* roofDepthMap;
+
+  /// Floor style, either depth map (0) or differential depth  map (1).
+  bool floorStyleDiff;
   
   /// Should we show tunnel 'spines', i.e., tunnel midpoints?
   bool tunnelSpine;

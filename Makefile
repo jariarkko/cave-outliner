@@ -324,7 +324,8 @@ cave-tests:	cave1-test \
 		cave1-form-analysis-smooth-line-test \
 		cave1-spine-test \
 		cave1-floor-test \
-		cave1-floor-condense-test
+		cave1-floor-condense-test \
+		cave1-floor-depth-test
 
 failing-tests:	failing-tests-note \
 		house-cross-section-side-test \
@@ -635,6 +636,13 @@ cave1-floor-condense-test:
 	@diff -q test/cave1-floor-condense.svg test/cave1-floor-condense.svg.expected
 	@diff -q test/cave1-floor-condense-floor.svg test/cave1-floor-condense-floor.svg.expected
 	@diff -q test/cave1-floor-condense-roof.svg test/cave1-floor-condense-roof.svg.expected
+
+cave1-floor-depth-test:
+	@echo 'Running test case cave1-floor-depth-test...'
+	@./cave-outliner --quiet --floorstyle depth --floordepthmap test/cave1-floor-depth-floor.svg --roofdepthmap test/cave1-floor-depth-roof.svg --tunnelspine --multiplier 5 --formanalysis 1 --borderline --step 0.1 --holethreshold 10 test/cave1.stl test/cave1-floor-depth.svg
+	@diff -q test/cave1-floor-depth.svg test/cave1-floor-depth.svg.expected
+	@diff -q test/cave1-floor-depth-floor.svg test/cave1-floor-depth-floor.svg.expected
+	@diff -q test/cave1-floor-depth-roof.svg test/cave1-floor-depth-roof.svg.expected
 
 example-tests:	cave1-example-orig-test \
 		cave1-example-form-test \

@@ -34,7 +34,14 @@
 // Class functions ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-ProcessorOptions::ProcessorOptions() {
+ProcessorOptions::ProcessorOptions() :
+  floorStyleDiff(1) {
+}
+
+ProcessorOptions&
+ProcessorOptions::operator=(const ProcessorOptions& input) {
+  floorStyleDiff = input.floorStyleDiff;
+  return(*this);
 }
 
 ProcessorOptions::~ProcessorOptions() {

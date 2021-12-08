@@ -181,6 +181,16 @@ MainOptions::processCommandLineOptions(int& argc,
     } else if (strcmp(argv[1],"--roofdepthmap") == 0 && argc > 2) {
       config.roofDepthMap = argv[2];
       argc--;argv++;
+    } else if (strcmp(argv[1],"--floorstyle") == 0 && argc > 2) {
+      if (strcmp(argv[2],"depth") == 0) {
+        config.floorStyleDiff = 0;
+      } else if (strcmp(argv[2],"diff") == 0) {
+        config.floorStyleDiff = 1;
+      } else {
+        errf("Invalid floor style %s, expected either depth or diff", argv[2]);
+        return(0);
+      }
+      argc--;argv++;
     } else if (strcmp(argv[1],"--tunnelspine") == 0) {
       config.tunnelSpine = 1;
     } else if (strcmp(argv[1],"--label") == 0) {

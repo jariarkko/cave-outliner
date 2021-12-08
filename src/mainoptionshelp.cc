@@ -81,6 +81,8 @@ MainOptions::processHelp(void) {
   std::cout << "                           value of 1 implies no compression.\n";
   std::cout << "  --floordepthmap file     Output cave tunnel floor depth map to given file.\n";
   std::cout << "  --roofdepthmap file      Output cave tunnel roof depth map to given file.\n";
+  std::cout << "  --floorstyle s           Specify floor and roof depthmap style, either depth\n";
+  std::cout << "                           or diff.\n";
   std::cout << "  --tunnelspine            Mark cave tunnel centerpoints.\n";
   std::cout << "  --label                  Label cross sections.\n";
   std::cout << "  --dimensions             Show dimensions of each cave plan view and cross section.\n";

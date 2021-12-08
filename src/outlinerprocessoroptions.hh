@@ -47,8 +47,14 @@ public:
   /// Create the configuration object, with default values.
   ProcessorOptions();
 
+  /// Assign the configuration object, as a copy from another object.
+  ProcessorOptions& operator=(const ProcessorOptions& input);
+
   /// Release all resources for the configuration object.
   ~ProcessorOptions();
+  
+  /// Floor style, either depth map (0) or differential depth  map (1).
+  bool floorStyleDiff;
 
 };
 

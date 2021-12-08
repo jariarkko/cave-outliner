@@ -73,6 +73,7 @@ public:
 
   /// Create a Processor.
   Processor(const char* fileNameIn,
+            const ProcessorOptions& optionsIn,
             const unsigned int multiplierIn,
             const bool smoothIn,
             const bool mergedLinesIn,
@@ -115,8 +116,9 @@ private:
   friend class ProcessorCrossSection;
   friend class ProcessorForms;
   friend class DepthMap;
-  
+
   const char* fileName;
+  ProcessorOptions options;
   const unsigned int multiplier;
   const bool smooth;
   const bool mergedLines;

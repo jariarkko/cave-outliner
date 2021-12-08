@@ -83,6 +83,8 @@ Options:
                              value of 1 implies no compression.
     --floordepthmap file     Output cave tunnel floor depth map to given file.
     --roofdepthmap file      Output cave tunnel roof depth map to given file.
+    --floorstyle s           Specify floor and roof depthmap style, either depth
+                             or diff.
     --tunnelspine            Mark cave tunnel centerpoints.
     --label                  Label cross sections
     --dimensions             Show dimensions of each cave plan view and cross section.

@@ -38,6 +38,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 Processor::Processor(const char* fileNameIn,
+                     const ProcessorOptions& optionsIn,
                      const unsigned int multiplierIn,
                      const bool smoothIn,
                      const bool mergedLinesIn,
@@ -64,6 +65,7 @@ Processor::Processor(const char* fileNameIn,
                      struct ProcessorCrossSectionInfo* crossSectionsIn,
                      IndexedMesh& indexedIn) :
   fileName(fileNameIn),
+   options(optionsIn),
   multiplier(multiplierIn),
   smooth(smoothIn),
   mergedLines(mergedLinesIn),
@@ -223,11 +225,11 @@ Processor::processScene(const aiScene* scene) {
   // written to image files, do that as well.
   if (floorDepthMap != 0) {
     const DepthMap& map = formAnalyzer.getFloorDepthMap();
-    map.toImage(floorDepthMap,multiplier,svgYSwap,1,*this);
+    map.toImage(floorDepthMap,multiplier,svgYSwap,options.floorStyleDiff,*this);
   }
   if (roofDepthMap != 0) {
     const DepthMap& map = formAnalyzer.getRoofDepthMap();
-    map.toImage(roofDepthMap,multiplier,svgYSwap,1,*this);
+    map.toImage(roofDepthMap,multiplier,svgYSwap,options.floorStyleDiff,*this);
   }
   
   // Main result (plan view) is also done, flush the image output

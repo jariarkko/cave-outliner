@@ -65,6 +65,7 @@ MainConfig::MainConfig() :
   crossSectionWidth(1.0),
   floorDepthMap(0),
   roofDepthMap(0),
+  floorStyleDiff(1),
   tunnelSpine(0),
   labelCrossSections(0),
   formAnalysis(0),

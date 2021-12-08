@@ -224,8 +224,13 @@ main(int argc, char** argv) {
     indexed.describe(std::cout);
   }
   
+  // Find the options for the processor
+  ProcessorOptions processorOptions;
+  processorOptions.floorStyleDiff = config.floorStyleDiff;
+  
   // Process the model
   Processor processor(config.outputFile,
+                      processorOptions,
                       config.multiplier,
                       config.smooth,
                       config.mergedLines,
