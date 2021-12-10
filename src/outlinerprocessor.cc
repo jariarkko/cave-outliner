@@ -1065,14 +1065,15 @@ Processor::createSvg(const char* svgFileName,
         xSizeInt*multiplier, ySizeInt*multiplier);
   
   // Create the object
+  SvgOptions resultOptions(multiplier,
+                           smooth,mergedLines,
+                           linewidth,
+                           svgYSwap);
   SvgCreator* result = new SvgCreator(svgFileName,
                                       xSizeInt,ySizeInt,
-                                      multiplier,
                                       xOutputStart,yOutputStart,
                                       xFactor,yFactor,
-                                      smooth,mergedLines,
-                                      linewidth,
-                                      svgYSwap);
+                                      resultOptions);
   
   // Check for allocation success
   deepdebugf("svg allocated");

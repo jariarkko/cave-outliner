@@ -33,33 +33,25 @@
 SvgCreator::SvgCreator(const char* fileNameIn,
                        const unsigned int xSizeIn,
                        const unsigned int ySizeIn,
-                       const unsigned int multiplierIn,
                        const outlinerreal xStartIn,
                        const outlinerreal yStartIn,
                        const outlinerreal xFactorIn,
                        const outlinerreal yFactorIn,
-                       const bool smoothIn,
-                       const bool mergedLinesIn,
-                       const outlinerreal linewidthIn,
-                       const bool ySwapIn) :
+                       const SvgOptions& optionsIn) :
   fileName(fileNameIn),
   xSize(xSizeIn),
   ySize(ySizeIn),
-  multiplier(multiplierIn),
-  xSizeMultiplied(xSize*multiplierIn),
-  ySizeMultiplied(ySize*multiplierIn),
+  xSizeMultiplied(xSize*optionsIn.multiplier),
+  ySizeMultiplied(ySize*optionsIn.multiplier),
   xStart(xStartIn),
   yStart(yStartIn),
   xFactor(xFactorIn),
   yFactor(yFactorIn),
-  smooth(smoothIn),
-  mergedLines(mergedLinesIn),
-  linewidth(linewidthIn),
-  ySwap(ySwapIn) {
+  options(optionsIn) {
 
   assert(xSize > 0);
   assert(ySize > 0);
-  assert(linewidth > 0.0);
+  assert(options.linewidth > 0.0);
   file.open(fileName);
   pixels = 0;
   originalLines = 0;
@@ -69,7 +61,7 @@ SvgCreator::SvgCreator(const char* fileNameIn,
   characters = 0;
   
   debugf("coordinate normalization starts (%.2f,%.2f) factors (%f,%f) linewidth %f",
-         xStart, yStart, xFactor, yFactor, linewidth);
+         xStart, yStart, xFactor, yFactor, options.linewidth);
 
   lineTableInit();
   preamble();
@@ -92,12 +84,12 @@ SvgCreator::~SvgCreator() {
 
 outlinerreal
 SvgCreator::getPixelXSize(void) {
-  return((1.0/xFactor)/multiplier);
+  return((1.0/xFactor)/options.multiplier);
 }
 
 outlinerreal
 SvgCreator::getPixelYSize(void) {
-  return((1.0/yFactor)/multiplier);
+  return((1.0/yFactor)/options.multiplier);
 }
 
 void
@@ -135,7 +127,7 @@ SvgCreator::addLine(unsigned int x1,
                     OutlinerSvgStyle style) {
   deepdebugf("addLine");
   assert((style & outlinersvgstyle_illegal) == 0);
-  if (mergedLines) {
+  if (options.mergedLines) {
     unsigned int matchIndex;
     bool isStart;
     bool reverseOriginal;
@@ -238,7 +230,7 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
   }
 
   // Handle smoothing
-  if (smooth) {
+  if (options.smooth) {
     struct OutlinerSvgLine smoothedLine = line;
     smoothLine(smoothedLine);
     emitLineAux(smoothedLine);
@@ -285,13 +277,13 @@ SvgCreator::emitLineAux(const struct OutlinerSvgLine& line) {
   }
 
   // Postamble
-  file << "stroke-width=\"" << linewidth << "\" />\n";
+  file << "stroke-width=\"" << options.linewidth << "\" />\n";
 
   // Styles that add something beyond the line itself
   assert((line.style & outlinersvgstyle_stubs) == 0);
   if ((line.style & outlinersvgstyle_ends) != 0) {
 
-    unsigned int notch = 1 + multiplier/2;
+    unsigned int notch = 1 + options.multiplier/2;
     unsigned int xDiff;
     unsigned int yDiff;
     if (line.points[0].x == line.points[line.nPoints-1].x) {
@@ -397,7 +389,7 @@ SvgCreator::emitStubsLine(const struct OutlinerSvgLine& line) {
 
     // Emit the stub line that is perpendicular to the segment
     struct OutlinerSvgLine stub;
-    unsigned int stubLength = 1 + multiplier/1;
+    unsigned int stubLength = 1 + options.multiplier/1;
     stub.refCount = 1;
     stub.style = (newLine.style & ~(outlinersvgstyle_stubs+outlinersvgstyle_stubs_dirl+outlinersvgstyle_stubs_dird));
     //stub.style |= outlinersvgstyle_red;
@@ -439,7 +431,7 @@ SvgCreator::pixel(outlinerreal x,
   deepdebugf("     pixel %u %s", style, color);
   deepdebugf("SvgCreator::pixel %.2f,%.2f to %u,%u", x, y, xInt, yInt);
   file << "<rect x=\"" << xInt << "\" y=\"" << yInt << "\"";
-  file << " width=\"" << multiplier << "\" height=\"" << multiplier << "\"";
+  file << " width=\"" << options.multiplier << "\" height=\"" <<  options.multiplier << "\"";
   file << " fill=\"" << color << "\"";
   file << " stroke-width=\"0\" stroke=\"" << color << "\" />\n";
   pixels++;
@@ -523,18 +515,18 @@ SvgCreator::coordinateNormalization(outlinerreal x,
   outlinerreal xNormalized = (x - xStart) * xFactor;
   outlinerreal yNormalized = (y - yStart) * yFactor;
   if (xNormalized > (outlinerreal)xSize) xInt = xSizeMultiplied;
-  else xInt = (xNormalized*multiplier);
-  if (yNormalized > (outlinerreal)ySize) yInt = ySwap ? 0 : ySizeMultiplied;
-  else yInt = ySwap ? (ySizeMultiplied - (yNormalized*multiplier)) : yNormalized*multiplier;
+  else xInt = (xNormalized*options.multiplier);
+  if (yNormalized > (outlinerreal)ySize) yInt = options.ySwap ? 0 : ySizeMultiplied;
+  else yInt = options.ySwap ? (ySizeMultiplied - (yNormalized*options.multiplier)) : yNormalized*options.multiplier;
   deepdebugf("coordinate normalization (%.2f,%.2f) to (%u,%u) with yNormalized %.2f ySize %u yStart %.2f and yFactor %.2f",
              x, y,
              xInt, yInt,
              yNormalized, ySize, yStart, yFactor);
   if (xInt > xSizeMultiplied || yInt > ySizeMultiplied) {
     infof("xInt %u (/%u) from x %.2f start %.2f factor %.2f multiplier %.2f",
-          xInt, xSizeMultiplied, x, xStart, xFactor, multiplier);
+          xInt, xSizeMultiplied, x, xStart, xFactor, options.multiplier);
     infof("yInt %u (/%u) from y %.2f start %.2f factor %.2f multiplier %.2f",
-          yInt, ySizeMultiplied, y, yStart, yFactor, multiplier);
+          yInt, ySizeMultiplied, y, yStart, yFactor, options.multiplier);
   }
   assert(xInt <= xSizeMultiplied);
   assert(yInt <= ySizeMultiplied);
@@ -839,12 +831,13 @@ SvgCreator::preamble() {
   file << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n";
   file << "          \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
   file << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n";
-  file << "     width=\"" << (xSize+1)*multiplier << "\" height=\"" << (ySize+1)*multiplier << "\">\n";
+  file << "     width=\"" << (xSize+1)*options.multiplier << "\" height=\"" << (ySize+1)*options.multiplier << "\">\n";
 
   // Make the background white
-  file << "<rect x=\"0\" y=\"0\" width=\"" << (xSize+1)*multiplier << "\" height=\"" << (ySize+1)*multiplier << "\"";
+  file << "<rect x=\"0\" y=\"0\" width=\"" << (xSize+1)*options.multiplier;
+  file << "\" height=\"" << (ySize+1)*options.multiplier << "\"";
   file << " fill=\"white\" stroke=\"white\" stroke-width=\"0\"/>\n";
-
+ 
   // Done
   debugf("preamble done");
 }
@@ -1268,12 +1261,13 @@ SvgCreator::lineTableOutput(void) {
 
 void
 SvgCreator::test(void) {
+  SvgOptions opt(2,
+                 0,1,1,0);
   SvgCreator svg("/tmp/foo.svg",
                  10,10,
-                 2,
                  0,0,
                  1,1,
-                 0,1,1,0);
+                 opt);
   svg.smoothingTest();
 }
 

@@ -265,14 +265,15 @@ DepthMap::toImage(const char* filename,
   assert(xIndexSize == materialMatrix.xIndexSize);
   assert(yIndexSize == materialMatrix.yIndexSize);
   // Allocate an image object
+  SvgOptions imageOptions(multiplier,
+                          0,0,
+                          1,
+                          svgYSwap);
   SvgCreator image(filename,
                    xIndexSize,yIndexSize,
-                   multiplier,
                    0,0,
                    1,1,
-                   0,0,
-                   1,
-                   svgYSwap);
+                   imageOptions);
 
   // Construct the actual image
   infof("converting depth map to image in file %s", filename);

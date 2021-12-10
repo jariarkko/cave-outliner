@@ -40,6 +40,7 @@ OBJS=	$(OBJDIR)/main.o \
 	$(OBJDIR)/outlinermath.o \
 	$(OBJDIR)/outlinerhighprecision.o \
 	$(OBJDIR)/outlinersvg.o \
+	$(OBJDIR)/outlinersvgoptions.o \
 	$(OBJDIR)/outlinerversion.o
 HDRS=	src/main.hh \
 	src/mainconfig.hh \
@@ -65,6 +66,7 @@ HDRS=	src/main.hh \
 	src/outlinermath.hh \
 	src/outlinerhighprecision.hh \
 	src/outlinersvg.hh \
+	src/outlinersvgoptions.hh \
 	src/outlinerversion.hh
 SRCS=	src/main.cc \
 	src/mainconfig.cc \
@@ -89,6 +91,7 @@ SRCS=	src/main.cc \
 	src/outlinermath.cc \
 	src/outlinerhighprecision.cc \
 	src/outlinersvg.cc \
+	src/outlinersvgoptions.cc \
 	src/outlinerversion.cc
 CLASSES=outliner_math \
 	main_config \
@@ -140,7 +143,8 @@ CLASSMARKDOWNS=	doc/software/class_outliner_math.md \
 		doc/software/class_processor_forms.md \
 		doc/software/class_outline_analyzer.md \
 		doc/software/class_shape_recognizer.md \
-		doc/software/class_svg_creator.md
+		doc/software/class_svg_creator.md \
+		doc/software/class_svg_options.md
 TOOLS=	doc/tools/markdowncleanup.sh
 SUPP=	Makefile $(TOOLS)
 CPPFLAGS=-O3 -Wall -std=c++11 `pkg-config --cflags assimp`
@@ -220,6 +224,9 @@ $(OBJDIR)/outlinerhighprecision.o:	src/outlinerhighprecision.cc $(HDRS)
 
 $(OBJDIR)/outlinersvg.o:	src/outlinersvg.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinersvg.o
+
+$(OBJDIR)/outlinersvgoptions.o:	src/outlinersvgoptions.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinersvgoptions.o
 
 $(OBJDIR)/outlinerversion.o:	src/outlinerversion.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerversion.o

@@ -27,6 +27,7 @@
 #include <fstream>
 #include "outlinertypes.hh"
 #include "outlinerhighprecision.hh"
+#include "outlinersvgoptions.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Data types /////////////////////////////////////////////////////////////////////////////////
@@ -97,15 +98,11 @@ class SvgCreator {
   SvgCreator(const char* fileNameIn,
              const unsigned int xSizeIn, 
              const unsigned int ySizeIn,
-             const unsigned int multiplierIn,
              const outlinerreal xStartIn,
              const outlinerreal yStartIn,
              const outlinerreal xFactorIn,
              const outlinerreal yFactorIn,
-             const bool smoothIn,
-             const bool mergedLinesIn,
-             const outlinerreal linewidthIn,
-             const bool ySwapIn);
+             const SvgOptions& optionsIn);
 
   /// Release all resources associated with the SVG creation object. And close the file, if still open.
   ~SvgCreator();
@@ -155,17 +152,13 @@ class SvgCreator {
   std::ofstream file;
   const unsigned int xSize;
   const unsigned int ySize;
-  const unsigned int multiplier;
   const unsigned int xSizeMultiplied;
   const unsigned int ySizeMultiplied;
   const outlinerreal xStart;
   const outlinerreal yStart;
   const outlinerreal xFactor;
   const outlinerreal yFactor;
-  const bool smooth;
-  const bool mergedLines;
-  const outlinerreal linewidth;
-  const bool ySwap;
+  const SvgOptions options;
   unsigned int pixels;
   unsigned int originalLines;
   unsigned int finalLines;

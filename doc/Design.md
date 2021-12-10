@@ -103,7 +103,7 @@ See the detailed description of the [Class ShapeRecognizer API](software/class_s
 
 This module can be used to output SVG images to a file. For a description of what an SVG image format is, see https://www.w3schools.com/graphics/svg_intro.asp. 
 
-See the detailed description of the [Class SvgCreator API](software/class_svg_creator.md). 
+See the detailed description of the [Class SvgCreator API](software/class_svg_creator.md) and the options object [Class SvgOptions API](software/class_svg_options.md).
 
 ### Outlinerdesribe
 
