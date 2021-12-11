@@ -225,15 +225,15 @@ MainOptions::processCommandLineOptions(int& argc,
         errf("Hole threshold value needs to be non-negative and max 100, %s given", argv[2]);
         return(0);
       }
-      config.holethreshold = num;
+      config.holeThreshold = num;
       argc--;argv++;
-    } else if (strcmp(argv[1],"--lineholethreshold") == 0 && argc > 2) {
+    } else if (strcmp(argv[1],"--lineHoleThreshold") == 0 && argc > 2) {
       int num = atoi(argv[2]);
       if (num < 0 || num > 100) {
         errf("Line hole threshold value needs to be non-negative and max 100, %s given", argv[2]);
         return(0);
       }
-      config.lineholethreshold = num;
+      config.lineHoleThreshold = num;
       argc--;argv++;
     } else if (strcmp(argv[1],"--dustthreshold") == 0 && argc > 2) {
       int num = atoi(argv[2]);

@@ -35,12 +35,51 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 ProcessorOptions::ProcessorOptions() :
-  floorStyleDiff(1) {
+  floorStyleDiff(1),
+  tunnelSpine(0),
+  labels(0),
+  formAnalysis(0),
+  formCondense(1),
+  dimensions(0) {
+}
+
+ProcessorOptions::ProcessorOptions(const unsigned int holeThresholdIn,
+                                   const unsigned int lineHoleThresholdIn,
+                                   const unsigned int dustThresholdIn,
+                                   const char* floorDepthMapIn,
+                                   const char* roofDepthMapIn,
+                                   const bool floorStyleDiffIn,
+                                   const bool tunnelSpineIn,
+                                   const bool labelsIn,
+                                   const bool formAnalysisIn,
+                                   const unsigned int formCondenseIn,
+                                   const bool dimensionsIn) :
+  holeThreshold(holeThresholdIn),
+  lineHoleThreshold(lineHoleThresholdIn),
+  dustThreshold(dustThresholdIn),
+  floorDepthMap(floorDepthMapIn),
+  roofDepthMap(roofDepthMapIn),
+  floorStyleDiff(floorStyleDiffIn),
+  tunnelSpine(tunnelSpineIn),
+  labels(labelsIn),
+  formAnalysis(formAnalysisIn),
+  formCondense(formCondenseIn),
+  dimensions(dimensionsIn) {
 }
 
 ProcessorOptions&
 ProcessorOptions::operator=(const ProcessorOptions& input) {
+  holeThreshold = input.holeThreshold;
+  lineHoleThreshold = input.lineHoleThreshold;
+  dustThreshold = input.dustThreshold;
+  floorDepthMap = input.floorDepthMap;
+  roofDepthMap = input.roofDepthMap;
   floorStyleDiff = input.floorStyleDiff;
+  tunnelSpine = input.tunnelSpine;
+  labels = input.labels;
+  formAnalysis = input.formAnalysis;
+  formCondense = input.formCondense;
+  dimensions = input.dimensions;
   return(*this);
 }
 

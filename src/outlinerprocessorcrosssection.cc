@@ -123,7 +123,7 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   }
   
   // Add space for the line and text underneath
-  if (proc.dimensions) {
+  if (proc.options.dimensions) {
     proc.addSpaceForDimensions(sliceVerticalBoundingBox,
                                sliceVerticalBoundingBoxExtended,
                                dimensionBottomLabelingSpaceStartY,
@@ -192,7 +192,7 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   // Now there's a matrix filled with a flag for each coordinate,
   // whether there was material or not. Determine if we want to fill
   // small imperfections, removing small holes in lines.
-  if (proc.lineHolethreshold > 0) {
+  if (proc.options.lineHoleThreshold > 0) {
     unsigned int holeMinSize;
     unsigned int holeMaxSize;
     unsigned int holes = proc.lineHoleRemoval(holeMinSize,holeMaxSize);
@@ -213,7 +213,7 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   }
   
   // Add dimension lines, if any
-  if (fileName != 0 && proc.dimensions) {
+  if (fileName != 0 && proc.options.dimensions) {
     proc.addDimensionLines(svg,
                            sliceVerticalBoundingBox,
                            dimensionBottomLabelingSpaceStartY,
@@ -719,19 +719,19 @@ void
 ProcessorCrossSection::addSpaceForLabel(OutlinerBox2D& pictureBoundingBox,
                                         outlinerreal thisStepX,
                                         outlinerreal thisStepY) {
-  debugf("proc.multiplier %u", proc.multiplier);
+  debugf("proc.svgOptions.multiplier %u", proc.svgOptions.multiplier);
   outlinerreal incr =
-    (outlinerdefaultfontysize*thisStepY) / proc.multiplier +
+    (outlinerdefaultfontysize*thisStepY) / proc.svgOptions.multiplier +
     outlinertitlespaceempty*thisStepY;
   debugf("increasing cross-section image vertical size by %.2f (%u*%.2f)/%u+(%u*%.2f) to accommodate label",
-         incr, outlinerdefaultfontysize, thisStepY, proc.multiplier,
+         incr, outlinerdefaultfontysize, thisStepY, proc.svgOptions.multiplier,
          outlinertitlespaceempty, thisStepY);
   pictureBoundingBox.end.y += incr;
-  outlinerreal labelHorizontalSpaceNeeded = outlinertitlespacex / proc.multiplier;
+  outlinerreal labelHorizontalSpaceNeeded = outlinertitlespacex / proc.svgOptions.multiplier;
   outlinerreal horizontalSpaceAvailable = (pictureBoundingBox.end.x - pictureBoundingBox.start.x)/stepy;
   debugf("horizontal space available %.2f, needed %.2f %.2f/%u (stepy %.2f)",
          horizontalSpaceAvailable, labelHorizontalSpaceNeeded,
-         outlinertitlespacex, proc.multiplier, stepy);
+         outlinertitlespacex, proc.svgOptions.multiplier, stepy);
   if (horizontalSpaceAvailable < labelHorizontalSpaceNeeded) {
     outlinerreal incr2 = (labelHorizontalSpaceNeeded - horizontalSpaceAvailable) * stepy;
     debugf("increasing cross-section image horizontal size by %.2f (%f-%2f)*%f to accommodate label",

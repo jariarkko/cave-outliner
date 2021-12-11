@@ -116,10 +116,10 @@ public:
   unsigned int tiles;
 
   /// If the model has holes, e.g., missing faces for various reasons, should the software try to fill them? 
-  unsigned int holethreshold;
+  unsigned int holeThreshold;
 
   /// If the cross section lines have holes, e.g., missing faces for various reasons, should the software try to fill them? 
-  unsigned int lineholethreshold;
+  unsigned int lineHoleThreshold;
 
   /// Can remove small isolated pieces of model?
   unsigned int dustThreshold;

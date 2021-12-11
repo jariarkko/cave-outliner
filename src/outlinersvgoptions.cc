@@ -33,6 +33,14 @@
 // Class functions ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+SvgOptions::SvgOptions()  :
+  multiplier(1),
+  smooth(0),
+  mergedLines(1),
+  linewidth(outlinerdefaultlinewidth),
+  ySwap(1) {
+}
+
 SvgOptions::SvgOptions(const unsigned int multiplierIn,
                        const bool smoothIn,
                        const bool mergedLinesIn,
@@ -48,6 +56,14 @@ SvgOptions::SvgOptions(const unsigned int multiplierIn,
   assert(mergedLines == 0 || mergedLines == 1);
   assert(linewidth > 0.0);
   assert(ySwap == 0 || ySwap == 1);
+}
+
+SvgOptions::SvgOptions(const SvgOptions& input) :
+  multiplier(input.multiplier),
+  smooth(input.smooth),
+  mergedLines(input.mergedLines),
+  linewidth(input.linewidth),
+  ySwap(input.ySwap) {
 }
 
 SvgOptions&

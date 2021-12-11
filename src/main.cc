@@ -48,6 +48,10 @@
 // Function prototypes ////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+static void setProcessorOptions(const MainConfig& config,
+                                ProcessorOptions& options);
+static void setSvgOptions(const MainConfig& config,
+                          SvgOptions& options);
 static const aiScene* processImport(Assimp::Importer& importer,
                                     const char* file);
 static char* makeFilenameFromPattern(const char* pattern,
@@ -224,18 +228,16 @@ main(int argc, char** argv) {
     indexed.describe(std::cout);
   }
   
-  // Find the options for the processor
+  // Find the options for the processor and SVG output
   ProcessorOptions processorOptions;
-  processorOptions.floorStyleDiff = config.floorStyleDiff;
+  SvgOptions svgOptions;
+  setProcessorOptions(config,processorOptions);
+  setSvgOptions(config,svgOptions);
   
   // Process the model
   Processor processor(config.outputFile,
                       processorOptions,
-                      config.multiplier,
-                      config.smooth,
-                      config.mergedLines,
-                      config.linewidth,
-                      config.svgYSwap,
+                      svgOptions,
                       originalBoundingBox,
                       config.boundingBox,
                       config.stepx,
@@ -243,16 +245,6 @@ main(int argc, char** argv) {
                       config.stepz,
                       config.direction,
                       config.algorithm,
-                      config.holethreshold,
-                      config.lineholethreshold,
-                      config.dustThreshold,
-                      config.floorDepthMap,
-                      config.roofDepthMap,
-                      (config.formAnalysis && config.tunnelSpine),
-                      (config.labelCrossSections && config.nCrossSections > 0),
-                      config.formAnalysis,
-                      config.formCondense,
-                      config.dimensions,
                       config.nCrossSections,
                       config.crossSections,
                       indexed);
@@ -294,6 +286,36 @@ processImport(Assimp::Importer& importer,
 
   return(scene);
 
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Configuration conversions //////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+static void
+setProcessorOptions(const MainConfig& config,
+                    ProcessorOptions& options) {
+  options.holeThreshold = config.holeThreshold;
+  options.lineHoleThreshold = config.lineHoleThreshold;
+  options.dustThreshold = config.dustThreshold;
+  options.floorDepthMap = config.floorDepthMap;
+  options.roofDepthMap = config.roofDepthMap;
+  options.floorStyleDiff = config.floorStyleDiff;
+  options.tunnelSpine = config.tunnelSpine;
+  options.labels = (config.labelCrossSections && config.nCrossSections > 0);
+  options.formAnalysis = config.formAnalysis;
+  options.formCondense = config.formCondense;
+  options.dimensions = config.dimensions;
+}
+
+static void
+setSvgOptions(const MainConfig& config,
+              SvgOptions& options) {
+  options.multiplier = config.multiplier;
+  options.smooth = config.smooth;
+  options.mergedLines = config.mergedLines;
+  options.linewidth = config.linewidth;
+  options.ySwap = config.svgYSwap;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

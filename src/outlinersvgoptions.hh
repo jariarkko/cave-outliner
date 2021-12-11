@@ -43,15 +43,21 @@ class SvgOptions {
 public:
 
   /// Create the configuration object, with default values.
+  SvgOptions();
+  
+  /// Create the configuration object, with given values.
   SvgOptions(const unsigned int multiplierIn,
              const bool smoothIn,
              const bool mergedLinesIn,
              const outlinerreal linewidthIn,
              const bool ySwapIn);
 
-  /// Assign the configuration object, as a copy from another object.
+  /// Create the configuration object, as a copy of another object
+  SvgOptions(const SvgOptions& input);
+  
+  /// Assignment
   SvgOptions& operator=(const SvgOptions& input);
-
+  
   /// Release all resources for the configuration object.
   ~SvgOptions();
   

@@ -35,6 +35,7 @@
 #include "outlinermaterialmatrix3d.hh"
 #include "outlinerformmatrix2d.hh"
 #include "outlinerdepthmap.hh"
+#include "outlinersvgoptions.hh"
 #include "outlinerprocessoroptions.hh"
 #include "outlinerprocessorforms.hh"
 
@@ -74,11 +75,7 @@ public:
   /// Create a Processor.
   Processor(const char* fileNameIn,
             const ProcessorOptions& optionsIn,
-            const unsigned int multiplierIn,
-            const bool smoothIn,
-            const bool mergedLinesIn,
-            const float linewidthIn,
-            const bool svgYSwapIn,
+            const SvgOptions& svgOptionsIn,
             const OutlinerBox3D& originalBoundingBoxIn,
             const OutlinerBox3D& boundingBoxIn,
             const outlinerreal stepxIn,
@@ -86,16 +83,6 @@ public:
             const outlinerreal stepzIn,
             const enum outlinerdirection directionIn,
             const enum outlineralgorithm algorithmIn,
-            const unsigned int holethresholdIn,
-            const unsigned int lineHolethresholdIn,
-            const unsigned int dustTresholdIn,
-            const char* floorDepthMapIn,
-            const char* roofDepthMapIn,
-            const bool tunnelSpineIn,
-            const bool labelsIn,
-            const bool formAnalysisIn,
-            const unsigned int formCondenseIn,
-            const bool dimensionsIn,
             unsigned int nCrossSectionsIn,
             struct ProcessorCrossSectionInfo* crossSectionsIn,
             IndexedMesh& indexedIn);
@@ -118,12 +105,8 @@ private:
   friend class DepthMap;
 
   const char* fileName;
-  ProcessorOptions options;
-  const unsigned int multiplier;
-  const bool smooth;
-  const bool mergedLines;
-  const float linewidth;
-  const bool svgYSwap;
+  const ProcessorOptions options;
+  const SvgOptions svgOptions;
   SvgCreator* svg;
   const unsigned int maxNeighbors = 8;
   const OutlinerBox3D originalBoundingBox;
@@ -134,15 +117,6 @@ private:
   const outlinerreal stepz;
   const enum outlinerdirection direction;
   const enum outlineralgorithm algorithm;
-  const unsigned int holethreshold;
-  const unsigned int lineHolethreshold;
-  const unsigned int dustThreshold;
-  const char* floorDepthMap;
-  const char* roofDepthMap;
-  const bool tunnelSpine;
-  const bool labels;
-  const bool formAnalysis;
-  const bool dimensions;
   const OutlinerBox2D originalPlanviewBoundingBox;
   const OutlinerBox2D planviewBoundingBox;
   MaterialMatrix2D matrix2; // Plan view matrix

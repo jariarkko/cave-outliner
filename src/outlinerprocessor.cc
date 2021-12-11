@@ -39,11 +39,7 @@
 
 Processor::Processor(const char* fileNameIn,
                      const ProcessorOptions& optionsIn,
-                     const unsigned int multiplierIn,
-                     const bool smoothIn,
-                     const bool mergedLinesIn,
-                     const float linewidthIn,
-                     const bool svgYSwapIn,
+                     const SvgOptions& svgOptionsIn,
                      const OutlinerBox3D& originalBoundingBoxIn,
                      const OutlinerBox3D& boundingBoxIn,
                      const outlinerreal stepxIn,
@@ -51,26 +47,12 @@ Processor::Processor(const char* fileNameIn,
                      const outlinerreal stepzIn,
                      const enum outlinerdirection directionIn,
                      const enum outlineralgorithm algorithmIn,
-                     const unsigned int holethresholdIn,
-                     const unsigned int lineHolethresholdIn,
-                     const unsigned int dustThresholdIn,
-                     const char* floorDepthMapIn,
-                     const char* roofDepthMapIn,
-                     const bool tunnelSpineIn,
-                     const bool labelsIn,
-                     const bool formAnalysisIn,
-                     const unsigned int formCondenseIn,
-                     const bool dimensionsIn,
                      unsigned int nCrossSectionsIn,
                      struct ProcessorCrossSectionInfo* crossSectionsIn,
                      IndexedMesh& indexedIn) :
   fileName(fileNameIn),
-   options(optionsIn),
-  multiplier(multiplierIn),
-  smooth(smoothIn),
-  mergedLines(mergedLinesIn),
-  linewidth(linewidthIn),
-  svgYSwap(svgYSwapIn),
+  options(optionsIn),
+  svgOptions(svgOptionsIn),
   svg(0),
   originalBoundingBox(originalBoundingBoxIn),
   boundingBox(boundingBoxIn),
@@ -79,15 +61,6 @@ Processor::Processor(const char* fileNameIn,
   stepz(stepzIn),
   direction(directionIn),
   algorithm(algorithmIn),
-  holethreshold(holethresholdIn),
-  lineHolethreshold(lineHolethresholdIn),
-  dustThreshold(dustThresholdIn),
-  floorDepthMap(floorDepthMapIn),
-  roofDepthMap(roofDepthMapIn),
-  tunnelSpine(tunnelSpineIn),
-  labels(labelsIn),
-  formAnalysis(formAnalysisIn),
-  dimensions(dimensionsIn),
   originalPlanviewBoundingBox(DirectionOperations::outputx(direction,originalBoundingBox.start),
                               DirectionOperations::outputy(direction,originalBoundingBox.start),
                               DirectionOperations::outputx(direction,originalBoundingBox.end),
@@ -110,24 +83,26 @@ Processor::Processor(const char* fileNameIn,
                stepx,
                stepy,
                stepz,
-               formCondenseIn,
+               options.formCondense,
                matrix2,
                *this),
   nCrossSections(nCrossSectionsIn),
   crossSections(crossSectionsIn),
   indexed(indexedIn) {
   debugf("algorithm %u=%u", algorithm, algorithmIn);
-  if (holethreshold > outlinermaxholethreshold) {
-    errf("Cannot compute hole thresholds larger than %u (%u given)", outlinermaxholethreshold, holethreshold);
+  if (options.holeThreshold > outlinermaxholethreshold) {
+    errf("Cannot compute hole thresholds larger than %u (%u given)",
+         outlinermaxholethreshold, options.holeThreshold);
   }
-  if (lineHolethreshold > outlinermaxlineholethreshold) {
-    errf("Cannot compute line hole thresholds larger than %u (%u given)", outlinermaxlineholethreshold, lineHolethreshold);
+  if (options.lineHoleThreshold > outlinermaxlineholethreshold) {
+    errf("Cannot compute line hole thresholds larger than %u (%u given)",
+         outlinermaxlineholethreshold, options.lineHoleThreshold);
   }
   boundingBox2D = planviewBoundingBox;
   OutlinerBox2D boundingBox2DExtended(boundingBox2D);
 
   // Add spacce for labels
-  if (labels) {
+  if (options.labels) {
     addSpaceForLabels(boundingBox2DExtended,
                       hasNonHorizontalCrossSections(),
                       hasHorizontalCrossSections(),
@@ -136,7 +111,7 @@ Processor::Processor(const char* fileNameIn,
   }
   
   // Add space for the line and text underneath
-  if (dimensions) {
+  if (options.dimensions) {
     addSpaceForDimensions(originalPlanviewBoundingBox,
                           boundingBox2DExtended,
                           dimensionBottomLabelingSpaceStartY,
@@ -189,7 +164,7 @@ Processor::processScene(const aiScene* scene) {
   }
   
   // Figure out if we need to analyse cave forms
-  if (formAnalysis) {
+  if (options.formAnalysis) {
     formAnalyzer.performFormAnalysis(scene);
     // Redo some preprocessing. See if we can also filter out any small specks of material
     // spread in the model
@@ -202,12 +177,12 @@ Processor::processScene(const aiScene* scene) {
   }
 
   // Add tunnel spines (midpoints) if requested
-  if (tunnelSpine) {
+  if (options.tunnelSpine) {
     formAnalyzer.drawSpines(*svg);
   }
   
   // Add dimension lines, if any
-  if (dimensions) {
+  if (options.dimensions) {
     addDimensionLines(svg,
                       originalPlanviewBoundingBox,
                       dimensionBottomLabelingSpaceStartY,
@@ -223,13 +198,13 @@ Processor::processScene(const aiScene* scene) {
 
   // If there was a request for depth maps for floor or roof to be
   // written to image files, do that as well.
-  if (floorDepthMap != 0) {
+  if (options.floorDepthMap != 0) {
     const DepthMap& map = formAnalyzer.getFloorDepthMap();
-    map.toImage(floorDepthMap,multiplier,svgYSwap,options.floorStyleDiff,*this);
+    map.toImage(options.floorDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,*this);
   }
-  if (roofDepthMap != 0) {
+  if (options.roofDepthMap != 0) {
     const DepthMap& map = formAnalyzer.getRoofDepthMap();
-    map.toImage(roofDepthMap,multiplier,svgYSwap,options.floorStyleDiff,*this);
+    map.toImage(options.roofDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,*this);
   }
   
   // Main result (plan view) is also done, flush the image output
@@ -241,7 +216,7 @@ Processor::processScene(const aiScene* scene) {
 
 void
 Processor::holeFillingPass(void) {
-  if (holethreshold > 0) {
+  if (options.holeThreshold > 0) {
     unsigned int holeMinSize;
     unsigned int holeMaxSize;
     unsigned int holes = objectHoleRemoval(1,holeMinSize,holeMaxSize);
@@ -253,7 +228,7 @@ Processor::holeFillingPass(void) {
 
 void
 Processor::lineHoleFillingPass(void) {
-  if (lineHolethreshold > 0) {
+  if (options.lineHoleThreshold > 0) {
     unsigned int holeMinSize;
     unsigned int holeMaxSize;
     unsigned int holes = lineHoleRemoval(holeMinSize,holeMaxSize);
@@ -266,7 +241,7 @@ Processor::lineHoleFillingPass(void) {
 void
 Processor::dustRemovingPass(void) {
   infof("Dust removing pass...");
-  if (dustThreshold > 0) {
+  if (options.dustThreshold > 0) {
     unsigned int dustMinSize;
     unsigned int dustMaxSize;
     unsigned int dustParticles = objectHoleRemoval(0,dustMinSize,dustMaxSize);
@@ -443,13 +418,13 @@ Processor::addSpaceForLabels(OutlinerBox2D& pictureBoundingBox,
     pictureBoundingBox.start.y -= (outlinercrosssectionextraline * thisStepY);
     pictureBoundingBox.end.y += (outlinercrosssectionextraline * thisStepY);
     pictureBoundingBox.end.y += (outlinertitlespaceempty * thisStepY);
-    pictureBoundingBox.end.y += ((outlinerdefaultfontysize * thisStepY) / multiplier);
+    pictureBoundingBox.end.y += ((outlinerdefaultfontysize * thisStepY) / svgOptions.multiplier);
   }
   if (horizontal) {
     pictureBoundingBox.start.x -= (outlinercrosssectionextraline * thisStepX);
     pictureBoundingBox.end.x += (outlinercrosssectionextraline * thisStepX);
     pictureBoundingBox.end.x += (outlinertitlespaceempty * thisStepX);
-    pictureBoundingBox.end.x += ((2 * outlinerdefaultfontysizelarge * thisStepX) / multiplier);
+    pictureBoundingBox.end.x += ((2 * outlinerdefaultfontysizelarge * thisStepX) / svgOptions.multiplier);
   }
 }
 
@@ -469,11 +444,11 @@ Processor::addSpaceForDimensions(const OutlinerBox2D& objectBoundingBox,
   bottomDimensionLabelingStartY =  pictureBoundingBox.start.y;
   rightDimensionLabelingStartX = pictureBoundingBox.end.x;
   pictureBoundingBox.start.y -= (outlinerdimensionlinespace * thisStepY);
-  pictureBoundingBox.start.y -= (outlinersmallfontysize * thisStepY) / multiplier;
+  pictureBoundingBox.start.y -= (outlinersmallfontysize * thisStepY) / svgOptions.multiplier;
   
   // Is the picture in general big enough to take the string length
   // for the label underneath?
-  outlinerreal dimensionHorizontalSpaceNeeded = outlinerdimensionspacex / multiplier;
+  outlinerreal dimensionHorizontalSpaceNeeded = outlinerdimensionspacex / svgOptions.multiplier;
   outlinerreal horizontalSpaceAvailable = (objectBoundingBox.end.x - objectBoundingBox.start.x)/thisStepX;
   if (horizontalSpaceAvailable < dimensionHorizontalSpaceNeeded) {
     outlinerreal incr = (dimensionHorizontalSpaceNeeded - horizontalSpaceAvailable) * thisStepX + 2*thisStepX;
@@ -485,11 +460,11 @@ Processor::addSpaceForDimensions(const OutlinerBox2D& objectBoundingBox,
 
   // Add space to the right side to fit the length line and text
   pictureBoundingBox.end.x += (outlinerdimensionlinespace * thisStepX);
-  pictureBoundingBox.end.x += (outlinersmallfontysize * thisStepX) / multiplier;
+  pictureBoundingBox.end.x += (outlinersmallfontysize * thisStepX) / svgOptions.multiplier;
   
   // Is the picture in general big enough to take the string length
   // for the label on the right side?
-  outlinerreal dimensionVerticalSpaceNeeded = outlinerdimensionspacex / multiplier;
+  outlinerreal dimensionVerticalSpaceNeeded = outlinerdimensionspacex / svgOptions.multiplier;
   outlinerreal verticalSpaceAvailable = (objectBoundingBox.end.y - objectBoundingBox.start.y)/thisStepY;
   if (verticalSpaceAvailable < dimensionVerticalSpaceNeeded) {
     outlinerreal incr = (dimensionVerticalSpaceNeeded - verticalSpaceAvailable) * thisStepY + 2*thisStepY;
@@ -521,12 +496,12 @@ Processor::addDimensionLines(SvgCreator* theSvg,
   outlinerreal bottomTextStartY =
     bottomDimensionLabelingStartY -
     outlinerdimensionlinespace * thisStepY -
-    (outlinersmallfontysize * thisStepY) / multiplier;
+    (outlinersmallfontysize * thisStepY) / svgOptions.multiplier;
   outlinerreal diffX = objectBoundingBox.end.x - objectBoundingBox.start.x;
   char bufX[20];
   memset(bufX,0,sizeof(bufX));
   snprintf(bufX,sizeof(bufX)-1,"%.2fm",diffX);
-  bottomTextStartX -= (((strlen(bufX) / 2.0) * outlinersmallfontxsize) * thisStepX) / multiplier;
+  bottomTextStartX -= (((strlen(bufX) / 2.0) * outlinersmallfontxsize) * thisStepX) / svgOptions.multiplier;
   debugf("addDimensionLines bottom text %s at %.2f %.2f", bufX, bottomTextStartX, bottomTextStartY);
   theSvg->text(bottomTextStartX,bottomTextStartY,bufX,outlinersmallfont);
   
@@ -551,7 +526,7 @@ Processor::addDimensionLines(SvgCreator* theSvg,
   memset(bufY,0,sizeof(bufY));
   snprintf(bufY,sizeof(bufY)-1,"%.2fm",diffY);
   debugf("addDimensionLines right text now at %.2f %.2f", rightTextStartX, rightTextStartY);
-  rightTextStartY += (((strlen(bufY) / 2.0) * outlinersmallfontxsize) * thisStepY) / multiplier;
+  rightTextStartY += (((strlen(bufY) / 2.0) * outlinersmallfontxsize) * thisStepY) / svgOptions.multiplier;
   debugf("addDimensionLines right text %s at %.2f %.2f (string %u fontxsize %.2f thisstepy %.2f)",
          bufY, rightTextStartX, rightTextStartY,
          strlen(bufY), outlinersmallfontxsize, thisStepY);
@@ -710,7 +685,7 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
                   outlinerreal otherY = matrix2.indexToCoordinateY(borderTableY[b]);
                   deepdeepdebugf("calling theSvg->line");
                   OutlinerSvgStyle style = outlinersvgstyle_none;
-                  if (formAnalysis && formAnalyzer.formIsEntrance(xIndex,yIndex)) {
+                  if (options.formAnalysis && formAnalyzer.formIsEntrance(xIndex,yIndex)) {
                     style = outlinersvgstyle_stubs;
                   }
                   theSvg->line(otherX,otherY,x,y,style);
@@ -1062,18 +1037,14 @@ Processor::createSvg(const char* svgFileName,
         yOutputStart, yOutputEnd, svgStepY, ySize, ySizeInt);
   infof("SVG size will be %u x %u (%u x %u multiplied)",
         xSizeInt, ySizeInt,
-        xSizeInt*multiplier, ySizeInt*multiplier);
+        xSizeInt*svgOptions.multiplier, ySizeInt*svgOptions.multiplier);
   
   // Create the object
-  SvgOptions resultOptions(multiplier,
-                           smooth,mergedLines,
-                           linewidth,
-                           svgYSwap);
   SvgCreator* result = new SvgCreator(svgFileName,
                                       xSizeInt,ySizeInt,
                                       xOutputStart,yOutputStart,
                                       xFactor,yFactor,
-                                      resultOptions);
+                                      svgOptions);
   
   // Check for allocation success
   deepdebugf("svg allocated");
@@ -1223,7 +1194,7 @@ unsigned int
 Processor::objectHoleRemoval(const bool lookForHoles,
                              unsigned int& holeMinSize,
                              unsigned int& holeMaxSize) {
-  const unsigned int threshold = lookForHoles ? holethreshold : dustThreshold;
+  const unsigned int threshold = lookForHoles ? options.holeThreshold : options.dustThreshold;
   unsigned int holes = 0;
   holeMinSize = 9999;
   holeMaxSize = 0;
