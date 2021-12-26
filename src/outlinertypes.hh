@@ -66,6 +66,7 @@ enum outlineralgorithm {
 #define outlineravg(a,b)               (((a)+(b))/2.0)
 #define outlineravg3(a,b,c)            (((a)+(b)+(c))/3.0)
 #define outlinerunsignedabsdiff(a,b)   ((a) < (b) ? (b)-(a) : (a)-(b))
+#define outlinersquared(x)             ((x)*(x))
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Math common utilities //////////////////////////////////////////////////////////////////////

@@ -87,19 +87,20 @@ public:
   // Coordinate transformations
   //
 
-  void condensedXIndexToIndex(const unsigned int matrix3xIndex,
+  bool condensedXIndexToIndex(const unsigned int matrix3xIndex,
                               unsigned int& matrix2xIndexStart,
                               unsigned int& matrix2xIndexEnd) const;
-  void condensedYIndexToIndex(const unsigned int matrix3yIndex,
+  bool condensedYIndexToIndex(const unsigned int matrix3yIndex,
                               unsigned int& matrix2yIndexStart,
                               unsigned int& matrix2yIndexEnd) const;
-  void condensedIndexesToIndexes(const unsigned int matrix3xIndex,
+  bool condensedIndexesToIndexes(const unsigned int matrix3xIndex,
                                  const unsigned int matrix3yIndex,
                                  unsigned int& matrix2xIndexStart,
                                  unsigned int& matrix2yIndexStart,
                                  unsigned int& matrix2xIndexEnd,
                                  unsigned int& matrix2yIndexEnd) const;
-  void condensedIndexIncrease(unsigned int& matrix2Index) const;
+  bool condensedXIndexIncrease(unsigned int& matrix2xIndex) const;
+  bool condensedYIndexIncrease(unsigned int& matrix2yIndex) const;
   
 private:
   

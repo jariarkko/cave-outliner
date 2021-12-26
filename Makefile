@@ -332,6 +332,7 @@ cave-tests:	cave1-test \
 		cave1-spine-test \
 		cave1-floor-test \
 		cave1-floor-condense-test \
+		cave1-floor-condense-more-test \
 		cave1-floor-depth-test
 
 failing-tests:	failing-tests-note \
@@ -591,7 +592,7 @@ cave1-depthmap-test:
 	@diff -q test/cave1-depthmap.svg test/cave1-depthmap.svg.expected
 
 cave1-depthmap-cut-test:
-	@echo 'Running test case cave1-depthmap-ut-test...'
+	@echo 'Running test case cave1-depthmap-cut-test...'
 	@./cave-outliner --quiet --depthmap --step 0.05 --bounding 0.4 12.6 -0.06 3.7 0 0.8 --holethreshold 10 test/cave1.stl test/cave1-depthmap-cut.svg
 	@diff -q test/cave1-depthmap-cut.svg test/cave1-depthmap-cut.svg.expected
 
@@ -643,6 +644,13 @@ cave1-floor-condense-test:
 	@diff -q test/cave1-floor-condense.svg test/cave1-floor-condense.svg.expected
 	@diff -q test/cave1-floor-condense-floor.svg test/cave1-floor-condense-floor.svg.expected
 	@diff -q test/cave1-floor-condense-roof.svg test/cave1-floor-condense-roof.svg.expected
+
+cave1-floor-condense-more-test:
+	@echo 'Running test case cave1-floor-condense-more-test...'
+	@./cave-outliner --quiet --floordepthmap test/cave1-floor-condense-more-floor.svg --roofdepthmap test/cave1-floor-condense-more-roof.svg --tunnelspine --multiplier 5 --formanalysis 5 --borderline --step 0.1 --holethreshold 10 test/cave1.stl test/cave1-floor-condense-more.svg
+	@diff -q test/cave1-floor-condense-more.svg test/cave1-floor-condense-more.svg.expected
+	@diff -q test/cave1-floor-condense-more-floor.svg test/cave1-floor-condense-more-floor.svg.expected
+	@diff -q test/cave1-floor-condense-more-roof.svg test/cave1-floor-condense-more-roof.svg.expected
 
 cave1-floor-depth-test:
 	@echo 'Running test case cave1-floor-depth-test...'

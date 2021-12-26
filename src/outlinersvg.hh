@@ -45,6 +45,7 @@
 #define outlinersvgstyle_ends       0x01000
 #define outlinersvgstyle_grey       0x02000
 #define outlinersvgstyle_greyval(x) (outlinersvgstyle_grey+((x)&0xff))
+#define outlinersvgstyle_greyget(s) ((s)&0xff)
 #define outlinersvgstyle_red        0x04000
 #define outlinersvgstyle_blue       0x08000
 #define outlinersvgstyle_green      0x10000
@@ -60,6 +61,7 @@
                                      outlinersvgstyle_green +        \
                                      outlinersvgstyle_yellow)
 #define outlinersvgstyle_basemask   0x000fff00
+#define outlinersvgstyle_getbase(s) ((s)&outlinersvgstyle_basemask)
 #define outlinersvgstyle_illegal    (~(outlinersvgstyle_legal))
 
 struct OutlinerSvgCoord {

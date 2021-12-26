@@ -96,7 +96,9 @@ public:
   /// size step.
   static unsigned int calculateSize(const outlinerreal from,
                                     const outlinerreal to,
-                                    const outlinerreal step);
+                                    const outlinerreal step,
+                                    unsigned int multiplier,
+                                    const char* what);
   
   /// Map an actual coordinate value to an index.
   unsigned int coordinateXToIndex(const outlinerreal x) const;

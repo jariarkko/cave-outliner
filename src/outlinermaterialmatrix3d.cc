@@ -39,14 +39,15 @@
 MaterialMatrix3D::MaterialMatrix3D(const OutlinerBox3D& boundingBoxIn,
                                    const outlinerreal stepxIn,
                                    const outlinerreal stepyIn,
-                                   const outlinerreal stepzIn) :
+                                   const outlinerreal stepzIn,
+                                   const unsigned int multiplier) :
   boundingBox(boundingBoxIn),
-  xIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.x,boundingBox.end.x,stepxIn)),
-  yIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.y,boundingBox.end.y,stepyIn)),
-  zIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.z,boundingBox.end.z,stepzIn)),
-  stepx(stepxIn),
-  stepy(stepyIn),
-  stepz(stepzIn),
+  xIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.x,boundingBox.end.x,stepxIn,multiplier,"matrix3 x")),
+  yIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.y,boundingBox.end.y,stepyIn,multiplier,"matrix3 y")),
+  zIndexSize(MaterialMatrix2D::calculateSize(boundingBox.start.z,boundingBox.end.z,stepzIn,multiplier,"matrix3 z")),
+  stepx(stepxIn*multiplier),
+  stepy(stepyIn*multiplier),
+  stepz(stepzIn*multiplier),
   verticalMatrixes(new VerticalMatrix [xIndexSize]) {
   if (verticalMatrixes == 0) {
     errf("Cannot allocate %u vertical matrixes", xIndexSize);
@@ -236,7 +237,7 @@ MaterialMatrix3D::test(void) {
   // Simple matrix creation and deletion
   {
     OutlinerBox3D bb1(0,0,0,10,10,10);
-    MaterialMatrix3D matrix1(bb1,1,1,1);
+    MaterialMatrix3D matrix1(bb1,1,1,1,1);
     for (unsigned int i = 0; i < 10; i++) matrix1.setMaterialMatrix(i,i,i);
     // Verify contents
     for (unsigned int x = 0; x < 10; x++) {
@@ -253,7 +254,7 @@ MaterialMatrix3D::test(void) {
   // Make a matrix of 2D matrixes (full size)
   {
     OutlinerBox3D bb2(0,0,0,100,100,100);
-    MaterialMatrix3D matrix2(bb2,1,1,1);
+    MaterialMatrix3D matrix2(bb2,1,1,1,1);
     for (unsigned int i = 0; i < 100; i++) {
       OutlinerBox2D sliceBoundingBox(0,0,100,100);
       MaterialMatrix2D* sliceMatrix = new MaterialMatrix2D(sliceBoundingBox,1,1);
@@ -278,7 +279,7 @@ MaterialMatrix3D::test(void) {
   // Make a matrix of 2D matrixes (smaller size 2D matrixes)
   {
     OutlinerBox3D bb3(0,0,0,100,100,100);
-    MaterialMatrix3D matrix3(bb3,1,1,1);
+    MaterialMatrix3D matrix3(bb3,1,1,1,1);
     for (unsigned int i = 0; i < 100; i++) {
       OutlinerBox2D sliceBoundingBoxA(0,0,50,50);
       OutlinerBox2D sliceBoundingBoxB(50,50,100,100);
@@ -315,7 +316,7 @@ MaterialMatrix3D::test(void) {
   // non-uniorm content)
   {
     OutlinerBox3D bb3(0,0,0,100,100,100);
-    MaterialMatrix3D matrix3(bb3,1,1,1);
+    MaterialMatrix3D matrix3(bb3,1,1,1,1);
     for (unsigned int i = 0; i < 100; i++) {
       OutlinerBox2D sliceBoundingBoxA(0,0,50,50);
       OutlinerBox2D sliceBoundingBoxB(50,50,100,100);

@@ -200,11 +200,11 @@ Processor::processScene(const aiScene* scene) {
   // written to image files, do that as well.
   if (options.floorDepthMap != 0) {
     const DepthMap& map = formAnalyzer.getFloorDepthMap();
-    map.toImage(options.floorDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,*this);
+    map.toImage(options.floorDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,options.formCondense,*this);
   }
   if (options.roofDepthMap != 0) {
     const DepthMap& map = formAnalyzer.getRoofDepthMap();
-    map.toImage(options.roofDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,*this);
+    map.toImage(options.roofDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,options.formCondense,*this);
   }
   
   // Main result (plan view) is also done, flush the image output
@@ -657,7 +657,7 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
           break;
         case alg_depthdiffmap:
           {
-            OutlinerSvgStyle style = depthMap->depthDiffToColor(xIndex,yIndex,*this);
+            OutlinerSvgStyle style = depthMap->depthDiffToColor(xIndex,yIndex,1);
             debugf("pixel depthdiffmap alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
             theSvg->pixel(x,y,style);
           }
@@ -877,18 +877,17 @@ Processor::faceHasMaterial(const aiScene* scene,
 void
 Processor::getNeighbours(unsigned int xIndex,
                          unsigned int yIndex,
+                         unsigned int xSize,
+                         unsigned int ySize,
                          unsigned int& n,
                          unsigned int tableSize,
                          unsigned int* tableX,
                          unsigned int* tableY,
-                         unsigned int step,
-                         unsigned int xSize,
-                         unsigned int ySize) const {
+                         unsigned int step) {
   assert(tableSize >= 8);
   assert(step >= 1);
-
-  if (xSize == 0) xSize = matrix2.xIndexSize;
-  if (ySize == 0) ySize = matrix2.yIndexSize;
+  assert(xSize >= 2);
+  assert(ySize >= 2);
   
   n = 0;
 
@@ -965,7 +964,7 @@ Processor::isBorder(unsigned int xIndex,
   unsigned int n;
   unsigned int tableX[maxNeighbors];
   unsigned int tableY[maxNeighbors];
-  getNeighbours(xIndex,yIndex,n,maxNeighbors,tableX,tableY);
+  getNeighbours(xIndex,yIndex,matrix2.xIndexSize,matrix2.yIndexSize,n,maxNeighbors,tableX,tableY,1);
   debugf("point %u,%u has %u neighbors", xIndex, yIndex, n);
   nBorderTo = 0;
   bool ans = 0;
@@ -1299,7 +1298,7 @@ Processor::objectHoleIsEqualOrSmallerThan(const bool lookForHoles,
     unsigned int nNeigh = 0;
     unsigned int neighXtable[maxNeighbours];
     unsigned int neighYtable[maxNeighbours];
-    getNeighbours(xIndex,yIndex,nNeigh,maxNeighbours,neighXtable,neighYtable);
+    getNeighbours(xIndex,yIndex,matrix2.xIndexSize,matrix2.yIndexSize,nNeigh,maxNeighbours,neighXtable,neighYtable,1);
 
     // See if the neighbours have already seen as part of the hole or
     // are already in the investigation table. If so, no need to

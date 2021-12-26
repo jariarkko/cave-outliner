@@ -85,7 +85,7 @@ public:
   /// (x,y) index compared to its neighbours in the matrix.
   OutlinerSvgStyle depthDiffToColor(const unsigned int xIndex,
                                     const unsigned int yIndex,
-                                    const Processor& proc) const;
+                                    unsigned int step) const;
 
   /// Normalize a depth value.
   static outlinerdepth calculateDepthWithinRange(outlinerreal depth,
@@ -97,6 +97,7 @@ public:
                const unsigned int multiplier,
                const bool svgYSwap,
                const bool diff,
+               unsigned int step,
                const Processor& proc) const;
   
   /// Run unit tests for this module.
@@ -119,9 +120,43 @@ private:
   const MaterialMatrix2D& materialMatrix;
   
   outlinerdepth normalize(outlinerdepth input) const;
+  static outlinerdepth rgbCompress(const outlinerdepth input);
   void toImageAux(SvgCreator& image,
-                     const bool diff,
-                     const Processor& proc) const;
+                  const bool diff,
+                  unsigned int step,
+                  const Processor& proc) const;
+  unsigned int countSmallerX(const unsigned int xIndex,
+                             const unsigned int yIndex,
+                             const unsigned int n,
+                             const unsigned int* tableX,
+                             const unsigned int* tableY,
+                             unsigned int& sum) const;
+  unsigned int countLargerX(const unsigned int xIndex,
+                            const unsigned int yIndex,
+                            const unsigned int n,
+                            const unsigned int* tableX,
+                            const unsigned int* tableY,
+                            unsigned int& sum) const;
+  unsigned int countLargerY(const unsigned int xIndex,
+                            const unsigned int yIndex,
+                            const unsigned int n,
+                            const unsigned int* tableX,
+                            const unsigned int* tableY,
+                            unsigned int& sum) const;
+  unsigned int countSmallerY(const unsigned int xIndex,
+                             const unsigned int yIndex,
+                             const unsigned int n,
+                             const unsigned int* tableX,
+                             const unsigned int* tableY,
+                             unsigned int& sum) const;
+  unsigned int countGeneric(const unsigned int xIndexRangeStart,
+                            const unsigned int xIndexRangeEnd,
+                            const unsigned int yIndexRangeStart,
+                            const unsigned int yIndexRangeEnd,
+                            const unsigned int n,
+                            const unsigned int* tableX,
+                            const unsigned int* tableY,
+                            unsigned int& sum) const;
 };
 
 #endif // OUTLINERDEPTHMAP_HH

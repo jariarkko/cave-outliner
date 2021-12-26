@@ -113,11 +113,11 @@ OutlineAnalyzer::analyzeOneSlice(unsigned int xIndex) {
     unsigned int matrix2yIndexStart;
     unsigned int matrix2xIndexEnd;
     unsigned int matrix2yIndexEnd;
-    formAnalyzer.condensedIndexesToIndexes(xIndex,yIndex,
-                                           matrix2xIndexStart,
-                                           matrix2yIndexStart,
-                                           matrix2xIndexEnd,
-                                           matrix2yIndexEnd);
+    if (!formAnalyzer.condensedIndexesToIndexes(xIndex,yIndex,
+                                                matrix2xIndexStart,
+                                                matrix2yIndexStart,
+                                                matrix2xIndexEnd,
+                                                matrix2yIndexEnd)) continue;
     if (matrix2.getMaterialMatrixRange(matrix2xIndexStart,
                                        matrix2yIndexStart,
                                        matrix2xIndexEnd,
@@ -184,14 +184,16 @@ OutlineAnalyzer::analyzeOneTunnelSlice(struct OutlineSliceTunnelDescriptor& tunn
 
     if (matrix3yIndex >= matrix3.yIndexSize - 1) break;
     matrix3yIndex++;
-    formAnalyzer.condensedIndexIncrease(matrix2yIndexStartVar);
-    formAnalyzer.condensedIndexIncrease(matrix2yIndexEndVar);
+    if (!formAnalyzer.condensedXIndexIncrease(matrix2yIndexStartVar)) break;
+    if (!formAnalyzer.condensedYIndexIncrease(matrix2yIndexEndVar)) break;
 
     //
     // If the tunnel is marked as an tunnel place in the forms matrix,
     // we know there's empty space in the tunnel
     //
-    
+
+    assert(matrix2xIndexStart < matrix2.xIndexSize);
+    assert(matrix2yIndexStartVar < matrix2.yIndexSize);
     if (outlinerform_istunnel(formAnalyzer.getForm(matrix2xIndexStart,matrix2yIndexStartVar))) {
       infof("      found empty space at %u", matrix3yIndex);
       tunnel.emptySpace = 1;
@@ -383,11 +385,11 @@ OutlineAnalyzer::createDepthMapTunnel(DepthMap& map,
     unsigned int matrix2yIndexStart;
     unsigned int matrix2xIndexEnd;
     unsigned int matrix2yIndexEnd;
-    formAnalyzer.condensedIndexesToIndexes(tunnel.xIndex,yIndex,
-                                           matrix2xIndexStart,
-                                           matrix2yIndexStart,
-                                           matrix2xIndexEnd,
-                                           matrix2yIndexEnd);
+    if (!formAnalyzer.condensedIndexesToIndexes(tunnel.xIndex,yIndex,
+                                                matrix2xIndexStart,
+                                                matrix2yIndexStart,
+                                                matrix2xIndexEnd,
+                                                matrix2yIndexEnd)) continue;
     outlinerdepth thisDepth = def;
     if (matrix2.getMaterialMatrixRange(matrix2xIndexStart,
                                        matrix2yIndexStart,
@@ -483,11 +485,11 @@ OutlineAnalyzer::drawSpineElement(const struct OutlineSliceDescriptor& slice,
     unsigned int matrix2yIndexStart;
     unsigned int matrix2xIndexEnd;
     unsigned int matrix2yIndexEnd;
-    formAnalyzer.condensedIndexesToIndexes(tunnel.xIndex,tunnel.yMidPoint,
-                                           matrix2xIndexStart,
-                                           matrix2yIndexStart,
-                                           matrix2xIndexEnd,
-                                           matrix2yIndexEnd);
+    if (!formAnalyzer.condensedIndexesToIndexes(tunnel.xIndex,tunnel.yMidPoint,
+                                                matrix2xIndexStart,
+                                                matrix2yIndexStart,
+                                                matrix2xIndexEnd,
+                                                matrix2yIndexEnd)) return;
     outlinerreal x = matrix2.indexToCoordinateX(matrix2xIndexStart);
     outlinerreal y = matrix2.indexToCoordinateY(matrix2yIndexStart);
     svg.pixel(x,y,outlinersvgstyle_red);

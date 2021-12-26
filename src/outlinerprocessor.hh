@@ -143,15 +143,15 @@ private:
   // Neighbor operations in a matrix
   //
   
-  void getNeighbours(unsigned int xIndex,
-                     unsigned int yIndex,
-                     unsigned int& n,
-                     unsigned int tableSize,
-                     unsigned int* tableX,
-                     unsigned int* tableY,
-                     unsigned int step = 1,
-                     unsigned int xSize = 0,
-                     unsigned int ySize = 0) const;
+  static void getNeighbours(unsigned int xIndex,
+                            unsigned int yIndex,
+                            unsigned int xSize,
+                            unsigned int ySize,
+                            unsigned int& n,
+                            unsigned int tableSize,
+                            unsigned int* tableX,
+                            unsigned int* tableY,
+                            unsigned int step);
   bool closerNeighborExists(const unsigned int thisX,
                             const unsigned int thisY,
                             const unsigned int xIndex,

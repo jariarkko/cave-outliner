@@ -83,14 +83,21 @@ ProcessorForms::ProcessorForms(const OutlinerBox3D& boundingBoxIn,
   stepzCondensed(stepz*formCondense),
   matrix2(matrix2In),
   matrix3(boundingBox,
-          stepxCondensed,
-          stepyCondensed,
-          stepzCondensed),
+          stepx,
+          stepy,
+          stepz,
+          formCondense),
   forms(matrix2.xIndexSize,
         matrix2.yIndexSize),
   outlineAnalyzer(matrix2,matrix3,*this),
   proc(procIn),
   nClearedMaterial(0) {
+  infof("matrix 2 size %ux%u matrix 3 size %ux%u condense %u",
+        matrix2.xIndexSize, matrix2.yIndexSize,
+        matrix3.xIndexSize, matrix3.yIndexSize,
+        formCondense);
+  assert(matrix2.xIndexSize - 2 <= (matrix3.xIndexSize - 2) * formCondense);
+  assert(matrix2.yIndexSize - 2 <= (matrix3.yIndexSize - 2) * formCondense);
 }
 
 ProcessorForms::~ProcessorForms() {
@@ -247,11 +254,11 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
   for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
     unsigned int matrix2xIndexStart;
     unsigned int matrix2xIndexEnd;
-    condensedXIndexToIndex(xIndex,matrix2xIndexStart,matrix2xIndexEnd);
+    if (!condensedXIndexToIndex(xIndex,matrix2xIndexStart,matrix2xIndexEnd)) continue;
     for (unsigned int yIndex = 0; yIndex < matrix3.yIndexSize - 2; yIndex++) {
       unsigned int matrix2yIndexStart;
       unsigned int matrix2yIndexEnd;
-      condensedYIndexToIndex(yIndex,matrix2yIndexStart,matrix2yIndexEnd);
+      if (!condensedYIndexToIndex(yIndex,matrix2yIndexStart,matrix2yIndexEnd)) continue;
       debugf("    analyze phase 1 %u,%u: (matrix2 %u,%u .. %u,%u)",
              xIndex, yIndex, 
              matrix2xIndexStart, matrix2yIndexStart,
@@ -280,11 +287,11 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
     memset(buf,0,sizeof(buf));
     unsigned int matrix2xIndexStart;
     unsigned int matrix2xIndexEnd;
-    condensedXIndexToIndex(i,matrix2xIndexStart,matrix2xIndexEnd);
+    if (!condensedXIndexToIndex(i,matrix2xIndexStart,matrix2xIndexEnd)) continue;
     for (unsigned int f = 0; f < matrix3.yIndexSize -2 && f < 80; f++) {
       unsigned int matrix2yIndexStart;
       unsigned int matrix2yIndexEnd;
-      condensedYIndexToIndex(f,matrix2yIndexStart,matrix2yIndexEnd);
+      if (!condensedYIndexToIndex(f,matrix2yIndexStart,matrix2yIndexEnd)) continue;
       outlinerform form = forms.getForm(matrix2xIndexStart,matrix2yIndexStart);
       char representativeChar = forms.getFormChar(form);
       snprintf(buf+strlen(buf),sizeof(buf)-1-strlen(buf),"%c", representativeChar);
@@ -308,15 +315,15 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
   // Phase 2
   infof("Form analysis phase 2...");
   for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
-    outlinerreal x = matrix3.indexToCoordinateX(xIndex);
-    unsigned int matrix2xIndexStart = matrix2.coordinateXToIndex(x);
-    unsigned int matrix2xIndexEnd = matrix2xIndexStart + formCondense - 1;
+    unsigned int matrix2xIndexStart;
+    unsigned int matrix2xIndexEnd;
+    if (!condensedXIndexToIndex(xIndex,matrix2xIndexStart,matrix2xIndexEnd)) continue;
     for (unsigned int yIndex = 0; yIndex < matrix3.yIndexSize - 2; yIndex++) {
-      outlinerreal y = matrix3.indexToCoordinateY(yIndex);
-      unsigned int matrix2yIndexStart = matrix2.coordinateYToIndex(y);
-      unsigned int matrix2yIndexEnd = matrix2yIndexStart + formCondense - 1;
-      debugf("  analyze phase 2 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
-             xIndex, yIndex, x, y,
+      unsigned int matrix2yIndexStart;
+      unsigned int matrix2yIndexEnd;
+      if (condensedYIndexToIndex(yIndex,matrix2yIndexStart,matrix2yIndexEnd)) continue;
+      debugf("  analyze phase 2 %u,%u: (matrix2 %u,%u .. %u,%u)",
+             xIndex, yIndex, 
              matrix2xIndexStart, matrix2yIndexStart,
              matrix2xIndexEnd, matrix2yIndexEnd);
       assert(matrix2xIndexStart <= matrix2xIndexEnd);
@@ -330,15 +337,15 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
   // Phase 3
   infof("Form analysis phase 3...");
   for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
-    outlinerreal x = matrix3.indexToCoordinateX(xIndex);
-    unsigned int matrix2xIndexStart = matrix2.coordinateXToIndex(x);
-    unsigned int matrix2xIndexEnd = matrix2xIndexStart + formCondense - 1;
+    unsigned int matrix2xIndexStart;
+    unsigned int matrix2xIndexEnd;
+    if (!condensedXIndexToIndex(xIndex,matrix2xIndexStart,matrix2xIndexEnd)) continue;
     for (unsigned int yIndex = 0; yIndex < matrix3.yIndexSize - 2; yIndex++) {
-      outlinerreal y = matrix3.indexToCoordinateY(yIndex);
-      unsigned int matrix2yIndexStart = matrix2.coordinateYToIndex(y);
-      unsigned int matrix2yIndexEnd = matrix2yIndexStart + formCondense - 1;
-      debugf("  analyze phase 3 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
-             xIndex, yIndex, x, y,
+      unsigned int matrix2yIndexStart;
+      unsigned int matrix2yIndexEnd;
+      if (!condensedYIndexToIndex(yIndex,matrix2yIndexStart,matrix2yIndexEnd)) continue;
+      debugf("  analyze phase 3 %u,%u: (matrix2 %u,%u .. %u,%u)",
+             xIndex, yIndex, 
              matrix2xIndexStart, matrix2yIndexStart,
              matrix2xIndexEnd, matrix2yIndexEnd);
       assert(matrix2xIndexStart <= matrix2xIndexEnd);
@@ -360,15 +367,15 @@ ProcessorForms::performFormAnalysisAnalyze(void) {
   
   infof("Form analysis phase 5...");
   for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
-    outlinerreal x = matrix3.indexToCoordinateX(xIndex);
-    unsigned int matrix2xIndexStart = matrix2.coordinateXToIndex(x);
-    unsigned int matrix2xIndexEnd = matrix2xIndexStart + formCondense - 1;
+    unsigned int matrix2xIndexStart;
+    unsigned int matrix2xIndexEnd;
+    if (!condensedXIndexToIndex(xIndex,matrix2xIndexStart,matrix2xIndexEnd)) continue;
     for (unsigned int yIndex = 0; yIndex < matrix3.yIndexSize - 2; yIndex++) {
-      outlinerreal y = matrix3.indexToCoordinateY(yIndex);
-      unsigned int matrix2yIndexStart = matrix2.coordinateYToIndex(y);
-      unsigned int matrix2yIndexEnd = matrix2yIndexStart + formCondense - 1;
-      debugf("  analyze phase 5 %u,%u: %.2f,%.2f (matrix2 %u,%u .. %u,%u)",
-            xIndex, yIndex, x, y,
+      unsigned int matrix2yIndexStart;
+      unsigned int matrix2yIndexEnd;
+      if (!condensedYIndexToIndex(yIndex,matrix2yIndexStart,matrix2yIndexEnd)) continue;
+      debugf("  analyze phase 5 %u,%u: (matrix2 %u,%u .. %u,%u)",
+            xIndex, yIndex, 
             matrix2xIndexStart, matrix2yIndexStart,
             matrix2xIndexEnd, matrix2yIndexEnd);
       assert(matrix2xIndexStart <= matrix2xIndexEnd);
@@ -639,15 +646,15 @@ ProcessorForms::checkFormNearby(ProcessorFormChecker checkFunction,
   //
   
   if (steps > 0)  {
-    proc.getNeighbours(matrix2xIndex,
-                       matrix2yIndex,
-                       n,
-                       maxTable,
-                       xTable,
-                       yTable,
-                       oneStep,
-                       forms.xIndexSize,
-                       forms.yIndexSize);
+    Processor::getNeighbours(matrix2xIndex,
+                             matrix2yIndex,
+                             matrix2.xIndexSize,
+                             matrix2.yIndexSize,
+                             n,
+                             maxTable,
+                             xTable,
+                             yTable,
+                             oneStep);
   }
 
   //
@@ -656,6 +663,8 @@ ProcessorForms::checkFormNearby(ProcessorFormChecker checkFunction,
   
   for (unsigned int i = 0; i < n; i++) {
     deepdebugf("      neighbor %u/%u: %u,%u", i, n, xTable[i],yTable[i]);
+    assert(xTable[i] < forms.xIndexSize);
+    assert(yTable[i] < forms.yIndexSize);
     outlinerform form = forms.getForm(xTable[i],yTable[i]);
     bool val = (*checkFunction)(form);
     if (val) deepdebugreturn("    found neighbor with matching form",1);
@@ -798,7 +807,9 @@ ProcessorForms::collectMaterialToClear(ProcessorFormChecker checkFunction,
     //
     // Check if we still have the material that needs to be cleared
     //
-    
+
+    assert(matrix2xIndexIter < forms.xIndexSize);
+    assert(matrix2yIndexIter < forms.yIndexSize);
     outlinerform form = forms.getForm(matrix2xIndexIter,matrix2yIndexIter);
     bool val = (*checkFunction)(form);
     if (!val) {
@@ -830,6 +841,8 @@ ProcessorForms::collectMaterialToClear(ProcessorFormChecker checkFunction,
       unsigned int neighY;
       for (unsigned int side = 0; side < 6; side++) {
         if (hasSideNeighbor(matrix2xIndexIter,matrix2yIndexIter,xDirection,yDirection,side,neighX,neighY)) {
+          assert(neighX < forms.xIndexSize);
+          assert(neighY < forms.yIndexSize);
           if ((*checkFunction)(getForm(neighX,neighY))) addToTable(neighX,neighY,n,tableSize,tableX,tableY);
         }
       }
@@ -1203,29 +1216,49 @@ ProcessorForms::formAnalysisCountLayers(const unsigned int matrix3xIndex,
 // Coordinate conversions /////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-void
+bool
 ProcessorForms::condensedXIndexToIndex(const unsigned int matrix3xIndex,
                                        unsigned int& matrix2xIndexStart,
                                        unsigned int& matrix2xIndexEnd) const {
+  infof("matrix 2 size %ux%u matrix 3 size %ux%u condense %u",
+        matrix2.xIndexSize, matrix2.yIndexSize,
+        matrix3.xIndexSize, matrix3.yIndexSize,
+        formCondense);
   assert(matrix3xIndex < matrix3.xIndexSize);
-  outlinerreal x = matrix3.indexToCoordinateX(matrix3xIndex);
-  matrix2xIndexStart = matrix2.coordinateXToIndex(x);
-  matrix2xIndexEnd = matrix2xIndexStart + formCondense - 1;
+  assert(matrix2.xIndexSize - 2 <= (matrix3.xIndexSize - 2) * formCondense);
+  assert(matrix2.yIndexSize - 2 <= (matrix3.yIndexSize - 2) * formCondense);
+  matrix2xIndexStart = matrix3xIndex * formCondense;
+  if (matrix2xIndexStart > matrix2.xIndexSize - 2) return(0);
+  matrix2xIndexEnd = outlinermin(matrix2xIndexStart + formCondense - 1,
+                                 matrix2.xIndexSize - 1);
   assert(matrix2xIndexStart <= matrix2xIndexEnd);
+  assert(matrix2xIndexStart < matrix2.xIndexSize);
+  assert(matrix2xIndexEnd < matrix2.xIndexSize);
+  return(1);
 }
 
-void
+bool
 ProcessorForms::condensedYIndexToIndex(const unsigned int matrix3yIndex,
                                        unsigned int& matrix2yIndexStart,
                                        unsigned int& matrix2yIndexEnd) const {
   assert(matrix3yIndex < matrix3.yIndexSize);
-  outlinerreal y = matrix3.indexToCoordinateY(matrix3yIndex);
-  matrix2yIndexStart = matrix2.coordinateYToIndex(y);
-  matrix2yIndexEnd = matrix2yIndexStart + formCondense - 1;
+  assert(matrix2.xIndexSize - 2 <= (matrix3.xIndexSize - 2) * formCondense);
+  assert(matrix2.yIndexSize - 2 <= (matrix3.yIndexSize - 2) * formCondense);
+  matrix2yIndexStart = matrix3yIndex * formCondense;
+  if (matrix2yIndexStart > matrix2.yIndexSize - 2) return(0);
+  matrix2yIndexEnd = outlinermin(matrix2yIndexStart + formCondense - 1,
+                                 matrix2.yIndexSize - 1);
+  infof("cy2y %u/%u => %u..%u/%u",
+        matrix3yIndex, matrix3.yIndexSize,
+        matrix2yIndexStart, matrix2yIndexEnd,
+        matrix2.yIndexSize);
   assert(matrix2yIndexStart <= matrix2yIndexEnd);
+  assert(matrix2yIndexStart < matrix2.yIndexSize);
+  assert(matrix2yIndexEnd < matrix2.yIndexSize);
+  return(1);
 }
 
-void
+bool
 ProcessorForms::condensedIndexesToIndexes(const unsigned int matrix3xIndex,
                                           const unsigned int matrix3yIndex,
                                           unsigned int& matrix2xIndexStart,
@@ -1237,13 +1270,23 @@ ProcessorForms::condensedIndexesToIndexes(const unsigned int matrix3xIndex,
              matrix3.xIndexSize, matrix3.yIndexSize);
   assert(matrix3xIndex < matrix3.xIndexSize);
   assert(matrix3yIndex < matrix3.yIndexSize);
-  condensedXIndexToIndex(matrix3xIndex,matrix2xIndexStart,matrix2xIndexEnd);
-  condensedYIndexToIndex(matrix3yIndex,matrix2yIndexStart,matrix2yIndexEnd);
+  if (!condensedXIndexToIndex(matrix3xIndex,matrix2xIndexStart,matrix2xIndexEnd)) return(0);
+  if (!condensedYIndexToIndex(matrix3yIndex,matrix2yIndexStart,matrix2yIndexEnd)) return(0);
+  return(1);
 }
 
-void
-ProcessorForms::condensedIndexIncrease(unsigned int& matrix2Index) const {
-  matrix2Index += formCondense;
+bool
+ProcessorForms::condensedXIndexIncrease(unsigned int& matrix2xIndex) const {
+  if (matrix2xIndex >= matrix2.xIndexSize - formCondense) return(0);
+  matrix2xIndex += formCondense;
+  return(1);
+}
+
+bool
+ProcessorForms::condensedYIndexIncrease(unsigned int& matrix2yIndex) const {
+  if (matrix2yIndex >= matrix2.yIndexSize - formCondense) return(0);
+  matrix2yIndex += formCondense;
+  return(1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

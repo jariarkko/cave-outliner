@@ -40,8 +40,8 @@ MaterialMatrix2D::MaterialMatrix2D(const OutlinerBox2D& boundingBoxIn,
                                    const outlinerreal stepxIn,
                                    const outlinerreal stepyIn) :
   boundingBox(boundingBoxIn),
-  xIndexSize(calculateSize(boundingBox.start.x,boundingBox.end.x,stepxIn)),
-  yIndexSize(calculateSize(boundingBox.start.y,boundingBox.end.y,stepyIn)),
+  xIndexSize(calculateSize(boundingBox.start.x,boundingBox.end.x,stepxIn,1,"matrix2 x")),
+  yIndexSize(calculateSize(boundingBox.start.y,boundingBox.end.y,stepyIn,1,"matrix2 y")),
   stepx(stepxIn),
   stepy(stepyIn),
   nBits(xIndexSize * yIndexSize),
@@ -73,10 +73,23 @@ MaterialMatrix2D::~MaterialMatrix2D() {
 unsigned int
 MaterialMatrix2D::calculateSize(const outlinerreal from,
                                 const outlinerreal to,
-                                const outlinerreal step) {
+                                const outlinerreal step,
+                                const unsigned int multiplier,
+                                const char* what) {
   assert(from <= to);
   assert(step > 0.0);
-  return(((unsigned int)ceil(((to - from) / step))) + 2);
+  outlinerreal divResult = ((to - from) / step);
+  outlinerreal ceilResult = ceil(divResult);
+  outlinerreal mulResult = ceilResult / multiplier;
+  outlinerreal ceil2Result = ceil(mulResult);
+  outlinerreal realResult = ceil2Result + 2;
+  unsigned int intResult = realResult;
+  infof("calculate %s size %5.2f..%5.2f in %5.2f x %u: %6.2f => %6.2f => %6.2f => %6.2f% => %6.2f=%u",
+        what,
+        from, to, step, multiplier,
+        divResult, ceilResult, mulResult, ceil2Result, realResult,
+        intResult);
+  return(intResult);
 }
 
 void

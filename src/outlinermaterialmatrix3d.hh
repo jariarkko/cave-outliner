@@ -67,7 +67,8 @@ public:
   MaterialMatrix3D(const OutlinerBox3D& boundingbox,
                    const outlinerreal stepxIn,
                    const outlinerreal stepyIn,
-                   const outlinerreal stepzIn);
+                   const outlinerreal stepzIn,
+                   const unsigned int multiplier);
 
   /// Destruct the material matrix.
   ~MaterialMatrix3D();
