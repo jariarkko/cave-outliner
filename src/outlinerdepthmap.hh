@@ -97,8 +97,7 @@ public:
                const unsigned int multiplier,
                const bool svgYSwap,
                const bool diff,
-               unsigned int step,
-               const Processor& proc) const;
+               unsigned int step) const;
   
   /// Run unit tests for this module.
   static void test(void);
@@ -123,8 +122,7 @@ private:
   static outlinerdepth rgbCompress(const outlinerdepth input);
   void toImageAux(SvgCreator& image,
                   const bool diff,
-                  unsigned int step,
-                  const Processor& proc) const;
+                  unsigned int step) const;
   unsigned int countSmallerX(const unsigned int xIndex,
                              const unsigned int yIndex,
                              const unsigned int n,

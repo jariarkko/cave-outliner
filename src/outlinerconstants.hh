@@ -59,5 +59,7 @@
 #define OUTLINER_INFOPREFIX                                     OUTLINER_PROG ": Info: "
 #define OUTLINER_DEBUGPREFIX                                   OUTLINER_PROG ": Debug: "
 
+#define OUTLINER_TEMPDIRECTORY                                                   "/tmp/"
+
 #endif // OUTLINERCONSTANTS_HH
 

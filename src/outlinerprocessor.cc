@@ -200,11 +200,11 @@ Processor::processScene(const aiScene* scene) {
   // written to image files, do that as well.
   if (options.floorDepthMap != 0) {
     const DepthMap& map = formAnalyzer.getFloorDepthMap();
-    map.toImage(options.floorDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,options.formCondense,*this);
+    map.toImage(options.floorDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,options.formCondense);
   }
   if (options.roofDepthMap != 0) {
     const DepthMap& map = formAnalyzer.getRoofDepthMap();
-    map.toImage(options.roofDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,options.formCondense,*this);
+    map.toImage(options.roofDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,options.formCondense);
   }
   
   // Main result (plan view) is also done, flush the image output

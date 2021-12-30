@@ -95,7 +95,7 @@ DepthMap::setDepth(const unsigned int xIndex,
     if (depth > rangeMax) rangeMax = depth;
   }
   if (prev == 0) nEntries++;
-  infof("depth(%u,%u)=%u (%u..%u)", xIndex, yIndex, depth, rangeMin, rangeMax);
+  if (yIndex == 10) infof("set depth(%u,%u index %u/%u into table %lx)=%u (%u..%u)", xIndex, yIndex, index, fullSize, data, depth, rangeMin, rangeMax);
 }
 
 void
@@ -130,7 +130,9 @@ DepthMap::getDepth(const unsigned int xIndex,
   assert(materialMatrix.getMaterialMatrix(xIndex,yIndex));
   const unsigned int index = depthMatrixIndex(xIndex,yIndex);
   assert(index < fullSize);
-  return(data[index]);
+  outlinerdepth result = data[index];
+  if (yIndex == 10) infof("get depth(%u,%u index %u/%u into table %lx)=%u (%u..%u)", xIndex, yIndex, index, fullSize, data, result, rangeMin, rangeMax);
+  return(result);
 }
 
 
@@ -145,8 +147,9 @@ DepthMap::depthToColor(const unsigned int xIndex,
   outlinerdepth depth = normalize(input);
   outlinerdepth rgbval = 255 - depth;
   outlinerdepth finalval = rgbCompress(rgbval);
-  infof("    depthToColor(%u,%u)=%u (%u..%u) normalized %02x rgbval %02x finalval %02x",
-        xIndex, yIndex, input, rangeMin, rangeMax, depth, rgbval, finalval);
+  debugf("    depthToColor(%u,%u)=%u (%u..%u) normalized %02x rgbval %02x finalval %02x",
+	 xIndex, yIndex, input, rangeMin, rangeMax, depth, rgbval, finalval);
+  if (yIndex == 10) infof(" depth matrix color x = %u, depth = %u, normalized = %u, rgbval = %u, rgb = %u", xIndex, input, depth, rgbval, finalval);
   return(outlinersvgstyle_greyval(finalval));
 }
 
@@ -261,12 +264,16 @@ DepthMap::depthDiffToColor(const unsigned int xIndex,
     outlinerdepth resultInt = (outlinerdepth)floor(result);
     const outlinerdepth diffcompress = 16;
     const outlinerdepth maxdiff = (256 / diffcompress) - 1;
-    if (result > maxdiff) result = maxdiff;
-    result *= diffcompress;
-    outlinerdepth finalresult = rgbCompress(255 - resultInt);
-    return(outlinersvgstyle_greyval(finalresult));
+    outlinerdepth resultFinal = resultInt;
+    if (resultFinal > maxdiff) resultFinal = maxdiff;
+    resultFinal *= diffcompress;
+    outlinerdepth rgb = 255 - resultFinal;
+    outlinerdepth resultCompressed = rgbCompress(rgb);
+    if (yIndex == 10) infof(" depth matrix diff x = %u, depth = %u, result = %u, resultFinal = %u, rgb = %u, compressed = %u",
+			    xIndex, depth, resultInt, resultFinal, rgb, resultCompressed);
+    return(outlinersvgstyle_greyval(resultCompressed));
   }
-
+  
 }
 
 unsigned int
@@ -369,19 +376,19 @@ DepthMap::normalize(outlinerdepth input) const {
   outlinerdepth range = rangeMax - rangeMin;
   outlinerdepth base = 0;
   outlinerdepth factor = 1;
-  outlinerdepth halfFactor = 0;
-  if      (range <   8) { base = rangeMin; factor = 32; halfFactor = 0; }
-  else if (range <  16) { base = rangeMin; factor = 16; halfFactor = 0; }
-  else if (range <  32) { base = rangeMin; factor =  8; halfFactor = 0; }
-  else if (range <  64) { base = rangeMin; factor =  4; halfFactor = 0; }
-  else if (range < 128) { base = rangeMin; factor =  2; halfFactor = 0; }
-  else if (range < 196) { base = rangeMin; factor =  1; halfFactor = 1; }
+  outlinerdepth quarterFactor = 0;
+  if      (range <   8) { base = rangeMin; factor = 32; quarterFactor = 0; }
+  else if (range <  16) { base = rangeMin; factor = 16; quarterFactor = 0; }
+  else if (range <  32) { base = rangeMin; factor =  8; quarterFactor = 0; }
+  else if (range <  64) { base = rangeMin; factor =  4; quarterFactor = 0; }
+  else if (range < 128) { base = rangeMin; factor =  2; quarterFactor = 0; }
+  else if (range < 196) { base = rangeMin; factor =  1; quarterFactor = 1; }
   outlinerdepth preval = input - base;
-  outlinerdepth result = preval * factor + (preval/2) * halfFactor;
-  if (base != 0 || factor != 1 || halfFactor != 0) {
+  outlinerdepth result = preval * factor + (preval/4) * quarterFactor;
+  if (base != 0 || factor != 1 || quarterFactor != 0) {
     debugf("  normalizing depth %u to %u via %ux 0.5*%ux sub %u",
            input, result,
-           factor, halfFactor, base);
+           factor, quarterFactor, base);
   }
   return(result);
 }
@@ -408,8 +415,7 @@ DepthMap::toImage(const char* filename,
                   const unsigned int multiplier,
                   const bool svgYSwap,
                   const bool diff,
-                  unsigned int step,
-                  const Processor& proc) const {
+                  unsigned int step) const {
 
   // Sanity checks
   assert(step >= 1);
@@ -429,7 +435,7 @@ DepthMap::toImage(const char* filename,
 
   // Construct the actual image
   infof("converting depth map to image in file %s", filename);
-  toImageAux(image,diff,step,proc);
+  toImageAux(image,diff,step);
   
   // Check that we were able to open and write the file
   deepdebugf("svg initial check");
@@ -442,8 +448,7 @@ DepthMap::toImage(const char* filename,
 void
 DepthMap::toImageAux(SvgCreator& image,
                      const bool diff,
-                     unsigned int step,
-                     const Processor& proc) const {
+                     unsigned int step) const {
   if (!rangeSet) {
      errf("Not enough model to draw a depth map");
     return;
@@ -452,7 +457,7 @@ DepthMap::toImageAux(SvgCreator& image,
   assert(yIndexSize == materialMatrix.yIndexSize);
   for (unsigned int xIndex = 0; xIndex < xIndexSize; xIndex++) {
     for (unsigned int yIndex = 0; yIndex < yIndexSize; yIndex++) {
-      if (!proc.getMaterialMatrix(xIndex,yIndex)) continue;
+      if (!materialMatrix.getMaterialMatrix(xIndex,yIndex)) continue;
       OutlinerSvgStyle style =
         (diff ?
          depthDiffToColor(xIndex,yIndex,step) :
@@ -570,6 +575,40 @@ DepthMap::test(void) {
         }
       }
     }
+  }
+  infof("writing depth maps to files");
+  {
+    const char* depthmaptestfile = OUTLINER_TEMPDIRECTORY "cave-outliner-unit-test-depthmap.svg";
+    const char* depthdiffmaptestfile = OUTLINER_TEMPDIRECTORY "cave-outliner-unit-test-depthdiffmap.svg";
+    const unsigned int siz = 200;
+    const unsigned int border = 10;
+    const unsigned int step = 5;
+    const unsigned int div = 7;
+    OutlinerBox2D mmbb3(0,0,siz,siz);
+    MaterialMatrix2D mm3(mmbb3,1,1);
+    DepthMap map3(mm3.xIndexSize,mm3.yIndexSize,mm3);
+    for (unsigned int x = border; x < mm3.xIndexSize - 2 - border; x++) {
+      for (unsigned int y = border; y < mm3.yIndexSize - 2 - border; y++) {
+	mm3.setMaterialMatrix(x,y);
+	unsigned int height = (x/step);
+	if (height > div) height *= (height/div);
+	if (y == border) infof("  depth matrix number 3 x = %u, height = %u", x, height);
+	assert(height < 256);
+	map3.setDepth(x,y,(outlinerdepth)height);
+	outlinerdepth back = map3.getDepth(x,y);
+	assert(back == height);
+      }
+    }
+    map3.toImage(depthmaptestfile,
+		 1,
+		 1,
+		 0,
+		 1);
+    map3.toImage(depthdiffmaptestfile,
+		 1,
+		 1,
+		 1,
+		 1);
   }
   infof("depth matrix test ok");
 }
