@@ -99,6 +99,10 @@ public:
                const bool diff,
                unsigned int step) const;
   
+  /// Retrieve range information
+  bool getRange(outlinerdepth& minRangeOut,
+		outlinerdepth& maxRangeOut) const;
+  
   /// Run unit tests for this module.
   static void test(void);
 

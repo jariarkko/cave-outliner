@@ -406,6 +406,18 @@ DepthMap::calculateDepthWithinRange(outlinerreal depth,
   return(normalizedDepthInt);
 }
 
+bool
+DepthMap::getRange(outlinerdepth& minRangeOut,
+		   outlinerdepth& maxRangeOut) const {
+  if (rangeSet) {
+    minRangeOut = rangeMin;
+    maxRangeOut = rangeMax;
+    return(1);
+  } else {
+    return(0);
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Image processing ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -421,6 +433,9 @@ DepthMap::toImage(const char* filename,
   assert(step >= 1);
   assert(xIndexSize == materialMatrix.xIndexSize);
   assert(yIndexSize == materialMatrix.yIndexSize);
+  infof("computed depth map (%s) to image: %u..%u",
+	diff ? "diff" : "regular",
+	rangeMin, rangeMax);
   
   // Allocate an image object
   SvgOptions imageOptions(multiplier,

@@ -282,6 +282,20 @@ Processor::preprocessSceneAlgorithmDraw(const aiScene* scene) {
 
 bool
 Processor::processSceneAlgorithmDraw(const aiScene* scene) {
+  // Sanityt checks and debugs
+  assert(scene != 0);
+  outlinerdepth rangeMin;
+  outlinerdepth rangeMax;
+  if (algorithm == alg_depthmap &&
+      depthMap->getRange(rangeMin,rangeMax)) {
+      infof("requested depth map (regular) to image: %u..%u",
+	    rangeMin, rangeMax);
+  } else if (algorithm == alg_depthdiffmap &&
+	     depthMap->getRange(rangeMin,rangeMax)) {
+    infof("requested depth map (diff) to image: %u..%u",
+	  rangeMin, rangeMax);
+  }
+  
   // Decide what to do, based on the algorithm specified
   switch (algorithm) {
 
