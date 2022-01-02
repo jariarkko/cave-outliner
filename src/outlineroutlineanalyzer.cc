@@ -57,6 +57,11 @@ OutlineAnalyzer::OutlineAnalyzer(const MaterialMatrix2D& matrix2In,
                matrix2.yIndexSize,
                matrix2)
 {
+  if (matrix3.zIndexSize > outlinerdepth_maxvalue) {
+    fatalf("Depth %u exceeds analyzer ability to store depth values (max %u)",
+	   matrix3.zIndexSize, outlinerdepth_maxvalue);
+    return;
+  }
   if (descriptors == 0) {
     errf("Cannot allocate %u outline descriptors", matrix2.xIndexSize);
     return;
@@ -380,7 +385,9 @@ OutlineAnalyzer::createDepthMapTunnel(DepthMap& map,
         border,
         tunnel.startZ, tunnel.endZ,
         borderStep);
-  for (unsigned int yIndex = tunnel.yIndexRange.start; yIndex <= tunnel.yIndexRange.end; yIndex++, border += borderStep) {
+  for (unsigned int yIndex = tunnel.yIndexRange.start;
+       yIndex <= tunnel.yIndexRange.end;
+       yIndex++, border += borderStep) {
     unsigned int matrix2xIndexStart;
     unsigned int matrix2yIndexStart;
     unsigned int matrix2xIndexEnd;
@@ -451,7 +458,10 @@ OutlineAnalyzer::getDepth(const unsigned int xIndex,
 
   unsigned int zIndex = zIndexFloorRoofBorder;
   for (;;) {
-    if (matrix3.getMaterialMatrix(xIndex,yIndex,zIndex)) { result = zIndex; return(1); }
+    if (matrix3.getMaterialMatrix(xIndex,yIndex,zIndex)) {
+      result = zIndex;
+      return(1);
+    }
     if (floor) {
       if (zIndex == 0) return(0);
       else zIndex--;

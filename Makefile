@@ -279,6 +279,8 @@ test:	cave-outliner \
 unit-tests:	cave-outliner
 	@echo 'Running test case unit-tests...'
 	@./cave-outliner --quiet --test
+	@diff /tmp/cave-outliner-unit-test-depthmap.svg test/cave-outliner-unit-test-depthmap.svg.expected
+	@diff /tmp/cave-outliner-unit-test-depthdiffmap.svg test/cave-outliner-unit-test-depthdiffmap.svg.expected
 
 basic-tests:	cave-outliner \
 		empty-test \
@@ -332,6 +334,7 @@ cave-tests:	cave1-test \
 		cave1-form-analysis-smooth-line-test \
 		cave1-spine-test \
 		cave1-floor-test \
+		cave1-floor-highres-test \
 		cave1-floor-condense-test \
 		cave1-floor-condense-more-test \
 		cave1-floor-depth-test
@@ -643,6 +646,13 @@ cave1-floor-test:
 	@diff -q test/cave1-floor.svg test/cave1-floor.svg.expected
 	@diff -q test/cave1-floor-floor.svg test/cave1-floor-floor.svg.expected
 	@diff -q test/cave1-floor-roof.svg test/cave1-floor-roof.svg.expected
+
+cave1-floor-highres-test:
+	@echo 'Running test case cave1-floor-highres-test...'
+	@./cave-outliner --quiet --floordepthmap test/cave1-floor-highres-floor.svg --roofdepthmap test/cave1-floor-highres-roof.svg --tunnelspine --multiplier 5 --formanalysis 1 --borderline --step 0.05 --holethreshold 10 test/cave1.stl test/cave1-floor-highres.svg
+	@diff -q test/cave1-floor-highres.svg test/cave1-floor-highres.svg.expected
+	@diff -q test/cave1-floor-highres-floor.svg test/cave1-floor-highres-floor.svg.expected
+	@diff -q test/cave1-floor-highres-roof.svg test/cave1-floor-highres-roof.svg.expected
 
 cave1-floor-condense-test:
 	@echo 'Running test case cave1-floor-condense-test...'

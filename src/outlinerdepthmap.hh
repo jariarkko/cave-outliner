@@ -31,7 +31,9 @@ class Processor;
 // Class definition ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-typedef uint8_t outlinerdepth;
+typedef uint16_t outlinerdepth;
+#define outlinerdepth_maxvalue 0xffff
+#define outlinerdepthrgbscale 8
 
 ///
 /// This object represents a "depth map", i.e., an object representing
@@ -119,11 +121,12 @@ private:
   bool rangeSet;
   outlinerdepth rangeMin;
   outlinerdepth rangeMax;
+  outlinerdepth range;
   unsigned int nEntries;
   const MaterialMatrix2D& materialMatrix;
   
   outlinerdepth normalize(outlinerdepth input) const;
-  static outlinerdepth rgbCompress(const outlinerdepth input);
+  static OutlinerRgb rgbCompress(const outlinerdepth input);
   void toImageAux(SvgCreator& image,
                   const bool diff,
                   unsigned int step) const;

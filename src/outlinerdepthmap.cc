@@ -49,6 +49,7 @@ DepthMap::DepthMap(const unsigned int xIndexSizeIn,
   rangeSet(0),
   rangeMin(0),
   rangeMax(0),
+  range(0),
   nEntries(0),
   materialMatrix(materialMatrixIn) {
 
@@ -65,9 +66,10 @@ DepthMap::DepthMap(const unsigned int xIndexSizeIn,
 }
 
 DepthMap::~DepthMap() {
-  infof("depth map %u/%u entries, range %u..%u",
+  infof("depth map %u/%u entries, range %u..%u (%u)",
         nEntries, fullSize,
-        rangeMin, rangeMax);
+        rangeMin, rangeMax,
+	range);
   if (data != 0) {
     free((void*)data);
     data = 0;
@@ -89,10 +91,11 @@ DepthMap::setDepth(const unsigned int xIndex,
   data[index] = depth;
   if (!rangeSet) {
     rangeMin = rangeMax = depth;
+    range = 0;
     rangeSet = 1;
   } else {
-    if (depth < rangeMin) rangeMin = depth;
-    if (depth > rangeMax) rangeMax = depth;
+    if (depth < rangeMin) { rangeMin = depth; range = rangeMax - rangeMin; }
+    if (depth > rangeMax) { rangeMax = depth; range = rangeMax - rangeMin; }
   }
   if (prev == 0) nEntries++;
   if (yIndex == 10) infof("set depth(%u,%u index %u/%u into table %lx)=%u (%u..%u)", xIndex, yIndex, index, fullSize, data, depth, rangeMin, rangeMax);
@@ -145,24 +148,25 @@ DepthMap::depthToColor(const unsigned int xIndex,
   assert(materialMatrix.getMaterialMatrix(xIndex,yIndex));
   outlinerdepth input = getDepth(xIndex,yIndex);
   outlinerdepth depth = normalize(input);
-  outlinerdepth rgbval = 255 - depth;
-  outlinerdepth finalval = rgbCompress(rgbval);
+  outlinerdepth reverseval = outlinerdepth_maxvalue - depth;
+  OutlinerRgb finalval = rgbCompress(reverseval);
   debugf("    depthToColor(%u,%u)=%u (%u..%u) normalized %02x rgbval %02x finalval %02x",
-	 xIndex, yIndex, input, rangeMin, rangeMax, depth, rgbval, finalval);
-  if (yIndex == 10) infof(" depth matrix color x = %u, depth = %u, normalized = %u, rgbval = %u, rgb = %u", xIndex, input, depth, rgbval, finalval);
+	 xIndex, yIndex, input, rangeMin, rangeMax, depth, reverseval, finalval);
+  if (yIndex == 10) infof(" depth matrix color x = %u, depth = %u, normalized = %u, rgbval = %u, rgb = %u",
+			  xIndex, input, depth, reverseval, finalval);
   return(outlinersvgstyle_greyval(finalval));
 }
 
-outlinerdepth
+OutlinerRgb
 DepthMap::rgbCompress(const outlinerdepth input) {
   static const unsigned int scaleFactor = 16;
-  static const unsigned int actualRgbRangeAvailable = (255 - outlinerunusablegreyscale) - outlinerunusablegreyscale + 1;
-  static const unsigned int scale = ((actualRgbRangeAvailable<<scaleFactor)/256);
-  const unsigned int scaledInput = (((unsigned int)input)*scale);
-  const unsigned int compressedScaledInput = (scaledInput >> scaleFactor);
+  static const uint64_t actualRgbRangeAvailable = (256 - 2*outlinerunusablegreyscale);
+  static const uint64_t scale = ((actualRgbRangeAvailable<<scaleFactor)/256);
+  const uint64_t scaledInput = (((uint64_t)input)*scale);
+  const uint64_t compressedScaledInput = (scaledInput >> scaleFactor);
   const outlinerdepth compressedInput = (outlinerdepth)compressedScaledInput;
-  const outlinerdepth adjustedCompressedInput = outlinerunusablegreyscale + compressedInput;
-  infof("   rgb compress %u to %u  (actual %u, scale %u, scaled input %u)",
+  const OutlinerRgb adjustedCompressedInput = outlinerunusablegreyscale + (OutlinerRgb)(compressedInput >> outlinerdepthrgbscale);
+  infof("   rgb compress %u to %lu  (actual %lu, scale %lu, scaled input %lu)",
         input, adjustedCompressedInput,
         actualRgbRangeAvailable, scale, scaledInput);
   return(adjustedCompressedInput);
@@ -197,82 +201,61 @@ DepthMap::depthDiffToColor(const unsigned int xIndex,
                            tableX,
                            tableY,
                            step);
+  // Handle special cases
+  if (range == 0) return(128);
   
   // Calculate what depth values they have
-  if (0) {
-    unsigned int present = 0;
-    outlinerdepth minval = 0;
-    for (unsigned int i = 0; i < n; i++) {
-      unsigned int neighXIndex = tableX[i];
-      unsigned int neighYIndex = tableY[i];
-      if (materialMatrix.getMaterialMatrix(neighXIndex,neighYIndex)) {
-        outlinerdepth x = normalize(getDepth(neighXIndex,neighYIndex));
-        if (present == 0) minval = x;
-        else if (minval > x) minval = x;
-        present++;
-      }
-    }
-    // Determine final value
-    debugf("  neighbor depths %u min %u, own %u", present, minval, depth);
-    if (present == 0) {
-      return(outlinersvgstyle_greyval(128));
-    } else {
-      //outlinerreal avg = sum / present;
-      //outlinerdepth avgInt = (outlinerdepth)floor(avg);
-      outlinerdepth avgInt = minval;
-      if (depth <= avgInt) {
-        return(outlinersvgstyle_greyval(255-outlinerunusablegreyscale));
-      } else {
-        outlinerdepth diff = depth-avgInt;
-        outlinerdepth val  = 255-diff;
-        outlinerdepth finalval = rgbCompress(val);
-        debugf("  depth diff %u from %u = %u => %u => %u", depth, avgInt, diff, val, finalval);
-        return(outlinersvgstyle_greyval(finalval));
-      }
-    }
-  } else {
-#   define sideavg(nside,sumside)                                                         \
-    (((outlinerreal)(sumside))/(nside))
-#   define sidegradient1(depthhere,nside,sumside)                                         \
-    ((depthhere) - sideavg(nside,sumside))
-#   define sidegradient2(depthhere,nside,sumside)                                         \
-    (sideavg(nside,sumside) - (depthhere))
-#   define sidegradient3(depthhere,nsmaller,sumsmaller,nlarger,sumlarger)                 \
-    ((sidegradient1(depthhere,nsmaller,sumsmaller) +                                      \
-      sidegradient2(depthhere,nlarger,sumlarger))/2.0)   
-#   define setdirectiongradient(gradient,depthhere,nsmaller,sumsmaller,nlarger,sumlarger) \
-    if ((nsmaller) == 0 && (nlarger) == 0) (gradient) = 0.0;                              \
-    else if ((nlarger) == 0) (gradient) = sidegradient1(depthhere,nsmaller,sumsmaller);   \
-    else if ((nsmaller) == 0) (gradient) = sidegradient2(depthhere,nlarger,sumlarger);    \
-    else (gradient) = sidegradient3(depthhere,nsmaller,sumsmaller,nlarger,sumlarger)
-    unsigned int sSmallerX;
-    unsigned int nSmallerX = countSmallerX(xIndex,yIndex,n,tableX,tableY,sSmallerX);
-    unsigned int sLargerX;
-    unsigned int nLargerX = countLargerX(xIndex,yIndex,n,tableX,tableY,sLargerX);
-    unsigned int sSmallerY;
-    unsigned int nSmallerY = countSmallerY(xIndex,yIndex,n,tableX,tableY,sSmallerY);
-    unsigned int sLargerY;
-    unsigned int nLargerY = countLargerY(xIndex,yIndex,n,tableX,tableY,sLargerY);
-    outlinerreal depthreal = depth;
-    outlinerreal xgradient;
-    outlinerreal ygradient;
-    setdirectiongradient(xgradient,depthreal,nSmallerX,sSmallerX,nLargerX,sLargerX);
-    setdirectiongradient(ygradient,depthreal,nSmallerY,sSmallerY,nLargerY,sLargerY);
-    outlinerreal result = sqrt((outlinersquared(xgradient) + outlinersquared(ygradient))/2.0);
-    assert(result >= 0.0);
-    assert(result < 256.0);
-    outlinerdepth resultInt = (outlinerdepth)floor(result);
-    const outlinerdepth diffcompress = 16;
-    const outlinerdepth maxdiff = (256 / diffcompress) - 1;
-    outlinerdepth resultFinal = resultInt;
-    if (resultFinal > maxdiff) resultFinal = maxdiff;
-    resultFinal *= diffcompress;
-    outlinerdepth rgb = 255 - resultFinal;
-    outlinerdepth resultCompressed = rgbCompress(rgb);
-    if (yIndex == 10) infof(" depth matrix diff x = %u, depth = %u, result = %u, resultFinal = %u, rgb = %u, compressed = %u",
-			    xIndex, depth, resultInt, resultFinal, rgb, resultCompressed);
-    return(outlinersvgstyle_greyval(resultCompressed));
-  }
+# define sideavg(nside,sumside)		\
+  (((outlinerreal)(sumside))/(nside))
+# define sidegradient1(depthhere,nside,sumside)                                         \
+  ((depthhere) - sideavg(nside,sumside))
+# define sidegradient2(depthhere,nside,sumside)                                         \
+  (sideavg(nside,sumside) - (depthhere))
+# define sidegradient3(depthhere,nsmaller,sumsmaller,nlarger,sumlarger)                 \
+  ((sidegradient1(depthhere,nsmaller,sumsmaller) +                                      \
+    sidegradient2(depthhere,nlarger,sumlarger))/2.0)   
+# define setdirectiongradient(gradient,depthhere,nsmaller,sumsmaller,nlarger,sumlarger) \
+  if ((nsmaller) == 0 && (nlarger) == 0) (gradient) = 0.0;                              \
+  else if ((nlarger) == 0) (gradient) = sidegradient1(depthhere,nsmaller,sumsmaller); \
+  else if ((nsmaller) == 0) (gradient) = sidegradient2(depthhere,nlarger,sumlarger); \
+  else (gradient) = sidegradient3(depthhere,nsmaller,sumsmaller,nlarger,sumlarger)
+  unsigned int sSmallerX;
+  unsigned int nSmallerX = countSmallerX(xIndex,yIndex,n,tableX,tableY,sSmallerX);
+  unsigned int sLargerX;
+  unsigned int nLargerX = countLargerX(xIndex,yIndex,n,tableX,tableY,sLargerX);
+  unsigned int sSmallerY;
+  unsigned int nSmallerY = countSmallerY(xIndex,yIndex,n,tableX,tableY,sSmallerY);
+  unsigned int sLargerY;
+  unsigned int nLargerY = countLargerY(xIndex,yIndex,n,tableX,tableY,sLargerY);
+  outlinerreal depthreal = depth;
+  outlinerreal xgradient;
+  outlinerreal ygradient;
+  setdirectiongradient(xgradient,depthreal,nSmallerX,sSmallerX,nLargerX,sLargerX);
+  setdirectiongradient(ygradient,depthreal,nSmallerY,sSmallerY,nLargerY,sLargerY);
+  outlinerreal result = sqrt((outlinersquared(xgradient) + outlinersquared(ygradient))/2.0);
+  assert(result >= 0.0);
+  assert(result <= outlinerdepth_maxvalue);
+  outlinerdepth resultInt = (outlinerdepth)floor(result);
+  outlinerdepth diffcompress;
+  outlinerdepth diffexpand;
+  if (range < 16)        { diffcompress =  2; diffexpand = (outlinerdepth_maxvalue+1) /    16; }
+  else if (range < 64)   { diffcompress =  4; diffexpand = (outlinerdepth_maxvalue+1) /    64; }
+  else if (range < 256)  { diffcompress =  8; diffexpand = (outlinerdepth_maxvalue+1) /   256; }
+  else if (range < 1024) { diffcompress = 16; diffexpand = (outlinerdepth_maxvalue+1) /  1024; }
+  else if (range < 4096) { diffcompress = 32; diffexpand = (outlinerdepth_maxvalue+1) /  4096; }
+  else                   { diffcompress = 64; diffexpand = (outlinerdepth_maxvalue+1) / 65536; }
+  const outlinerdepth maxdiff = (range / diffcompress) - 1;
+  outlinerdepth resultFinal = resultInt;
+  if (resultFinal > maxdiff) resultFinal = maxdiff;
+  resultFinal *= diffcompress;
+  resultFinal *= diffexpand;
+  outlinerdepth reverseval = outlinerdepth_maxvalue - resultFinal;
+  outlinerdepth resultCompressed = rgbCompress(reverseval);
+  if (yIndex == 10) infof(" depth matrix diff x = %u, depth = %u, result = %u, resultFinal = %u, reverseval = %u (compress %u, expand %u), compressed = %u",
+			  xIndex, depth, resultInt, resultFinal, reverseval,
+			  diffcompress, diffexpand,
+			  resultCompressed);
+  return(outlinersvgstyle_greyval(resultCompressed));
   
 }
 
@@ -373,16 +356,28 @@ DepthMap::normalize(outlinerdepth input) const {
   }
   assert(input >= rangeMin);
   assert(input <= rangeMax);
-  outlinerdepth range = rangeMax - rangeMin;
   outlinerdepth base = 0;
-  outlinerdepth factor = 1;
-  outlinerdepth quarterFactor = 0;
-  if      (range <   8) { base = rangeMin; factor = 32; quarterFactor = 0; }
-  else if (range <  16) { base = rangeMin; factor = 16; quarterFactor = 0; }
-  else if (range <  32) { base = rangeMin; factor =  8; quarterFactor = 0; }
-  else if (range <  64) { base = rangeMin; factor =  4; quarterFactor = 0; }
-  else if (range < 128) { base = rangeMin; factor =  2; quarterFactor = 0; }
-  else if (range < 196) { base = rangeMin; factor =  1; quarterFactor = 1; }
+  unsigned int factor = 1;
+  unsigned int quarterFactor = 0;
+  if      (range <     2)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/   2; quarterFactor = 0; }
+  else if (range <     4)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/   4; quarterFactor = 0; }
+  else if (range <     8)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/   8; quarterFactor = 0; }
+  else if (range <    16)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/  16; quarterFactor = 0; }
+  else if (range <    32)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/  32; quarterFactor = 0; }
+  else if (range <    64)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/  64; quarterFactor = 0; }
+  else if (range <   128)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/ 128; quarterFactor = 0; }
+  else if (range <   128+64)     { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/ 256; quarterFactor = 1; }
+#if outlinerdepthrgbscale == 8
+  else if (range <   256)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/ 256; quarterFactor = 0; }
+  else if (range <   512)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/ 512; quarterFactor = 0; }
+  else if (range <  1024)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/1024; quarterFactor = 0; }
+  else if (range <  2048)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/2048; quarterFactor = 0; }
+  else if (range <  4096)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/4096; quarterFactor = 0; }
+  else if (range <  8192)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/81926; quarterFactor = 0; }
+  else if (range < 16384)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/16384; quarterFactor = 0; }
+  else if (range < 32768)        { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/32768; quarterFactor = 0; }
+  else if (range < 32768+16384)  { base = rangeMin; factor =  (outlinerdepth_maxvalue+1)/65536; quarterFactor = 1; }
+#endif
   outlinerdepth preval = input - base;
   outlinerdepth result = preval * factor + (preval/4) * quarterFactor;
   if (base != 0 || factor != 1 || quarterFactor != 0) {
@@ -524,13 +519,21 @@ DepthMap::test(void) {
   infof("depth map  value compression test");
   outlinerdepth result = rgbCompress(0);
   assert(result == outlinerunusablegreyscale);
-  result = rgbCompress(255);
+  result = rgbCompress(outlinerdepth_maxvalue);
   assert(result == 255 - outlinerunusablegreyscale ||
          result == 255 - outlinerunusablegreyscale - 1);
   result = rgbCompress(20);
-  assert(result == outlinerunusablegreyscale + 18);
-  result = rgbCompress(255);
-  assert(result == outlinerunusablegreyscale + 239);
+  infof("compress result %u", result);
+  assert((outlinerdepth_maxvalue == 65535 && result == outlinerunusablegreyscale + 0) ||
+	 (outlinerdepth_maxvalue == 255 && result == outlinerunusablegreyscale + 18));
+  result = rgbCompress(outlinerdepth_maxvalue/2);
+  infof("compress result %u", result);
+  assert((outlinerdepth_maxvalue == 65535 && result == 127) ||
+	 (outlinerdepth_maxvalue == 255 && result == 127));
+  result = rgbCompress(outlinerdepth_maxvalue);
+  infof("compress result %u", result);
+  assert((outlinerdepth_maxvalue == 65535 && result == 255 - outlinerunusablegreyscale) ||
+	 (outlinerdepth_maxvalue == 255 && result == outlinerunusablegreyscale + 239));
   
   // Diff test, simple version
   infof("depth map diff simple test");
@@ -538,10 +541,11 @@ DepthMap::test(void) {
   MaterialMatrix2D mm2(mmbb2,1,1);
   DepthMap map2(mm2.xIndexSize,mm2.yIndexSize,mm2);
   infof("fill");
+  const unsigned factor = (outlinerdepth_maxvalue+1)/256;
   for (unsigned int x = 0; x < mm2.xIndexSize - 2; x++) {
     for (unsigned int y = 0; y < mm2.yIndexSize - 2; y++) {
       mm2.setMaterialMatrix(x,y);
-      map2.setDepth(x,y,10+x);
+      map2.setDepth(x,y,(10+x)*factor);
     }
   }
   infof("depth check");
@@ -549,7 +553,7 @@ DepthMap::test(void) {
     for (unsigned int y = 0; y < mm2.yIndexSize - 2; y++) {
       if (mm2.getMaterialMatrix(x,y)) {
         outlinerdepth depth = map2.getDepth(x,y);
-        assert(depth == 10+x);
+        assert(depth == (10+x)*factor);
       }
     }
   }
@@ -558,15 +562,15 @@ DepthMap::test(void) {
     for (unsigned int y = 0; y < mm2.yIndexSize - 2; y++) {
       if (mm2.getMaterialMatrix(x,y)) {
         outlinerdepth depth = map2.getDepth(x,y);
-        assert(depth == 10+x);
+        assert(depth == (10+x)*factor);
         OutlinerSvgStyle style = map2.depthToColor(x,y);
         assert(outlinersvgstyle_getbase(style) == outlinersvgstyle_grey);
         unsigned int greylevel = outlinersvgstyle_greyget(style);
-        infof("  %u,%u grey %02x", x ,y, greylevel);
+        infof("  color check %u,%u depth %u grey %02x", x ,y, depth, greylevel);
         switch (x) {
         case 0: assert(greylevel == 0xf7); break;
-        case 1: assert(greylevel == 0xd9); break;
-        case 2: assert(greylevel == 0xbb); break;
+        case 1: assert(greylevel == 0xbb /*0xd9*/); break;
+        case 2: assert(greylevel == 0x7f /*0xbb*/); break;
         default: assert(0); break;
         }
       }
@@ -577,11 +581,11 @@ DepthMap::test(void) {
     for (unsigned int y = 0; y < mm2.yIndexSize - 2; y++) {
       if (mm2.getMaterialMatrix(x,y)) {
         outlinerdepth depth = map2.getDepth(x,y);
-        assert(depth == 10+x);
+        assert(depth == (10+x)*factor);
         OutlinerSvgStyle style = map2.depthDiffToColor(x,y,1);
         assert(outlinersvgstyle_getbase(style) == outlinersvgstyle_grey);
         unsigned int greylevel = outlinersvgstyle_greyget(style);
-        infof("  %u,%u diff grey %02x", x ,y, greylevel);
+        infof("  color check %u,%u depth %u diff grey %02x", x ,y, depth, greylevel);
         switch (x) {
         case 0: assert(greylevel != 0); break;
         case 1: assert(greylevel != 0); break;
@@ -608,7 +612,7 @@ DepthMap::test(void) {
 	unsigned int height = (x/step);
 	if (height > div) height *= (height/div);
 	if (y == border) infof("  depth matrix number 3 x = %u, height = %u", x, height);
-	assert(height < 256);
+	assert(height <= outlinerdepth_maxvalue);
 	map3.setDepth(x,y,(outlinerdepth)height);
 	outlinerdepth back = map3.getDepth(x,y);
 	assert(back == height);
