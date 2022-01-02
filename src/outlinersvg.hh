@@ -36,6 +36,8 @@
 #define OutlinerSvgMaxLineSegments  511
 #define OutlinerSvgMaxLinePoints    (OutlinerSvgMaxLineSegments+1)
 
+#define OutlinerRgb                 uint8_t
+
 #define OutlinerSvgStyle            uint32_t
 #define outlinersvgstyle_none       0x00000
 #define outlinersvgstyle_dashed     0x00100
