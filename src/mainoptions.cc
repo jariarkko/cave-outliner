@@ -287,6 +287,14 @@ MainOptions::processCommandLineOptions(int& argc,
       argc--;argv++;
     } else if (strcmp(argv[1],"--test") == 0) {
       config.test = 1;
+    } else if (strcmp(argv[1],"--parallel") == 0 && argc > 2) {
+      int num = atoi(argv[2]);
+      if (num < 1 || num > 100) {
+        errf("Number of threads needs to a positive integer and under 100, %s given", argv[2]);
+        return(0);
+      }
+      config.nThreads = num;
+      argc--;argv++;
     } else if (strcmp(argv[1],"--version") == 0) {
       processVersion();
       return(0);

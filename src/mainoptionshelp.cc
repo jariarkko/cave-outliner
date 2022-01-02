@@ -101,6 +101,7 @@ MainOptions::processHelp(void) {
   std::cout << "                           Default is " << outlinertiledivision << ",\n";
   std::cout << "                           and --tiling 1 implies no optimization.\n";
   std::cout << "  --quiet                  Turn on informative messages (default is they are on).\n";
+  std::cout << "  --parallel n             How many parallel threads can be run.\n";
   std::cout << "  --debug                  Turn on debugging messages (level 0, least)\n";
   std::cout << "  --deepdebug              Turn on debugging messages (level 1)\n";
   std::cout << "  --deepdeepdebug          Turn on debugging messages (level 2, most)\n";

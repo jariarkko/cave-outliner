@@ -23,6 +23,7 @@
 // Defines ////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+#define outlinerdefaultthreads                                                         4
 #define outlinermaxmeshes                                                              1
 #define outlinertiledivision                                                          30
 #define outlinermaxholethreshold                                                      50

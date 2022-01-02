@@ -101,6 +101,7 @@ Options:
                              than or equal to n pixels.
     --tiling n               Optimize search process with n x n tiles. Default is 30,
                              and --tiling 1 implies no optimization.
+    --parallel n             How many parallel threads can be run.
     --quiet                  Turn on informative messages (default is they are on).
     --debug                  Turn on debugging messages (level 0, least).
     --deepdebug              Turn on debugging messages (level 1).

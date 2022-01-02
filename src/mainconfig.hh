@@ -62,6 +62,9 @@ public:
   /// True if we should run unit tests
   bool test;
 
+  /// How many parallel threads we can run
+  unsigned int nThreads;
+  
   /// True if informational messages should be displayed
   bool info;
 

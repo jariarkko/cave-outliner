@@ -38,6 +38,7 @@ MainConfig::MainConfig() :
   inputFile(0),
   outputFile(0),
   test(0),
+  nThreads(outlinerdefaultthreads),
   info(1),
   debug(0),
   deepdebug(0),
