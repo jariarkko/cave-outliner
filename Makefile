@@ -332,14 +332,22 @@ cave-tests:	cave1-test \
 		cave1-form-analysis-smooth-line-test \
 		cave1-spine-test \
 		cave1-floor-test \
-		cave1-floor-condense-test \
-		cave1-floor-condense-more-test \
 		cave1-floor-depth-test
 
+heavy-tests:	heavy-tests-note \
+		cave1-floor-highres-test
+
 failing-tests:	failing-tests-note \
+		cave1-floor-condense-test \
+		cave1-floor-condense-more-test \
 		house-cross-section-side-test \
 		house-cross-section-another-side-test \
 		house-cross-section-highres-test
+
+heavy-tests-note:
+	@echo ''
+	@echo 'Note: The subsequent tests may take some minutes'
+	@echo ''
 
 failing-tests-note:
 	@echo ''
