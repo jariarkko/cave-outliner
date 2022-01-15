@@ -202,21 +202,23 @@ class SvgCreator {
                                        unsigned int& matchIndex,
                                        bool& matchesStart,
                                        bool& reverseOriginal);
-  struct OutlinerSvgLine* matchingLineJoin(struct OutlinerSvgLine* target,
-                                           unsigned int x,
-                                           unsigned int y,
-                                           bool fromStart);
-  struct OutlinerSvgLine* matchingLineAux(unsigned int x,
-                                          unsigned int y,
-                                          OutlinerSvgStyle style,
-                                          bool lookForTailMatch,
-                                          unsigned int index);
-  struct OutlinerSvgLine* matchingLineAuxAvoid(struct OutlinerSvgLine* avoid,
-                                               unsigned int x,
-                                               unsigned int y,
-                                               OutlinerSvgStyle style,
-                                               bool lookForTailMatch,
-                                               unsigned int index);
+  struct OutlinerSvgLine* matchingLineJoin(const struct OutlinerSvgLine* target,
+                                           const unsigned int maxPoints,
+                                           const unsigned int x,
+                                           const unsigned int y,
+                                           const bool fromStart);
+  struct OutlinerSvgLine* matchingLineAux(const unsigned int x,
+                                          const unsigned int y,
+                                          const OutlinerSvgStyle style,
+                                          const bool lookForTailMatch,
+                                          const unsigned int index);
+  struct OutlinerSvgLine* matchingLineAuxAvoid(const struct OutlinerSvgLine* avoid,
+                                               const unsigned int maxPoints,
+                                               const unsigned int x,
+                                               const unsigned int y,
+                                               const OutlinerSvgStyle style,
+                                               const bool lookForTailMatch,
+                                               const unsigned int index);
   void lineTableJoin(struct OutlinerSvgLine* entry,
                      struct OutlinerSvgLine* join,
                      bool fromStart,

@@ -180,7 +180,7 @@ SvgCreator::addLine(unsigned int x1,
         lineTableEntryLink(match,newIndex);
         // Check if the newly extended line can be joined with an existing one
         struct OutlinerSvgLine* tojoin = 0;
-        if ((tojoin = matchingLineJoin(match,x1,y1,1)) != 0) {
+        if ((tojoin = matchingLineJoin(match,OutlinerSvgMaxLinePoints-match->nPoints,x1,y1,1)) != 0) {
           deepdebugf("going to merge start of two lines of %u and %u points",
                      match->nPoints, tojoin->nPoints);
           assert(match->nPoints + tojoin->nPoints <= OutlinerSvgMaxLinePoints);
@@ -194,7 +194,7 @@ SvgCreator::addLine(unsigned int x1,
         lineTableEntryLink(match,newIndex);
         // Check if the newly extended line can be joined with an existing one
         struct OutlinerSvgLine* tojoin = 0;
-        if ((tojoin = matchingLineJoin(match,x2,y2,0)) != 0) {
+        if ((tojoin = matchingLineJoin(match,OutlinerSvgMaxLinePoints-match->nPoints,x2,y2,0)) != 0) {
           deepdebugf("going to merge two lines of %u and %u points",
                      match->nPoints, tojoin->nPoints);
           assert(match->nPoints + tojoin->nPoints <= OutlinerSvgMaxLinePoints);
@@ -909,24 +909,26 @@ SvgCreator::matchingLine(unsigned int x1,
 }
 
 struct OutlinerSvgLine*
-SvgCreator::matchingLineAux(unsigned int x,
-                            unsigned int y,
-                            OutlinerSvgStyle style,
-                            bool lookForTailMatch,
-                            unsigned int index) {
+SvgCreator::matchingLineAux(const unsigned int x,
+                            const unsigned int y,
+                            const OutlinerSvgStyle style,
+                            const bool lookForTailMatch,
+                            const unsigned int index) {
   assert((style & outlinersvgstyle_basemask & outlinersvgstyle_illegal) == 0);
-  return(matchingLineAuxAvoid(0,x,y,style,lookForTailMatch,
+  return(matchingLineAuxAvoid(0,OutlinerSvgMaxLinePoints,x,y,style,lookForTailMatch,
                               index));
 }
 
 struct OutlinerSvgLine*
-SvgCreator::matchingLineAuxAvoid(struct OutlinerSvgLine* avoid,
-                                 unsigned int x,
-                                 unsigned int y,
-                                 OutlinerSvgStyle style,
-                                 bool lookForTailMatch,
-                                 unsigned int index) {
+SvgCreator::matchingLineAuxAvoid(const struct OutlinerSvgLine* avoid,
+                                 const unsigned int maxPoints,
+                                 const unsigned int x,
+                                 const unsigned int y,
+                                 const OutlinerSvgStyle style,
+                                 const bool lookForTailMatch,
+                                 const unsigned int index) {
   assert((style & outlinersvgstyle_basemask & outlinersvgstyle_illegal) == 0);
+  assert(maxPoints <= OutlinerSvgMaxLinePoints);
   struct OutlinerSvgLineList* list = lineTable[index];
   deepdeepdebugf("matchingLineAux loop");
   while (list != 0) {
@@ -951,7 +953,7 @@ SvgCreator::matchingLineAuxAvoid(struct OutlinerSvgLine* avoid,
     //    3/ style does not match
     //
     
-    if (line != avoid && line->nPoints < OutlinerSvgMaxLinePoints && style == line->style) {
+    if (line != avoid && line->nPoints < maxPoints && style == line->style) {
     
       // Is there a match here?
       if (!lookForTailMatch && line->points[first].x == x && line->points[first].y == y) return(line);
@@ -974,24 +976,26 @@ SvgCreator::matchingLineAuxAvoid(struct OutlinerSvgLine* avoid,
 }
 
 struct OutlinerSvgLine*
-SvgCreator::matchingLineJoin(struct OutlinerSvgLine* target,
-                             unsigned int x,
-                             unsigned int y,
-                             bool fromStart) {
+SvgCreator::matchingLineJoin(const struct OutlinerSvgLine* target,
+                             const unsigned maxPoints,
+                             const unsigned int x,
+                             const unsigned int y,
+                             const bool fromStart) {
   deepdebugf("matchingLineJoin");
   assert(target != 0);
   assert(fromStart == 0 || fromStart == 1);
+  assert(maxPoints <= OutlinerSvgMaxLinePoints);
   unsigned int searchIndex = lineTableIndex(x,y);
   assert(searchIndex < lineTableSize);
   struct OutlinerSvgLine* result = 0;
   if (fromStart) {
     // See if we can find a line that ends with (x,y)
-    if ((result = matchingLineAuxAvoid(target,x,y,target->style,1,searchIndex)) != 0) {
+    if ((result = matchingLineAuxAvoid(target,maxPoints,x,y,target->style,1,searchIndex)) != 0) {
       return(result);
     }
   } else {
     // See if we can find a line that starts with (x,y)
-    if ((result = matchingLineAuxAvoid(target,x,y,target->style,0,searchIndex)) != 0) {
+    if ((result = matchingLineAuxAvoid(target,maxPoints,x,y,target->style,0,searchIndex)) != 0) {
       return(result);
     }
   }

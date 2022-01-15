@@ -135,11 +135,11 @@ MainOptions::processCommandLineOptions(int& argc,
       if (!parseDirection(argv[2],linedirection))  {
         return(0);
       }
-      float num = atof(argv[3]);
-      if (num <= 0.0) {
-        errf("Cross section coordinate value needs to be a positive number, %s given", argv[3]);
+      if (!isdigit(argv[3][0]) && argv[3][0] != '+' && argv[3][0] != '-') {
+        errf("Cross section coordinate value needs to be a number, %s given", argv[3]);
         return(0);
       }
+      float num = atof(argv[3]);
       const char* file = argv[4];
       if (strlen(file) < 1) {
         errf("Cross section file name cannot be empty, %s given", file);
