@@ -338,7 +338,8 @@ cave-tests:	cave1-test \
 		cave1-floor-depth-test
 
 heavy-tests:	heavy-tests-note \
-		cave1-floor-highres-test
+		cave1-floor-highres-test \
+		cave2-form-test
 
 failing-tests:	failing-tests-note \
 		cave1-floor-condense-test \
@@ -717,6 +718,15 @@ cave1-example-form-long-test:
                   test/cave1.stl test/cave1-example-form-long-planview.svg > test/cave1-example-form-long.out
 	@diff -q test/cave1-example-form-long-planview.svg test/cave1-example-form-long-planview.svg.expected
 	@diff -q test/cave1-example-form-long-cross0.svg test/cave1-example-form-long-cross0.svg.expected
+
+cave2-form-test:
+	@echo 'Running test case cave2-form-test...'
+	@./cave-outliner --label --dimensions --borderline \
+                  --multiplier 4 --step 0.05 --holethreshold 10 --formanalysis 1 \
+		  --crosssectionwidth 3 --crosssections x 1 test/cave2-form-cross%.svg \
+                  test/cave2.stl test/cave2-form-planview.svg > test/cave2-form.out
+	@diff -q test/cave2-form-planview.svg test/cave2-form-planview.svg.expected
+	@diff -q test/cave2-form-cross0.svg test/cave2-form-cross0.svg.expected
 
 updateversion:
 	@echo This makefile target updates one software source file based on tags in GitHub,

@@ -84,11 +84,11 @@ MaterialMatrix2D::calculateSize(const outlinerreal from,
   outlinerreal ceil2Result = ceil(mulResult);
   outlinerreal realResult = ceil2Result + 2;
   unsigned int intResult = realResult;
-  infof("calculate %s size %5.2f..%5.2f in %5.2f x %u: %6.2f => %6.2f => %6.2f => %6.2f% => %6.2f=%u",
-        what,
-        from, to, step, multiplier,
-        divResult, ceilResult, mulResult, ceil2Result, realResult,
-        intResult);
+  debugf("calculate %s size %5.2f..%5.2f in %5.2f x %u: %6.2f => %6.2f => %6.2f => %6.2f% => %6.2f=%u",
+         what,
+         from, to, step, multiplier,
+         divResult, ceilResult, mulResult, ceil2Result, realResult,
+         intResult);
   return(intResult);
 }
 
