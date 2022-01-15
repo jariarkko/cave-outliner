@@ -523,6 +523,7 @@ IndexedMesh::coordsToTile(outlinerreal x,
 }
 
 IndexedMesh::~IndexedMesh() {
+  infof("IndexedMesh::~IndexedMesh start");
   if (meshes != 0) {
     for (unsigned int i = 0; i < maxMeshes; i++) {
       if (meshes[i].tileMatrix == 0) continue;
@@ -544,6 +545,7 @@ IndexedMesh::~IndexedMesh() {
   
   maxMeshes = 0;
   subdivisions = 0;
+  infof("IndexedMesh::~IndexedMesh done");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

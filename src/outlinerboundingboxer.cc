@@ -68,6 +68,7 @@ BoundingBoxer::getIncreasedBoundingBox(OutlinerBox3D& boundingBoxOut) {
 }
 
 BoundingBoxer::~BoundingBoxer() {
+  infof("BoundingBoxer::~BoundingBoxer");
 }
 
 void

@@ -45,6 +45,7 @@ Describer::Describer(bool transforms,
 }
 
 Describer::~Describer() {
+  infof("Describer::~Describer");
 }
 
 void

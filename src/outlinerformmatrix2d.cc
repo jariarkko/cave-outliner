@@ -54,10 +54,12 @@ FormMatrix2D::FormMatrix2D(const unsigned int xIndexSizeIn,
 }
 
 FormMatrix2D::~FormMatrix2D() {
+  infof("FormMatrix2D::~FormMatrix2D start");
   if (data != 0) {
     free((void*)data);
     data = 0;
   }
+  infof("FormMatrix2D::~FormMatrix2D done");
 }
   
 void

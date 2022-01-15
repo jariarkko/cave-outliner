@@ -69,10 +69,12 @@ OutlineAnalyzer::OutlineAnalyzer(const MaterialMatrix2D& matrix2In,
 }
 
 OutlineAnalyzer::~OutlineAnalyzer() {
+  infof("OutlineAnalyzer::~OutlineAnalyzer start");
   if (descriptors != 0) {
     delete [] descriptors;
     descriptors = 0;
   }
+  infof("OutlineAnalyzer::~OutlineAnalyzer done");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

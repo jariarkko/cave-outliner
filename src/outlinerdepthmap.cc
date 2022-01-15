@@ -70,10 +70,12 @@ DepthMap::~DepthMap() {
         nEntries, fullSize,
         rangeMin, rangeMax,
 	range);
+  infof("freeing data");
   if (data != 0) {
     free((void*)data);
     data = 0;
   }
+  infof("freed data");
 }
   
 void

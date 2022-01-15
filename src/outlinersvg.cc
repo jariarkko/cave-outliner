@@ -68,6 +68,7 @@ SvgCreator::SvgCreator(const char* fileNameIn,
 }
 
 SvgCreator::~SvgCreator() {
+  infof("SvgCreator::~SvgCreator start");
   lineTableOutput();
   postamble();
   unsigned long bytes = file.tellp();
@@ -80,6 +81,7 @@ SvgCreator::~SvgCreator() {
   lineTableInfos();
   lineTableDeinit();
   lineTable = 0;
+  infof("SvgCreator::~SvgCreator done");
 }
 
 outlinerreal

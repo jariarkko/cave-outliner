@@ -101,6 +101,7 @@ ProcessorForms::ProcessorForms(const OutlinerBox3D& boundingBoxIn,
 }
 
 ProcessorForms::~ProcessorForms() {
+  infof("ProcessorForms::~ProcessorForms");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

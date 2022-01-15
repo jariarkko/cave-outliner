@@ -41,6 +41,7 @@ MainOptions::MainOptions(MainConfig& configIn) :
 }
 
 MainOptions::~MainOptions() {
+  infof("MainOptions::~MainOptions");
 }
 
 bool
@@ -140,8 +141,11 @@ MainOptions::processCommandLineOptions(int& argc,
         return(0);
       }
       float num = atof(argv[3]);
-      const char* file = argv[4];
-      if (strlen(file) < 1) {
+      const char* file = strdup(argv[4]);
+      if (file == 0) {
+        fatalf("Cannot allocate file name string for %s", argv[4]);
+        return(0);
+      } else if (strlen(file) < 1) {
         errf("Cross section file name cannot be empty, %s given", file);
         return(0);
       }

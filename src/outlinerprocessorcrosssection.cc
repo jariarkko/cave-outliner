@@ -61,8 +61,10 @@ ProcessorCrossSection::ProcessorCrossSection(const char* fileNameIn,
 }
 
 ProcessorCrossSection::~ProcessorCrossSection() {
+  infof("ProcessorCrossSection::~ProcessorCrossSection start");
   deleteSvg();
   deleteMatrix();
+  infof("ProcessorCrossSection::~ProcessorCrossSection done");
 }
 
 void

@@ -76,6 +76,7 @@ MainConfig::MainConfig() :
 }
 
 MainConfig::~MainConfig() {
+  infof("MainConfig::~MainConfig start");
   if (inputFile != 0) free((void*)inputFile);
   inputFile = 0;
   if (outputFile != 0) free((void*)outputFile);
@@ -89,6 +90,7 @@ MainConfig::~MainConfig() {
     if (one.label != 0) free((void*)one.label);
     one.label = 0;
   }
+  infof("MainConfig::~MainConfig done");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

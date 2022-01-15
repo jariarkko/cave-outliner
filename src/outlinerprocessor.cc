@@ -125,11 +125,13 @@ Processor::Processor(const char* fileNameIn,
 }
 
 Processor::~Processor() {
+  infof("Processor::~Processor start");
   svgDone();
   if (depthMap != 0) {
     delete depthMap;
     depthMap = 0;
   }
+  infof("Processor::~Processor done");
 }
 
 void

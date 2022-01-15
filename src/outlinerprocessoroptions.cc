@@ -84,5 +84,6 @@ ProcessorOptions::operator=(const ProcessorOptions& input) {
 }
 
 ProcessorOptions::~ProcessorOptions() {
+  infof("ProcessorOptions::~ProcessorOptions");
 }
 
