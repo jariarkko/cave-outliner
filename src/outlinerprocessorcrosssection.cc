@@ -173,6 +173,9 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   
   // Process the actual cross section
   drawCrossSection(scene);  
+
+  // Statistics
+  outputStats();
   debugf("  slice bounding box after drawing (%.2f,%.2f) to (%.2f,%.2f) and steps %.2f and %.2f",
          sliceVerticalBoundingBox.start.x, sliceVerticalBoundingBox.start.y,
          sliceVerticalBoundingBox.end.x, sliceVerticalBoundingBox.end.y,
@@ -231,9 +234,6 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
                            stepz);
   }
 
-  // Statistics
-  outputStats();
-  
   // Main result (plan view) is done, flush the image output
   deleteSvg();
   
@@ -243,9 +243,11 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
 
 void
 ProcessorCrossSection::outputStats(void) const {
-  infof("  Cross-section statistics: %lu steps, %lu faces, %lu z steps, %lu faces hit dimension and %lu voxel",
+  infof("    Cross-section statistics: %lu steps, %lu faces, %lu z steps, %lu faces hit dimension and %lu voxel (%.2f and %.2f per step)",
         statStepsLine, statFacesGotten, statStepsZ,
-        statFacesHitDimension, statFacesHitVoxel);
+        statFacesHitDimension, statFacesHitVoxel,
+        ((outlinerreal)statFacesHitDimension) / (outlinerreal)statStepsLine,
+        ((outlinerreal)statFacesHitVoxel) / (outlinerreal)statStepsLine);
 }
 
 void
