@@ -77,6 +77,6 @@ SvgOptions::operator=(const SvgOptions& input) {
 }
 
 SvgOptions::~SvgOptions() {
-  infof("SvgOptions::~SvgOptions");
+  debugf("SvgOptions::~SvgOptions");
 }
 

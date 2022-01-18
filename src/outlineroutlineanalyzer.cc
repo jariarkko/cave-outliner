@@ -69,12 +69,12 @@ OutlineAnalyzer::OutlineAnalyzer(const MaterialMatrix2D& matrix2In,
 }
 
 OutlineAnalyzer::~OutlineAnalyzer() {
-  infof("OutlineAnalyzer::~OutlineAnalyzer start");
+  debugf("OutlineAnalyzer::~OutlineAnalyzer start");
   if (descriptors != 0) {
     delete [] descriptors;
     descriptors = 0;
   }
-  infof("OutlineAnalyzer::~OutlineAnalyzer done");
+  debugf("OutlineAnalyzer::~OutlineAnalyzer done");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -97,13 +97,14 @@ OutlineAnalyzer::getRoofDepthMap(void) {
 
 bool
 OutlineAnalyzer::analyze(void) {
-  infof("OutlineAnalyzer::analyze");
+  infof("Outline analysis starting...");
   for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
     if (!analyzeOneSlice(xIndex)) return(0);
   }
   infof("  outline analysis found %u tunnel segments in %u slices (and %u failed z scans)",
         nTunnelSegments, matrix3.xIndexSize, nFailedZScans);
   createDepthMaps();
+  infof("Outline analysis done");
   return(1);
 }
 
@@ -250,11 +251,11 @@ OutlineAnalyzer::findZMidPoint(const unsigned int matrix3xIndex,
   // (x,y) position.
   //
 
-  infof("      finding a z at (%u,%u)", matrix3xIndex, matrix3yIndex);
+  debugf("      finding a z at (%u,%u)", matrix3xIndex, matrix3yIndex);
   unsigned int zIndex = matrix3.zIndexSize - 1;
   while (!matrix3.getMaterialMatrix(matrix3xIndex,matrix3yIndex,zIndex)) {
     if (zIndex == 0) {
-      infof("      no z material at (%u,%u)", matrix3xIndex, matrix3yIndex);
+      debugf("      no z material at (%u,%u)", matrix3xIndex, matrix3yIndex);
       return(0);
     }
     zIndex--;
@@ -279,8 +280,8 @@ OutlineAnalyzer::findZMidPoint(const unsigned int matrix3xIndex,
   //
 
   matrix3zIndex = ((zStart + zIndex) / 2);
-  infof("      z material at (%u,%u) found at level %u",
-        matrix3xIndex, matrix3yIndex, matrix3zIndex);
+  debugf("      z material at (%u,%u) found at level %u",
+         matrix3xIndex, matrix3yIndex, matrix3zIndex);
   return(1);
 }
 
@@ -323,7 +324,7 @@ OutlineAnalyzer::allocateTunnel(const unsigned int matrix3xIndex,
     // Debugs
     //
     
-    infof("    allocated a new tunnel at x %u, starting from y %u", matrix3xIndex, matrix3yIndex);
+    debugf("    allocated a new tunnel at x %u, starting from y %u", matrix3xIndex, matrix3yIndex);
     
     //
     // Return result
@@ -380,7 +381,7 @@ OutlineAnalyzer::createDepthMapTunnel(DepthMap& map,
   } else {
     borderStep = diff / steps;
   }
-  infof("depth map tunnel at x %u, y %u..%u (n=%.2f), border %.2f (%u..%u), step %.2f",
+  debugf("depth map tunnel at x %u, y %u..%u (n=%.2f), border %.2f (%u..%u), step %.2f",
         tunnel.xIndex,
         tunnel.yIndexRange.start, tunnel.yIndexRange.end,
         steps,
@@ -413,11 +414,11 @@ OutlineAnalyzer::createDepthMapTunnel(DepthMap& map,
                              depth);
         thisDepth = depth;
         if (!succ) {
-          infof("  depth %s (%u,%u) no success, continuing",
+          debugf("  depth %s (%u,%u) no success, continuing",
                 floor ? "floor" : "roof", matrix2xIndexStart, matrix2yIndexStart);
           thisDepth = def;
         } else {
-          infof("  depth %s map tunnel border now %.2f (%u,%u) at y %u = %u",
+          debugf("  depth %s map tunnel border now %.2f (%u,%u) at y %u = %u",
                 floor ? "floor" : "roof",
                 border,
                 matrix2xIndexStart, matrix2yIndexStart,
@@ -425,15 +426,15 @@ OutlineAnalyzer::createDepthMapTunnel(DepthMap& map,
                 depth);
         }
       } else {
-        infof("  depth %s (%u,%u) no z success earlier, continuing",
+        debugf("  depth %s (%u,%u) no z success earlier, continuing",
                 floor ? "floor" : "roof", matrix2xIndexStart, matrix2yIndexStart);
         thisDepth = def;
       }
     } else {
-      infof("  depth %s tunnel (%u,%u) no material, continuing",
+      debugf("  depth %s tunnel (%u,%u) no material, continuing",
             floor ? "floor" : "roof", matrix2xIndexStart, matrix2yIndexStart);
     }
-    infof("  depth %s range set (%u,%u)..(%u,%u) = %u",
+    debugf("  depth %s range set (%u,%u)..(%u,%u) = %u",
           floor ? "floor" : "roof",
           matrix2xIndexStart,
           matrix2yIndexStart,

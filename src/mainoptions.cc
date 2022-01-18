@@ -41,7 +41,7 @@ MainOptions::MainOptions(MainConfig& configIn) :
 }
 
 MainOptions::~MainOptions() {
-  infof("MainOptions::~MainOptions");
+  debugf("MainOptions::~MainOptions");
 }
 
 bool

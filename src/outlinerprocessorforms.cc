@@ -101,7 +101,7 @@ ProcessorForms::ProcessorForms(const OutlinerBox3D& boundingBoxIn,
 }
 
 ProcessorForms::~ProcessorForms() {
-  infof("ProcessorForms::~ProcessorForms");
+  debugf("ProcessorForms::~ProcessorForms");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -1221,7 +1221,7 @@ bool
 ProcessorForms::condensedXIndexToIndex(const unsigned int matrix3xIndex,
                                        unsigned int& matrix2xIndexStart,
                                        unsigned int& matrix2xIndexEnd) const {
-  infof("matrix 2 size %ux%u matrix 3 size %ux%u condense %u",
+  debugf("matrix 2 size %ux%u matrix 3 size %ux%u condense %u",
         matrix2.xIndexSize, matrix2.yIndexSize,
         matrix3.xIndexSize, matrix3.yIndexSize,
         formCondense);
@@ -1249,10 +1249,10 @@ ProcessorForms::condensedYIndexToIndex(const unsigned int matrix3yIndex,
   if (matrix2yIndexStart > matrix2.yIndexSize - 2) return(0);
   matrix2yIndexEnd = outlinermin(matrix2yIndexStart + formCondense - 1,
                                  matrix2.yIndexSize - 1);
-  infof("cy2y %u/%u => %u..%u/%u",
-        matrix3yIndex, matrix3.yIndexSize,
-        matrix2yIndexStart, matrix2yIndexEnd,
-        matrix2.yIndexSize);
+  debugf("cy2y %u/%u => %u..%u/%u",
+         matrix3yIndex, matrix3.yIndexSize,
+         matrix2yIndexStart, matrix2yIndexEnd,
+         matrix2.yIndexSize);
   assert(matrix2yIndexStart <= matrix2yIndexEnd);
   assert(matrix2yIndexStart < matrix2.yIndexSize);
   assert(matrix2yIndexEnd < matrix2.yIndexSize);

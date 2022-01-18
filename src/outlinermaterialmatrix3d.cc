@@ -56,7 +56,7 @@ MaterialMatrix3D::MaterialMatrix3D(const OutlinerBox3D& boundingBoxIn,
 }
 
 MaterialMatrix3D::~MaterialMatrix3D() {
-  infof("MaterialMatrix3D::~MaterialMatrix3D");
+  debugf("MaterialMatrix3D::~MaterialMatrix3D");
 }
   
 void
@@ -373,6 +373,6 @@ VerticalMatrix::VerticalMatrix() :
 }
 
 VerticalMatrix::~VerticalMatrix() {
-  infof("VerticalMatrix::~VerticalMatrix");
+  debugf("VerticalMatrix::~VerticalMatrix");
 }
 

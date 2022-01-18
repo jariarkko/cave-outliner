@@ -65,11 +65,11 @@ MaterialMatrix2D::MaterialMatrix2D(const OutlinerBox2D& boundingBoxIn,
 }
 
 MaterialMatrix2D::~MaterialMatrix2D() {
-  infof("MaterialMatrix2D::~MaterialMatrix2D start");
+  debugf("MaterialMatrix2D::~MaterialMatrix2D start");
   if (bitMatrix != 0) {
     delete [] bitMatrix;
   }
-  infof("MaterialMatrix2D::~MaterialMatrix2D done");
+  debugf("MaterialMatrix2D::~MaterialMatrix2D done");
 }
 
 unsigned int

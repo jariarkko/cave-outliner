@@ -41,7 +41,7 @@ ShapeRecognizer::ShapeRecognizer()
 }
 
 ShapeRecognizer::~ShapeRecognizer() {
-  infof("ShapeRecognizer::~ShapeRecognizer");
+   debugf("ShapeRecognizer::~ShapeRecognizer");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

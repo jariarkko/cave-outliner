@@ -156,7 +156,7 @@ main(int argc, char** argv) {
       newOne->line.end.y = 0;
       newOne->filename = makeFilenameFromPattern(config.automaticCrossSectionFilenamePattern,c);
       newOne->width = config.crossSectionWidth;
-      infof("used cross section width %.2f", newOne->width);
+      debugf("used cross section width %.2f", newOne->width);
       newOne->label = config.getCrossSectionLabel();
       debugf("cross section %s file %s at %.2f",
              (newOne->label == 0 ? "(none)" : newOne->label),
@@ -205,7 +205,7 @@ main(int argc, char** argv) {
   const outlinerreal xStepsPerTile = xSteps / ((outlinerreal)config.tiles);
   const outlinerreal yStepsPerTile = ySteps / ((outlinerreal)config.tiles);
   bool tilesChanged = 0;
-  infof("tiles check %f %f %f", xStepsPerTile, yStepsPerTile, minStepsPerTile);
+  debugf("tiles check %f %f %f", xStepsPerTile, yStepsPerTile, minStepsPerTile);
   if (xStepsPerTile < minStepsPerTile) {
     config.tiles = ((unsigned int)(xSteps / minStepsPerTile));
     if (config.tiles < 1) config.tiles = 1;

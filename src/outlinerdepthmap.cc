@@ -70,12 +70,12 @@ DepthMap::~DepthMap() {
         nEntries, fullSize,
         rangeMin, rangeMax,
 	range);
-  infof("freeing data");
+  debugf("freeing data");
   if (data != 0) {
     free((void*)data);
     data = 0;
   }
-  infof("freed data");
+  debugf("freed data");
 }
   
 void
@@ -525,24 +525,24 @@ DepthMap::test(void) {
   assert(result == 255 - outlinerunusablegreyscale ||
          result == 255 - outlinerunusablegreyscale - 1);
   result = rgbCompress(20);
-  infof("compress result %u", result);
+  debugf("compress result %u", result);
   assert((outlinerdepth_maxvalue == 65535 && result == outlinerunusablegreyscale + 0) ||
 	 (outlinerdepth_maxvalue == 255 && result == outlinerunusablegreyscale + 18));
   result = rgbCompress(outlinerdepth_maxvalue/2);
-  infof("compress result %u", result);
+  debugf("compress result %u", result);
   assert((outlinerdepth_maxvalue == 65535 && result == 127) ||
 	 (outlinerdepth_maxvalue == 255 && result == 127));
   result = rgbCompress(outlinerdepth_maxvalue);
-  infof("compress result %u", result);
+  debugf("compress result %u", result);
   assert((outlinerdepth_maxvalue == 65535 && result == 255 - outlinerunusablegreyscale) ||
 	 (outlinerdepth_maxvalue == 255 && result == outlinerunusablegreyscale + 239));
   
   // Diff test, simple version
-  infof("depth map diff simple test");
+  debugf("depth map diff simple test");
   OutlinerBox2D mmbb2(0,0,3,3);
   MaterialMatrix2D mm2(mmbb2,1,1);
   DepthMap map2(mm2.xIndexSize,mm2.yIndexSize,mm2);
-  infof("fill");
+  debugf("fill");
   const unsigned factor = (outlinerdepth_maxvalue+1)/256;
   for (unsigned int x = 0; x < mm2.xIndexSize - 2; x++) {
     for (unsigned int y = 0; y < mm2.yIndexSize - 2; y++) {
@@ -550,7 +550,7 @@ DepthMap::test(void) {
       map2.setDepth(x,y,(10+x)*factor);
     }
   }
-  infof("depth check");
+  debugf("depth check");
   for (unsigned int x = 0; x < mm2.xIndexSize - 2; x++) {
     for (unsigned int y = 0; y < mm2.yIndexSize - 2; y++) {
       if (mm2.getMaterialMatrix(x,y)) {
@@ -559,7 +559,7 @@ DepthMap::test(void) {
       }
     }
   }
-  infof("color check");
+  debugf("color check");
   for (unsigned int x = 0; x < mm2.xIndexSize - 2; x++) {
     for (unsigned int y = 0; y < mm2.yIndexSize - 2; y++) {
       if (mm2.getMaterialMatrix(x,y)) {
@@ -568,7 +568,7 @@ DepthMap::test(void) {
         OutlinerSvgStyle style = map2.depthToColor(x,y);
         assert(outlinersvgstyle_getbase(style) == outlinersvgstyle_grey);
         unsigned int greylevel = outlinersvgstyle_greyget(style);
-        infof("  color check %u,%u depth %u grey %02x", x ,y, depth, greylevel);
+        debugf("  color check %u,%u depth %u grey %02x", x ,y, depth, greylevel);
         switch (x) {
         case 0: assert(greylevel == 0xf7); break;
         case 1: assert(greylevel == 0xbb /*0xd9*/); break;
@@ -578,7 +578,7 @@ DepthMap::test(void) {
       }
     }
   }
-  infof("diff check");
+  debugf("diff check");
   for (unsigned int x = 0; x < mm2.xIndexSize - 2; x++) {
     for (unsigned int y = 0; y < mm2.yIndexSize - 2; y++) {
       if (mm2.getMaterialMatrix(x,y)) {
@@ -587,7 +587,7 @@ DepthMap::test(void) {
         OutlinerSvgStyle style = map2.depthDiffToColor(x,y,1);
         assert(outlinersvgstyle_getbase(style) == outlinersvgstyle_grey);
         unsigned int greylevel = outlinersvgstyle_greyget(style);
-        infof("  color check %u,%u depth %u diff grey %02x", x ,y, depth, greylevel);
+        debugf("  color check %u,%u depth %u diff grey %02x", x ,y, depth, greylevel);
         switch (x) {
         case 0: assert(greylevel != 0); break;
         case 1: assert(greylevel != 0); break;

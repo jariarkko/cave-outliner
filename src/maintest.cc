@@ -44,7 +44,7 @@ MainTest::MainTest() {
 }
 
 MainTest::~MainTest() {
-  infof("MainTest::~MainTest");
+  debugf("MainTest::~MainTest");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

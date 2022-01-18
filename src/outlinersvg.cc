@@ -68,7 +68,7 @@ SvgCreator::SvgCreator(const char* fileNameIn,
 }
 
 SvgCreator::~SvgCreator() {
-  infof("SvgCreator::~SvgCreator start");
+  debugf("SvgCreator::~SvgCreator start");
   lineTableOutput();
   postamble();
   unsigned long bytes = file.tellp();
@@ -81,7 +81,7 @@ SvgCreator::~SvgCreator() {
   lineTableInfos();
   lineTableDeinit();
   lineTable = 0;
-  infof("SvgCreator::~SvgCreator done");
+  debugf("SvgCreator::~SvgCreator done");
 }
 
 outlinerreal
@@ -355,7 +355,7 @@ SvgCreator::emitStubsLine(const struct OutlinerSvgLine& line) {
   // Debugs
   //
 
-  infof("emitStubsLine with %u points", line.nPoints);
+  debugf("emitStubsLine with %u points", line.nPoints);
   assert(line.nPoints >= 2);
 
   //
@@ -411,7 +411,7 @@ SvgCreator::emitStubsLine(const struct OutlinerSvgLine& line) {
     if ((newLine.style & outlinersvgstyle_stubs_dird)) yportion = -yportion;
     int stubx = stubLength * yportion;
     int stuby = stubLength * -xportion;
-    infof("stub diffs %u %u => portions %.2f %.2f => stub %d %d",
+    debugf("stub diffs %u %u => portions %.2f %.2f => stub %d %d",
           xdiff, ydiff, xportion, yportion, stubx, stuby);
     stub.points[0].x = stubstartx;
     stub.points[0].y = stubstarty;
@@ -506,7 +506,7 @@ SvgCreator::text(outlinerreal x,
   // Statistics updates
   strings++;
   characters += strlen(string);
-  infof("text to (%.2f,%.2f) which is (%u,%u)", x, y, xInt, yInt);
+  debugf("text to (%.2f,%.2f) which is (%u,%u)", x, y, xInt, yInt);
 }
 
 void
@@ -525,9 +525,9 @@ SvgCreator::coordinateNormalization(outlinerreal x,
              xInt, yInt,
              yNormalized, ySize, yStart, yFactor);
   if (xInt > xSizeMultiplied || yInt > ySizeMultiplied) {
-    infof("xInt %u (/%u) from x %.2f start %.2f factor %.2f multiplier %.2f",
+    debugf("xInt %u (/%u) from x %.2f start %.2f factor %.2f multiplier %.2f",
           xInt, xSizeMultiplied, x, xStart, xFactor, options.multiplier);
-    infof("yInt %u (/%u) from y %.2f start %.2f factor %.2f multiplier %.2f",
+    debugf("yInt %u (/%u) from y %.2f start %.2f factor %.2f multiplier %.2f",
           yInt, ySizeMultiplied, y, yStart, yFactor, options.multiplier);
   }
   assert(xInt <= xSizeMultiplied);
@@ -1293,7 +1293,7 @@ SvgCreator::smoothingTest(void) {
   line1.points[2].x = 2;
   line1.points[2].y = 2;
   smoothLine(line1);
-  infof("smoothing 1st result %u,%u", line1.points[1].x, line1.points[1].y);
+  debugf("smoothing 1st result %u,%u", line1.points[1].x, line1.points[1].y);
   assert(line1.points[1].x == 1);
   assert(line1.points[1].y == 1);
   
@@ -1310,7 +1310,7 @@ SvgCreator::smoothingTest(void) {
   line2.points[2].x = 2;
   line2.points[2].y = 2;
   smoothLine(line2);
-  infof("smoothing 2nd result %u,%u", line2.points[1].x, line2.points[1].y);
+  debugf("smoothing 2nd result %u,%u", line2.points[1].x, line2.points[1].y);
   assert(line2.points[1].x == 2/3);
   assert(line2.points[1].y == 4/3);
 }
