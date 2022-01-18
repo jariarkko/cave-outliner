@@ -56,8 +56,15 @@ ProcessorCrossSection::ProcessorCrossSection(const char* fileNameIn,
   width(widthIn),
   matrix(0),
   proc(procIn),
-  svg(0) {
+  svg(0),
+  statStepsLine(0),
+  statStepsZ(0),
+  statFacesGotten(0),
+  statFacesHitDimension(0),
+  statFacesHitVoxel(0) {
+  
   calculateLineEquation();
+  
 }
 
 ProcessorCrossSection::~ProcessorCrossSection() {
@@ -199,7 +206,7 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
     unsigned int holeMaxSize;
     unsigned int holes = proc.lineHoleRemoval(holeMinSize,holeMaxSize);
     if (holes > 0) {
-      infof("  removed %u cross section line holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
+      infof("  Removed %u cross section line holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
     }
   }
   
@@ -223,12 +230,22 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
                            stepy,
                            stepz);
   }
+
+  // Statistics
+  outputStats();
   
   // Main result (plan view) is done, flush the image output
   deleteSvg();
   
   // Done
   return(1);
+}
+
+void
+ProcessorCrossSection::outputStats(void) const {
+  infof("  Cross-section statistics: %lu steps, %lu faces, %lu z steps, %lu faces hit dimension and %lu voxel",
+        statStepsLine, statFacesGotten, statStepsZ,
+        statFacesHitDimension, statFacesHitVoxel);
 }
 
 void
@@ -475,6 +492,7 @@ ProcessorCrossSection::drawCrossSectionMesh(const aiScene* scene,
   lineIteratorInit(iter);
   for (; !lineIteratorDone(iter); lineIteratorNext(iter)) {
     deepdebugf("  drawCrossSectionMesh: line iterator step (%.2f,%.2f)", iter.point.x, iter.point.y);
+    statStepsLine++;
     if (!outlinerbetweenanyorder(sliceVerticalBoundingBox.start.x,
                                  (lineStepY == 0 ? iter.point.x :
                                                    iter.point.y),
@@ -491,6 +509,7 @@ ProcessorCrossSection::drawCrossSectionMesh(const aiScene* scene,
     const aiFace** faces = 0;
     deepdebugf("  cross section line iterator step %u (starting from %u)", iter.step, firstStepInBoundingBox);
     proc.indexed.getFaces(mesh,iter.point.x,iter.point.y,&nFaces,&faces);
+    statFacesGotten += nFaces;
     if (nFaces > 0) {
       deepdebugf("  drawCrossSectionMesh: got %u cross section faces from (%.2f,%.2f)",
                  nFaces, iter.point.x, iter.point.y);
@@ -505,6 +524,7 @@ ProcessorCrossSection::drawCrossSectionMesh(const aiScene* scene,
                    iter.point.y, iter.point.y+lineStepY);
         deepdebugf("  drawCrossSectionMesh: z iterator step (%.2f,%.2f,%.2f)",
                    iter.point.x, iter.point.y, z);
+        statStepsZ++;
         for (unsigned int f = 0; f < nFaces; f++) {
           drawCrossSectionFace(scene,mesh,faces[f],
                                iter.step - firstStepInBoundingBox,
@@ -550,6 +570,7 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
                x, thisBox.end.x, y, thisBox.end.y, z, thisBox.end.z,
                buf, xyStep, zStep);
     matrix->setMaterialMatrix(xyStep,zStep);
+    statFacesHitVoxel++;
   } else {
     deepdebugf("     no   match at %u,%u (%.2f,%.2f,%.2f) for face %s",
                xyStep, zStep, x, y, z, buf);
@@ -687,6 +708,7 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxFace(const aiScene* scene,
     deepdebugf("    adding a face to cross section bounding box, triangle box (%.2f,%.2f) - (%.2f,%.2f)",
                faceBoundingBox.start.x, faceBoundingBox.start.y,
                faceBoundingBox.end.x, faceBoundingBox.end.y);
+    statFacesHitDimension++;
     if (!set) {
       sliceVerticalBoundingBox = faceBoundingBox;
       debugf("setting initial cross section bounding box at (%.2f,%.2f) "

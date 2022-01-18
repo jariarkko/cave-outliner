@@ -122,6 +122,11 @@ private:
   SvgCreator* svg;
   outlinerreal dimensionBottomLabelingSpaceStartY;
   outlinerreal dimensionRightLabelingSpaceStartX;
+  uint64_t statStepsLine;
+  uint64_t statStepsZ;
+  uint64_t statFacesGotten;
+  uint64_t statFacesHitDimension;
+  uint64_t statFacesHitVoxel;
   
   //
   // Internal state management
@@ -201,8 +206,10 @@ private:
                         outlinerreal thisStepY);
   
   //
-  // Dimension lines
+  // Statistics
   //
+  
+  void outputStats(void) const;
 };
 
 #endif // PROCESSORCROSSECTION_HH
