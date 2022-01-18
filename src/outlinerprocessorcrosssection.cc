@@ -106,7 +106,7 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   
   // Debugs
   debugf("process scene cross section");
-  
+
   // Determine the bounding box of what we see in the cross section
   getSliceVerticalBoundingBox(scene,sliceVerticalBoundingBox);
   debugf("  cross section bounding box (%.2f,%.2f) to (%.2f,%.2f)",
@@ -254,6 +254,20 @@ ProcessorCrossSection::calculateLineEquation(void) {
   debugf("calculate cross section line equation for (%.2f,%.2f)-(%.2f,%.2f)",
          line.start.x, line.start.y, line.end.x, line.end.y);
 
+  // Check that the cross section is within bounds
+  if (!outlinerbetween(proc.boundingBox2D.start.x,line.start.x,proc.boundingBox2D.end.x)) {
+    fatalf("Cross section x coordinate %f is out of bounds (%f..%f)",
+           line.start.x,
+           proc.boundingBox2D.start.x,proc.boundingBox2D.end.x);
+    return;
+  }
+  if (!outlinerbetween(proc.boundingBox2D.start.y,line.start.y,proc.boundingBox2D.end.y)) {
+    fatalf("Cross section y coordinate %f is out of bounds (%f..%f)",
+           line.start.x,
+           proc.boundingBox2D.start.y,proc.boundingBox2D.end.y);
+    return;
+  }
+  
   //
   // Calculate the line as an equation
   //
@@ -607,6 +621,12 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxMesh(const aiScene* scene,
   for (; !lineIteratorDone(iter); lineIteratorNext(iter)) {
     unsigned int nFaces = 0;
     const aiFace** faces = 0;
+    deepdeepdebugf("vertical processing at %f,%f (bb %f..%f,%f..%f)",
+                   iter.point.x, iter.point.y,
+                   proc.boundingBox2D.start.x,proc.boundingBox2D.end.x,
+                   proc.boundingBox2D.start.y,proc.boundingBox2D.end.y);
+    assert(outlinerbetween(proc.boundingBox2D.start.x,iter.point.x,proc.boundingBox2D.end.x));
+    assert(outlinerbetween(proc.boundingBox2D.start.y,iter.point.y,proc.boundingBox2D.end.y));
     proc.indexed.getFaces(mesh,iter.point.x,iter.point.y,&nFaces,&faces);
     unsigned int nActualFaces = 0;
     for (unsigned int f = 0; f < nFaces; f++) {
@@ -620,6 +640,7 @@ ProcessorCrossSection::getSliceVerticalBoundingBoxMesh(const aiScene* scene,
     deepdebugf("cross section iteration step %u at %.2f,%.2f: hits %u tiled faces, %u actual faces",
                iter.step, iter.point.x, iter.point.y, nFaces, nActualFaces);
   }
+  debugf("process mesh cross section done");
 }
 
 bool

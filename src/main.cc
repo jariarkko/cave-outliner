@@ -205,7 +205,7 @@ main(int argc, char** argv) {
   const outlinerreal xStepsPerTile = xSteps / ((outlinerreal)config.tiles);
   const outlinerreal yStepsPerTile = ySteps / ((outlinerreal)config.tiles);
   bool tilesChanged = 0;
-  debugf("tiles check %f %f %f", xStepsPerTile, yStepsPerTile, minStepsPerTile);
+  infof("tiles check %f %f %f", xStepsPerTile, yStepsPerTile, minStepsPerTile);
   if (xStepsPerTile < minStepsPerTile) {
     config.tiles = ((unsigned int)(xSteps / minStepsPerTile));
     if (config.tiles < 1) config.tiles = 1;

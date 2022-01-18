@@ -1115,12 +1115,15 @@ bool
 Processor::processSceneCrossSections(const aiScene* scene,
                                      const unsigned int nCrossSections,
                                      const struct ProcessorCrossSectionInfo* crossSections) {
+  if (nCrossSections == 0) return(1);
+  infof("processing %u cross sections", nCrossSections);
   for (unsigned int c = 0; c < nCrossSections; c++) {
     const struct ProcessorCrossSectionInfo* crossSection = &crossSections[c];
     if (!processSceneCrossSection(scene,c,crossSection)) {
       return(0);
     }
   }
+  infof("done processing cross sections");
   return(1);
 }
 

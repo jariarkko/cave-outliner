@@ -450,6 +450,7 @@ IndexedMesh::getFaces(const aiMesh* mesh,
                       const aiFace*** p_faces) {
   unsigned int tileX;
   unsigned int tileY;
+  deepdeepdebugf("getFaces %f,%f", x, y);
   coordsToTile(x,y,tileX,tileY);
   struct IndexedMeshOneMesh* shadow = 0;
   getShadow(mesh,&shadow);
