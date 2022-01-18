@@ -92,7 +92,7 @@ main(int argc, char** argv) {
   debuginit(config.info,config.debug,config.deepdebug,config.deepdeepdebug);
   
   // Import the model
-  infof("importing the model...");
+  infof("Importing the model...");
   Assimp::Importer importer;
   const aiScene* scene = processImport(importer,config.inputFile);
   if (scene == 0) return(1);
@@ -190,7 +190,7 @@ main(int argc, char** argv) {
       errf("Invalid type");
       return(1);
     }
-    infof("configured a cross section from (%.2f,%.2f) to (%.2f,%.2f)",
+    infof("Configured a cross section from (%.2f,%.2f) to (%.2f,%.2f)",
           thisOne->line.start.x, thisOne->line.start.y,
           thisOne->line.end.x, thisOne->line.end.y);
   }
@@ -205,7 +205,7 @@ main(int argc, char** argv) {
   const outlinerreal xStepsPerTile = xSteps / ((outlinerreal)config.tiles);
   const outlinerreal yStepsPerTile = ySteps / ((outlinerreal)config.tiles);
   bool tilesChanged = 0;
-  infof("tiles check %f %f %f", xStepsPerTile, yStepsPerTile, minStepsPerTile);
+  infof("Tiles check %f %f %f", xStepsPerTile, yStepsPerTile, minStepsPerTile);
   if (xStepsPerTile < minStepsPerTile) {
     config.tiles = ((unsigned int)(xSteps / minStepsPerTile));
     if (config.tiles < 1) config.tiles = 1;
@@ -253,7 +253,7 @@ main(int argc, char** argv) {
   }
 
   // Done
-  infof("done");
+  infof("Done");
   return(0);
 }
 

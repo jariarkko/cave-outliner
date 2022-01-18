@@ -66,10 +66,12 @@ DepthMap::DepthMap(const unsigned int xIndexSizeIn,
 }
 
 DepthMap::~DepthMap() {
-  infof("depth map %u/%u entries, range %u..%u (%u)",
-        nEntries, fullSize,
-        rangeMin, rangeMax,
-	range);
+  if (nEntries > 0) {
+    infof("Depth map %u/%u entries, range %u..%u (%u)",
+          nEntries, fullSize,
+          rangeMin, rangeMax,
+          range);
+  }
   debugf("freeing data");
   if (data != 0) {
     free((void*)data);

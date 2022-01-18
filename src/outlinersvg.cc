@@ -73,11 +73,11 @@ SvgCreator::~SvgCreator() {
   postamble();
   unsigned long bytes = file.tellp();
   file.close();
-  infof("  image statistics");
-  infof("    file %s size %.1f KB", fileName, (bytes / 1000.0));
-  infof("    image has %u pixels", pixels);
-  infof("    image has %u lines (from originally %u line components)", finalLines, originalLines);
-  infof("    image has %u strings (%u characters)", strings, characters);
+  infof("  Image statistics");
+  infof("    File %s size %.1f KB", fileName, (bytes / 1000.0));
+  infof("    Image has %u pixels", pixels);
+  infof("    Image has %u lines (from originally %u line components)", finalLines, originalLines);
+  infof("    Image has %u strings (%u characters)", strings, characters);
   lineTableInfos();
   lineTableDeinit();
   lineTable = 0;
@@ -104,7 +104,7 @@ SvgCreator::line(outlinerreal fromX,
   deepdeepdebugf("line %.2f,%.2f to %.2f,%.2f", fromX, fromY, toX, toY);
   assert((style & outlinersvgstyle_illegal) == 0);
   if (originalLines == 0 && pixels == 0) {
-    infof("  image size %u x %u", xSize, ySize);
+    infof("  Image size %u x %u", xSize, ySize);
   }
   originalLines++;
   
@@ -1231,15 +1231,15 @@ SvgCreator::lineTableInfos(void) {
       lineTableMaxListLengthIndex = i;
     }
   }
-  infof("    longest line has %u points (on average %.1f points)",
+  infof("    Longest line has %u points (on average %.1f points)",
         lineLongest,
         (lineSumPoints / 2.0)  / (lineLines / 2.0));
-  infof("    line table has %u entries", lineTableEntries);
-  infof("    line table entries longest list has %u entries (%.2f%% of all, at index %u)",
+  infof("    Line table has %u entries", lineTableEntries);
+  infof("    Line table entries longest list has %u entries (%.2f%% of all, at index %u)",
         lineTableMaxListLength,
         (lineTableMaxListLength * 100.0) / (lineTableEntries * 1.0),
         lineTableMaxListLengthIndex);
-  infof("    long line joins: %u", joins);
+  infof("    Long line joins: %u", joins);
 }
 
 void

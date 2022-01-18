@@ -174,10 +174,12 @@ Processor::processScene(const aiScene* scene) {
   }
 
   // Draw the basic plan view
+  infof("Drawing plan view...");
   if (!processSceneAlgorithmDraw(scene)) {
     return(0);
   }
-
+  infof("Drawing plan view complete");
+  
   // Add tunnel spines (midpoints) if requested
   if (options.tunnelSpine) {
     formAnalyzer.drawSpines(*svg);
@@ -201,10 +203,12 @@ Processor::processScene(const aiScene* scene) {
   // If there was a request for depth maps for floor or roof to be
   // written to image files, do that as well.
   if (options.floorDepthMap != 0) {
+    infof("Producing a floor depth map...");
     const DepthMap& map = formAnalyzer.getFloorDepthMap();
     map.toImage(options.floorDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,options.formCondense);
   }
   if (options.roofDepthMap != 0) {
+    infof("Producing a roof depth map...");
     const DepthMap& map = formAnalyzer.getRoofDepthMap();
     map.toImage(options.roofDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,options.formCondense);
   }
@@ -223,7 +227,7 @@ Processor::holeFillingPass(void) {
     unsigned int holeMaxSize;
     unsigned int holes = objectHoleRemoval(1,holeMinSize,holeMaxSize);
       if (holes > 0) {
-        infof("  removed %u holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
+        infof("  Removed %u holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
       }
   }
 }
@@ -235,7 +239,7 @@ Processor::lineHoleFillingPass(void) {
     unsigned int holeMaxSize;
     unsigned int holes = lineHoleRemoval(holeMinSize,holeMaxSize);
     if (holes > 0) {
-      infof("  removed %u line holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
+      infof("  Removed %u line holes of size %u..%u pixels", holes, holeMinSize, holeMaxSize);
     }
   }
 }
@@ -248,7 +252,7 @@ Processor::dustRemovingPass(void) {
     unsigned int dustMaxSize;
     unsigned int dustParticles = objectHoleRemoval(0,dustMinSize,dustMaxSize);
     if (dustParticles > 0) {
-      infof("  removed %u dust material particles of size %u..%u pixels", dustParticles, dustMinSize, dustMaxSize);
+      infof("  Removed %u dust material particles of size %u..%u pixels", dustParticles, dustMinSize, dustMaxSize);
     }
   }
 }
@@ -290,11 +294,11 @@ Processor::processSceneAlgorithmDraw(const aiScene* scene) {
   outlinerdepth rangeMax;
   if (algorithm == alg_depthmap &&
       depthMap->getRange(rangeMin,rangeMax)) {
-      infof("requested depth map (regular) to image: %u..%u",
+      infof("Requested depth map (regular) to image: %u..%u",
 	    rangeMin, rangeMax);
   } else if (algorithm == alg_depthdiffmap &&
 	     depthMap->getRange(rangeMin,rangeMax)) {
-    infof("requested depth map (diff) to image: %u..%u",
+    infof("Requested depth map (diff) to image: %u..%u",
 	  rangeMin, rangeMax);
   }
   
@@ -350,7 +354,7 @@ Processor::sceneToMaterialMatrix(const aiScene* scene) {
   // results.
   unsigned int xIndex = 0;
   
-  infof("computing material matrix...");
+  infof("Computing material matrix...");
   for (outlinerreal x = DirectionOperations::outputx(direction,boundingBox.start);
        outlinerleepsilon(x,DirectionOperations::outputx(direction,boundingBox.end));
        x += stepx) {
@@ -456,6 +460,7 @@ Processor::addSpaceForDimensions(const OutlinerBox2D& objectBoundingBox,
                                  const outlinerreal thisStepX,
                                  const outlinerreal thisStepY) {
 
+  infof("    Adjusting image for additional information...");
   // Add space underneath to fit in the length line and text
   bottomDimensionLabelingStartY =  pictureBoundingBox.start.y;
   rightDimensionLabelingStartX = pictureBoundingBox.end.x;
@@ -468,7 +473,7 @@ Processor::addSpaceForDimensions(const OutlinerBox2D& objectBoundingBox,
   outlinerreal horizontalSpaceAvailable = (objectBoundingBox.end.x - objectBoundingBox.start.x)/thisStepX;
   if (horizontalSpaceAvailable < dimensionHorizontalSpaceNeeded) {
     outlinerreal incr = (dimensionHorizontalSpaceNeeded - horizontalSpaceAvailable) * thisStepX + 2*thisStepX;
-    infof("increasing image horizontal size by %.2f to accommodate dimension text",
+    infof("  Increasing image horizontal size by %.2f to accommodate dimension text",
           incr);
     pictureBoundingBox.start.x = outlinermin(pictureBoundingBox.start.x,objectBoundingBox.start.x - incr/2);
     pictureBoundingBox.end.x = outlinermax(pictureBoundingBox.end.x,objectBoundingBox.end.x + incr/2);
@@ -484,7 +489,7 @@ Processor::addSpaceForDimensions(const OutlinerBox2D& objectBoundingBox,
   outlinerreal verticalSpaceAvailable = (objectBoundingBox.end.y - objectBoundingBox.start.y)/thisStepY;
   if (verticalSpaceAvailable < dimensionVerticalSpaceNeeded) {
     outlinerreal incr = (dimensionVerticalSpaceNeeded - verticalSpaceAvailable) * thisStepY + 2*thisStepY;
-    infof("increasing image vertical size by %.2f to accommodate dimension text",
+    infof("  Increasing image vertical size by %.2f to accommodate dimension text",
           incr);
     pictureBoundingBox.start.y = outlinermin(pictureBoundingBox.start.y,objectBoundingBox.start.y - incr/2);
     pictureBoundingBox.end.y = outlinermax(pictureBoundingBox.end.y,objectBoundingBox.end.y + incr/2);
@@ -564,7 +569,7 @@ Processor::sceneToTrianglesSvg(const aiScene* scene,
   // Go through each part of the picture, and draw a triangle to the
   // output image for each of them.
   
-  infof("drawing triangles...");
+  infof("Drawing triangles...");
   OutlinerBox2D trianglesBoundingBox(DirectionOperations::outputx(direction,boundingBox.start),
                                      DirectionOperations::outputy(direction,boundingBox.start),
                                      DirectionOperations::outputx(direction,boundingBox.end),
@@ -635,7 +640,7 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
                        outlinerreal yStart,
                        outlinerreal xStep,
                        outlinerreal yStep) {
-  infof("constructing output core of %ux%u pixels...",
+  infof("  Constructing output core of %ux%u pixels...",
         theMatrix->xIndexSize, theMatrix->yIndexSize);
   deepdebugf("algorithm %u", theAlgorithm);
   debugf("  covering model from (%.2f,%.2,f) to (%.2f,%.2f)",
@@ -1045,12 +1050,12 @@ Processor::createSvg(const char* svgFileName,
                           xSize,ySize,
                           xSizeInt,ySizeInt,
                           xFactor,yFactor);
-  infof("SVG %s size x %.2f..%.2f step %.2f xsize %.2f xsizeint %u",
+  infof("    SVG %s size x %.2f..%.2f",
         svgFileName,
-        xOutputStart, xOutputEnd, svgStepX, xSize, xSizeInt);
-  infof("  size y %.2f..%.2f step %.2f ysize %.2f ysizeint %u",
-        yOutputStart, yOutputEnd, svgStepY, ySize, ySizeInt);
-  infof("SVG size will be %u x %u (%u x %u multiplied)",
+        xOutputStart, xOutputEnd);
+  debugf("  size y %.2f..%.2f step %.2f ysize %.2f ysizeint %u",
+         yOutputStart, yOutputEnd, svgStepY, ySize, ySizeInt);
+  infof("    SVG size will be %u x %u (%u x %u multiplied)",
         xSizeInt, ySizeInt,
         xSizeInt*svgOptions.multiplier, ySizeInt*svgOptions.multiplier);
   
@@ -1116,14 +1121,14 @@ Processor::processSceneCrossSections(const aiScene* scene,
                                      const unsigned int nCrossSections,
                                      const struct ProcessorCrossSectionInfo* crossSections) {
   if (nCrossSections == 0) return(1);
-  infof("processing %u cross sections", nCrossSections);
+  infof("Processing %u cross sections", nCrossSections);
   for (unsigned int c = 0; c < nCrossSections; c++) {
     const struct ProcessorCrossSectionInfo* crossSection = &crossSections[c];
     if (!processSceneCrossSection(scene,c,crossSection)) {
       return(0);
     }
   }
-  infof("done processing cross sections");
+  infof("  Done processing cross sections");
   return(1);
 }
 
@@ -1131,7 +1136,7 @@ bool
 Processor::processSceneCrossSection(const aiScene* scene,
                                     const unsigned int c,
                                     const struct ProcessorCrossSectionInfo* crossSection) {
-  infof("cross section %u at (%.2f,%.2f)-(%.2f,%.2f) to file %s",
+  infof("  Cross section %u at (%.2f,%.2f)-(%.2f,%.2f) to file %s",
         c,
         crossSection->line.start.x,
         crossSection->line.start.y,
@@ -1217,7 +1222,7 @@ Processor::objectHoleRemoval(const bool lookForHoles,
   holeMinSize = 9999;
   holeMaxSize = 0;
   if (threshold > 0) {
-    infof("filtering %s...", lookForHoles ? "holes" : "dust");
+    infof("Filtering %s...", lookForHoles ? "holes" : "dust");
     for (unsigned int xIndex = 1; xIndex < matrix2.xIndexSize; xIndex++) {
       for (unsigned int yIndex = 0; yIndex < matrix2.yIndexSize; yIndex++) {
         if (lookForHoles == !matrix2.getMaterialMatrix(xIndex-1,yIndex)) continue;

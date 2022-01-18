@@ -200,9 +200,9 @@ IndexedMesh::countFaces(struct IndexedMeshOneMesh& shadow,
 
 void
 IndexedMesh::addScene(const aiScene* scene) {
-  infof("computing tiling...");
+  infof("Computing tiling...");
   addNode(scene,scene->mRootNode);
-  infof("  tiling statistics");
+  infof("  Tiling statistics");
   for (unsigned int i = 0; i < nMeshes; i++) {
     struct IndexedMeshOneMesh& shadow = meshes[i];
     unsigned int nth = i+1;
@@ -218,29 +218,29 @@ IndexedMesh::addScene(const aiScene* scene) {
     unsigned int nf;
     unsigned int mf;
     countFaces(shadow,nf,mf);
-    infof("      unique faces %u (total %u, %u more, original face count %u)",
+    infof("      Unique faces %u (total %u, %u more, original face count %u)",
           nf, mf, mf - nf,
           shadow.mesh->mNumFaces);
-    infof("      ignored %u (%.2f%%) faces as being outside 3D bounding box",
+    infof("      Ignored %u (%.2f%%) faces as being outside 3D bounding box",
           shadow.nOutsideModelBoundingBox,
           (100.0 * (double)shadow.nOutsideModelBoundingBox) / (double)shadow.mesh->mNumFaces);
     unsigned int total = subdivisions * subdivisions;
     infof("      %u x %u = %u tiles", subdivisions, subdivisions, total);
-    infof("      tile sizes %.2f x and %.2f y", tileSizeX, tileSizeY);
+    infof("      Tile sizes %.2f x and %.2f y", tileSizeX, tileSizeY);
     unsigned int all = countTilesWithFaces(shadow);
-    infof("      tiles with faces %u (%.2f%%)", all, (100.0*(float)all)/(float)total);
+    infof("      Tiles with faces %u (%.2f%%)", all, (100.0*(float)all)/(float)total);
     unsigned int nmin;
     unsigned int min = minFacesPerTile(shadow,nmin);
-    infof("      min number of faces per tile %u (%u instances, %.2f%%)", min, nmin, (100.0*(float)nmin)/(float)total);
+    infof("      Min number of faces per tile %u (%u instances, %.2f%%)", min, nmin, (100.0*(float)nmin)/(float)total);
     unsigned int nmax;
     unsigned int max = maxFacesPerTile(shadow,nmax);
-    infof("      max number of faces per tile %u (that's %.2f%% of total faces, there were %u instances, %.2f%%)",
+    infof("      Max number of faces per tile %u (that's %.2f%% of total faces, there were %u instances, %.2f%%)",
           max,
           (100.0*(float)max)/(float)nf,
           nmax,
           (100.0*(float)nmax)/(float)total);
     float avg = avgFacesPerTile(shadow);
-    infof("      avg number of faces per tile %.1f", avg);
+    infof("      Avg number of faces per tile %.1f", avg);
   }
 }
 

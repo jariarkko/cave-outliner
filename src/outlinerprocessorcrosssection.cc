@@ -306,7 +306,7 @@ ProcessorCrossSection::calculateLineEquation(void) {
   lineStepY = yDifference / lineSteps;
   boxStepX = lineStepX + width * (stepx * yDifferenceFraction);
   boxStepY = lineStepY + width * (stepy * xDifferenceFraction);
-  infof("    cross section line equation length %.2f steps %.2f stepX %.2f stepY %.2f boxX %.2f boxY %.2f",
+  infof("    Cross section line equation length %.2f steps %.2f stepX %.2f stepY %.2f boxX %.2f boxY %.2f",
         lineLength,
         lineSteps,
         lineStepX,

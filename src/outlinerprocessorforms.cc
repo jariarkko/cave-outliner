@@ -92,10 +92,10 @@ ProcessorForms::ProcessorForms(const OutlinerBox3D& boundingBoxIn,
   outlineAnalyzer(matrix2,matrix3,*this),
   proc(procIn),
   nClearedMaterial(0) {
-  infof("matrix 2 size %ux%u matrix 3 size %ux%u condense %u",
-        matrix2.xIndexSize, matrix2.yIndexSize,
-        matrix3.xIndexSize, matrix3.yIndexSize,
-        formCondense);
+  debugf("Matrix 2 size %ux%u matrix 3 size %ux%u condense %u",
+         matrix2.xIndexSize, matrix2.yIndexSize,
+         matrix3.xIndexSize, matrix3.yIndexSize,
+         formCondense);
   assert(matrix2.xIndexSize - 2 <= (matrix3.xIndexSize - 2) * formCondense);
   assert(matrix2.yIndexSize - 2 <= (matrix3.yIndexSize - 2) * formCondense);
 }

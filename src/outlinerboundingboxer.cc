@@ -37,7 +37,7 @@ BoundingBoxer::BoundingBoxer(const aiScene* scene,
                              outlinerreal xIncrease,
                              outlinerreal yIncrease,
                              outlinerreal zIncrease) {
-  infof("calculating bounding box...");
+  infof("Calculating bounding box...");
   boundingBoxSet = 0;
   boundingScene(scene);
   if (!boundingBoxSet) {
@@ -50,7 +50,7 @@ BoundingBoxer::BoundingBoxer(const aiScene* scene,
   increasedBoundingBox.end.y += yIncrease;
   increasedBoundingBox.start.z -= zIncrease;
   increasedBoundingBox.end.z += zIncrease;
-  infof("  discovered bounding box (%.2f,%.2f,%.2f) to (%.2f,%.2f,%.2f)",
+  infof("  Discovered bounding box (%.2f,%.2f,%.2f) to (%.2f,%.2f,%.2f)",
         boundingBox.start.x, boundingBox.start.y, boundingBox.start.z,
         boundingBox.end.x, boundingBox.end.y, boundingBox.end.z);
 }
