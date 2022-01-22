@@ -147,7 +147,10 @@ FormMatrix2D::getFormChar(const outlinerform form) const {
   case outlinerform_mainform_dripline: return('E');
   case outlinerform_mainform_degenerate: return('D');
   case outlinerform_mainform_complex: return('C');
-  default: return('U');
+  case outlinerform_mainform_cleared: return('Z');
+  default:
+    assert(0);
+    return('U');
   }
 }
 

@@ -171,6 +171,8 @@ ProcessorForms::formToColor(const unsigned int xIndex,
     return(outlinersvgstyle_yellow);
   case outlinerform_mainform_complex:
     return(outlinersvgstyle_green);
+  case outlinerform_mainform_cleared:
+    return(outlinersvgstyle_cyan);
   default:
     errf("Invalid form %x", form);
     return(outlinersvgstyle_none);
@@ -184,7 +186,7 @@ ProcessorForms::formToColor(const unsigned int xIndex,
 bool
 ProcessorForms::performFormAnalysisSlicing(const aiScene* scene) {
   for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
-    performFormAnalysisOneSlice(scene,xIndex);
+    performFormAnalysisOneSlice(xIndex+1,matrix3.xIndexSize - 2,scene,xIndex);
   }
   unsigned int memory;
   unsigned int theoretical;
@@ -198,8 +200,10 @@ ProcessorForms::performFormAnalysisSlicing(const aiScene* scene) {
 }
 
 bool
-ProcessorForms::performFormAnalysisOneSlice(const aiScene* scene,
-                                            unsigned int xIndex) {
+ProcessorForms::performFormAnalysisOneSlice(const unsigned int nth,
+                                            const unsigned int howMany,
+                                            const aiScene* scene,
+                                            const unsigned int xIndex) {
   unsigned int yIndexFrom;
   unsigned int yIndexTo;
   outlinerreal x = planviewBoundingBox.start.x + xIndex * stepxCondensed;
@@ -218,7 +222,9 @@ ProcessorForms::performFormAnalysisOneSlice(const aiScene* scene,
       infof("  skipping a slice because it is y-degenerate at x %u", xIndex);
       return(1);
     }
-    ProcessorCrossSection csproc(0, // no image
+    ProcessorCrossSection csproc(xIndex,
+                                 howMany,
+                                 0, // no image
                                  0, // no labels
                                  DirectionOperations::screenx(direction),
                                  sliceLine,
@@ -534,7 +540,8 @@ ProcessorForms::performFormAnalysisAnalyzeOnePixelPhase5(const unsigned int matr
 
 bool
 ProcessorForms::isEmpty(outlinerform form) {
-  return(form  == outlinerform_mainform_empty);
+  return(form == outlinerform_mainform_empty ||
+         form == outlinerform_mainform_cleared);
 }
 
 bool
@@ -546,6 +553,7 @@ bool
 ProcessorForms::isEmptyOrDegenerate(outlinerform form) {
   switch (form) {
   case outlinerform_mainform_empty:
+  case outlinerform_mainform_cleared:
   case outlinerform_mainform_degenerate:
     return(1);
   default:
@@ -688,7 +696,7 @@ ProcessorForms::clearMaterial(const unsigned int n,
     for (unsigned int xIndexExtra = xIndex; xIndexExtra < xIndex + formCondense; xIndexExtra++) {
       for (unsigned int yIndexExtra = yIndex; yIndexExtra < yIndex + formCondense; yIndexExtra++) {
         debugf("        clearing %u,%", xIndexExtra,yIndexExtra);
-        forms.setForm(xIndexExtra,yIndexExtra,outlinerform_mainform_empty);
+        forms.setForm(xIndexExtra,yIndexExtra,outlinerform_mainform_cleared);
         matrix2.unsetMaterialMatrix(xIndexExtra,yIndexExtra);
       }
     }

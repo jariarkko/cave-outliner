@@ -37,7 +37,9 @@
 // Object creation and destruction ////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-ProcessorCrossSection::ProcessorCrossSection(const char* fileNameIn,
+ProcessorCrossSection::ProcessorCrossSection(const unsigned int nthIn,
+                                             const unsigned int howManyIn,
+                                             const char* fileNameIn,
                                              const char* labelIn, // 0 if no label desired
                                              enum outlinerdirection sliceDirectionIn,
                                              const OutlinerLine2D& lineIn,
@@ -46,6 +48,8 @@ ProcessorCrossSection::ProcessorCrossSection(const char* fileNameIn,
                                              outlinerreal stepzIn,
                                              outlinerreal widthIn,
                                              Processor& procIn) :
+  nth(nthIn),
+  howMany(howManyIn),
   fileName(fileNameIn),
   label(labelIn),
   sliceDirection(sliceDirectionIn),
@@ -243,7 +247,8 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
 
 void
 ProcessorCrossSection::outputStats(void) const {
-  infof("    Cross-section statistics: %lu steps, %lu faces, %lu z steps, %lu faces hit dimension and %lu voxel (%.2f and %.2f per step)",
+  infof("    Cross-section %u/%u statistics: %lu steps, %lu faces, %lu z steps, %lu faces hit dimension and %lu voxel (%.2f and %.2f f/s)",
+        nth, howMany,
         statStepsLine, statFacesGotten, statStepsZ,
         statFacesHitDimension, statFacesHitVoxel,
         ((outlinerreal)statFacesHitDimension) / (outlinerreal)statStepsLine,
@@ -325,7 +330,7 @@ ProcessorCrossSection::calculateLineEquation(void) {
   lineStepY = yDifference / lineSteps;
   boxStepX = lineStepX + width * (stepx * yDifferenceFraction);
   boxStepY = lineStepY + width * (stepy * xDifferenceFraction);
-  infof("    Cross section line equation length %.2f steps %.2f stepX %.2f stepY %.2f boxX %.2f boxY %.2f",
+  debugf("    Cross section line equation length %.2f steps %.2f stepX %.2f stepY %.2f boxX %.2f boxY %.2f",
         lineLength,
         lineSteps,
         lineStepX,

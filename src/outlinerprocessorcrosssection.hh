@@ -57,7 +57,9 @@ public:
 
   /// Create an object to prepare for the drawing of a cross section
   /// view of a cave tunnel.
-  ProcessorCrossSection(const char* fileNameIn, // 0 if no image desired
+  ProcessorCrossSection(const unsigned int nthIn,
+                        const unsigned int howManyIn,
+                        const char* fileNameIn, // 0 if no image desired
                         const char* labelIn, // 0 if no label desired
                         enum outlinerdirection sliceDirectionIn,
                         const OutlinerLine2D& lineIn,
@@ -98,6 +100,8 @@ public:
   
 private:
 
+  const unsigned int nth;
+  const unsigned int howMany;
   const unsigned int freespacearound = 2;
   const char* fileName;
   const char* label; // 0 if no label desired

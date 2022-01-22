@@ -263,7 +263,9 @@ private:
   bool processSceneCrossSections(const aiScene* scene,
                                  const unsigned int nCrossSections,
                                  const struct ProcessorCrossSectionInfo* crossSections);
-  bool processSceneCrossSection(const aiScene* scene,
+  bool processSceneCrossSection(const unsigned int nth,
+                                const unsigned int howMany,
+                                const aiScene* scene,
                                 const unsigned int c,
                                 const struct ProcessorCrossSectionInfo* crossSection);
   void addCrossSectionLine(const char* label,

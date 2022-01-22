@@ -37,6 +37,7 @@
                                                // block of material (exit, border, etc)
 #define outlinerform_mainform_complex        5 // More than two layers of material
                                                // and air (complex cave, multi-level tunnels, ...)
+#define outlinerform_mainform_cleared        6 // Was something else before, but got cleared
 #define outlinerform_max                  0x07
 #define outlinerform_istunnel(form)       (((form) == outlinerform_mainform_tunnel) || \
                                            ((form) == outlinerform_mainform_tunnel_stalac) || \

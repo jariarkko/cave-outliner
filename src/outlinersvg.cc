@@ -812,6 +812,8 @@ SvgCreator::colorBasedOnStyle(OutlinerSvgStyle style) const {
     color = "green";
   } else if ((style & outlinersvgstyle_blue) != 0) {
     color = "blue";
+  } else if ((style & outlinersvgstyle_cyan) != 0) {
+    color = "cyan";
   } else if ((style & outlinersvgstyle_yellow) != 0) {
     color = "yellow";
   }

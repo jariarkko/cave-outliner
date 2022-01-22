@@ -1124,7 +1124,7 @@ Processor::processSceneCrossSections(const aiScene* scene,
   infof("Processing %u cross sections", nCrossSections);
   for (unsigned int c = 0; c < nCrossSections; c++) {
     const struct ProcessorCrossSectionInfo* crossSection = &crossSections[c];
-    if (!processSceneCrossSection(scene,c,crossSection)) {
+    if (!processSceneCrossSection(c+1,nCrossSections,scene,c,crossSection)) {
       return(0);
     }
   }
@@ -1133,7 +1133,9 @@ Processor::processSceneCrossSections(const aiScene* scene,
 }
 
 bool
-Processor::processSceneCrossSection(const aiScene* scene,
+Processor::processSceneCrossSection(const unsigned int nth,
+                                    const unsigned int howMany,
+                                    const aiScene* scene,
                                     const unsigned int c,
                                     const struct ProcessorCrossSectionInfo* crossSection) {
   infof("  Cross section %u at (%.2f,%.2f)-(%.2f,%.2f) to file %s",
@@ -1145,7 +1147,9 @@ Processor::processSceneCrossSection(const aiScene* scene,
         crossSection->filename);
   assert(crossSection->filename != 0);
   assert(crossSection->width >= 0.0);
-  ProcessorCrossSection csproc(crossSection->filename,
+  ProcessorCrossSection csproc(nth,
+                               howMany,
+                               crossSection->filename,
                                crossSection->label,
                                DirectionOperations::screenx(direction),
                                crossSection->line,

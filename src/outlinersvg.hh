@@ -52,6 +52,7 @@
 #define outlinersvgstyle_blue       0x08000
 #define outlinersvgstyle_green      0x10000
 #define outlinersvgstyle_yellow     0x20000
+#define outlinersvgstyle_cyan       0x40000
 #define outlinersvgstyle_legal      (outlinersvgstyle_dashed +       \
                                      outlinersvgstyle_stubs +        \
                                      outlinersvgstyle_stubs_dirl +   \
@@ -61,7 +62,8 @@
                                      outlinersvgstyle_red +          \
                                      outlinersvgstyle_blue +         \
                                      outlinersvgstyle_green +        \
-                                     outlinersvgstyle_yellow)
+                                     outlinersvgstyle_yellow +       \
+                                     outlinersvgstyle_cyan)
 #define outlinersvgstyle_basemask   0x000fff00
 #define outlinersvgstyle_getbase(s) ((s)&outlinersvgstyle_basemask)
 #define outlinersvgstyle_illegal    (~(outlinersvgstyle_legal))

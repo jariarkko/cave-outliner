@@ -140,8 +140,10 @@ private:
   //
   
   bool performFormAnalysisSlicing(const aiScene* scene);
-  bool performFormAnalysisOneSlice(const aiScene* scene,
-                                   unsigned int xIndex);
+  bool performFormAnalysisOneSlice(const unsigned int nth,
+                                   const unsigned int howMany,
+                                   const aiScene* scene,
+                                   const unsigned int xIndex);
   bool performFormAnalysisAnalyzeOnePixelPhase1(const unsigned int matrix3xIndex,
                                                 const unsigned int matrix3yIndex,
                                                 const unsigned int matrix2xIndexStart,
