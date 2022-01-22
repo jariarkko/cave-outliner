@@ -653,7 +653,13 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
   unsigned int borderTableY[maxNeighbors];
   for (unsigned int xIndex = 0; xIndex < theMatrix->xIndexSize; xIndex++) {
     for (unsigned int yIndex = 0; yIndex < theMatrix->yIndexSize; yIndex++) {
-      if (theMatrix->getMaterialMatrix(xIndex,yIndex)) {
+      if (theAlgorithm == alg_pixelform) {
+        OutlinerSvgStyle style = formAnalyzer.formToColor(xIndex,yIndex);
+        outlinerreal x = xStart + xIndex * xStep;
+        outlinerreal y = yStart + yIndex * yStep;
+        debugf("pixelform alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
+        theSvg->pixel(x,y,style);
+      } else if (theMatrix->getMaterialMatrix(xIndex,yIndex)) {
         outlinerreal x = xStart + xIndex * xStep;
         outlinerreal y = yStart + yIndex * yStep;
         debugf("algorithm %u", theAlgorithm);
@@ -661,13 +667,6 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
         case alg_pixel:
           debugf("pixel alg %u,%u from %.2f,%.2f", xIndex, yIndex, x, y);
           theSvg->pixel(x,y);
-          break;
-        case alg_pixelform:
-          {
-            OutlinerSvgStyle style = formAnalyzer.formToColor(xIndex,yIndex);
-            debugf("pixelform alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
-            theSvg->pixel(x,y,style);
-          }
           break;
         case alg_depthmap:
           {
