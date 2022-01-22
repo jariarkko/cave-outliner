@@ -132,7 +132,7 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
   }
   
   // Add space for the line and text underneath
-  if (proc.options.dimensions) {
+  if (fileName != 0 && proc.options.dimensions) {
     proc.addSpaceForDimensions(sliceVerticalBoundingBox,
                                sliceVerticalBoundingBoxExtended,
                                dimensionBottomLabelingSpaceStartY,
