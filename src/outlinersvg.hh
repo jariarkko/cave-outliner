@@ -178,15 +178,15 @@ class SvgCreator {
   const char* colorBasedOnStyle(OutlinerSvgStyle style) const;
   void preamble();
   void postamble();
-  void coordinateNormalization(outlinerreal x,
-                               outlinerreal y,
+  void coordinateNormalization(const outlinerreal x,
+                               const outlinerreal y,
                                unsigned int& xInt,
                                unsigned int& yInt);
-  void addLine(unsigned int x1,
-               unsigned int y1,
-               unsigned int x2,
-               unsigned int y2,
-               OutlinerSvgStyle style);
+  void addLine(const unsigned int x1In,
+               const unsigned int y1In,
+               const unsigned int x2In,
+               const unsigned int y2In,
+               const OutlinerSvgStyle style);
   void emitLine(const struct OutlinerSvgLine& line);
   void emitLineAux(const struct OutlinerSvgLine& line);
   void emitStubsLine(const struct OutlinerSvgLine& line);

@@ -27,6 +27,17 @@
 #include "outlinersvg.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
+// Macros /////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+#define svgcreator_badcoordvalue 4294967295
+#define svgcreator_checkline(l)                        \
+    assert(l.points[0].x != svgcreator_badcoordvalue); \
+    assert(l.points[0].y != svgcreator_badcoordvalue); \
+    assert(l.points[1].x != svgcreator_badcoordvalue); \
+    assert(l.points[1].y != svgcreator_badcoordvalue)
+  
+///////////////////////////////////////////////////////////////////////////////////////////////
 // Class methods //////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -118,16 +129,28 @@ SvgCreator::line(outlinerreal fromX,
 
   deepdebugf("SvgCreator::line (%u,%u) to (%u,%u)",
              fromXInt,fromYInt,toXInt,toYInt);
+  assert(fromXInt != svgcreator_badcoordvalue);
+  assert(fromYInt != svgcreator_badcoordvalue);
+  assert(toXInt != svgcreator_badcoordvalue);
+  assert(toYInt != svgcreator_badcoordvalue);
   addLine(fromXInt,fromYInt,toXInt,toYInt,style);
 }
 
 void
-SvgCreator::addLine(unsigned int x1,
-                    unsigned int y1,
-                    unsigned int x2,
-                    unsigned int y2,
-                    OutlinerSvgStyle style) {
+SvgCreator::addLine(const unsigned int x1In,
+                    const unsigned int y1In,
+                    const unsigned int x2In,
+                    const unsigned int y2In,
+                    const OutlinerSvgStyle style) {
   deepdebugf("addLine");
+  unsigned int x1 = x1In;
+  unsigned int y1 = y1In;
+  unsigned int x2 = x2In;
+  unsigned int y2 = y2In;
+  assert(x1 != svgcreator_badcoordvalue);
+  assert(y1 != svgcreator_badcoordvalue);
+  assert(x2 != svgcreator_badcoordvalue);
+  assert(y2 != svgcreator_badcoordvalue);
   assert((style & outlinersvgstyle_illegal) == 0);
   if (options.mergedLines) {
     unsigned int matchIndex;
@@ -214,6 +237,7 @@ SvgCreator::addLine(unsigned int x1,
     line.points[1].x = x2;
     line.points[1].y = y2;
     line.style = style;
+    svgcreator_checkline(line);
     emitLine(line);
   }
 }
@@ -235,6 +259,7 @@ SvgCreator::emitLine(const struct OutlinerSvgLine& line) {
   if (options.smooth) {
     struct OutlinerSvgLine smoothedLine = line;
     smoothLine(smoothedLine);
+    svgcreator_checkline(smoothedLine);
     emitLineAux(smoothedLine);
     return;
   }
@@ -248,6 +273,7 @@ SvgCreator::emitLineAux(const struct OutlinerSvgLine& line) {
 
   // Basic line drawing
   if (line.nPoints == 2) {
+    svgcreator_checkline(line);
     file << "<line x1=\"" << line.points[0].x << "\" y1=\"" << line.points[0].y << "\"";
     file << " x2=\"" << line.points[1].x << "\" y2=\"" << line.points[1].y << "\"";
   } else {
@@ -394,7 +420,6 @@ SvgCreator::emitStubsLine(const struct OutlinerSvgLine& line) {
     unsigned int stubLength = 1 + options.multiplier/1;
     stub.refCount = 1;
     stub.style = (newLine.style & ~(outlinersvgstyle_stubs+outlinersvgstyle_stubs_dirl+outlinersvgstyle_stubs_dird));
-    //stub.style |= outlinersvgstyle_red;
     stub.printed = 0;
     stub.nPoints = 2;
     unsigned int stubstartx = (newLine.points[segmentStart].x + newLine.points[segmentOther].x)/2;
@@ -415,8 +440,9 @@ SvgCreator::emitStubsLine(const struct OutlinerSvgLine& line) {
           xdiff, ydiff, xportion, yportion, stubx, stuby);
     stub.points[0].x = stubstartx;
     stub.points[0].y = stubstarty;
-    stub.points[1].x = stubstartx + stubx;
-    stub.points[1].y = stubstarty + stuby;
+    stub.points[1].x = ((stubx < 0 && -stubx > stubstartx) ? 0 : stubstartx + stubx);
+    stub.points[1].y = ((stuby < 0 && -stuby > stubstarty) ? 0 : stubstarty + stuby);
+    svgcreator_checkline(stub);
     emitLine(stub);
   }
 }
@@ -432,6 +458,7 @@ SvgCreator::pixel(outlinerreal x,
   const char* color = colorBasedOnStyle(style);
   deepdebugf("     pixel %u %s", style, color);
   deepdebugf("SvgCreator::pixel %.2f,%.2f to %u,%u", x, y, xInt, yInt);
+  if (xInt == 1 && yInt == 0) infof("      pixel %u,%u: %x", xInt, yInt, style);
   file << "<rect x=\"" << xInt << "\" y=\"" << yInt << "\"";
   file << " width=\"" << options.multiplier << "\" height=\"" <<  options.multiplier << "\"";
   file << " fill=\"" << color << "\"";
@@ -510,10 +537,12 @@ SvgCreator::text(outlinerreal x,
 }
 
 void
-SvgCreator::coordinateNormalization(outlinerreal x,
-                                    outlinerreal y,
+SvgCreator::coordinateNormalization(const outlinerreal x,
+                                    const outlinerreal y,
                                     unsigned int& xInt,
                                     unsigned int& yInt) {
+  assert(x >= xStart);
+  assert(y >= yStart);
   outlinerreal xNormalized = (x - xStart) * xFactor;
   outlinerreal yNormalized = (y - yStart) * yFactor;
   if (xNormalized > (outlinerreal)xSize) xInt = xSizeMultiplied;

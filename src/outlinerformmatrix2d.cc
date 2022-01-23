@@ -87,6 +87,7 @@ FormMatrix2D::setForm(const unsigned int xIndex,
   baseValue |= (form << shift);
   deepdebugf("            new base = %02x", baseValue);
   data[charIndex] = baseValue;
+  if (form == outlinerform_mainform_dripline) infof("  setting %u,%u to entrance form", xIndex, yIndex);
 }
 
 void

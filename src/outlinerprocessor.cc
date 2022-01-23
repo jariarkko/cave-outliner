@@ -654,10 +654,12 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
   for (unsigned int xIndex = 0; xIndex < theMatrix->xIndexSize; xIndex++) {
     for (unsigned int yIndex = 0; yIndex < theMatrix->yIndexSize; yIndex++) {
       if (theAlgorithm == alg_pixelform) {
+        if (xIndex >= theMatrix->xIndexSize - 2 ||
+            yIndex >= theMatrix->yIndexSize - 2) continue;
         OutlinerSvgStyle style = formAnalyzer.formToColor(xIndex,yIndex);
         outlinerreal x = xStart + xIndex * xStep;
         outlinerreal y = yStart + yIndex * yStep;
-        debugf("pixelform alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
+        infof("pixelform alg %u,%u from %.2f,%.2f style %04x", xIndex, yIndex, x, y, style);
         theSvg->pixel(x,y,style);
       } else if (theMatrix->getMaterialMatrix(xIndex,yIndex)) {
         outlinerreal x = xStart + xIndex * xStep;
@@ -707,6 +709,7 @@ Processor::matrixToSvg(MaterialMatrix2D* theMatrix,
                   OutlinerSvgStyle style = outlinersvgstyle_none;
                   if (options.formAnalysis && formAnalyzer.formIsEntrance(xIndex,yIndex)) {
                     style = outlinersvgstyle_stubs;
+                    infof(" Form analysis tells (%u,%u) is an entrance", xIndex, yIndex);
                   }
                   theSvg->line(otherX,otherY,x,y,style);
                 }

@@ -102,7 +102,7 @@ DepthMap::setDepth(const unsigned int xIndex,
     if (depth > rangeMax) { rangeMax = depth; range = rangeMax - rangeMin; }
   }
   if (prev == 0) nEntries++;
-  if (yIndex == 10) infof("set depth(%u,%u index %u/%u into table %lx)=%u (%u..%u)", xIndex, yIndex, index, fullSize, data, depth, rangeMin, rangeMax);
+  deepdebugf("set depth(%u,%u index %u/%u into table %lx)=%u (%u..%u)", xIndex, yIndex, index, fullSize, data, depth, rangeMin, rangeMax);
 }
 
 void
@@ -138,7 +138,7 @@ DepthMap::getDepth(const unsigned int xIndex,
   const unsigned int index = depthMatrixIndex(xIndex,yIndex);
   assert(index < fullSize);
   outlinerdepth result = data[index];
-  if (yIndex == 10) infof("get depth(%u,%u index %u/%u into table %lx)=%u (%u..%u)", xIndex, yIndex, index, fullSize, data, result, rangeMin, rangeMax);
+  deepdebugf("get depth(%u,%u index %u/%u into table %lx)=%u (%u..%u)", xIndex, yIndex, index, fullSize, data, result, rangeMin, rangeMax);
   return(result);
 }
 
@@ -170,9 +170,9 @@ DepthMap::rgbCompress(const outlinerdepth input) {
   const uint64_t compressedScaledInput = (scaledInput >> scaleFactor);
   const outlinerdepth compressedInput = (outlinerdepth)compressedScaledInput;
   const OutlinerRgb adjustedCompressedInput = outlinerunusablegreyscale + (OutlinerRgb)(compressedInput >> outlinerdepthrgbscale);
-  infof("   rgb compress %u to %lu  (actual %lu, scale %lu, scaled input %lu)",
-        input, adjustedCompressedInput,
-        actualRgbRangeAvailable, scale, scaledInput);
+  debugf("   rgb compress %u to %lu  (actual %lu, scale %lu, scaled input %lu)",
+         input, adjustedCompressedInput,
+         actualRgbRangeAvailable, scale, scaledInput);
   return(adjustedCompressedInput);
 }
 
@@ -255,10 +255,10 @@ DepthMap::depthDiffToColor(const unsigned int xIndex,
   resultFinal *= diffexpand;
   outlinerdepth reverseval = outlinerdepth_maxvalue - resultFinal;
   outlinerdepth resultCompressed = rgbCompress(reverseval);
-  if (yIndex == 10) infof(" depth matrix diff x = %u, depth = %u, result = %u, resultFinal = %u, reverseval = %u (compress %u, expand %u), compressed = %u",
-			  xIndex, depth, resultInt, resultFinal, reverseval,
-			  diffcompress, diffexpand,
-			  resultCompressed);
+  debugf(" depth matrix diff x = %u, depth = %u, result = %u, resultFinal = %u, reverseval = %u (compress %u, expand %u), compressed = %u",
+         xIndex, depth, resultInt, resultFinal, reverseval,
+         diffcompress, diffexpand,
+         resultCompressed);
   return(outlinersvgstyle_greyval(resultCompressed));
   
 }
@@ -432,7 +432,7 @@ DepthMap::toImage(const char* filename,
   assert(step >= 1);
   assert(xIndexSize == materialMatrix.xIndexSize);
   assert(yIndexSize == materialMatrix.yIndexSize);
-  infof("computed depth map (%s) to image: %u..%u",
+  infof("Computed depth map (%s) to image: %u..%u",
 	diff ? "diff" : "regular",
 	rangeMin, rangeMax);
   
@@ -448,7 +448,7 @@ DepthMap::toImage(const char* filename,
                    imageOptions);
 
   // Construct the actual image
-  infof("converting depth map to image in file %s", filename);
+  infof("  Converting depth map to image in file %s", filename);
   toImageAux(image,diff,step);
   
   // Check that we were able to open and write the file

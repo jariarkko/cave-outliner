@@ -101,7 +101,7 @@ OutlineAnalyzer::analyze(void) {
   for (unsigned int xIndex = 0; xIndex < matrix3.xIndexSize - 2; xIndex++) {
     if (!analyzeOneSlice(xIndex)) return(0);
   }
-  infof("  outline analysis found %u tunnel segments in %u slices (and %u failed z scans)",
+  infof("  Outline analysis found %u tunnel segments in %u slices (and %u failed z scans)",
         nTunnelSegments, matrix3.xIndexSize, nFailedZScans);
   createDepthMaps();
   infof("Outline analysis done");
@@ -110,7 +110,7 @@ OutlineAnalyzer::analyze(void) {
 
 bool
 OutlineAnalyzer::analyzeOneSlice(unsigned int xIndex) {
-  infof("OutlineAnalyzer::analyzeOneSlice(%u)", xIndex);
+  debugf("OutlineAnalyzer::analyzeOneSlice(%u)", xIndex);
   assert(xIndex < matrix3.xIndexSize);
   struct OutlineSliceDescriptor& slice = descriptors[xIndex];
   memset(&slice,0,sizeof(slice));
@@ -167,7 +167,7 @@ OutlineAnalyzer::analyzeOneTunnelSlice(struct OutlineSliceTunnelDescriptor& tunn
               findZMidPointAlternatives(matrix3xIndex,matrix3yIndex,matrix3yIndex+1,tunnel.startZ) :
               findZMidPoint(matrix3xIndex,matrix3yIndex,tunnel.startZ));
   if (!ans) {
-    infof("  Failed to find begin z at %u", matrix3xIndex);
+    debugf("  Failed to find begin z at %u", matrix3xIndex);
     nFailedZScans++;
     tunnel.zFound = 0;
   }
@@ -203,7 +203,7 @@ OutlineAnalyzer::analyzeOneTunnelSlice(struct OutlineSliceTunnelDescriptor& tunn
     assert(matrix2xIndexStart < matrix2.xIndexSize);
     assert(matrix2yIndexStartVar < matrix2.yIndexSize);
     if (outlinerform_istunnel(formAnalyzer.getForm(matrix2xIndexStart,matrix2yIndexStartVar))) {
-      infof("      found empty space at %u", matrix3yIndex);
+      debugf("      found empty space at %u", matrix3yIndex);
       tunnel.emptySpace = 1;
     }
     
@@ -231,11 +231,11 @@ OutlineAnalyzer::analyzeOneTunnelSlice(struct OutlineSliceTunnelDescriptor& tunn
          findZMidPointAlternatives(matrix3xIndex,matrix3yIndex,matrix3yIndex-1,tunnel.endZ) :
          findZMidPoint(matrix3xIndex,matrix3yIndex,tunnel.endZ));
   if (!ans) {
-    infof("  Failed to find end z at %u", matrix3xIndex);
+    debugf("  Failed to find end z at %u", matrix3xIndex);
     nFailedZScans++;
     tunnel.zFound = 0;
   }
-  infof("  tunnel midpoint at x %u = y %u (z %u..%u)",
+  debugf("  tunnel midpoint at x %u = y %u (z %u..%u)",
         matrix3xIndex, tunnel.yMidPoint,
         tunnel.startZ, tunnel.endZ);
   return(1);

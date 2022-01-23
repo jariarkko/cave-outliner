@@ -170,6 +170,8 @@ private:
                             const aiNode* node);
   void drawCrossSectionMesh(const aiScene* scene,
                             const aiMesh* mesh);
+#define OLDZLOOP
+#ifdef OLDZLOOP
   void drawCrossSectionFace(const aiScene* scene,
                             const aiMesh* mesh,
                             const aiFace* face,
@@ -178,6 +180,14 @@ private:
                             outlinerreal x,
                             outlinerreal y,
                             outlinerreal z);
+#else
+  void drawCrossSectionFace(const aiScene* scene,
+                            const aiMesh* mesh,
+                            const aiFace* face,
+                            unsigned int xyStep,
+                            outlinerreal x,
+                            outlinerreal y);
+#endif
   
   //
   // Line operations

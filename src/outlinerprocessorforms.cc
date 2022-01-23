@@ -145,8 +145,9 @@ ProcessorForms::formIsEntrance(const unsigned int xIndex,
   assert(forms.yIndexSize == matrix2.yIndexSize);
   assert(xIndex < forms.xIndexSize);
   assert(yIndex < forms.yIndexSize);
-  if (forms.getForm(xIndex,yIndex) == outlinerform_mainform_dripline) return(1);
-  else if (checkFormNearby(isEntrance,xIndex,yIndex,formCondense,1)) return(1);
+  infof("    form check %u,%u = %u", xIndex, yIndex, forms.getForm(xIndex,yIndex));
+  if (isEntrance(forms.getForm(xIndex,yIndex))) { infof("    form check direct"); return(1); }
+  else if (checkFormNearby(isEntrance,xIndex,yIndex,formCondense,1)) { infof("    form check nearby"); return(1); }
   else return(0);
 }
 
@@ -247,9 +248,9 @@ ProcessorForms::performFormAnalysisOneSlice(const unsigned int nth,
 
 bool
 ProcessorForms::performFormAnalysisAnalyze(void) {
-  infof("  form analysis matrix2 %u x %u matrix3 %u x %u",
+  infof("  Form analysis 2D matrix %u x %u and 3D matrix %u x %u x %u",
         matrix2.xIndexSize, matrix2.yIndexSize,
-        matrix3.xIndexSize, matrix3.yIndexSize);
+        matrix3.xIndexSize, matrix3.yIndexSize, matrix3.zIndexSize);
   char buf[50];
   OutlinerMath::boxDescribe(matrix2.boundingBox,buf,sizeof(buf),1);
   debugf("  form matrix2 box %s", buf);
@@ -676,7 +677,10 @@ ProcessorForms::checkFormNearby(ProcessorFormChecker checkFunction,
     assert(yTable[i] < forms.yIndexSize);
     outlinerform form = forms.getForm(xTable[i],yTable[i]);
     bool val = (*checkFunction)(form);
-    if (val) deepdebugreturn("    found neighbor with matching form",1);
+    if (val) {
+      infof("    form check nearby evaluates to true at %u,%u", xTable[i],yTable[i]);
+      deepdebugreturn("    found neighbor with matching form",1);
+    }
   }
   
   //

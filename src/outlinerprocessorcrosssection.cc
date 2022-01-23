@@ -247,7 +247,7 @@ ProcessorCrossSection::processSceneCrossSection(const aiScene* scene) {
 
 void
 ProcessorCrossSection::outputStats(void) const {
-  infof("    Cross-section %u/%u statistics: %lu steps, %lu faces, %lu z steps, face hits %lu dimension %lu voxel (%.2f and %.2f f/s)",
+  infof("  Cross-section %u/%u statistics: %lu steps, %lu faces, %lu z steps, face hits %lu dimension %lu voxel (%.2f and %.2f f/s)",
         nth, howMany,
         statStepsLine, statFacesGotten, statStepsZ,
         statFacesHitDimension, statFacesHitVoxel,
@@ -520,7 +520,7 @@ ProcessorCrossSection::drawCrossSectionMesh(const aiScene* scene,
     if (nFaces > 0) {
       deepdebugf("  drawCrossSectionMesh: got %u cross section faces from (%.2f,%.2f)",
                  nFaces, iter.point.x, iter.point.y);
-#define OLDZLOOP
+
 #ifdef OLDZLOOP
       unsigned int zStep = 0;
       for  (outlinerreal z = sliceVerticalBoundingBox.start.y;
@@ -607,29 +607,38 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
   assert(mesh != 0);
   assert(face != 0);
   assert(matrix != 0);
+
+  // First check if the face falls within the right area in the xy-plane
   OutlinerTriangle3D t;
   proc.faceGetVertices3D(mesh,face,t);
-  OutlinerBox3D thisBox(x,y,z,x+boxStepX,y+boxStepY,z+stepz);
+  OutlinerVector2D a(DirectionOperations::outputx(proc.direction,t.a),DirectionOperations::outputy(proc.direction,t.a));
+  OutlinerVector2D b(DirectionOperations::outputx(proc.direction,t.b),DirectionOperations::outputy(proc.direction,t.b));
+  OutlinerVector2D c(DirectionOperations::outputx(proc.direction,t.c),DirectionOperations::outputy(proc.direction,t.c));
+  OutlinerTriangle2D t2(a,b,c);
+  OutlinerBox2D thisBox2(x,y,x+boxStepX,y+boxStepY);
+  if (!OutlinerMath::boundingBoxIntersectsTriangle2D(t2,thisBox2)) {
+    return;
+  }
+
+  // It is in the right place. Then figure out what z-level coordinates are affected.
+  OutlinerBox3D tBoundingBox;
+  OutlinerMath::triangleBoundingBox3D(t,tBoundingBox);
   char buf[120];
   OutlinerMath::triangleDescribe(t,buf,sizeof(buf));
-  if (OutlinerMath::boundingBoxIntersectsTriangle3D(t,thisBox)) {
-    deepdebugf("    face match at %u,%u (%.2f,%.2f,%.2f) for face %s",
-               xyStep, zStep, x, y, z, buf);
-    deepdebugf("    face xyz match at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) triangle %s => matrix %u,%u",
-               x, thisBox.end.x, y, thisBox.end.y, z, thisBox.end.z,
-               buf, xyStep, zStep);
-    matrix->setMaterialMatrix(xyStep,zStep);
+
+  // Mark each of the voxels as present
+  outlinerreal zStart = outlinermax(sliceVerticalBoundingBox.start.y,tBoundingBox.start.z);
+  outlinerreal zEnd = outlinermin(sliceVerticalBoundingBox.end.y,tBoundingBox.end.z);
+  outlinerreal zDiff = zEnd - zStart;
+  unsigned int zIndexStart = (unsigned int)floor((zStart-sliceVerticalBoundingBox.start.y) / stepz);
+  unsigned int zIndexN = zDiff / stepz;
+  deepdebugf("    face xy match with triangle %s => matrix %u,%u..+%u",
+             buf, xyStep, zIndexStart, zIndexN);
+  for (unsigned int zIndex = zIndexStart; zIndex <= zIndexStart + zIndexN; zIndex++) {
+    deepdebugf("    face xyz match => matrix %u,%u", xyStep, zIndex);
+    matrix->setMaterialMatrix(xyStep,zIndex);
+    statStepsZ++;
     statFacesHitVoxel++;
-  } else {
-    deepdebugf("     no   match at %u,%u (%.2f,%.2f,%.2f) for face %s",
-               xyStep, zStep, x, y, z, buf);
-    deepdebugf("    cross section draw face xyz non-match at (%5.2f..%5.2f,%5.2f..%5.2f,%5.2f..%5.2f) "
-               "face (%5.2f,%5.2f,%5.2f) x (%5.2f,%5.2f,%5.2f) x (%5.2f,%5.2f,%5.2f) triangle %s",
-               x, thisBox.end.x, y, thisBox.end.y, z, thisBox.end.z,
-               t.a.x, t.a.y, t.a.z,
-               t.b.x, t.b.y, t.b.z,
-               t.c.x, t.c.y, t.c.z,
-               buf);
   }
 }
 
