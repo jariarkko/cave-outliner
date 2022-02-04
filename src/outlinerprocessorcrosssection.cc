@@ -616,10 +616,8 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
   OutlinerVector2D c(DirectionOperations::outputx(proc.direction,t.c),DirectionOperations::outputy(proc.direction,t.c));
   OutlinerTriangle2D t2(a,b,c);
   OutlinerBox2D thisBox2(x,y,x+boxStepX,y+boxStepY);
-  if (!OutlinerMath::boundingBoxIntersectsTriangle2D(t2,thisBox2)) {
-    return;
-  }
-
+  if (!OutlinerMath::boundingBoxIntersectsTriangle2D(t2,thisBox2)) return;
+  
   // It is in the right place. Then figure out what z-level coordinates are affected.
   OutlinerBox3D tBoundingBox;
   OutlinerMath::triangleBoundingBox3D(t,tBoundingBox);
@@ -629,11 +627,12 @@ ProcessorCrossSection::drawCrossSectionFace(const aiScene* scene,
   // Mark each of the voxels as present
   outlinerreal zStart = outlinermax(sliceVerticalBoundingBox.start.y,tBoundingBox.start.z);
   outlinerreal zEnd = outlinermin(sliceVerticalBoundingBox.end.y,tBoundingBox.end.z);
+  if (zStart > zEnd) return;
   outlinerreal zDiff = zEnd - zStart;
   unsigned int zIndexStart = (unsigned int)floor((zStart-sliceVerticalBoundingBox.start.y) / stepz);
   unsigned int zIndexN = zDiff / stepz;
-  deepdebugf("    face xy match with triangle %s => matrix %u,%u..+%u",
-             buf, xyStep, zIndexStart, zIndexN);
+  infof("    face xy match with triangle %s => matrix %u,%u..%u",
+             buf, xyStep, zIndexStart, zIndexStart + zIndexN);
   for (unsigned int zIndex = zIndexStart; zIndex <= zIndexStart + zIndexN; zIndex++) {
     deepdebugf("    face xyz match => matrix %u,%u", xyStep, zIndex);
     matrix->setMaterialMatrix(xyStep,zIndex);
