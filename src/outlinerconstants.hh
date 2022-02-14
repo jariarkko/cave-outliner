@@ -26,7 +26,7 @@
 #define outlinerdefaultthreads                                                         4
 #define outlinermaxmeshes                                                              1
 #define outlinertiledivision                                                          30
-#define outlinermaxholethreshold                                                      50
+#define outlinermaxholethreshold                                                     100
 #define outlinermaxlineholethreshold                                                  20
 #define outlinermaxcrosssections                                                     100
 #define outlinermaxtunnelsinoneslice                                                  16
