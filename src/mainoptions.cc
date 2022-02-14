@@ -225,8 +225,8 @@ MainOptions::processCommandLineOptions(int& argc,
       config.svgYSwap = 0;
     } else if (strcmp(argv[1],"--holethreshold") == 0 && argc > 2) {
       int num = atoi(argv[2]);
-      if (num < 0 || num > 100) {
-        errf("Hole threshold value needs to be non-negative and max 100, %s given", argv[2]);
+      if (num < 0 || num > outlinermaxholethreshold) {
+        errf("Hole threshold value needs to be non-negative and max %u, %s given", outlinermaxholethreshold, argv[2]);
         return(0);
       }
       config.holeThreshold = num;
