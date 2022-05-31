@@ -22,6 +22,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
+#include <sys/stat.h>
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
 #include "outlinerdirection.hh"
@@ -36,8 +37,10 @@
 // Class functions ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-MainOptions::MainOptions(MainConfig& configIn) :
-  config(configIn) {
+MainOptions::MainOptions(MainConfig& configIn,
+			 TempFiler& tempFilerIn) :
+  config(configIn),
+  tempFiler(tempFilerIn) {
 }
 
 MainOptions::~MainOptions() {
@@ -52,6 +55,7 @@ MainOptions::processCommandLine(int argc,
   } else if (!processCommandLineArguments(argc,argv)) {
     return(0);
   } else {
+    processDefaults();
     return(1);
   }
 }
@@ -60,7 +64,10 @@ bool
 MainOptions::processCommandLineOptions(int& argc,
                                        char**& argv) {
   while (argc > 1 && argv[1][0] == '-') {
-    if (strcmp(argv[1],"--quiet") == 0) {
+    if (strcmp(argv[1],"-") == 0 ||
+	strcmp(argv[1],"--") == 0) {
+      // Moving right along
+    } else if (strcmp(argv[1],"--quiet") == 0) {
       config.info = 0;
     } else if (strcmp(argv[1],"--debug") == 0) {
       config.debug = 1;
@@ -97,7 +104,7 @@ MainOptions::processCommandLineOptions(int& argc,
       config.algorithm = alg_borderline;
     } else if (strcmp(argv[1],"--borderactual") == 0) {
       config.algorithm = alg_borderactual;
-    } else if (strcmp(argv[1],"--crosssections") == 0 && argc > 4) {
+    } else if (strcmp(argv[1],"--crosssections") == 0 && argc > 3) {
       if (config.nCrossSections == outlinermaxcrosssections) {
         errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
         return(0);
@@ -111,7 +118,21 @@ MainOptions::processCommandLineOptions(int& argc,
         errf("A number of cross sections must be 1 or greater, %s given", argv[3]);
         return(0);
       }
-      const char* filenamePattern = argv[4];
+      const char* filenamePattern = 0;
+      if (argc > 4 && argv[4][0] != '-') {
+	filenamePattern = strdup(argv[4]);
+	if (filenamePattern == 0) {
+	  errf("Cannot allocate file name pattern string");
+	  exit(1);
+	}
+	argc--;argv++;
+	argc--;argv++;
+	argc--;argv++;
+      } else {
+	filenamePattern = tempFiler.createTempFile("auto-cross-section-%","svg");
+	argc--;argv++;
+	argc--;argv++;
+      }
       if (strchr(filenamePattern,'%') == 0) {
         errf("File name pattern should include the %% sign, %s given", filenamePattern);
         return(0);
@@ -119,15 +140,8 @@ MainOptions::processCommandLineOptions(int& argc,
       config.automaticCrossSections = 1;
       config.automaticCrossSectionsDirection = linedirection;
       config.nAutomaticCrossSections = num;
-      config.automaticCrossSectionFilenamePattern = strdup(filenamePattern);
-      if (config.automaticCrossSectionFilenamePattern == 0) {
-        errf("Cannot allocate file name pattern string");
-        exit(1);
-      }
-      argc--;argv++;
-      argc--;argv++;
-      argc--;argv++;
-    } else if (strcmp(argv[1],"--crosssection") == 0 && argc > 4) {
+      config.automaticCrossSectionFilenamePattern = filenamePattern;
+    } else if (strcmp(argv[1],"--crosssection") == 0 && argc > 3) {
       if (config.nCrossSections == outlinermaxcrosssections) {
         errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
         return(0);
@@ -141,11 +155,22 @@ MainOptions::processCommandLineOptions(int& argc,
         return(0);
       }
       float num = atof(argv[3]);
-      const char* file = strdup(argv[4]);
-      if (file == 0) {
-        fatalf("Cannot allocate file name string for %s", argv[4]);
-        return(0);
-      } else if (strlen(file) < 1) {
+      const char* file = 0;
+      if (argc > 4 && argv[4][0] != '-') {
+	file = strdup(argv[4]);
+	if (file == 0) {
+	  fatalf("Cannot allocate file name string for %s", argv[4]);
+	  return(0);
+	}
+	argc--;argv++;
+	argc--;argv++;
+	argc--;argv++;
+      } else {
+	file = tempFiler.createTempFile("cross-section-#-%","svg");
+	argc--;argv++;
+	argc--;argv++;
+      }
+      if (strlen(file) < 1) {
         errf("Cross section file name cannot be empty, %s given", file);
         return(0);
       }
@@ -159,9 +184,6 @@ MainOptions::processCommandLineOptions(int& argc,
       config.crossSections[config.nCrossSections].width = config.crossSectionWidth;
       config.crossSections[config.nCrossSections].label = config.getCrossSectionLabel();
       config.nCrossSections++;
-      argc--;argv++;
-      argc--;argv++;
-      argc--;argv++;
     } else if (strcmp(argv[1],"--crosssectionwidth") == 0 && argc > 2) {
       float num = atof(argv[2]);
       if (num < 0.0) {
@@ -178,6 +200,29 @@ MainOptions::processCommandLineOptions(int& argc,
       }
       config.formAnalysis = 1;
       config.formCondense = num;
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--composite") == 0) {
+      config.compositeMap = 1;
+    } else if (strcmp(argv[1],"--name") == 0 && argc > 2) {
+      config.name = argv[2];
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--surveyer") == 0 && argc > 2) {
+      config.surveyer = argv[2];
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--surveytool") == 0 && argc > 2) {
+      config.surveyTool = argv[2];
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--surveydate") == 0 && argc > 2) {
+      config.surveyDate = argv[2];
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--mapdate") == 0 && argc > 2) {
+      config.mapDate = argv[2];
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--location") == 0 && argc > 2) {
+      config.location = argv[2];
+      argc--;argv++;
+    } else if (strcmp(argv[1],"--coordinates") == 0 && argc > 2) {
+      config.coordinates = argv[2];
       argc--;argv++;
     } else if (strcmp(argv[1],"--floordepthmap") == 0 && argc > 2) {
       config.floorDepthMap = argv[2];
@@ -331,14 +376,19 @@ MainOptions::processCommandLineArguments(int& argc,
     return(0);
   }
   config.inputFile = strdup(argv[1]);
-  config.outputFile = strdup(argv[2]);
-  if (config.inputFile == 0 || config.outputFile == 0) {
+  if (!config.compositeMap) {
+    config.planViewOutputFile = strdup(argv[2]);
+  } else {
+    config.planViewOutputFile = tempFiler.createTempFile("planview","svg");
+    config.compositeOutputFile = strdup(argv[2]);
+  }
+  if (config.inputFile == 0 || config.planViewOutputFile == 0) {
     fatalf("Cannot allocate input/output file names");
     return(0);
   }
   if (outlineralgorithm_generatespicture(config.algorithm)) {
-    if (!checkFileExtension(config.outputFile,"svg")) {
-      errf("Output file must be an SVG file, %s given", config.outputFile);
+    if (!checkFileExtension(config.planViewOutputFile,"svg")) {
+      errf("Output file must be an SVG file, %s given", config.planViewOutputFile);
       return(0);
     }
   }
@@ -346,6 +396,43 @@ MainOptions::processCommandLineArguments(int& argc,
   return(1);
 }
 
+bool
+MainOptions::processDefaults(void) {
+  if (config.surveyDate == 0 && config.inputFile != 0) {
+    time_t fileCreation;
+    if (!getFileCreation(config.inputFile,&fileCreation)) {
+      warnf("Cannot stat input file %s", config.inputFile);
+      return(1);
+    }
+    const unsigned int dateSize = 30;
+    char* buf = (char*)malloc(dateSize);
+    if (buf == 0) {
+      fatalf("Cannot allocate %u bytes", dateSize);
+      return(0);
+    }
+    config.convertToDate(fileCreation,buf,dateSize);
+    config.surveyDate = buf;
+  }
+  return(1);
+}
+
+bool
+MainOptions::getFileCreation(const char* file,
+			     time_t* p_result) const {
+  assert(file != 0);
+  assert(p_result != 0);
+  struct stat info;
+  if (stat(file,&info) < 0) {
+    return(0);
+  }
+#ifdef _DARWIN_FEATURE_64_BIT_INODE
+  *p_result = info.st_birthtime;
+#else
+  *p_result = info.st_mtimespec;
+#endif
+  return(1);
+}
+  
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Version ////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -394,3 +481,5 @@ MainOptions::parseDirection(const char* string,
   }
 }
 
+  
+  

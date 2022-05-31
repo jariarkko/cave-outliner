@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-          "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-     width="556" height="580">
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="556" height="580">
 <rect x="0" y="0" width="556" height="580" fill="white" stroke="white" stroke-width="0"/>
 <text x="250" y="576" fill="black" font-size="9px">6.44m</text>
 <text x="0" y="0" fill="black" font-size="9px" transform="translate(547,270) rotate(90)">6.02m</text>

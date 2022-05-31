@@ -3,8 +3,8 @@
 <col style="width: 100%" />
 </colgroup>
 <tbody>
-<tr class="odd" style="height: 56px;">
-<td id="projectalign" style="padding-left: 0.5em"><div id="projectname">
+<tr id="projectrow" class="odd">
+<td id="projectalign"><div id="projectname">
 Cave Outliner
 </div></td>
 </tr>
@@ -19,10 +19,11 @@ ShapeRecognizer Class Reference
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinershaperecognizer_8hh_source.md" class="el">outlinershaperecognizer.hh</a>
+-   src/<a href="outlinershaperecognizer_8hh_source.md"
+    class="el">outlinershaperecognizer.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.md)
-1.9.2</span>
+by [<img src="doxygen.svg" class="footer" width="104" height="31"
+alt="doxygen" />](https://www.doxygen.org/index.md) 1.9.4</span>

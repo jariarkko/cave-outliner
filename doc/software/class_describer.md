@@ -3,8 +3,8 @@
 <col style="width: 100%" />
 </colgroup>
 <tbody>
-<tr class="odd" style="height: 56px;">
-<td id="projectalign" style="padding-left: 0.5em"><div id="projectname">
+<tr id="projectrow" class="odd">
+<td id="projectalign"><div id="projectname">
 Cave Outliner
 </div></td>
 </tr>
@@ -25,11 +25,16 @@ Describer Class Reference
 </colgroup>
 <tbody>
 <tr class="odd heading">
-<td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
+<td colspan="2"><h2 id="public-member-functions"
+class="groupheader"><span id="pub-methods"></span> Public Member
+Functions</h2></td>
 </tr>
 <tr class="even memitem:a54a7d2be5e7e2c7272d5193c933d6f7e">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a54a7d2be5e7e2c7272d5193c933d6f7e"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>Describer</strong> (bool transforms, bool recurse, bool vertexes, bool faces)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a54a7d2be5e7e2c7272d5193c933d6f7e"></span>
+ </td>
+<td class="memItemRight" data-valign="bottom"><strong>Describer</strong>
+(bool transforms, bool recurse, bool vertexes, bool faces)</td>
 </tr>
 <tr class="odd memdesc:a54a7d2be5e7e2c7272d5193c933d6f7e">
 <td class="mdescLeft"> </td>
@@ -40,8 +45,12 @@ Describer Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:a76530b5d374572e9e75b2637b49d7e0a">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a76530b5d374572e9e75b2637b49d7e0a"></span> void </td>
-<td class="memItemRight" data-valign="bottom"><strong>describeScene</strong> (const aiScene *scene)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a76530b5d374572e9e75b2637b49d7e0a"></span>
+void </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>describeScene</strong> (const aiScene
+*scene)</td>
 </tr>
 <tr class="even memdesc:a76530b5d374572e9e75b2637b49d7e0a">
 <td class="mdescLeft"> </td>
@@ -52,8 +61,11 @@ Describer Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:aff9200eb95e18ae11e297860f6c85fba">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aff9200eb95e18ae11e297860f6c85fba"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>~Describer</strong> ()</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="aff9200eb95e18ae11e297860f6c85fba"></span>
+ </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>~Describer</strong> ()</td>
 </tr>
 <tr class="odd memdesc:aff9200eb95e18ae11e297860f6c85fba">
 <td class="mdescLeft"> </td>
@@ -77,10 +89,11 @@ It is only used for debugging.
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinerdescribe_8hh_source.md" class="el">outlinerdescribe.hh</a>
+-   src/<a href="outlinerdescribe_8hh_source.md"
+    class="el">outlinerdescribe.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.md)
-1.9.2</span>
+by [<img src="doxygen.svg" class="footer" width="104" height="31"
+alt="doxygen" />](https://www.doxygen.org/index.md) 1.9.4</span>

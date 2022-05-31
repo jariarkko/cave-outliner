@@ -49,65 +49,73 @@ Here's a more detailed description of the command and its options:
 
 Options:
 
-    --bounding x x y y z z   Set the bounding box area. Default is the the model's bounding box.
-    --step i                 Set the granularity increment. Default is 1.
-    --z                      Generate output as viewed from the z direction, i.e.,
-                             showing x/y picture.
-    --x                      Generate output as viewed from the x direction, i.e.,
-                             showing z/y picture.
-    --y                      Generate output as viewed from the y direction, i.e.,
-                             showing x/z picture.
-    --pixel                  Use the pixel output drawing algorithm (default, fills cave
-                             with pixels).
-    --pixelform              Same as --pixel, but color pixels based form analysis.
-    --triangle               Use the triangle output drawing algorithm (draws model faces
-                             in plan view).
-    --depthmap               Same as --pixel, but color pixels based on their height.
-    --depthdiffmap           Same as --pixel, but color pixels based on their height
-                             difference from neighbouring pixels.
-    --borderpixel            Use the border-only drawing algorithm, draws only the cave
-                             walls, with pixels.
-    --borderline             Use the border-only drawing algorithm, draws only the cave
-                             walls, with lines.
-    --borderactual           Use the border-only drawing algorithm, draws the cave walls using
-                             model triangle sides.
-    --crosssection d p file  Produce also a cross section at a given direction (d = x or y),
-                             position p, output to file.
-    --crosssections d n pat  Produce n cross sections at different direction (d = x or y)
-                             positions, output to files (percent sign denotes the cross
-                             section number in the file name pattern).
-    --crossectionwidth n     Width of the analysis for a cross section, by default 1.0, i.e.,
-                             one step.
-    --formanalysis f         Analyze cave forms, e.g., entrances, stones, stalactites, etc.
-                             Factor f specifies how much the analysis compresses pixels,
-                             value of 1 implies no compression.
-    --floordepthmap file     Output cave tunnel floor depth map to given file.
-    --roofdepthmap file      Output cave tunnel roof depth map to given file.
-    --floorstyle s           Specify floor and roof depthmap style, either depth
-                             or diff.
-    --tunnelspine            Mark cave tunnel centerpoints.
-    --label                  Label cross sections
-    --dimensions             Show dimensions of each cave plan view and cross section.
-    --linewidth n            Set the width of the lines in output picture. The value can be a
-                             decimal number.
-    --multiplier n           Multiply image size by n (default 1).
-    --smooth                 Set the line drawings use smooth curves.
-    --jagged                 Set the line drawings use hard lines (default).
-    --svgyreverse            Reverse Y axis in the SVG (to maintain same Y coordinate
-                             direction as in the model).
-    --holethreshold n        Ignore holes in the model if they are n or less pixels.
-    --lineholethreshold n    Ignore holes in cross-section  lines if they are n or less pixels.
-    --dustthreshold n        Ignore small amount of material if not connected and less
-                             than or equal to n pixels.
-    --tiling n               Optimize search process with n x n tiles. Default is 30,
-                             and --tiling 1 implies no optimization.
-    --parallel n             How many parallel threads can be run.
-    --quiet                  Turn on informative messages (default is they are on).
-    --debug                  Turn on debugging messages (level 0, least).
-    --deepdebug              Turn on debugging messages (level 1).
-    --deepdeepdebug          Turn on debugging messages (level 2, most).
-    --version                Output version information.
-    --help                   Print this message.
+    --bounding x x y y z z    Set the bounding box area. Default is the the model's bounding box.
+    --step i                  Set the granularity increment. Default is 1.
+    --z                       Generate output as viewed from the z direction, i.e.,
+                              showing x/y picture.
+    --x                       Generate output as viewed from the x direction, i.e.,
+                              showing z/y picture.
+    --y                       Generate output as viewed from the y direction, i.e.,
+                              showing x/z picture.
+    --pixel                   Use the pixel output drawing algorithm (default, fills cave
+                              with pixels).
+    --pixelform               Same as --pixel, but color pixels based form analysis.
+    --triangle                Use the triangle output drawing algorithm (draws model faces
+                              in plan view).
+    --depthmap                Same as --pixel, but color pixels based on their height.
+    --depthdiffmap            Same as --pixel, but color pixels based on their height
+                              difference from neighbouring pixels.
+    --borderpixel             Use the border-only drawing algorithm, draws only the cave
+                              walls, with pixels.
+    --borderline              Use the border-only drawing algorithm, draws only the cave
+                              walls, with lines.
+    --borderactual            Use the border-only drawing algorithm, draws the cave walls using
+                              model triangle sides.
+    --crosssection d p [file] Produce also a cross section at a given direction (d = x or y),
+                              position p, output to file 'file'.
+    --crosssections d n [pat] Produce n cross sections at different direction (d = x or y)
+                              positions, output to files (percent sign denotes the cross
+                              section number in the file name pattern).
+    --crossectionwidth n      Width of the analysis for a cross section, by default 1.0, i.e.,
+                              one step.
+    --formanalysis f          Analyze cave forms, e.g., entrances, stones, stalactites, etc.
+                              Factor f specifies how much the analysis compresses pixels,
+                              value of 1 implies no compression.
+    --composite               Create a composite cave map file from the plan view and all
+                              cross sections.
+    --name name               The name of the cave.
+    --surveyer name           Who performed the 3D survey? Default is the user's name who is
+                              running this software.
+    --surveytool name         What tool was used for 3D scan? Default is iPhone 12 Pro.
+    --location place          The location of the cave, e.g., city or country. 
+    --coordinates coords      Coordinates of the cave. 
+    --floordepthmap file      Output cave tunnel floor depth map to given file.
+    --roofdepthmap file       Output cave tunnel roof depth map to given file.
+    --floorstyle s            Specify floor and roof depthmap style, either depth
+                              or diff.
+    --tunnelspine             Mark cave tunnel centerpoints.
+    --label                   Label cross sections
+    --dimensions              Show dimensions of each cave plan view and cross section.
+    --linewidth n             Set the width of the lines in output picture. The value can be a
+                              decimal number.
+    --multiplier n            Multiply image size by n (default 1).
+    --smooth                  Set the line drawings use smooth curves.
+    --jagged                  Set the line drawings use hard lines (default).
+    --svgyreverse             Reverse Y axis in the SVG (to maintain same Y coordinate
+                              direction as in the model).
+    --holethreshold n         Ignore holes in the model if they are n or less pixels.
+    --lineholethreshold n     Ignore holes in cross-section  lines if they are n or less pixels.
+    --dustthreshold n         Ignore small amount of material if not connected and less
+                              than or equal to n pixels.
+    --tiling n                Optimize search process with n x n tiles. Default is 30,
+                              and --tiling 1 implies no optimization.
+    --parallel n              How many parallel threads can be run.
+    --quiet                   Turn on informative messages (default is they are on).
+    --debug                   Turn on debugging messages (level 0, least).
+    --deepdebug               Turn on debugging messages (level 1).
+    --deepdeepdebug           Turn on debugging messages (level 2, most).
+    --version                 Output version information.
+    --help                    Print this message.
 
 # Installation
 

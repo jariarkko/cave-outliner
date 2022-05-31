@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-          "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-     width="1175" height="370">
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1175" height="370">
 <rect x="0" y="0" width="1175" height="370" fill="white" stroke="white" stroke-width="0"/>
 <polyline points="60,25 63,23 65,20 " fill="none" stroke="black" stroke-width="1" />
 <polyline points="15,165 15,160 15,155 15,150 14,146 13,145 10,143 8,141 6,138 5,135 5,130 5,125 5,120 6,116 9,114 13,113 14,109 15,105 15,100 16,96 20,95 25,95 28,93 31,91 33,88 35,85 34,81 33,80 31,78 30,75 29,71 28,70 25,68 23,66 21,63 20,60 21,56 23,53 25,50 28,48 29,44 31,41 34,39 38,38 40,35 43,33 45,30 48,28 51,26 55,25 58,23 61,21 65,20 " fill="none" stroke="black" stroke-width="1" />

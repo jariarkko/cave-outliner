@@ -25,6 +25,7 @@
 #include "outlinerconstants.hh"
 #include "outlinerdebug.hh"
 #include "outlinersvg.hh"
+#include "outlinersvgreader.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Macros /////////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +39,7 @@
     assert(l.points[1].y != svgcreator_badcoordvalue)
   
 ///////////////////////////////////////////////////////////////////////////////////////////////
-// Class methods //////////////////////////////////////////////////////////////////////////////
+// Construction ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 SvgCreator::SvgCreator(const char* fileNameIn,
@@ -75,13 +76,13 @@ SvgCreator::SvgCreator(const char* fileNameIn,
          xStart, yStart, xFactor, yFactor, options.linewidth);
 
   lineTableInit();
-  preamble();
+  preamble(file,xSize,ySize,options,1);
 }
 
 SvgCreator::~SvgCreator() {
   debugf("SvgCreator::~SvgCreator start");
   lineTableOutput();
-  postamble();
+  postamble(file);
   unsigned long bytes = file.tellp();
   file.close();
   infof("  Image statistics");
@@ -94,6 +95,10 @@ SvgCreator::~SvgCreator() {
   lineTable = 0;
   debugf("SvgCreator::~SvgCreator done");
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Class methods //////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 outlinerreal
 SvgCreator::getPixelXSize(void) {
@@ -854,31 +859,37 @@ SvgCreator::colorBasedOnStyle(OutlinerSvgStyle style) const {
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 void
-SvgCreator::preamble() {
+SvgCreator::preamble(std::ofstream& outputFile,
+		     const unsigned int xSizeImage,
+		     const unsigned int ySizeImage,
+		     const SvgOptions& options,
+		     const bool setBackground) {
 
   // Debugs
   debugf("preamble");
   
   // Basics for all SVGs
-  file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-  file << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n";
-  file << "          \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
-  file << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\"\n";
-  file << "     width=\"" << (xSize+1)*options.multiplier << "\" height=\"" << (ySize+1)*options.multiplier << "\">\n";
+  outputFile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+  outputFile << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" ";
+  outputFile << "\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
+  outputFile << "<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" ";
+  outputFile << "width=\"" << (xSizeImage+1)*options.multiplier << "\" height=\"" << (ySizeImage+1)*options.multiplier << "\">\n";
 
   // Make the background white
-  file << "<rect x=\"0\" y=\"0\" width=\"" << (xSize+1)*options.multiplier;
-  file << "\" height=\"" << (ySize+1)*options.multiplier << "\"";
-  file << " fill=\"white\" stroke=\"white\" stroke-width=\"0\"/>\n";
+  if (setBackground) {
+    outputFile << "<rect x=\"0\" y=\"0\" width=\"" << (xSizeImage+1)*options.multiplier;
+    outputFile << "\" height=\"" << (ySizeImage+1)*options.multiplier << "\"";
+    outputFile << " fill=\"white\" stroke=\"white\" stroke-width=\"0\"/>\n";
+  }
  
   // Done
   debugf("preamble done");
 }
 
 void
-SvgCreator::postamble() {
+SvgCreator::postamble(std::ofstream& outputFile) {
   // Just close the full SVG XML
-  file << "</svg>\n";
+  outputFile << "</svg>\n";
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

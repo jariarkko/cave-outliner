@@ -26,6 +26,7 @@ OBJS=	$(OBJDIR)/main.o \
 	$(OBJDIR)/outlinerprocessorcrosssection.o \
 	$(OBJDIR)/outlinerprocessoroptions.o \
 	$(OBJDIR)/outlinerprocessorforms.o \
+	$(OBJDIR)/outlinercomposer.o \
 	$(OBJDIR)/outlineroutlineanalyzer.o \
 	$(OBJDIR)/outlinershaperecognizer.o \
 	$(OBJDIR)/outlinerindexedmesh.o \
@@ -37,9 +38,12 @@ OBJS=	$(OBJDIR)/main.o \
 	$(OBJDIR)/outlinerboundingboxer.o \
 	$(OBJDIR)/outlinerdebug.o \
 	$(OBJDIR)/outlinerdirection.o \
+	$(OBJDIR)/outlinertemp.o \
 	$(OBJDIR)/outlinermath.o \
 	$(OBJDIR)/outlinerhighprecision.o \
 	$(OBJDIR)/outlinersvg.o \
+	$(OBJDIR)/outlinersvgreader.o \
+	$(OBJDIR)/outlinersvgstacker.o \
 	$(OBJDIR)/outlinersvgoptions.o \
 	$(OBJDIR)/outlinerversion.o
 HDRS=	src/main.hh \
@@ -50,10 +54,12 @@ HDRS=	src/main.hh \
 	src/outlinerconstants.hh \
 	src/outlinerdebug.hh \
 	src/outlinerdirection.hh \
+	src/outlinertemp.hh \
 	src/outlinerprocessor.hh \
 	src/outlinerprocessorcrosssection.hh \
 	src/outlinerprocessoroptions.hh \
 	src/outlinerprocessorforms.hh \
+	src/outlinercomposer.hh \
 	src/outlineroutlineanalyzer.hh \
 	src/outlinershaperecognizer.hh \
 	src/outlinerindexedmesh.hh \
@@ -66,6 +72,8 @@ HDRS=	src/main.hh \
 	src/outlinermath.hh \
 	src/outlinerhighprecision.hh \
 	src/outlinersvg.hh \
+	src/outlinersvgreader.hh \
+	src/outlinersvgstacker.hh \
 	src/outlinersvgoptions.hh \
 	src/outlinerversion.hh
 SRCS=	src/main.cc \
@@ -75,10 +83,12 @@ SRCS=	src/main.cc \
 	src/maintest.cc \
 	src/outlinerdebug.cc \
 	src/outlinerdirection.cc \
+	src/outlinertemp.cc \
 	src/outlinerprocessor.cc \
 	src/outlinerprocessorcrosssection.cc \
 	src/outlinerprocessoroptions.cc \
 	src/outlinerprocessorforms.cc \
+	src/outlinercomposer.cc \
 	src/outlineroutlineanalyzer.cc \
 	src/outlinershaperecognizer.cc \
 	src/outlinerindexedmesh.cc \
@@ -91,14 +101,18 @@ SRCS=	src/main.cc \
 	src/outlinermath.cc \
 	src/outlinerhighprecision.cc \
 	src/outlinersvg.cc \
+	src/outlinersvgreader.cc \
+	src/outlinersvgstacker.cc \
 	src/outlinersvgoptions.cc \
 	src/outlinerversion.cc
 CLASSES=outliner_math \
 	main_config \
 	main_options \
+	main_test \
 	bounding_boxer \
 	describer \
 	direction_operations \
+	temp_filer \
 	indexed_mesh \
 	material_matrix2_d \
 	material_matrix3_d \
@@ -115,15 +129,19 @@ CLASSES=outliner_math \
 	processor_cross_section \
 	processor_options \
 	processor_forms \
+	composer \
 	outline_analyzer \
 	shape_recognizer \
-	svg_creator
+	svg_creator \
+	svg_stacker \
+	svg_reader
 CLASSMARKDOWNS=	doc/software/class_outliner_math.md \
 		doc/software/class_main_config.md \
 		doc/software/class_main_options.md \
 		doc/software/class_bounding_boxer.md \
 		doc/software/class_describer.md \
 		doc/software/class_direction_operations.md \
+		doc/software/class_temp_filer.md \
 		doc/software/class_indexed_mesh.md \
 		doc/software/class_material_matrix2_d.md \
 		doc/software/class_material_matrix3_d.md \
@@ -141,9 +159,12 @@ CLASSMARKDOWNS=	doc/software/class_outliner_math.md \
 		doc/software/class_processor_cross_section.md \
 		doc/software/class_processor_options.md \
 		doc/software/class_processor_forms.md \
+		doc/software/class_composer.md \
 		doc/software/class_outline_analyzer.md \
 		doc/software/class_shape_recognizer.md \
 		doc/software/class_svg_creator.md \
+		doc/software/class_svg_reader.md \
+		doc/software/class_svg_stacker.md \
 		doc/software/class_svg_options.md
 TOOLS=	doc/tools/markdowncleanup.sh
 SUPP=	Makefile $(TOOLS)
@@ -183,6 +204,9 @@ $(OBJDIR)/outlinerprocessoroptions.o:	src/outlinerprocessoroptions.cc $(HDRS)
 $(OBJDIR)/outlinerprocessorforms.o:	src/outlinerprocessorforms.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerprocessorforms.o
 
+$(OBJDIR)/outlinercomposer.o:	src/outlinercomposer.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinercomposer.o
+
 $(OBJDIR)/outlineroutlineanalyzer.o:	src/outlineroutlineanalyzer.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlineroutlineanalyzer.o
 
@@ -216,6 +240,9 @@ $(OBJDIR)/outlinerdebug.o:	src/outlinerdebug.cc $(HDRS)
 $(OBJDIR)/outlinerdirection.o:	src/outlinerdirection.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinerdirection.o
 
+$(OBJDIR)/outlinertemp.o:	src/outlinertemp.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinertemp.o
+
 $(OBJDIR)/outlinermath.o:	src/outlinermath.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinermath.o
 
@@ -224,6 +251,12 @@ $(OBJDIR)/outlinerhighprecision.o:	src/outlinerhighprecision.cc $(HDRS)
 
 $(OBJDIR)/outlinersvg.o:	src/outlinersvg.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinersvg.o
+
+$(OBJDIR)/outlinersvgreader.o:	src/outlinersvgreader.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinersvgreader.o
+
+$(OBJDIR)/outlinersvgstacker.o:	src/outlinersvgstacker.cc $(HDRS)
+	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinersvgstacker.o
 
 $(OBJDIR)/outlinersvgoptions.o:	src/outlinersvgoptions.cc $(HDRS)
 	$(CPPCOMPILER) $(CPPFLAGS) -c $< -o $(OBJDIR)/outlinersvgoptions.o
@@ -251,23 +284,23 @@ $(CLASSMARKDOWNS):	$(HDRS) Makefile $(TOOLS)
 	for x in $(CLASSES); do pandoc doc/software/html/class_$$x.html -f html -t markdown_strict -o /tmp/gen.md; sh doc/tools/markdowncleanup.sh /tmp/gen.md doc/software/class_$$x.md; done
 	-rm -rf doc/software/xml doc/software/html doc/software/search.json doc/software/index.html doc/software/latex
 
-doc/Design-Structure-Small.jpg:	doc/Design-Structure.jpg Makefile
-	convert -quality 0.97 -resize 1400x doc/Design-Structure.jpg doc/Design-Structure-Small.jpg
+doc/images/Design-Structure-Small.jpg:	doc/images/Design-Structure.jpg Makefile
+	convert -quality 0.97 -resize 1400x doc/images/Design-Structure.jpg doc/images/Design-Structure-Small.jpg
 
-doc/example1-model-small.jpg:	doc/example1-model.jpg Makefile
-	convert -quality 0.97 -resize 800x doc/example1-model.jpg doc/example1-model-small.jpg
+doc/images/example1-model-small.jpg:	doc/images/example1-model.jpg Makefile
+	convert -quality 0.97 -resize 800x doc/images/example1-model.jpg doc/images/example1-model-small.jpg
 
-doc/example1-planview-small.jpg:	doc/example1-planview.jpg Makefile
-	convert -quality 0.97 -resize 800x doc/example1-planview.jpg doc/example1-planview-small.jpg
+doc/images/example1-planview-small.jpg:	doc/images/example1-planview.jpg Makefile
+	convert -quality 0.97 -resize 800x doc/images/example1-planview.jpg doc/images/example1-planview-small.jpg
 
-doc/example1-crosssection-small.jpg:	doc/example1-crosssection.jpg Makefile
-	convert -quality 0.97 -resize 400x doc/example1-crosssection.jpg doc/example1-crosssection-small.jpg
+doc/images/example1-crosssection-small.jpg:	doc/images/example1-crosssection.jpg Makefile
+	convert -quality 0.97 -resize 400x doc/images/example1-crosssection.jpg doc/images/example1-crosssection-small.jpg
 
-doc/example1-longplanview-small.jpg:	doc/example1-longplanview.jpg Makefile
-	convert -quality 0.97 -resize 800x doc/example1-longplanview.jpg doc/example1-longplanview-small.jpg
+doc/images/example1-longplanview-small.jpg:	doc/images/example1-longplanview.jpg Makefile
+	convert -quality 0.97 -resize 800x doc/images/example1-longplanview.jpg doc/images/example1-longplanview-small.jpg
 
-doc/example1-longcrosssection-small.jpg:	doc/example1-longcrosssection.jpg Makefile
-	convert -quality 0.97 -resize 800x doc/example1-longcrosssection.jpg doc/example1-longcrosssection-small.jpg
+doc/images/example1-longcrosssection-small.jpg:	doc/images/example1-longcrosssection.jpg Makefile
+	convert -quality 0.97 -resize 800x doc/images/example1-longcrosssection.jpg doc/images/example1-longcrosssection-small.jpg
 
 test:	cave-outliner \
 	unit-tests \
@@ -336,7 +369,8 @@ cave-tests:	cave1-test \
 		cave1-form-analysis-smooth-line-test \
 		cave1-spine-test \
 		cave1-floor-test \
-		cave1-floor-depth-test
+		cave1-floor-depth-test \
+		cave1-composite-test
 
 heavy-tests:	heavy-tests-note \
 		cave1-floor-highres-test \
@@ -685,14 +719,27 @@ cave1-floor-condense-more-test:
 
 cave1-floor-depth-test:
 	@echo 'Running test case cave1-floor-depth-test...'
-	@./cave-outliner --quiet --floorstyle depth --floordepthmap test/cave1-floor-depth-floor.svg --roofdepthmap test/cave1-floor-depth-roof.svg --tunnelspine --multiplier 5 --formanalysis 1 --borderline --step 0.1 --holethreshold 10 test/cave1.stl test/cave1-floor-depth.svg
+	@./cave-outliner --quiet --floorstyle depth \
+			 --floordepthmap test/cave1-floor-depth-floor.svg --roofdepthmap test/cave1-floor-depth-roof.svg \
+			 --tunnelspine --multiplier 5 --formanalysis 1 --borderline --step 0.1 --holethreshold 10 \
+			 test/cave1.stl test/cave1-floor-depth.svg
 	@diff -q test/cave1-floor-depth.svg test/cave1-floor-depth.svg.expected
 	@diff -q test/cave1-floor-depth-floor.svg test/cave1-floor-depth-floor.svg.expected
 	@diff -q test/cave1-floor-depth-roof.svg test/cave1-floor-depth-roof.svg.expected
 
+cave1-composite-test:
+	@echo 'Running test case cave1-composite-test...'
+	@./cave-outliner --quiet --label --borderline --multiplier 1 \
+			 --composite --location "Siuntio, Finland" --coordinates "N 60.161948 E 24.137638" \
+			 --crosssections x 3 --crosssections y 1 \
+			 --step 0.05 --holethreshold 10 \
+			 test/cave1.stl test/cave1-composite.svg
+	@diff -q test/cave1-composite.svg test/cave1-composite.svg.expected
+
 example-tests:	cave1-example-orig-test \
 		cave1-example-form-test \
-		cave1-example-form-long-test
+		cave1-example-form-long-test \
+		cave1-example-composite-test
 
 cave1-example-orig-test:
 	@echo 'Running test case cave1-example-orig-test...'
@@ -721,9 +768,23 @@ cave1-example-form-long-test:
 	@./cave-outliner --label --dimensions --borderline \
                   --multiplier 4 --step 0.05 --holethreshold 10 --formanalysis 1 \
 		  --crosssectionwidth 3 --crosssections y 1 test/cave1-example-form-long-cross%.svg \
-                  test/cave1.stl test/cave1-example-form-long-planview.svg > test/cave1-example-form-long.out
+		  test/cave1.stl test/cave1-example-form-long-planview.svg > test/cave1-example-form-long.out
 	@diff -q test/cave1-example-form-long-planview.svg test/cave1-example-form-long-planview.svg.expected
 	@diff -q test/cave1-example-form-long-cross0.svg test/cave1-example-form-long-cross0.svg.expected
+
+cave1-example-composite-test:
+	@echo 'Running test case cave1-example-composite-test...'
+	@./cave-outliner --label --dimensions --borderline \
+                  --multiplier 4 --step 0.05 --holethreshold 10 --formanalysis 1 \
+		  --name "Grottberget" \
+		  --location "Siuntio, Finland" \
+		  --coordinates "N 12.34 E 56.78" \
+		  --mapdate "January 1, 2099" \
+		  --crosssectionwidth 3 \
+		  --crosssections x 3 test/cave1-example-composite-x-cross%.svg \
+		  --crosssections y 1 test/cave1-example-composite-y-cross%.svg \
+                  test/cave1.stl test/cave1-example-composite.svg > test/cave1-example-composite.out
+	@diff -q test/cave1-example-composite.svg test/cave1-example-form-long-planview.svg.expected
 
 cave2-form-test:
 	@echo 'Running test case cave2-form-test...'

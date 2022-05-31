@@ -3,8 +3,8 @@
 <col style="width: 100%" />
 </colgroup>
 <tbody>
-<tr class="odd" style="height: 56px;">
-<td id="projectalign" style="padding-left: 0.5em"><div id="projectname">
+<tr id="projectrow" class="odd">
+<td id="projectalign"><div id="projectname">
 Cave Outliner
 </div></td>
 </tr>
@@ -26,35 +26,53 @@ OutlinerLine2D Class Reference
 </colgroup>
 <tbody>
 <tr class="odd heading">
-<td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
+<td colspan="2"><h2 id="public-member-functions"
+class="groupheader"><span id="pub-methods"></span> Public Member
+Functions</h2></td>
 </tr>
 <tr class="even memitem:acadf780ece6cf8fccdedf7eac09fdb26">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="acadf780ece6cf8fccdedf7eac09fdb26"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>OutlinerLine2D</strong> ()</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="acadf780ece6cf8fccdedf7eac09fdb26"></span>
+ </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>OutlinerLine2D</strong> ()</td>
 </tr>
 <tr class="odd memdesc:acadf780ece6cf8fccdedf7eac09fdb26">
 <td class="mdescLeft"> </td>
-<td class="mdescRight">Create an empty object, all values initialized to zero.<br />
+<td class="mdescRight">Create an empty object, all values initialized to
+zero.<br />
 </td>
 </tr>
 <tr class="even separator:acadf780ece6cf8fccdedf7eac09fdb26">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:aa2886e8daba122e03bec8c2c04389806">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aa2886e8daba122e03bec8c2c04389806"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>OutlinerLine2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp;in)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="aa2886e8daba122e03bec8c2c04389806"></span>
+ </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>OutlinerLine2D</strong> (const <a
+href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_line2_d.md" class="el">OutlinerLine2D</a>
+&amp;in)</td>
 </tr>
 <tr class="even memdesc:aa2886e8daba122e03bec8c2c04389806">
 <td class="mdescLeft"> </td>
-<td class="mdescRight">Make an exact copy of another similar object.<br />
+<td class="mdescRight">Make an exact copy of another similar
+object.<br />
 </td>
 </tr>
 <tr class="odd separator:aa2886e8daba122e03bec8c2c04389806">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a876e4750cceb53a711ef2bed556fac53">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a876e4750cceb53a711ef2bed556fac53"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>OutlinerLine2D</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;startIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;endIn)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a876e4750cceb53a711ef2bed556fac53"></span>
+ </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>OutlinerLine2D</strong> (const <a
+href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a>
+&amp;startIn, const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_vector2_d.md"
+class="el">OutlinerVector2D</a> &amp;endIn)</td>
 </tr>
 <tr class="odd memdesc:a876e4750cceb53a711ef2bed556fac53">
 <td class="mdescLeft"> </td>
@@ -65,15 +83,25 @@ OutlinerLine2D Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:ad14a163eaa3cfc23f6fc2593f97e5691">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"> </td>
-<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_line2_d.md#ad14a163eaa3cfc23f6fc2593f97e5691" class="el">OutlinerLine2D</a> (const outlinerreal startX, const outlinerreal startY, const outlinerreal endX, const outlinerreal endY)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"> </td>
+<td class="memItemRight" data-valign="bottom"><a
+href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_line2_d.md#ad14a163eaa3cfc23f6fc2593f97e5691"
+class="el">OutlinerLine2D</a> (const outlinerreal startX, const
+outlinerreal startY, const outlinerreal endX, const outlinerreal
+endY)</td>
 </tr>
 <tr class="even separator:ad14a163eaa3cfc23f6fc2593f97e5691">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:abb3245feea0b6f40575aaa54005dacb1">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="abb3245feea0b6f40575aaa54005dacb1"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp; </td>
-<td class="memItemRight" data-valign="bottom"><strong>operator=</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_line2_d.md" class="el">OutlinerLine2D</a> &amp;in)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="abb3245feea0b6f40575aaa54005dacb1"></span>
+<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_line2_d.md" class="el">OutlinerLine2D</a>
+&amp; </td>
+<td class="memItemRight" data-valign="bottom"><strong>operator=</strong>
+(const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_line2_d.md"
+class="el">OutlinerLine2D</a> &amp;in)</td>
 </tr>
 <tr class="even memdesc:abb3245feea0b6f40575aaa54005dacb1">
 <td class="mdescLeft"> </td>
@@ -84,8 +112,13 @@ OutlinerLine2D Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a1c0191abfd41ef59241c77e3e9473af3">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a1c0191abfd41ef59241c77e3e9473af3"></span> bool </td>
-<td class="memItemRight" data-valign="bottom"><strong>pointOnLine</strong> (const <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> &amp;point) const</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a1c0191abfd41ef59241c77e3e9473af3"></span>
+bool </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>pointOnLine</strong> (const <a
+href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a>
+&amp;point) const</td>
 </tr>
 <tr class="odd memdesc:a1c0191abfd41ef59241c77e3e9473af3">
 <td class="mdescLeft"> </td>
@@ -96,8 +129,11 @@ OutlinerLine2D Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:aae224f98ed05f69f0d3a3548ef5531a1">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="aae224f98ed05f69f0d3a3548ef5531a1"></span> bool </td>
-<td class="memItemRight" data-valign="bottom"><strong>horizontal</strong> () const</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="aae224f98ed05f69f0d3a3548ef5531a1"></span>
+bool </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>horizontal</strong> () const</td>
 </tr>
 <tr class="even memdesc:aae224f98ed05f69f0d3a3548ef5531a1">
 <td class="mdescLeft"> </td>
@@ -108,8 +144,11 @@ OutlinerLine2D Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a1a7faaeca47a4d49cd8f6cb5795a1a7d">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a1a7faaeca47a4d49cd8f6cb5795a1a7d"></span> bool </td>
-<td class="memItemRight" data-valign="bottom"><strong>vertical</strong> () const</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a1a7faaeca47a4d49cd8f6cb5795a1a7d"></span>
+bool </td>
+<td class="memItemRight" data-valign="bottom"><strong>vertical</strong>
+() const</td>
 </tr>
 <tr class="odd memdesc:a1a7faaeca47a4d49cd8f6cb5795a1a7d">
 <td class="mdescLeft"> </td>
@@ -129,11 +168,16 @@ OutlinerLine2D Class Reference
 </colgroup>
 <tbody>
 <tr class="odd heading">
-<td colspan="2"><h2 id="static-public-member-functions" class="groupheader"><span id="pub-static-methods"></span> Static Public Member Functions</h2></td>
+<td colspan="2"><h2 id="static-public-member-functions"
+class="groupheader"><span id="pub-static-methods"></span> Static Public
+Member Functions</h2></td>
 </tr>
 <tr class="even memitem:a5d3a780be0ce7401febc27ca1363cb9e">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a5d3a780be0ce7401febc27ca1363cb9e"></span> static void </td>
-<td class="memItemRight" data-valign="bottom"><strong>test</strong> (void)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a5d3a780be0ce7401febc27ca1363cb9e"></span>
+static void </td>
+<td class="memItemRight" data-valign="bottom"><strong>test</strong>
+(void)</td>
 </tr>
 <tr class="odd memdesc:a5d3a780be0ce7401febc27ca1363cb9e">
 <td class="mdescLeft"> </td>
@@ -153,11 +197,16 @@ OutlinerLine2D Class Reference
 </colgroup>
 <tbody>
 <tr class="odd heading">
-<td colspan="2"><h2 id="public-attributes" class="groupheader"><span id="pub-attribs"></span> Public Attributes</h2></td>
+<td colspan="2"><h2 id="public-attributes" class="groupheader"><span
+id="pub-attribs"></span> Public Attributes</h2></td>
 </tr>
 <tr class="even memitem:a72aecb0077d120778998c86102e28097">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a72aecb0077d120778998c86102e28097"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> </td>
-<td class="memItemRight" data-valign="bottom"><strong>start</strong></td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a72aecb0077d120778998c86102e28097"></span>
+<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_vector2_d.md"
+class="el">OutlinerVector2D</a> </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>start</strong></td>
 </tr>
 <tr class="odd memdesc:a72aecb0077d120778998c86102e28097">
 <td class="mdescLeft"> </td>
@@ -168,7 +217,10 @@ OutlinerLine2D Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:a10b728829cc0754b7f9c95458c6da75d">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a10b728829cc0754b7f9c95458c6da75d"></span> <a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_vector2_d.md" class="el">OutlinerVector2D</a> </td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a10b728829cc0754b7f9c95458c6da75d"></span>
+<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_outliner_vector2_d.md"
+class="el">OutlinerVector2D</a> </td>
 <td class="memItemRight" data-valign="bottom"><strong>end</strong></td>
 </tr>
 <tr class="even memdesc:a10b728829cc0754b7f9c95458c6da75d">
@@ -235,7 +287,8 @@ This object represents a "line" between two points in 2D space.
 </tr>
 </tbody>
 </table></td>
-<td class="mlabels-right"><span class="mlabels"><span class="mlabel">inline</span></span></td>
+<td class="mlabels-right"><span class="mlabels"><span
+class="mlabel">inline</span></span></td>
 </tr>
 </tbody>
 </table>
@@ -247,10 +300,11 @@ four arguments in total.
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinerhighprecision_8hh_source.md" class="el">outlinerhighprecision.hh</a>
+-   src/<a href="outlinerhighprecision_8hh_source.md"
+    class="el">outlinerhighprecision.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.md)
-1.9.2</span>
+by [<img src="doxygen.svg" class="footer" width="104" height="31"
+alt="doxygen" />](https://www.doxygen.org/index.md) 1.9.4</span>

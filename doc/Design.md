@@ -9,7 +9,7 @@ The structure of the software is shown in the below figure:
 
 Overall, the system consists of six major parts:
 
-* Main program ("main").
+* Main program ("main"), along with the associated "MainHelpers" modules.
 * 3D model import library ("assimp"), an external library.
 * Core functionality ("core"), used for calculating the actual results, such as plan views from the 3D model.
 * The SVG image export module, "outlinersvg".
@@ -18,11 +18,11 @@ Overall, the system consists of six major parts:
 
 ## Modules
 
-### Main
+### Main and MainHerlps
 
 This is the main program, which lives in src/main.cc. However, bulk of the functionality is in associated classes.
 
-See the detailed description of the [Class MainConfig API](software/class_main_config.md), [Class MainOptions API](software/class_main_options.md), and [Class MainTest API](software/class_main_test.md).
+The associated classes are shown inside the "MainHelpers" module. These help the main program perform its task, by parsing command line options, storing configuration information, and so on. See the detailed description of the [Class MainConfig API](software/class_main_config.md), [Class MainOptions API](software/class_main_options.md), and [Class MainTest API](software/class_main_test.md).
 
 ### Assimp
 
@@ -99,11 +99,29 @@ This is the module inside of the Core module that performs the actual analysis o
 
 See the detailed description of the [Class ShapeRecognizer API](software/class_shape_recognizer.md). 
 
+#### Outlinercomposer
+
+This is the module inside of the Core module that stiches together various pieces of the cave map results (planview, cross-sections, name, location, etc.) and creates a composite view. See the --composite command option.
+
+See the detailed description of the [Class Composer API](software/class_composer.md). 
+
 ### Outlinersvg
 
 This module can be used to output SVG images to a file. For a description of what an SVG image format is, see https://www.w3schools.com/graphics/svg_intro.asp. 
 
 See the detailed description of the [Class SvgCreator API](software/class_svg_creator.md) and the options object [Class SvgOptions API](software/class_svg_options.md).
+
+### Outlinersvgreader
+
+This module can be used to read SVG images from a file. 
+
+See the detailed description of the [Class SvgReader API](software/class_svg_reader.md).
+
+### Outlinersvgstacker
+
+This module can be used to combine a number of SVG images together, stacked on top of each other (vertically).
+
+See the detailed description of the [Class SvgStacker API](software/class_svg_stacker.md).
 
 ### Outlinerdesribe
 
@@ -158,6 +176,12 @@ This module only provides a set of constants for maximum sizes of tables, option
 #### Outlinerdebug
 
 This module provides a reporting and debugging facility, with printf-like functions to report on various events. The level of reporting can be controlled by the debuginit function, and the actual reporting functions are infof, debugf, deepdebugf, and deepdeepdebugf.
+
+#### Outlinertempfiler
+
+This module manages the creation of temporary files needed during the analysis process.
+
+See the detailed description of the [Class TempFiler API](software/class_temp_filer.md). 
 
 #### Outlinerversion
 

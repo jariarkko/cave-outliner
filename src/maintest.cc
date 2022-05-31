@@ -34,13 +34,17 @@
 #include "outlinerformmatrix2d.hh"
 #include "outlinerdepthmap.hh"
 #include "outlinersvg.hh"
+#include "outlinersvgreader.hh"
+#include "outlinersvgstacker.hh"
 #include "outlinermath.hh"
+#include "outlinercomposer.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Class functions ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-MainTest::MainTest() {
+MainTest::MainTest(TempFiler& tempFilerIn) :
+  tempFiler(tempFilerIn) {
 }
 
 MainTest::~MainTest() {
@@ -69,6 +73,9 @@ MainTest::test(void) {
   FormMatrix2D::test();
   DepthMap::test();
   SvgCreator::test();
+  SvgReader::test();
+  SvgStacker::test();
+  Composer::test(tempFiler);
   infof("tests ok");
 }
 

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-          "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-     width="61" height="20">
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="61" height="20">
 <rect x="0" y="0" width="61" height="20" fill="white" stroke="white" stroke-width="0"/>
 <rect x="1" y="9" width="1" height="1" fill="rgb(214,214,214)" stroke-width="0" stroke="rgb(214,214,214)" />
 <rect x="1" y="8" width="1" height="1" fill="rgb(203,203,203)" stroke-width="0" stroke="rgb(203,203,203)" />

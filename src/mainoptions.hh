@@ -25,6 +25,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "mainconfig.hh"
+#include "outlinertemp.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Class definition ///////////////////////////////////////////////////////////////////////////
@@ -40,7 +41,8 @@ class MainOptions {
 public:
 
   /// Create an options processor.
-  MainOptions(MainConfig& configIn);
+  MainOptions(MainConfig& configIn,
+	      TempFiler& tempFiler);
 
   /// Release all resources associated with the options processor.
   ~MainOptions();
@@ -52,17 +54,21 @@ public:
 private:
   
   MainConfig& config;
+  TempFiler& tempFiler;
   
   bool processCommandLineOptions(int& argc,
                                  char**& argv);
   bool processCommandLineArguments(int& argc,
                                    char**& argv);
+  bool processDefaults(void);
   void processVersion(void);
   void processHelp(void);
   bool checkFileExtension(const char* filename,
                           const char* extension);
   bool parseDirection(const char* string,
                       enum outlinerdirection& direction);
+  bool getFileCreation(const char* file,
+		       time_t* p_result) const;
 };
 
 #endif // MAINCONFIG_HH

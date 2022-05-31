@@ -3,8 +3,8 @@
 <col style="width: 100%" />
 </colgroup>
 <tbody>
-<tr class="odd" style="height: 56px;">
-<td id="projectalign" style="padding-left: 0.5em"><div id="projectname">
+<tr id="projectrow" class="odd">
+<td id="projectalign"><div id="projectname">
 Cave Outliner
 </div></td>
 </tr>
@@ -25,35 +25,50 @@ MainOptions Class Reference
 </colgroup>
 <tbody>
 <tr class="odd heading">
-<td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
+<td colspan="2"><h2 id="public-member-functions"
+class="groupheader"><span id="pub-methods"></span> Public Member
+Functions</h2></td>
 </tr>
-<tr class="even memitem:af3c0f3afe360cabab115c2a239555b9c">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="af3c0f3afe360cabab115c2a239555b9c"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>MainOptions</strong> (<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_main_config.md" class="el">MainConfig</a> &amp;configIn)</td>
+<tr class="even memitem:a005464daff286804d8e345563ab032be">
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a005464daff286804d8e345563ab032be"></span>
+ </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>MainOptions</strong> (<a
+href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_main_config.md" class="el">MainConfig</a> &amp;configIn,
+<a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_temp_filer.md" class="el">TempFiler</a>
+&amp;tempFiler)</td>
 </tr>
-<tr class="odd memdesc:af3c0f3afe360cabab115c2a239555b9c">
+<tr class="odd memdesc:a005464daff286804d8e345563ab032be">
 <td class="mdescLeft"> </td>
 <td class="mdescRight">Create an options processor.<br />
 </td>
 </tr>
-<tr class="even separator:af3c0f3afe360cabab115c2a239555b9c">
+<tr class="even separator:a005464daff286804d8e345563ab032be">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:a012c2b3ec96c28f973d4a6db4f77b54c">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a012c2b3ec96c28f973d4a6db4f77b54c"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>~MainOptions</strong> ()</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a012c2b3ec96c28f973d4a6db4f77b54c"></span>
+ </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>~MainOptions</strong> ()</td>
 </tr>
 <tr class="even memdesc:a012c2b3ec96c28f973d4a6db4f77b54c">
 <td class="mdescLeft"> </td>
-<td class="mdescRight">Release all resources associated with the options processor.<br />
+<td class="mdescRight">Release all resources associated with the options
+processor.<br />
 </td>
 </tr>
 <tr class="odd separator:a012c2b3ec96c28f973d4a6db4f77b54c">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a19b9958f21a641e84d004cc0a6f495fb">
-<td style="text-align: right;" class="memItemLeft" data-valign="top">bool </td>
-<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_main_options.md#a19b9958f21a641e84d004cc0a6f495fb" class="el">processCommandLine</a> (int argc, char **argv)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top">bool </td>
+<td class="memItemRight" data-valign="bottom"><a
+href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_main_options.md#a19b9958f21a641e84d004cc0a6f495fb"
+class="el">processCommandLine</a> (int argc, char **argv)</td>
 </tr>
 <tr class="odd separator:a19b9958f21a641e84d004cc0a6f495fb">
 <td colspan="2" class="memSeparator"> </td>
@@ -111,5 +126,5 @@ The documentation for this class was generated from the following file:
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.md)
-1.9.2</span>
+by [<img src="doxygen.svg" class="footer" width="104" height="31"
+alt="doxygen" />](https://www.doxygen.org/index.md) 1.9.4</span>

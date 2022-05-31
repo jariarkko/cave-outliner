@@ -39,6 +39,8 @@
 #include "outlinerboundingboxer.hh"
 #include "outlinersvg.hh"
 #include "outlinerversion.hh"
+#include "outlinercomposer.hh"
+#include "outlinertemp.hh"
 #include "mainconfig.hh"
 #include "mainoptions.hh"
 #include "maintest.hh"
@@ -65,8 +67,9 @@ int
 main(int argc, char** argv) {
 
   // Process command line options and arguments
+  TempFiler tempFiler;
   MainConfig config;
-  MainOptions options(config);
+  MainOptions options(config,tempFiler);
   if (!options.processCommandLine(argc,argv)) {
     return(1);
   }
@@ -77,14 +80,14 @@ main(int argc, char** argv) {
   // Run tests if needed
   if (config.test) {
     debugf("running tests");
-    MainTest tester;
+    MainTest tester(tempFiler);
     tester.test();
     debugf("done with tests");
     return(0);
   }
   
   // Check input and output file names, if we have them. Otherwise we are done.
-  if (config.inputFile == 0 || config.outputFile == 0) {
+  if (config.inputFile == 0 || config.planViewOutputFile == 0) {
     return(0);
   }
   
@@ -235,7 +238,7 @@ main(int argc, char** argv) {
   setSvgOptions(config,svgOptions);
   
   // Process the model
-  Processor processor(config.outputFile,
+  Processor processor(config.planViewOutputFile,
                       processorOptions,
                       svgOptions,
                       originalBoundingBox,
@@ -252,6 +255,34 @@ main(int argc, char** argv) {
     return(1);
   }
 
+  // Do we need to construct a composite map file, from planview and
+  // cross-sections? If yes, do it based on the previously created
+  // files.
+  if (config.compositeMap) {
+    const char* crossSectionFiles[outlinermaxcrosssections];
+    assert(config.nCrossSections <= outlinermaxcrosssections);
+    for (unsigned int i = 0; i < config.nCrossSections; i++) {
+      crossSectionFiles[i] = config.crossSections[i].filename;
+    }
+    Composer composer(config.compositeOutputFile,
+		      outlinerspacingbetweencompositeimages,
+		      svgOptions,
+		      config.name,
+		      config.location,
+		      config.coordinates,
+		      config.surveyer,
+		      config.surveyTool,
+		      config.surveyDate,
+		      config.mapDate,
+		      config.planViewOutputFile,
+		      config.nCrossSections,
+		      crossSectionFiles,
+		      tempFiler);
+    if (!composer.compose()) {
+      return(1);
+    }
+  }
+  
   // Done
   infof("Done");
   return(0);

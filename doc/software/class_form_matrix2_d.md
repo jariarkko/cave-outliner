@@ -3,8 +3,8 @@
 <col style="width: 100%" />
 </colgroup>
 <tbody>
-<tr class="odd" style="height: 56px;">
-<td id="projectalign" style="padding-left: 0.5em"><div id="projectname">
+<tr id="projectrow" class="odd">
+<td id="projectalign"><div id="projectname">
 Cave Outliner
 </div></td>
 </tr>
@@ -26,11 +26,17 @@ FormMatrix2D Class Reference
 </colgroup>
 <tbody>
 <tr class="odd heading">
-<td colspan="2"><h2 id="public-member-functions" class="groupheader"><span id="pub-methods"></span> Public Member Functions</h2></td>
+<td colspan="2"><h2 id="public-member-functions"
+class="groupheader"><span id="pub-methods"></span> Public Member
+Functions</h2></td>
 </tr>
 <tr class="even memitem:ac31aa4a7b5bcfb4f99514ac0a01b272b">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="ac31aa4a7b5bcfb4f99514ac0a01b272b"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>FormMatrix2D</strong> (const unsigned int xIndexSizeIn, const unsigned int yIndexSizeIn)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="ac31aa4a7b5bcfb4f99514ac0a01b272b"></span>
+ </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>FormMatrix2D</strong> (const unsigned int
+xIndexSizeIn, const unsigned int yIndexSizeIn)</td>
 </tr>
 <tr class="odd memdesc:ac31aa4a7b5bcfb4f99514ac0a01b272b">
 <td class="mdescLeft"> </td>
@@ -41,8 +47,11 @@ FormMatrix2D Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:a3fd9dc4f2b12e4e40329c15f458482de">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a3fd9dc4f2b12e4e40329c15f458482de"></span>  </td>
-<td class="memItemRight" data-valign="bottom"><strong>~FormMatrix2D</strong> ()</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a3fd9dc4f2b12e4e40329c15f458482de"></span>
+ </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>~FormMatrix2D</strong> ()</td>
 </tr>
 <tr class="even memdesc:a3fd9dc4f2b12e4e40329c15f458482de">
 <td class="mdescLeft"> </td>
@@ -53,29 +62,46 @@ FormMatrix2D Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:aed9f868ba8bdf4ddf19f3d50135a1345">
-<td style="text-align: right;" class="memItemLeft" data-valign="top">void </td>
-<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_form_matrix2_d.md#aed9f868ba8bdf4ddf19f3d50135a1345" class="el">setForm</a> (const unsigned int xIndex, const unsigned int yIndex, const outlinerform form)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top">void </td>
+<td class="memItemRight" data-valign="bottom"><a
+href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_form_matrix2_d.md#aed9f868ba8bdf4ddf19f3d50135a1345"
+class="el">setForm</a> (const unsigned int xIndex, const unsigned int
+yIndex, const outlinerform form)</td>
 </tr>
 <tr class="odd separator:aed9f868ba8bdf4ddf19f3d50135a1345">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:aab13d5d58e30a64fe84386d722e8692f">
-<td style="text-align: right;" class="memItemLeft" data-valign="top">void </td>
-<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_form_matrix2_d.md#aab13d5d58e30a64fe84386d722e8692f" class="el">setForm</a> (const unsigned int xIndexStart, const unsigned int yIndexStart, const unsigned int xIndexEnd, const unsigned int yIndexEnd, const outlinerform form)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top">void </td>
+<td class="memItemRight" data-valign="bottom"><a
+href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_form_matrix2_d.md#aab13d5d58e30a64fe84386d722e8692f"
+class="el">setForm</a> (const unsigned int xIndexStart, const unsigned
+int yIndexStart, const unsigned int xIndexEnd, const unsigned int
+yIndexEnd, const outlinerform form)</td>
 </tr>
 <tr class="odd separator:aab13d5d58e30a64fe84386d722e8692f">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:a03f462b59bb37cad777ac21fde3a0555">
-<td style="text-align: right;" class="memItemLeft" data-valign="top">outlinerform </td>
-<td class="memItemRight" data-valign="bottom"><a href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_form_matrix2_d.md#a03f462b59bb37cad777ac21fde3a0555" class="el">getForm</a> (const unsigned int xIndex, const unsigned int yIndex) const</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top">outlinerform </td>
+<td class="memItemRight" data-valign="bottom"><a
+href="https://github.com/jariarkko/cave-outliner/blob/master/doc/software/class_form_matrix2_d.md#a03f462b59bb37cad777ac21fde3a0555"
+class="el">getForm</a> (const unsigned int xIndex, const unsigned int
+yIndex) const</td>
 </tr>
 <tr class="odd separator:a03f462b59bb37cad777ac21fde3a0555">
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="even memitem:af3078e216048b5792c6e2bb38a856a2f">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="af3078e216048b5792c6e2bb38a856a2f"></span> char </td>
-<td class="memItemRight" data-valign="bottom"><strong>getFormChar</strong> (const outlinerform form) const</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="af3078e216048b5792c6e2bb38a856a2f"></span>
+char </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>getFormChar</strong> (const outlinerform
+form) const</td>
 </tr>
 <tr class="odd memdesc:af3078e216048b5792c6e2bb38a856a2f">
 <td class="mdescLeft"> </td>
@@ -86,8 +112,11 @@ FormMatrix2D Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:a87ebf8d776785f8ae105579b36406673">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a87ebf8d776785f8ae105579b36406673"></span> void </td>
-<td class="memItemRight" data-valign="bottom"><strong>print</strong> (unsigned int step=1) const</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a87ebf8d776785f8ae105579b36406673"></span>
+void </td>
+<td class="memItemRight" data-valign="bottom"><strong>print</strong>
+(unsigned int step=1) const</td>
 </tr>
 <tr class="even memdesc:a87ebf8d776785f8ae105579b36406673">
 <td class="mdescLeft"> </td>
@@ -107,11 +136,16 @@ FormMatrix2D Class Reference
 </colgroup>
 <tbody>
 <tr class="odd heading">
-<td colspan="2"><h2 id="static-public-member-functions" class="groupheader"><span id="pub-static-methods"></span> Static Public Member Functions</h2></td>
+<td colspan="2"><h2 id="static-public-member-functions"
+class="groupheader"><span id="pub-static-methods"></span> Static Public
+Member Functions</h2></td>
 </tr>
 <tr class="even memitem:a34e6a90c6fabe20bf69473aa00d9ad19">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a34e6a90c6fabe20bf69473aa00d9ad19"></span> static void </td>
-<td class="memItemRight" data-valign="bottom"><strong>test</strong> (void)</td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a34e6a90c6fabe20bf69473aa00d9ad19"></span>
+static void </td>
+<td class="memItemRight" data-valign="bottom"><strong>test</strong>
+(void)</td>
 </tr>
 <tr class="odd memdesc:a34e6a90c6fabe20bf69473aa00d9ad19">
 <td class="mdescLeft"> </td>
@@ -131,11 +165,15 @@ FormMatrix2D Class Reference
 </colgroup>
 <tbody>
 <tr class="odd heading">
-<td colspan="2"><h2 id="public-attributes" class="groupheader"><span id="pub-attribs"></span> Public Attributes</h2></td>
+<td colspan="2"><h2 id="public-attributes" class="groupheader"><span
+id="pub-attribs"></span> Public Attributes</h2></td>
 </tr>
 <tr class="even memitem:a48419b75066a56cd806a880b9ed17d51">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a48419b75066a56cd806a880b9ed17d51"></span> const unsigned int </td>
-<td class="memItemRight" data-valign="bottom"><strong>xIndexSize</strong></td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a48419b75066a56cd806a880b9ed17d51"></span>
+const unsigned int </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>xIndexSize</strong></td>
 </tr>
 <tr class="odd memdesc:a48419b75066a56cd806a880b9ed17d51">
 <td class="mdescLeft"> </td>
@@ -146,8 +184,11 @@ FormMatrix2D Class Reference
 <td colspan="2" class="memSeparator"> </td>
 </tr>
 <tr class="odd memitem:a619677cc03f8a61b6b7a2c2dd9701aaf">
-<td style="text-align: right;" class="memItemLeft" data-valign="top"><span id="a619677cc03f8a61b6b7a2c2dd9701aaf"></span> const unsigned int </td>
-<td class="memItemRight" data-valign="bottom"><strong>yIndexSize</strong></td>
+<td class="memItemLeft" style="text-align: right;"
+data-valign="top"><span id="a619677cc03f8a61b6b7a2c2dd9701aaf"></span>
+const unsigned int </td>
+<td class="memItemRight"
+data-valign="bottom"><strong>yIndexSize</strong></td>
 </tr>
 <tr class="even memdesc:a619677cc03f8a61b6b7a2c2dd9701aaf">
 <td class="mdescLeft"> </td>
@@ -296,10 +337,11 @@ Set the flag indicating that there is material in a given
 
 The documentation for this class was generated from the following file:
 
--   src/<a href="outlinerformmatrix2d_8hh_source.md" class="el">outlinerformmatrix2d.hh</a>
+-   src/<a href="outlinerformmatrix2d_8hh_source.md"
+    class="el">outlinerformmatrix2d.hh</a>
 
 ------------------------------------------------------------------------
 
 <span class="small">Generated
-by [Doxygen](https://www.doxygen.org/index.md)
-1.9.2</span>
+by [<img src="doxygen.svg" class="footer" width="104" height="31"
+alt="doxygen" />](https://www.doxygen.org/index.md) 1.9.4</span>

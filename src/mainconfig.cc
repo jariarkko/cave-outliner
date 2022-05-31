@@ -22,6 +22,9 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <cassert>
+#include <stdlib.h>
+#include <pwd.h>
+#include <string.h>
 #include "outlinertypes.hh"
 #include "outlinerconstants.hh"
 #include "outlinerdirection.hh"
@@ -36,7 +39,8 @@
 
 MainConfig::MainConfig() :
   inputFile(0),
-  outputFile(0),
+  planViewOutputFile(0),
+  compositeOutputFile(0),
   test(0),
   nThreads(outlinerdefaultthreads),
   info(1),
@@ -71,6 +75,14 @@ MainConfig::MainConfig() :
   labelCrossSections(0),
   formAnalysis(0),
   formCondense(1),
+  name(0),
+  surveyer(getUserRealName()),
+  surveyTool("iPhone 12 Pro"),
+  surveyDate(0),
+  mapDate(getCurrentDate()),
+  location(0),
+  coordinates(0),
+  compositeMap(0),
   dimensions(0),
   crossSectionLabelCount(0) {
 }
@@ -79,8 +91,10 @@ MainConfig::~MainConfig() {
   debugf("MainConfig::~MainConfig start");
   if (inputFile != 0) free((void*)inputFile);
   inputFile = 0;
-  if (outputFile != 0) free((void*)outputFile);
-  outputFile = 0;
+  if (planViewOutputFile != 0) free((void*)planViewOutputFile);
+  planViewOutputFile = 0;
+  if (compositeOutputFile != 0) free((void*)compositeOutputFile);
+  compositeOutputFile = 0;
   if (automaticCrossSectionFilenamePattern != 0) free((void*)automaticCrossSectionFilenamePattern);
   automaticCrossSectionFilenamePattern = 0;
   for (unsigned int i = 0; i < nCrossSections; i++) {
@@ -91,6 +105,82 @@ MainConfig::~MainConfig() {
     one.label = 0;
   }
   debugf("MainConfig::~MainConfig done");
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// Helper functions ///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+const char*
+MainConfig::getUserRealName() {
+
+  // Find out which user runs the software
+  const char* user = getenv("USER");
+  if (user == 0) {
+    warnf("Cannot find current user id");
+    return(0);
+  }
+
+  // Get the password entry for the user
+  struct passwd entrySpace;
+  const unsigned bufSize = 1024;
+  char buffer[bufSize];
+  struct passwd *entry = 0;
+  if (getpwnam_r(user,&entrySpace,buffer,bufSize,&entry) < 0 || entry == 0) {
+    warnf("Cannot find current user entry for user id %s", user);
+    return(0);
+  }
+  
+  // See if there's a real user name in the entry
+  if (strlen(entry->pw_gecos) == 0) {
+    warnf("No real name associated with user id %s", user);
+    return(0);
+  }
+
+  // Get the real name part (before comma)
+  size_t n = strcspn(entry->pw_gecos, ",");
+  if (n > maxRealNameLength - 1) {
+    n = maxRealNameLength - 1;
+  }
+  memset(realNameBuffer,0,maxRealNameLength);
+  strncpy(realNameBuffer,entry->pw_gecos,n);
+  return(realNameBuffer);
+}
+
+const char*
+MainConfig::getCurrentDate() {
+  time_t now = time(0);
+  convertToDate(now,dateBuffer,sizeof(dateBuffer));
+  return(dateBuffer);
+}
+
+void
+MainConfig::convertToDate(time_t when,
+			  char* buf,
+			  size_t bufSize) {
+  assert(bufSize > 0);
+  static const char* months[12] = {
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  };
+  struct tm* decoded = localtime(&when);
+  assert(decoded->tm_mday <= 31);
+  assert(decoded->tm_mon <= 11);
+  memset(buf,0,bufSize);
+  snprintf(buf,bufSize-1,"%s %u, %04u",
+	   months[decoded->tm_mon],
+	   decoded->tm_mday,
+	   1900 + decoded->tm_year);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

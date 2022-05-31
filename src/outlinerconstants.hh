@@ -42,6 +42,7 @@
 #define outlinersmallfontysize                                                       6.0
 #define outlinertitlespaceempty                                                        2
 #define outlinertitlespacex                                (outlinerdefaultfontxsize*15)
+#define outlinerbasicinfospacex                            (outlinerdefaultfontxsize*45)
 #define outlinercrosssectionextraline                                                  5
 #define outlinerdimensionlinespaceempty                                                2
 #define outlinerdimensionlinespacelinestart                                            4
@@ -52,6 +53,7 @@
                                                  outlinerdimensionlinespaceemptymore + \
                                                         outlinerdimensionlinespacewidth)
 #define outlinerdimensionspacex                               (outlinersmallfontxsize*5)
+#define outlinerspacingbetweencompositeimages                                         10
 #define outlinerepsilon                                                         0.000001 // ppm
 
 #define OUTLINER_PROG                                                    "cave-outliner"
@@ -61,6 +63,7 @@
 #define OUTLINER_DEBUGPREFIX                                   OUTLINER_PROG ": Debug: "
 
 #define OUTLINER_TEMPDIRECTORY                                                   "/tmp/"
+#define OUTLINER_TEMPIDENTIFIER                                              "outliner"
 
 #endif // OUTLINERCONSTANTS_HH
 

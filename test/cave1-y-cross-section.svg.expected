@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-          "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-     width="1265" height="370">
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="1265" height="370">
 <rect x="0" y="0" width="1265" height="370" fill="white" stroke="white" stroke-width="0"/>
 <text x="1191" y="185" fill="black">A</text>
 <polyline points="85,25 90,25 90,20 " fill="none" stroke="black" stroke-width="1" />

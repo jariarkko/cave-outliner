@@ -86,6 +86,8 @@ struct OutlinerSvgLineList {
   struct OutlinerSvgLineList* next;
 };
 
+class SvgReader;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Class interface ////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -153,11 +155,13 @@ class SvgCreator {
   static void test(void);
   
  private:
-
+  
+  friend class SvgStacker;
+  
   const char* fileName;
   std::ofstream file;
-  const unsigned int xSize;
-  const unsigned int ySize;
+  unsigned int xSize;
+  unsigned int ySize;
   const unsigned int xSizeMultiplied;
   const unsigned int ySizeMultiplied;
   const outlinerreal xStart;
@@ -176,8 +180,12 @@ class SvgCreator {
   struct OutlinerSvgLineList** lineTable;
   
   const char* colorBasedOnStyle(OutlinerSvgStyle style) const;
-  void preamble();
-  void postamble();
+  static void preamble(std::ofstream& outputFile,
+		       const unsigned int xSizeImage,
+		       const unsigned int ySizeImage,
+		       const SvgOptions& options,
+		       const bool setBackground);
+  static void postamble(std::ofstream& outputFile);
   void coordinateNormalization(const outlinerreal x,
                                const outlinerreal y,
                                unsigned int& xInt,
@@ -238,7 +246,7 @@ class SvgCreator {
                               unsigned int y);
   void lineTableOutput(void);
   void lineTableInfos(void);
-
+  
   void smoothingTest(void);
  };
 
