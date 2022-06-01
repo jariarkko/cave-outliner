@@ -97,7 +97,7 @@ SvgReader::getSize(unsigned int& xSize,
       return(0);
       
     case svgstatement_svgstart:
-      infof("statement = %s", statement);
+      deepdebugf("statement = %s", statement);
       if (!getIntComponent(statement,"width",xSize)) {
 	errf("Cannot parse SVG file <svg> statement in %s line %u, missing width field", fileName);
 	return(0);
@@ -148,7 +148,7 @@ SvgReader::getStatement(enum SvgStatement& statementType,
     }
     strcpy(statementSpace,line.c_str());
     statement = &statementSpace[0];
-    infof("converted statement = %s", statement);
+    deepdebugf("converted statement = %s", statement);
     lineno = curline++;
     return(parseStatement(statementType,lineno,statement));
   } else {
@@ -271,13 +271,34 @@ SvgReader::iterateStatementOptionsNext(struct SvgReaderOptionParser& iter,
     return(0);
   }
 
-  // Test for end of the directive
+  // Test for ending the first part of the directive, e.g., as in
+  // <text x="1" y="2">Some text</text>.
   if (*(iter.ptr) == '>') {
-    // This may not be the total end of the directive, but we've gone
-    // through the options by now, so we can bail out.
+    iter.ptr++;
+    optionName = iter.ptr;
+    optionNameLength = 0;
+    optionValue = iter.ptr;
+    optionValueLength = 0;
+    while (*(iter.ptr) != 0 && (*(iter.ptr) != '<' || *(iter.ptr + 1) != '/')) {
+      iter.ptr++;
+      optionValueLength++;
+    }
+    if (*(iter.ptr) == 0) {
+      errf("Premature end of two-part SVG statement in %s:%u", iter.fileName, iter.lineNo);
+      return(0);
+    }
+    end = 0;
+    return(1);
+  }
+  
+  // Test for final end of the directive, as in ...</text>.
+  if (*(iter.ptr) != 0 && (*(iter.ptr) == '<' && *(iter.ptr + 1) == '/')) {
     end = 1;
     return(1);
-  } else if (*(iter.ptr) == '/') {
+  }
+  
+  // Test for end of the directive
+  if (*(iter.ptr) == '/') {
     // This is the full end of the directive.
     iter.ptr++;
     if (*(iter.ptr) == '>') {
@@ -343,65 +364,106 @@ void
 SvgReader::test(void) {
   
   infof("  running SvgReader unit tests");
-  unsigned int value = 0;
-  bool ans = getIntComponent("","width",value);
-  assert(!ans);
-  ans = getIntComponent("width=17","width",value);
-  assert(!ans);
-  ans = getIntComponent("width=\"17","width",value);
-  assert(!ans);
-  ans = getIntComponent("width=\"-17\"","width",value);
-  assert(!ans);
-  ans = getIntComponent("width=\"17\"","width",value);
-  assert(ans);
-  assert(value == 17);
-  SvgReader reader1("test/cave1-line.svg");
-  unsigned int width;
-  unsigned int height;
-  ans = reader1.getSize(width,height);
-  assert(ans);
-  assert(width == 235);
-  assert(height == 74);
-
+  {
+    unsigned int value = 0;
+    bool ans = getIntComponent("","width",value);
+    assert(!ans);
+    ans = getIntComponent("width=17","width",value);
+    assert(!ans);
+    ans = getIntComponent("width=\"17","width",value);
+    assert(!ans);
+    ans = getIntComponent("width=\"-17\"","width",value);
+    assert(!ans);
+    ans = getIntComponent("width=\"17\"","width",value);
+    assert(ans);
+    assert(value == 17);
+    SvgReader reader1("test/cave1-line.svg");
+    unsigned int width;
+    unsigned int height;
+    ans = reader1.getSize(width,height);
+    assert(ans);
+    assert(width == 235);
+    assert(height == 74);
+  }
+    
   infof("Running SvgReader option parsing tests");
-  const char* statement = "<polyline points=\"13,61 14,61 14,62 \" fill=\"none\" stroke=\"black\" stroke-width=\"1\" />";
-  struct SvgReaderOptionParser iter;
-  ans = iterateStatementOptionsInit(statement,"sample.svg",20,iter);
-  assert(ans);
-  bool end;
-  const char* optionName = 0;
-  unsigned int optionNameLength = 0;
-  const char* optionValue = 0;
-  unsigned int optionValueLength = 0;
-  ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
-  assert(ans);
-  assert(end == 0);
-  assert(optionNameLength == 6);
-  assert(strncmp(optionName,"points",optionNameLength) == 0);
-  assert(optionValueLength == 18);
-  assert(strncmp(optionValue,"13,61 14,61 14,62 ",optionValueLength) == 0);
-  ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
-  assert(ans);
-  assert(end == 0);
-  assert(optionNameLength == 4);
-  assert(strncmp(optionName,"fill",optionNameLength) == 0);
-  assert(optionValueLength == 4);
-  assert(strncmp(optionValue,"none",optionValueLength) == 0);
-  ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
-  assert(ans);
-  assert(end == 0);
-  assert(optionNameLength == 6);
-  assert(strncmp(optionName,"stroke",optionNameLength) == 0);
-  assert(optionValueLength == 5);
-  assert(strncmp(optionValue,"black",optionValueLength) == 0);
-  ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
-  assert(ans);
-  assert(end == 0);
-  assert(optionNameLength == 12);
-  assert(strncmp(optionName,"stroke-width",optionNameLength) == 0);
-  assert(optionValueLength == 1);
-  assert(strncmp(optionValue,"1",optionValueLength) == 0);
-  ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
-  assert(ans);
-  assert(end == 1);
+  {
+    const char* statement = "<polyline points=\"13,61 14,61 14,62 \" fill=\"none\" stroke=\"black\" stroke-width=\"1\" />";
+    struct SvgReaderOptionParser iter;
+    bool ans = iterateStatementOptionsInit(statement,"sample.svg",20,iter);
+    assert(ans);
+    bool end;
+    const char* optionName = 0;
+    unsigned int optionNameLength = 0;
+    const char* optionValue = 0;
+    unsigned int optionValueLength = 0;
+    ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
+    assert(ans);
+    assert(end == 0);
+    assert(optionNameLength == 6);
+    assert(strncmp(optionName,"points",optionNameLength) == 0);
+    assert(optionValueLength == 18);
+    assert(strncmp(optionValue,"13,61 14,61 14,62 ",optionValueLength) == 0);
+    ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
+    assert(ans);
+    assert(end == 0);
+    assert(optionNameLength == 4);
+    assert(strncmp(optionName,"fill",optionNameLength) == 0);
+    assert(optionValueLength == 4);
+    assert(strncmp(optionValue,"none",optionValueLength) == 0);
+    ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
+    assert(ans);
+    assert(end == 0);
+    assert(optionNameLength == 6);
+    assert(strncmp(optionName,"stroke",optionNameLength) == 0);
+    assert(optionValueLength == 5);
+    assert(strncmp(optionValue,"black",optionValueLength) == 0);
+    ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
+    assert(ans);
+    assert(end == 0);
+    assert(optionNameLength == 12);
+    assert(strncmp(optionName,"stroke-width",optionNameLength) == 0);
+    assert(optionValueLength == 1);
+    assert(strncmp(optionValue,"1",optionValueLength) == 0);
+    ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
+    assert(ans);
+    assert(end == 1);
+  }
+  
+  infof("Running SvgReader option parsing tests for two-part directives");
+  {
+    const char* statement = "<text x=\"1\" y=\"2\">Example</text>";
+    struct SvgReaderOptionParser iter;
+    bool ans = iterateStatementOptionsInit(statement,"sample.svg",30,iter);
+    assert(ans);
+    bool end;
+    const char* optionName = 0;
+    unsigned int optionNameLength = 0;
+    const char* optionValue = 0;
+    unsigned int optionValueLength = 0;
+    ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
+    assert(ans);
+    assert(end == 0);
+    assert(optionNameLength == 1);
+    assert(strncmp(optionName,"x",optionNameLength) == 0);
+    assert(optionValueLength == 1);
+    assert(strncmp(optionValue,"1",optionValueLength) == 0);
+    ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
+    assert(ans);
+    assert(end == 0);
+    assert(optionNameLength == 1);
+    assert(strncmp(optionName,"y",optionNameLength) == 0);
+    assert(optionValueLength == 1);
+    assert(strncmp(optionValue,"2",optionValueLength) == 0);
+    ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
+    assert(ans);
+    assert(end == 0);
+    debugf("returned %s=%s (%u)", optionName, optionValue, optionValueLength);
+    assert(optionNameLength == 0);
+    assert(optionValueLength == 7);
+    assert(strncmp(optionValue,"Example",optionValueLength) == 0);
+    ans = iterateStatementOptionsNext(iter,end,optionName,optionNameLength,optionValue,optionValueLength);
+    assert(ans);
+    assert(end == 1);
+  }
 }

@@ -103,6 +103,13 @@ private:
   /// Object to manage temporary files.
   TempFiler& tempFiler;
 
+  /// Create a basic (name, surveyer, tools) image.
+  bool makeBasicInfoImage(const char* nameImageFile);
+
+  /// Calculate used font sizes.
+  void fontSizeMultipliers(unsigned int inputFontSize,
+			   unsigned int& actualFontSize,
+			   unsigned int& actualFontHeight) const;
 };
 
 #endif // OUTLINERCOMPOSER_HH

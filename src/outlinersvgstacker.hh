@@ -85,13 +85,13 @@ class SvgStacker {
   bool addYOffsetText(SvgReader& reader,
 		      const char* statement,
 		      unsigned int yOffset);
-  bool pointsStringAddYOffset(const char* optionValue,
-			      unsigned int optionValueLength,
-			      unsigned int yOffset,
-			      char* newValue,
-			      unsigned int newValueSize,
-			      const char* fileNameRead,
-			      const unsigned int lineNoRead);
+  static bool pointsStringAddYOffset(const char* optionValue,
+				     unsigned int optionValueLength,
+				     unsigned int yOffset,
+				     char* newValue,
+				     unsigned int newValueSize,
+				     const char* fileNameRead,
+				     const unsigned int lineNoRead);
   void outputCopiedText(const char* ptr,
 			unsigned int n);
 };

@@ -42,7 +42,8 @@
 #define outlinersmallfontysize                                                       6.0
 #define outlinertitlespaceempty                                                        2
 #define outlinertitlespacex                                (outlinerdefaultfontxsize*15)
-#define outlinerbasicinfospacex                            (outlinerdefaultfontxsize*45)
+#define outlinerbasicinfospacex                            (outlinerdefaultfontxsize*55)
+#define outlinerbasicinfospaceempty                                                    8
 #define outlinercrosssectionextraline                                                  5
 #define outlinerdimensionlinespaceempty                                                2
 #define outlinerdimensionlinespacelinestart                                            4
@@ -53,7 +54,7 @@
                                                  outlinerdimensionlinespaceemptymore + \
                                                         outlinerdimensionlinespacewidth)
 #define outlinerdimensionspacex                               (outlinersmallfontxsize*5)
-#define outlinerspacingbetweencompositeimages                                         10
+#define outlinerspacingbetweencompositeimages                                         24
 #define outlinerepsilon                                                         0.000001 // ppm
 
 #define OUTLINER_PROG                                                    "cave-outliner"

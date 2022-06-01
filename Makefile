@@ -370,7 +370,8 @@ cave-tests:	cave1-test \
 		cave1-spine-test \
 		cave1-floor-test \
 		cave1-floor-depth-test \
-		cave1-composite-test
+		cave1-composite-test \
+		cave1-composite-multiplier-test
 
 heavy-tests:	heavy-tests-note \
 		cave1-floor-highres-test \
@@ -729,17 +730,27 @@ cave1-floor-depth-test:
 
 cave1-composite-test:
 	@echo 'Running test case cave1-composite-test...'
-	@./cave-outliner --quiet --label --borderline --multiplier 1 \
+	@./cave-outliner --quiet --label --borderline --smooth --multiplier 1 \
 			 --composite --location "Siuntio, Finland" --coordinates "N 60.161948 E 24.137638" \
 			 --crosssections x 3 --crosssections y 1 \
 			 --step 0.05 --holethreshold 10 \
 			 test/cave1.stl test/cave1-composite.svg
 	@diff -q test/cave1-composite.svg test/cave1-composite.svg.expected
 
+cave1-composite-multiplier-test:
+	@echo 'Running test case cave1-composite-multiplier-test...'
+	@./cave-outliner --quiet --label --borderline --smooth --multiplier 5 \
+			 --composite --location "Siuntio, Finland" --coordinates "N 60.161948 E 24.137638" \
+			 --crosssections x 3 --crosssections y 1 \
+			 --step 0.05 --holethreshold 10 \
+			 test/cave1.stl test/cave1-composite-multiplier.svg
+	@diff -q test/cave1-composite-multiplier.svg test/cave1-composite-multiplier.svg.expected
+
 example-tests:	cave1-example-orig-test \
 		cave1-example-form-test \
 		cave1-example-form-long-test \
-		cave1-example-composite-test
+		cave1-example-composite-test \
+		cave1-example-composite-dimension-test
 
 cave1-example-orig-test:
 	@echo 'Running test case cave1-example-orig-test...'
