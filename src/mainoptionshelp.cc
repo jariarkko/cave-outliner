@@ -85,6 +85,8 @@ MainOptions::processHelp(void) {
   std::cout << "  --surveyer name           Who performed the 3D survey? Default is the user's name who is\n";
   std::cout << "                            running this software.\n";
   std::cout << "  --surveytool name         What tool was used for 3D scan? Default is iPhone 12 Pro.\n";
+  std::cout << "  --surveydate date         When was the survey taken? Default is the creation date of the\n";
+  std::cout << "                            input file.\n";
   std::cout << "  --location place          The location of the cave, e.g., city or country.\n";
   std::cout << "  --coordinates coords      Coordinates of the cave.\n";
   std::cout << "  --floordepthmap file      Output cave tunnel floor depth map to given file.\n";

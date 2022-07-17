@@ -87,6 +87,8 @@ Options:
     --surveyer name           Who performed the 3D survey? Default is the user's name who is
                               running this software.
     --surveytool name         What tool was used for 3D scan? Default is iPhone 12 Pro.
+    --surveydate date         When was the survey taken? Default is the creation date of the
+                              input file.
     --location place          The location of the cave, e.g., city or country. 
     --coordinates coords      Coordinates of the cave. 
     --floordepthmap file      Output cave tunnel floor depth map to given file.
