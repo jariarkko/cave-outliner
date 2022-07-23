@@ -356,6 +356,48 @@ SvgReader::iterateStatementOptionsNext(struct SvgReaderOptionParser& iter,
   return(1);
 }
 
+bool
+SvgReader::iterateStatementOptionsPeek(const struct SvgReaderOptionParser& iter,
+				       const char* optionName,
+				       unsigned int optionNameLength,
+				       const char* optionValue,
+				       unsigned int optionValueLength) {
+  struct SvgReaderOptionParser temporaryIter = iter;
+  bool end = 0;
+  const char* foundOptionName = 0;
+  unsigned int foundOptionNameLength = 0;
+  const char* foundOptionValue = 0;
+  unsigned int foundOptionValueLength = 0;
+  while (1) {
+    if (!iterateStatementOptionsNext(temporaryIter,end,
+				     foundOptionName,
+				     foundOptionNameLength,
+				     foundOptionValue,
+				     foundOptionValueLength)) {
+      errf("SVG peek %s operation option parsing failed", optionName);
+      return(0);
+    }
+
+    // Did the options end? Then we are done and we did not find the
+    // peeked for option.
+    if (end) {
+      return(0);
+    }
+    
+    // Do we have the right option? If not, move to next one
+    if (foundOptionNameLength != optionNameLength && strncmp(foundOptionName,optionName,optionNameLength) != 0) continue;
+
+    // We do have the right option. Does the value contain the expected string?
+    if (foundOptionValueLength >= optionValueLength && strncmp(foundOptionValue,optionValue,optionValueLength) == 0) {
+      // It has the right string in the value, too, return that it was found.
+      return(1);
+    }
+
+    // Did not have the right value. Keep looking.
+  }
+  
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Unit tests //////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////

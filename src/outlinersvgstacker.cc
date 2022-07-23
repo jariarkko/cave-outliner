@@ -393,13 +393,40 @@ SvgStacker::addYOffsetText(SvgReader& reader,
       return(0);
     } 
     if (end) break;
-    if (optionNameLength == 1 && strncmp(optionName,"y",optionNameLength) == 0) {
+    if (optionNameLength == 1 &&
+	strncmp(optionName,"y",optionNameLength) == 0 &&
+	!reader.iterateStatementOptionsPeek(optionParser,"transform",9,"translate(",10)) {
       // Modify the value
       outputCopiedText(optionName,optionNameLength);
       file << "=\"";
       long oldValue = strtol(optionValue,0,10);
       long newValue = oldValue + yOffset;
       file << newValue;
+      file << "\" ";
+    } else if (optionNameLength == 9 &&
+	       strncmp(optionName,"transform",optionNameLength) == 0 &&
+	       optionValueLength > 10 &&
+	       strncmp(optionValue,"translate(",10) == 0 &&
+	       findchar(optionValue,optionValueLength,',') != 0 &&
+	       findchar(optionValue,optionValueLength,')') != 0) {
+      // Modify the value
+      outputCopiedText(optionName,optionNameLength);
+      file << "=\"translate(";
+      long oldValueX = strtol(optionValue+10,0,10);
+      file << oldValueX;
+      file << ",";
+      const char* oldValueYString = findchar(optionValue,optionValueLength,',') + 1;
+      assert(oldValueYString != 0);
+      long oldValueY = strtol(oldValueYString,0,10);
+      long newValueY = oldValueY + yOffset;
+      file << newValueY;
+      file << ")";
+      const char* closingParenPointer = findchar(optionValue,optionValueLength,')');
+      assert(closingParenPointer != 0);
+      unsigned int closingParenPosition = closingParenPointer - optionValue;
+      assert(closingParenPosition <= optionValueLength);
+      unsigned int restPosition = closingParenPosition + 1;
+      outputCopiedText(optionValue+restPosition,optionValueLength-restPosition);
       file << "\" ";
     } else if (optionNameLength == 0) {
       // Body, copy it as is
@@ -545,6 +572,19 @@ SvgStacker::outputCopiedText(const char* ptr,
   for (unsigned int i = 0; i < n; i++) {
     file << ptr[i];
   }
+}
+
+const char*
+SvgStacker::findchar(const char* input,
+		     unsigned int inputLength,
+		     char search) const {
+  assert(input != 0);
+  while (inputLength > 0) {
+    if (*input == search) return(input);
+    input++;
+    inputLength--;
+  }
+  return(0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

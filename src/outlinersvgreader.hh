@@ -97,6 +97,14 @@ class SvgReader {
 					  const char*& optionValue,
 					  unsigned int& optionValueLength);
 
+  /// Peek if there's a given option with a given string in the option
+  /// value later in the input
+  static bool iterateStatementOptionsPeek(const struct SvgReaderOptionParser& iter,
+					  const char* optionName,
+					  unsigned int optionNameLength,
+					  const char* optionValue,
+					  unsigned int optionValueLength);
+  
   /// Get the current line we are on.
   unsigned int getLine() const;
   

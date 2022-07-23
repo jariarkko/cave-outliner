@@ -92,6 +92,9 @@ class SvgStacker {
 				     unsigned int newValueSize,
 				     const char* fileNameRead,
 				     const unsigned int lineNoRead);
+  const char* findchar(const char* input,
+		       unsigned int inputLength,
+		       char search) const;
   void outputCopiedText(const char* ptr,
 			unsigned int n);
 };

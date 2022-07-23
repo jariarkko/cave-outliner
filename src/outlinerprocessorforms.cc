@@ -881,6 +881,26 @@ static const outlinerreal minimumTunnelHeightMeters = 0.3;
 static const outlinerreal minimumTunnelPathMetersNearOtherEntrance = 0.3;
 static const outlinerreal minimumTunnelHeightMetersNearOtherEntrance = 0.2;
 
+//
+// Look for a possible entrance from the given (x,y) coordinates, and
+// to the given direction (e.g., towards increasing x).
+//
+// The algorithm for doing this is to first ensure that
+//
+//   (1) we are on a degenerate spot (e.g., just bottom cave surface
+//   in this area).
+//
+//   (2) towards the reverse direction (e.g., towards decreasing x)
+//   there is just emptyness.
+//
+//   (3) towards the looked-for direction (e.g., towards increasing x)
+//   we can descend to a level in which we end up between an upper and
+//   lower surface, and are in an (x,y) spot that can be classified as
+//   a tunnel. That is, we can freely move to the tunnel by descending
+//   and then going to the indicated direction. If there's a rock in
+//   between, we can't move freely, and this isn't an entrance.
+//
+
 bool
 ProcessorForms::entranceAnalysis(const unsigned int matrix3xIndex,
                                  const unsigned int matrix3yIndex,
