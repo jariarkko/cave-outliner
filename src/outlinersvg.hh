@@ -148,6 +148,16 @@ class SvgCreator {
   /// represents a 1 meter by 1 meter square, then return 1.0.
   outlinerreal getPixelYSize(void);
 
+  /// Get the actual x coordinate in the resulting SVG image based on
+  /// the floating point coordinate value.
+  void getCoordinateXPixel(const outlinerreal x,
+			   unsigned int& xPixel) const;
+
+  /// Get the actual y coordinate in the resulting SVG image based on
+  /// the floating point coordinate value.
+  void getCoordinateYPixel(const outlinerreal y,
+			   unsigned int& yPixel) const;
+
   /// Verify that image creation and file write was successful.
   bool ok();
 
@@ -189,7 +199,7 @@ class SvgCreator {
   void coordinateNormalization(const outlinerreal x,
                                const outlinerreal y,
                                unsigned int& xInt,
-                               unsigned int& yInt);
+                               unsigned int& yInt) const;
   void addLine(const unsigned int x1In,
                const unsigned int y1In,
                const unsigned int x2In,

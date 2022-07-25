@@ -36,6 +36,7 @@ struct svgcreator_composite_inputentry {
   const char* imageFileName;
   unsigned int xSize;
   unsigned int ySize;
+  unsigned int xOffset;
   unsigned int yOffset;
 };
 
@@ -46,6 +47,7 @@ struct svgcreator_composite_inputentry {
 SvgStacker::SvgStacker(const char* fileNameIn,
 		       const unsigned int nImageFileNames,
 		       const char** imageFileNames,
+		       const unsigned int* imageXIndents, // array can be 0 => no indent
 		       const SvgOptions& optionsIn,
 		       const unsigned int verticalSpacing) :
   fileName(fileNameIn),
@@ -67,6 +69,7 @@ SvgStacker::SvgStacker(const char* fileNameIn,
   for (unsigned int i = 0; i < nImageFileNames; i++) {
     struct svgcreator_composite_inputentry& entry = entries[i];
     entry.imageFileName = imageFileNames[i];
+    entry.xOffset = imageXIndents != 0 ? imageXIndents[i] : 0;
     entry.yOffset = yOffset;
     SvgReader reader(entry.imageFileName);
     if (!reader.getSize(entry.xSize,entry.ySize)) {
@@ -89,7 +92,7 @@ SvgStacker::SvgStacker(const char* fileNameIn,
     for (unsigned int i = 0; i < nImageFileNames; i++) {
       struct svgcreator_composite_inputentry& entry = entries[i];
       SvgReader reader(entry.imageFileName);
-      if (!importSvgContents(reader,entry.yOffset)) {
+      if (!importSvgContents(reader,entry.xOffset,entry.yOffset)) {
 	errf("Cannot import SVG file %s", entry.imageFileName);
 	return;
       }
@@ -141,6 +144,7 @@ SvgStacker::ok() {
 
 bool
 SvgStacker::importSvgContents(SvgReader& reader,
+			      unsigned int xOffset,
 			      unsigned int yOffset) {
   enum SvgStatement statementType;
   unsigned int lineno;
@@ -161,28 +165,28 @@ SvgStacker::importSvgContents(SvgReader& reader,
       continue;
       
     case svgstatement_rect:
-      if (!addYOffsetRectangle(reader,statement,yOffset)) {
+      if (!addXYOffsetRectangle(reader,statement,xOffset,yOffset)) {
 	errf("SVG processing failed for %s", statement);
 	return(0);
       }
       continue;
       
     case svgstatement_line:
-      if (!addYOffsetLine(reader,statement,yOffset)) {
+      if (!addXYOffsetLine(reader,statement,xOffset,yOffset)) {
 	errf("SVG processing failed for %s", statement);
 	return(0);
       }
       continue;
       
     case svgstatement_polyline:
-      if (!addYOffsetPolyline(reader,statement,yOffset)) {
+      if (!addXYOffsetPolyline(reader,statement,xOffset,yOffset)) {
 	errf("SVG processing failed for %s", statement);
 	return(0);
       }
       continue;
       
     case svgstatement_text:
-      if (!addYOffsetText(reader,statement,yOffset)) {
+      if (!addXYOffsetText(reader,statement,xOffset,yOffset)) {
 	errf("SVG processing failed for %s", statement);
 	return(0);
       }
@@ -200,9 +204,10 @@ SvgStacker::importSvgContents(SvgReader& reader,
 }
 
 bool
-SvgStacker::addYOffsetRectangle(SvgReader& reader,
-				const char* statement,
-				unsigned int yOffset) {
+SvgStacker::addXYOffsetRectangle(SvgReader& reader,
+				 const char* statement,
+				 unsigned int xOffset,
+				 unsigned int yOffset) {
   file << "<rect ";
   SvgReaderOptionParser optionParser;
   if (!reader.iterateStatementOptionsInit(statement,
@@ -226,7 +231,15 @@ SvgStacker::addYOffsetRectangle(SvgReader& reader,
       return(0);
     } 
     if (end) break;
-    if (optionNameLength == 1 && strncmp(optionName,"y",optionNameLength) == 0) {
+    if (optionNameLength == 1 && strncmp(optionName,"x",optionNameLength) == 0) {
+      // Modify the value
+      outputCopiedText(optionName,optionNameLength);
+      file << "=\"";
+      long oldValue = strtol(optionValue,0,10);
+      long newValue = oldValue + xOffset;
+      file << newValue;
+      file << "\" ";
+    } else if (optionNameLength == 1 && strncmp(optionName,"y",optionNameLength) == 0) {
       // Modify the value
       outputCopiedText(optionName,optionNameLength);
       file << "=\"";
@@ -250,9 +263,10 @@ SvgStacker::addYOffsetRectangle(SvgReader& reader,
 }
 
 bool
-SvgStacker::addYOffsetLine(SvgReader& reader,
-			   const char* statement,
-			   unsigned int yOffset) {
+SvgStacker::addXYOffsetLine(SvgReader& reader,
+			    const char* statement,
+			    unsigned int xOffset,
+			    unsigned int yOffset) {
   file << "<line ";
   SvgReaderOptionParser optionParser;
   if (!reader.iterateStatementOptionsInit(statement,
@@ -277,6 +291,16 @@ SvgStacker::addYOffsetLine(SvgReader& reader,
     } 
     if (end) break;
     if (optionNameLength == 2 &&
+	(strncmp(optionName,"x1",optionNameLength) == 0 ||
+	 strncmp(optionName,"x2",optionNameLength) == 0)) {
+      // Modify the value
+      outputCopiedText(optionName,optionNameLength);
+      file << "=\"";
+      long oldValue = strtol(optionValue,0,10);
+      long newValue = oldValue + xOffset;
+      file << newValue;
+      file << "\" ";
+    } else if (optionNameLength == 2 &&
 	(strncmp(optionName,"y1",optionNameLength) == 0 ||
 	 strncmp(optionName,"y2",optionNameLength) == 0)) {
       // Modify the value
@@ -302,9 +326,10 @@ SvgStacker::addYOffsetLine(SvgReader& reader,
 }
 
 bool
-SvgStacker::addYOffsetPolyline(SvgReader& reader,
-			       const char* statement,
-			       unsigned int yOffset) {
+SvgStacker::addXYOffsetPolyline(SvgReader& reader,
+				const char* statement,
+				unsigned int xOffset,
+				unsigned int yOffset) {
 # define polylinepoints_maxlen (10*1024)
 # define polylinepoints_maxlen_extra (2048*1)
   file << "<polyline ";
@@ -340,11 +365,12 @@ SvgStacker::addYOffsetPolyline(SvgReader& reader,
       }
       char newValue[polylinepoints_maxlen+polylinepoints_maxlen_extra];
       memset(newValue,0,sizeof(newValue));
-      if (!pointsStringAddYOffset(optionValue,optionValueLength,
-				  yOffset,
-				  newValue,sizeof(newValue)-1,
-				  reader.getFileName(),
-				  reader.getLine())) {
+      if (!pointsStringAddXYOffset(optionValue,optionValueLength,
+				   xOffset,
+				   yOffset,
+				   newValue,sizeof(newValue)-1,
+				   reader.getFileName(),
+				   reader.getLine())) {
 	errf("SVG polyline offset operation failed");
 	return(0);
       }
@@ -366,9 +392,10 @@ SvgStacker::addYOffsetPolyline(SvgReader& reader,
 }
 
 bool
-SvgStacker::addYOffsetText(SvgReader& reader,
-			   const char* statement,
-			   unsigned int yOffset) {
+SvgStacker::addXYOffsetText(SvgReader& reader,
+			    const char* statement,
+			    unsigned int xOffset,
+			    unsigned int yOffset) {
   file << "<text ";
   SvgReaderOptionParser optionParser;
   if (!reader.iterateStatementOptionsInit(statement,
@@ -394,6 +421,16 @@ SvgStacker::addYOffsetText(SvgReader& reader,
     } 
     if (end) break;
     if (optionNameLength == 1 &&
+	strncmp(optionName,"x",optionNameLength) == 0 &&
+	!reader.iterateStatementOptionsPeek(optionParser,"transform",9,"translate(",10)) {
+      // Modify the value
+      outputCopiedText(optionName,optionNameLength);
+      file << "=\"";
+      long oldValue = strtol(optionValue,0,10);
+      long newValue = oldValue + xOffset;
+      file << newValue;
+      file << "\" ";
+    } else if (optionNameLength == 1 &&
 	strncmp(optionName,"y",optionNameLength) == 0 &&
 	!reader.iterateStatementOptionsPeek(optionParser,"transform",9,"translate(",10)) {
       // Modify the value
@@ -413,7 +450,8 @@ SvgStacker::addYOffsetText(SvgReader& reader,
       outputCopiedText(optionName,optionNameLength);
       file << "=\"translate(";
       long oldValueX = strtol(optionValue+10,0,10);
-      file << oldValueX;
+      long newValueX = oldValueX + xOffset;
+      file << newValueX;
       file << ",";
       const char* oldValueYString = findchar(optionValue,optionValueLength,',') + 1;
       assert(oldValueYString != 0);
@@ -450,13 +488,14 @@ SvgStacker::addYOffsetText(SvgReader& reader,
 }
 
 bool
-SvgStacker::pointsStringAddYOffset(const char* optionValue,
-				   unsigned int optionValueLength,
-				   unsigned int yOffset,
-				   char* newValue,
-				   unsigned int newValueSize,
-				   const char* fileNameRead,
-				   const unsigned int lineNoRead) {
+SvgStacker::pointsStringAddXYOffset(const char* optionValue,
+				    unsigned int optionValueLength,
+				    unsigned int xOffset,
+				    unsigned int yOffset,
+				    char* newValue,
+				    unsigned int newValueSize,
+				    const char* fileNameRead,
+				    const unsigned int lineNoRead) {
   for (;;) {
 
     // Debugs
@@ -478,6 +517,14 @@ SvgStacker::pointsStringAddYOffset(const char* optionValue,
     // Check what character we are looking at
     switch (*optionValue) {
       
+    case ' ':
+    case '"':
+      // Keep copying
+      *(newValue++) = (*optionValue++);
+      optionValueLength--;
+      newValueSize--;
+      continue;
+
     case '0':
     case '1':
     case '2':
@@ -488,14 +535,44 @@ SvgStacker::pointsStringAddYOffset(const char* optionValue,
     case '7':
     case '8':
     case '9':
-    case ' ':
-    case '"':
-      // Keep copying
-      *(newValue++) = (*optionValue++);
-      optionValueLength--;
-      newValueSize--;
-      continue;
+      // Now we see a X value in front of us. Need to change it.
+      {
+	// Read the number
+	unsigned int currentValue = 0;
+	while (optionValueLength > 0 && isdigit(*optionValue)) {
+	  currentValue *= 10;
+	  char thisChar = (*(optionValue++)) - '0';
+	  unsigned int thisCharValue = ((unsigned int)(unsigned char)thisChar) & 0xFF;
+	  assert(thisCharValue <= 9);
+	  currentValue += thisCharValue;
+	  optionValueLength--;
+	  newValueSize--;
+	}
 
+	// Add the offset and store the number
+	unsigned int newIntValue = currentValue + xOffset;
+	char newIntValueBuf[20];
+	memset(newIntValueBuf,0,sizeof(newIntValueBuf));
+	snprintf(newIntValueBuf,sizeof(newIntValueBuf)-1,"%u",newIntValue);
+	unsigned int newIntValueLength = strlen(newIntValueBuf);
+	if (newValueSize < newIntValueLength + 1) {
+	  errf("SVG polyline processing for the points attribute out of space in %s:%u", fileNameRead, lineNoRead);
+	  return(0);
+	}
+	strcpy(newValue,newIntValueBuf);
+	newValue += newIntValueLength;
+	newValueSize -= newIntValueLength;
+	
+	// Check that the next thing is a comma
+	if (*optionValue != ',') {
+	  errf("SVG polyline syntax error for the points attribute after x,y entry in %s:%u, no comma after x value", fileNameRead, lineNoRead);
+	  return(0);
+	}
+	
+	// Done
+	continue;
+      }
+      
     case ',':
       // Now we see a Y value in front of us. Need to change it.
       {
@@ -599,15 +676,16 @@ SvgStacker::test(void) {
     const char* optionValue = "1,2 ";
     char buf[100];
     memset(buf,0,sizeof(buf));
-    bool ans = pointsStringAddYOffset(optionValue,strlen(optionValue),
-				      10,
-				      buf,
-				      sizeof(buf)-1,
-				      "sample.svg",
-				      10);
+    bool ans = pointsStringAddXYOffset(optionValue,strlen(optionValue),
+				       3,
+				       10,
+				       buf,
+				       sizeof(buf)-1,
+				       "sample.svg",
+				       10);
     assert(ans);
     debugf("result = '%s'", buf);
-    const char* expected = "1,12 ";
+    const char* expected = "4,12 ";
     assert(strlen(buf) == strlen(expected));
     assert(strcmp(buf,expected) == 0);
   }
@@ -617,14 +695,15 @@ SvgStacker::test(void) {
     const char* optionValue = "1,2 30,40 500,600 ";
     char buf[100];
     memset(buf,0,sizeof(buf));
-    bool ans = pointsStringAddYOffset(optionValue,strlen(optionValue),
-				      1000,
-				      buf,
-				      sizeof(buf)-1,
-				      "sample.svg",
-				      20);
+    bool ans = pointsStringAddXYOffset(optionValue,strlen(optionValue),
+				       7000,
+				       1000,
+				       buf,
+				       sizeof(buf)-1,
+				       "sample.svg",
+				       20);
     assert(ans);
-    const char* expected = "1,1002 30,1040 500,1600 ";
+    const char* expected = "7001,1002 7030,1040 7500,1600 ";
     debugf("expect = '%s'", expected);
     debugf("result = '%s'", buf);
     assert(strlen(buf) == strlen(expected));

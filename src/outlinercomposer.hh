@@ -104,7 +104,8 @@ private:
   TempFiler& tempFiler;
 
   /// Create a basic (name, surveyer, tools) image.
-  bool makeBasicInfoImage(const char* nameImageFile);
+  bool makeBasicInfoImage(const char* nameImageFile,
+			  unsigned int& xOffsetPixel);
 
   /// Calculate used font sizes.
   void fontSizeMultipliers(unsigned int inputFontSize,

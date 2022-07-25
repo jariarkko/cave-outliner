@@ -111,6 +111,20 @@ SvgCreator::getPixelYSize(void) {
 }
 
 void
+SvgCreator::getCoordinateXPixel(const outlinerreal x,
+				unsigned int& xPixel) const {
+  unsigned int yDummy;
+  coordinateNormalization(x,yStart,xPixel,yDummy);
+}
+
+void
+SvgCreator::getCoordinateYPixel(const outlinerreal y,
+				unsigned int& yPixel) const {
+  unsigned int xDummy;
+  coordinateNormalization(xStart,y,xDummy,yPixel);
+}
+
+void
 SvgCreator::line(outlinerreal fromX,
                  outlinerreal fromY,
                  outlinerreal toX,
@@ -545,7 +559,7 @@ void
 SvgCreator::coordinateNormalization(const outlinerreal x,
                                     const outlinerreal y,
                                     unsigned int& xInt,
-                                    unsigned int& yInt) {
+                                    unsigned int& yInt) const {
   assert(x >= xStart);
   assert(y >= yStart);
   outlinerreal xNormalized = (x - xStart) * xFactor;

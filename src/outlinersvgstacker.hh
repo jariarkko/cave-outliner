@@ -52,6 +52,7 @@ class SvgStacker {
   SvgStacker(const char* fileNameIn,
 	     const unsigned int nImageFileNames,
 	     const char** imageFileNames,
+	     const unsigned int* imageXIndents, // array can be 0 => no indent
 	     const SvgOptions& optionsIn,
 	     const unsigned int verticalSpacing);
   
@@ -72,26 +73,32 @@ class SvgStacker {
   std::ofstream file;
   
   bool importSvgContents(SvgReader& reader,
+			 unsigned int xOffset,
 			 unsigned int yOffset);
-  bool addYOffsetRectangle(SvgReader& reader,
+  bool addXYOffsetRectangle(SvgReader& reader,
+			    const char* statement,
+			    unsigned int xOffset,
+			    unsigned int yOffset);
+  bool addXYOffsetLine(SvgReader& reader,
+		       const char* statement,
+		       unsigned int xOffset,
+		       unsigned int yOffset);
+  bool addXYOffsetPolyline(SvgReader& reader,
 			   const char* statement,
+			   unsigned int xOffset,
 			   unsigned int yOffset);
-  bool addYOffsetLine(SvgReader& reader,
-		      const char* statement,
-		      unsigned int yOffset);
-  bool addYOffsetPolyline(SvgReader& reader,
-			  const char* statement,
-			  unsigned int yOffset);
-  bool addYOffsetText(SvgReader& reader,
-		      const char* statement,
-		      unsigned int yOffset);
-  static bool pointsStringAddYOffset(const char* optionValue,
-				     unsigned int optionValueLength,
-				     unsigned int yOffset,
-				     char* newValue,
-				     unsigned int newValueSize,
-				     const char* fileNameRead,
-				     const unsigned int lineNoRead);
+  bool addXYOffsetText(SvgReader& reader,
+		       const char* statement,
+		       unsigned int xOffset,
+		       unsigned int yOffset);
+  static bool pointsStringAddXYOffset(const char* optionValue,
+				      unsigned int optionValueLength,
+				      unsigned int xOffset,
+				      unsigned int yOffset,
+				      char* newValue,
+				      unsigned int newValueSize,
+				      const char* fileNameRead,
+				      const unsigned int lineNoRead);
   const char* findchar(const char* input,
 		       unsigned int inputLength,
 		       char search) const;

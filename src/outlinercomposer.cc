@@ -87,29 +87,36 @@ Composer::compose(void) {
   if (nameImageFile == 0) {
     return(0);
   }
-  if (!makeBasicInfoImage(nameImageFile)) {
+  unsigned int xOffsetPixel;
+  if (!makeBasicInfoImage(nameImageFile,xOffsetPixel)) {
     return(0);
   }
   
   // Compose all images together
   unsigned int nInputImages = 2 + nCrossSectionFiles;
   const char** inputImages = new const char* [nInputImages];
+  unsigned int* inputImageIndents = new unsigned int [nInputImages];
   inputImages[0] = nameImageFile;
+  inputImageIndents[0] = 0;
   inputImages[1] = planViewFile;
+  inputImageIndents[1] = xOffsetPixel;
   for (unsigned int i = 0; i < nCrossSectionFiles; i++) {
     inputImages[2+i] = crossSectionFiles[i];
+    inputImageIndents[2+i] = xOffsetPixel;
   }
   SvgOptions options;
-  SvgStacker newSvg(outputFile,nInputImages,inputImages,options,verticalSpacing);
+  SvgStacker newSvg(outputFile,nInputImages,inputImages,inputImageIndents,options,verticalSpacing);
   if (!newSvg.ok()) {
     errf("Unable to write SVG file to %s", outputFile);
     delete [] inputImages;
+    delete [] inputImageIndents;
     free(nameImageFile);
     return(0);
   }
   
   // Done
   delete [] inputImages;
+  delete [] inputImageIndents;
   free(nameImageFile);
   return(1);
 }
@@ -130,7 +137,8 @@ Composer::fontSizeMultipliers(unsigned int inputFontSize,
 }
 
 bool
-Composer::makeBasicInfoImage(const char* nameImageFile) {
+Composer::makeBasicInfoImage(const char* nameImageFile,
+			     unsigned int& xOffsetPixel) {
   infof("  Creating a basic information image to %s...", nameImageFile);
   unsigned int actualFontSize;
   unsigned int actualFontHeight;
@@ -157,6 +165,7 @@ Composer::makeBasicInfoImage(const char* nameImageFile) {
 		       svgOptions);
   outlinerreal xPosition = outlinerdefaultfontxsize;
   outlinerreal yPosition = ySize - (outlinerbasicinfospaceempty / (svgOptions.multiplier * 1.0)) - actualLargeFontHeight;
+  nameImage.getCoordinateXPixel(xPosition,xOffsetPixel);
   nameImage.text(xPosition,yPosition,name,actualLargeFontSize);
   yPosition -= actualFontHeight + (outlinerbasicinfospaceempty / (svgOptions.multiplier * 1.0));
   char buf[1000];
