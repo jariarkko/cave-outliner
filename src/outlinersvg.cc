@@ -1289,11 +1289,15 @@ SvgCreator::lineTableInfos(void) {
   }
   infof("    Longest line has %u points (on average %.1f points)",
         lineLongest,
-        (lineSumPoints / 2.0)  / (lineLines / 2.0));
+	(lineLines > 0 ? 
+	 ((lineSumPoints / 2.0)  / (lineLines / 2.0)) :
+	 0.0));
   infof("    Line table has %u entries", lineTableEntries);
   infof("    Line table entries longest list has %u entries (%.2f%% of all, at index %u)",
         lineTableMaxListLength,
-        (lineTableMaxListLength * 100.0) / (lineTableEntries * 1.0),
+	(lineTableEntries > 0 ?
+	 ((lineTableMaxListLength * 100.0) / (lineTableEntries * 1.0)) :
+	 0.0),
         lineTableMaxListLengthIndex);
   infof("    Long line joins: %u", joins);
 }
