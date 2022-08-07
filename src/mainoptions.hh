@@ -58,6 +58,9 @@ private:
   
   bool processCommandLineOptions(int& argc,
                                  char**& argv);
+  bool processCommandLineOption(int& argc,
+                                char**& argv);
+  bool processCommandLineOptionAuto(void);
   bool processCommandLineArguments(int& argc,
                                    char**& argv);
   bool processDefaults(void);

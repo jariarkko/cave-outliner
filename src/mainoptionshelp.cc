@@ -47,6 +47,7 @@ MainOptions::processHelp(void) {
   std::cout << "\n";
   std::cout << "Options:\n";
   std::cout << "\n";
+  std::cout << "  --auto                    Use default options for best cave map generation.\n";
   std::cout << "  --bounding x x y y z z    Set the bounding box area. Default is the model's bounding box.\n";
   std::cout << "  --step i                  Set the granularity increment. Default is 1.\n";
   std::cout << "  --z                       Generate output as viewed from the z direction, i.e.,\n";

@@ -161,7 +161,7 @@ main(int argc, char** argv) {
       newOne->width = config.crossSectionWidth;
       debugf("used cross section width %.2f", newOne->width);
       newOne->label = config.getCrossSectionLabel();
-      debugf("cross section %s file %s at %.2f",
+      debugf("    cross section %s file %s at %.2f",
              (newOne->label == 0 ? "(none)" : newOne->label),
              newOne->filename,
              config.crossSectionPoints[config.nCrossSections]);
@@ -193,7 +193,8 @@ main(int argc, char** argv) {
       errf("Invalid type");
       return(1);
     }
-    infof("Configured a cross section from (%.2f,%.2f) to (%.2f,%.2f)",
+    infof("Configured a %s cross section from (%.2f,%.2f) to (%.2f,%.2f)",
+	  config.crossSectionDirections[c] == dir_x ? "x" : "y",
           thisOne->line.start.x, thisOne->line.start.y,
           thisOne->line.end.x, thisOne->line.end.y);
   }
