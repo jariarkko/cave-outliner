@@ -82,6 +82,7 @@ MainConfig::MainConfig() :
   mapDate(getCurrentDate()),
   location(0),
   coordinates(0),
+  length(0),
   compositeMap(0),
   dimensions(0),
   crossSectionLabelCount(0) {

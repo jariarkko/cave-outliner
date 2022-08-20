@@ -82,6 +82,7 @@ Options:
     --formanalysis f          Analyze cave forms, e.g., entrances, stones, stalactites, etc.
                               Factor f specifies how much the analysis compresses pixels,
                               value of 1 implies no compression.
+    --no-formanalysis         Turn off form analysis.
     --composite               Create a composite cave map file from the plan view and all
                               cross sections.
     --name name               The name of the cave.
@@ -92,6 +93,7 @@ Options:
                               input file.
     --location place          The location of the cave, e.g., city or country. 
     --coordinates coords      Coordinates of the cave. 
+    --length text             Text to use as the length of the cave in the map.
     --floordepthmap file      Output cave tunnel floor depth map to given file.
     --roofdepthmap file       Output cave tunnel roof depth map to given file.
     --floorstyle s            Specify floor and roof depthmap style, either depth

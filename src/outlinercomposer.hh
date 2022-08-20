@@ -47,6 +47,7 @@ public:
 	   const char* nameIn,
 	   const char* locationIn,
 	   const char* coordinatesIn,
+	   const char* lengthIn,
 	   const char* surveyerIn,
 	   const char* surveyToolIn,
 	   const char* surveyDateIn,
@@ -78,6 +79,9 @@ private:
   
   /// Where is the cave? What are the coordinates?
   const char* coordinates;
+  
+  /// How long is the cave?
+  const char* length;
   
   /// Who performed the 3D scan?
   const char* surveyer;

@@ -45,6 +45,7 @@ Composer::Composer(const char* outputFileIn,
 		   const char* nameIn,
 		   const char* locationIn,
 		   const char* coordinatesIn,
+		   const char* lengthIn,
 		   const char* surveyerIn,
 		   const char* surveyToolIn,
 		   const char* surveyDateIn,
@@ -59,6 +60,7 @@ Composer::Composer(const char* outputFileIn,
   name(nameIn != 0 ? nameIn : "Unknown Cave"),
   location(locationIn),
   coordinates(coordinatesIn),
+  length(lengthIn),
   surveyer(surveyerIn),
   surveyTool(surveyToolIn),
   surveyDate(surveyDateIn),
@@ -150,7 +152,7 @@ Composer::makeBasicInfoImage(const char* nameImageFile,
   outlinerreal ySize =
     3 * (outlinerbasicinfospaceempty / (svgOptions.multiplier * 1.0)) +
     actualLargeFontHeight +
-    (((location != 0) + (coordinates != 0) + (surveyer != 0) + (mapDate != 0)) * actualFontHeight);
+    (((location != 0) + (coordinates != 0) + (length != 0) + (surveyer != 0) + (mapDate != 0)) * actualFontHeight);
   debugf("  basic info size %.2f x %.2f, lse %.2f to %.2f",
 	 xSize, ySize,
 	 outlinerbasicinfospaceempty * 1.0,
@@ -177,6 +179,11 @@ Composer::makeBasicInfoImage(const char* nameImageFile,
   }
   if (coordinates != 0) {
     snprintf(buf,sizeof(buf)-1,"Coordinates: %s", coordinates);
+    nameImage.text(xPosition,yPosition,buf,actualFontSize);
+    yPosition -= actualFontHeight;
+  }
+  if (length != 0) {
+    snprintf(buf,sizeof(buf)-1,"Length: %s", length);
     nameImage.text(xPosition,yPosition,buf,actualFontSize);
     yPosition -= actualFontHeight;
   }
@@ -212,5 +219,5 @@ Composer::makeBasicInfoImage(const char* nameImageFile,
 void
 Composer::test(TempFiler& tempFiler) {
   SvgOptions svgOptions;
-  Composer tester("test.svg",0,svgOptions,"name","loc","N 1 E 2","me","lazer!!!","1.1.1970","now","input.svg",0,0,tempFiler);
+  Composer tester("test.svg",0,svgOptions,"name","loc","N 1 E 2","too long","me","lazer!!!","1.1.1970","now","input.svg",0,0,tempFiler);
 }

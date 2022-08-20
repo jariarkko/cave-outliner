@@ -76,7 +76,7 @@ SvgStacker::SvgStacker(const char* fileNameIn,
       errf("Cannot read SVG file %s", entry.imageFileName);
       return;
     }
-    if (entry.xSize > compositeXSize) compositeXSize = entry.xSize;
+    if (entry.xSize + entry.xOffset > compositeXSize) compositeXSize = entry.xSize + entry.xOffset;
     unsigned int thisSize = entry.ySize + verticalSpacing;
     compositeYSize += thisSize;
     yOffset += thisSize;

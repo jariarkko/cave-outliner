@@ -80,6 +80,7 @@ MainOptions::processHelp(void) {
   std::cout << "  --formanalysis f          Analyze cave forms, e.g., entrances, stones, stalactites, etc.\n";
   std::cout << "                            Factor f specifies how much the analysis compresses pixels,\n";
   std::cout << "                            value of 1 implies no compression.\n";
+  std::cout << "  --no-formanalysis         Turn off form analysis.\n";
   std::cout << "  --composite               Create a composite cave map file from the plan view and all\n";
   std::cout << "                            cross sections.\n";
   std::cout << "  --name name               The name of the cave.\n";
@@ -90,6 +91,7 @@ MainOptions::processHelp(void) {
   std::cout << "                            input file.\n";
   std::cout << "  --location place          The location of the cave, e.g., city or country.\n";
   std::cout << "  --coordinates coords      Coordinates of the cave.\n";
+  std::cout << "  --length text             Text to use as the length of the cave in the map.\n";
   std::cout << "  --floordepthmap file      Output cave tunnel floor depth map to given file.\n";
   std::cout << "  --roofdepthmap file       Output cave tunnel roof depth map to given file.\n";
   std::cout << "  --floorstyle s            Specify floor and roof depthmap style, either depth\n";

@@ -218,6 +218,8 @@ MainOptions::processCommandLineOption(int& argc,
     config.formAnalysis = 1;
     config.formCondense = num;
     argc--;argv++;
+  } else if (strcmp(argv[1],"--no-formanalysis") == 0) {
+    config.formAnalysis = 0;
   } else if (strcmp(argv[1],"--composite") == 0) {
     config.compositeMap = 1;
   } else if (strcmp(argv[1],"--name") == 0 && argc > 2) {
@@ -240,6 +242,9 @@ MainOptions::processCommandLineOption(int& argc,
     argc--;argv++;
   } else if (strcmp(argv[1],"--coordinates") == 0 && argc > 2) {
     config.coordinates = argv[2];
+    argc--;argv++;
+  } else if (strcmp(argv[1],"--length") == 0 && argc > 2) {
+    config.length = argv[2];
     argc--;argv++;
   } else if (strcmp(argv[1],"--floordepthmap") == 0 && argc > 2) {
     config.floorDepthMap = argv[2];

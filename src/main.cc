@@ -271,6 +271,7 @@ main(int argc, char** argv) {
 		      config.name,
 		      config.location,
 		      config.coordinates,
+		      config.length,
 		      config.surveyer,
 		      config.surveyTool,
 		      config.surveyDate,

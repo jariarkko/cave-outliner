@@ -202,6 +202,9 @@ public:
   /// Where is the cave? What are the coordinates?
   const char* coordinates;
   
+  /// Length explanation for the cave.
+  const char* length;
+  
   /// Create a composite map of the plan view and all cross sections.
   bool compositeMap;
   
