@@ -106,7 +106,12 @@ SvgStacker::SvgStacker(const char* fileNameIn,
     // place where it can be set to 1.
     good = 1;
   }
-  
+
+  // Cleanup
+  if (entries != 0) {
+    delete [] entries;
+    entries = 0;
+  }
 }
 
 SvgStacker::~SvgStacker() {

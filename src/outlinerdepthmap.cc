@@ -74,7 +74,7 @@ DepthMap::~DepthMap() {
   }
   debugf("freeing data");
   if (data != 0) {
-    free((void*)data);
+    delete [] data;
     data = 0;
   }
   debugf("freed data");

@@ -310,7 +310,7 @@ test:	cave-outliner \
 	example-tests \
 	failing-tests
 
-unit-tests:	cave-outliner
+unit-tests:	cave-outliner cave1-line-test
 	@echo 'Running test case unit-tests...'
 	@./cave-outliner --quiet --test
 	@diff /tmp/cave-outliner-unit-test-depthmap.svg test/cave-outliner-unit-test-depthmap.svg.expected
@@ -732,6 +732,7 @@ cave1-composite-test:
 	@echo 'Running test case cave1-composite-test...'
 	@./cave-outliner --quiet --label --borderline --smooth --multiplier 1 \
 			 --composite --location "Siuntio, Finland" --coordinates "N 60.161948 E 24.137638" \
+			 --mapdate "June 1, 2022" \
 			 --crosssections x 3 --crosssections y 1 \
 			 --step 0.05 --holethreshold 10 \
 			 test/cave1.stl test/cave1-composite.svg
@@ -742,6 +743,7 @@ cave1-composite-multiplier-test:
 	@./cave-outliner --quiet --label --borderline --smooth --multiplier 5 \
 			 --composite --location "Siuntio, Finland" --coordinates "N 60.161948 E 24.137638" \
 			 --crosssections x 3 --crosssections y 1 \
+			 --mapdate "June 1, 2022" \
 			 --step 0.05 --holethreshold 10 \
 			 test/cave1.stl test/cave1-composite-multiplier.svg
 	@diff -q test/cave1-composite-multiplier.svg test/cave1-composite-multiplier.svg.expected

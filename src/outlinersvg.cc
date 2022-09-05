@@ -1250,12 +1250,16 @@ SvgCreator::lineTableInit(void) {
 void
 SvgCreator::lineTableDeinit(void) {
   deepdebugf("line table deinit");
-  for (unsigned int i = 0; i < lineTableSize; i++) {
-    assert(lineTable != 0);
-    deepdeepdebugf("deinit loop");
-    while (lineTable[i] != 0) {
-      lineTableEntryDelete(lineTable[i]);
+  if (lineTable != 0) {
+    for (unsigned int i = 0; i < lineTableSize; i++) {
+      assert(lineTable != 0);
+      deepdeepdebugf("deinit loop");
+      while (lineTable[i] != 0) {
+	lineTableEntryDelete(lineTable[i]);
+      }
     }
+    delete [] lineTable;
+    lineTable = 0;
   }
   deepdebugf("line table deinit done");
 }

@@ -422,7 +422,7 @@ IndexedMesh::addToTile(struct IndexedMeshOneMesh& shadow,
     memcpy(newFaces,oldFaces,sizeof(const aiFace*) * tile->nFaces);
     tile->faces = newFaces;
     tile->maxNFaces = newMaxNFaces;
-    delete oldFaces;
+    delete [] oldFaces;
   }
   
   // Add the face to the table
@@ -532,15 +532,15 @@ IndexedMesh::~IndexedMesh() {
         if (meshes[i].tileMatrix[j] == 0) continue;
         for (unsigned int k = 0; k < subdivisions;k++) {
           if (meshes[i].tileMatrix[j][k].faces != 0) {
-            delete meshes[i].tileMatrix[j][k].faces;
+            delete [] meshes[i].tileMatrix[j][k].faces;
           }
         }
-        delete meshes[i].tileMatrix[j];
+        delete [] meshes[i].tileMatrix[j];
       }
-      delete meshes[i].tileMatrix;
+      delete [] meshes[i].tileMatrix;
     }
     
-    delete meshes;
+    delete [] meshes;
     meshes = 0;
   }
   

@@ -68,6 +68,7 @@ MaterialMatrix2D::~MaterialMatrix2D() {
   debugf("MaterialMatrix2D::~MaterialMatrix2D start");
   if (bitMatrix != 0) {
     delete [] bitMatrix;
+    bitMatrix = 0;
   }
   debugf("MaterialMatrix2D::~MaterialMatrix2D done");
 }

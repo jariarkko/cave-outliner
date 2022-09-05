@@ -56,7 +56,7 @@ FormMatrix2D::FormMatrix2D(const unsigned int xIndexSizeIn,
 FormMatrix2D::~FormMatrix2D() {
   debugf("FormMatrix2D::~FormMatrix2D start");
   if (data != 0) {
-    free((void*)data);
+    delete [] data;
     data = 0;
   }
   debugf("FormMatrix2D::~FormMatrix2D done");
