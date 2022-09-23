@@ -440,7 +440,8 @@ DepthMap::toImage(const char* filename,
   SvgOptions imageOptions(multiplier,
                           0,0,
                           1,
-                          svgYSwap);
+                          svgYSwap,
+			  OutlinerSvgMaxLinePoints);
   SvgCreator image(filename,
                    xIndexSize,yIndexSize,
                    0,0,

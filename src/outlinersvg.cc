@@ -64,6 +64,8 @@ SvgCreator::SvgCreator(const char* fileNameIn,
   assert(xSize > 0);
   assert(ySize > 0);
   assert(options.linewidth > 0.0);
+  assert(options.maxLinePoints <= OutlinerSvgMaxLinePoints);
+  assert(options.maxLinePoints >= OutlinerSvgMinLinePoints);
   file.open(fileName);
   pixels = 0;
   originalLines = 0;
@@ -202,6 +204,7 @@ SvgCreator::addLine(const unsigned int x1In,
     } else {
       assert(match->nPoints > 0);
       assert(match->nPoints < OutlinerSvgMaxLinePoints);
+      assert(match->nPoints < options.maxLinePoints);
       assert(match->refCount == 2);
       assert(style == match->style);
       deepdebugf("line match for (%u,%u)-(%u,%u) in index %u start %u reverse %u",
@@ -224,10 +227,11 @@ SvgCreator::addLine(const unsigned int x1In,
         lineTableEntryLink(match,newIndex);
         // Check if the newly extended line can be joined with an existing one
         struct OutlinerSvgLine* tojoin = 0;
-        if ((tojoin = matchingLineJoin(match,OutlinerSvgMaxLinePoints-match->nPoints,x1,y1,1)) != 0) {
+        if ((tojoin = matchingLineJoin(match,options.maxLinePoints-match->nPoints,x1,y1,1)) != 0) {
           deepdebugf("going to merge start of two lines of %u and %u points",
                      match->nPoints, tojoin->nPoints);
           assert(match->nPoints + tojoin->nPoints <= OutlinerSvgMaxLinePoints);
+          assert(match->nPoints + tojoin->nPoints <= options.maxLinePoints);
           lineTableJoin(match,tojoin,1,newIndex);
         }
       } else {
@@ -238,10 +242,11 @@ SvgCreator::addLine(const unsigned int x1In,
         lineTableEntryLink(match,newIndex);
         // Check if the newly extended line can be joined with an existing one
         struct OutlinerSvgLine* tojoin = 0;
-        if ((tojoin = matchingLineJoin(match,OutlinerSvgMaxLinePoints-match->nPoints,x2,y2,0)) != 0) {
+        if ((tojoin = matchingLineJoin(match,options.maxLinePoints-match->nPoints,x2,y2,0)) != 0) {
           deepdebugf("going to merge two lines of %u and %u points",
                      match->nPoints, tojoin->nPoints);
           assert(match->nPoints + tojoin->nPoints <= OutlinerSvgMaxLinePoints);
+          assert(match->nPoints + tojoin->nPoints <= options.maxLinePoints);
           lineTableJoin(match,tojoin,0,newIndex);
         }
       }
@@ -973,7 +978,7 @@ SvgCreator::matchingLineAux(const unsigned int x,
                             const bool lookForTailMatch,
                             const unsigned int index) {
   assert((style & outlinersvgstyle_basemask & outlinersvgstyle_illegal) == 0);
-  return(matchingLineAuxAvoid(0,OutlinerSvgMaxLinePoints,x,y,style,lookForTailMatch,
+  return(matchingLineAuxAvoid(0,options.maxLinePoints,x,y,style,lookForTailMatch,
                               index));
 }
 
@@ -987,6 +992,7 @@ SvgCreator::matchingLineAuxAvoid(const struct OutlinerSvgLine* avoid,
                                  const unsigned int index) {
   assert((style & outlinersvgstyle_basemask & outlinersvgstyle_illegal) == 0);
   assert(maxPoints <= OutlinerSvgMaxLinePoints);
+  assert(maxPoints <= options.maxLinePoints);
   struct OutlinerSvgLineList* list = lineTable[index];
   deepdeepdebugf("matchingLineAux loop");
   while (list != 0) {
@@ -999,6 +1005,7 @@ SvgCreator::matchingLineAuxAvoid(const struct OutlinerSvgLine* avoid,
     struct OutlinerSvgLine* line = list->line;
     assert(line->nPoints >= 2);
     assert(line->nPoints <= OutlinerSvgMaxLinePoints);
+    assert(line->nPoints <= options.maxLinePoints);
     assert(line->refCount > 0);
     assert(line->refCount <= 2);
     unsigned int first = 0;
@@ -1043,6 +1050,7 @@ SvgCreator::matchingLineJoin(const struct OutlinerSvgLine* target,
   assert(target != 0);
   assert(fromStart == 0 || fromStart == 1);
   assert(maxPoints <= OutlinerSvgMaxLinePoints);
+  assert(maxPoints <= options.maxLinePoints);
   unsigned int searchIndex = lineTableIndex(x,y);
   assert(searchIndex < lineTableSize);
   struct OutlinerSvgLine* result = 0;
@@ -1076,6 +1084,7 @@ SvgCreator::lineTableJoin(struct OutlinerSvgLine* entry,
   assert(fromStart == 0 || fromStart == 1);
   assert(entryIndex < lineTableSize);
   assert(entry->nPoints + join->nPoints <= OutlinerSvgMaxLinePoints);
+  assert(entry->nPoints + join->nPoints <= options.maxLinePoints);
   assert(entry->style == join->style);
   assert(entry->refCount == 2);
   deepdebugf("join point 1 entry ref count %u", entry->refCount);
@@ -1135,6 +1144,8 @@ SvgCreator::lineTableEntryAdd(struct OutlinerSvgLine* entry) {
   assert(entry != 0);
   assert(entry->nPoints >= 2);
   assert(entry->nPoints <= OutlinerSvgMaxLinePoints);
+  deepdeepdebugf("points %u %u",entry->nPoints,options.maxLinePoints);
+  assert(entry->nPoints <= options.maxLinePoints);
   assert(entry->refCount == 0);
   assert(entry->refCount <= 2);
   unsigned int head;
@@ -1190,6 +1201,7 @@ SvgCreator::lineTableIndexes(const struct OutlinerSvgLine& line,
   deepdebugf("lineTableIndexes");
   assert(line.nPoints >= 2);
   assert(line.nPoints <= OutlinerSvgMaxLinePoints);
+  assert(line.nPoints <= options.maxLinePoints);
   assert(line.refCount <= 2);
   unsigned int x1 = line.points[0].x;
   unsigned int y1 = line.points[0].y;
@@ -1220,7 +1232,7 @@ SvgCreator::lineTableEntryDelete(struct OutlinerSvgLineList*& entry) {
   assert(entry != 0);
   assert(entry->line != 0);
   assert(entry->line->nPoints >= 2);
-  assert(entry->line->nPoints <= OutlinerSvgMaxLinePoints);
+  assert(entry->line->nPoints <= options.maxLinePoints);
   assert(entry->line->refCount > 0);
   struct OutlinerSvgLineList* oldPointer = entry;
   entry = entry->next;
@@ -1332,7 +1344,7 @@ SvgCreator::lineTableOutput(void) {
 void
 SvgCreator::test(void) {
   SvgOptions opt(2,
-                 0,1,1,0);
+                 0,1,1,0,20);
   SvgCreator svg("/tmp/foo.svg",
                  10,10,
                  0,0,

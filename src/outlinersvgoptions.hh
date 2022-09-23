@@ -50,7 +50,8 @@ public:
              const bool smoothIn,
              const bool mergedLinesIn,
              const outlinerreal linewidthIn,
-             const bool ySwapIn);
+             const bool ySwapIn,
+	     const unsigned int maxLinePointsIn);
 
   /// Create the configuration object, as a copy of another object
   SvgOptions(const SvgOptions& input);
@@ -66,7 +67,8 @@ public:
   bool mergedLines;
   outlinerreal linewidth;
   bool ySwap;
-
+  unsigned int maxLinePoints;
+  
 };
 
 #endif // SVGOPTIONS_HH

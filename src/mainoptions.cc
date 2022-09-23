@@ -290,6 +290,16 @@ MainOptions::processCommandLineOption(int& argc,
     config.smooth = 0;
   } else if (strcmp(argv[1],"--svgyreverse") == 0) {
     config.svgYSwap = 0;
+  } else if (strcmp(argv[1],"--maxlinepoints") == 0 && argc > 2) {
+    int num = atoi(argv[2]);
+    if (num < OutlinerSvgMinLinePoints  || num > OutlinerSvgMaxLinePoints) {
+      errf("Maximum line points needs to be between %u and %u,%s given",
+	   OutlinerSvgMinLinePoints, OutlinerSvgMaxLinePoints,
+	   argv[2]);
+      return(0);
+    }
+    config.svgMaxLinePoints = num;
+    argc--;argv++;
   } else if (strcmp(argv[1],"--holethreshold") == 0 && argc > 2) {
     int num = atoi(argv[2]);
     if (num < 0 || num > outlinermaxholethreshold) {

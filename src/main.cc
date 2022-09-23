@@ -239,6 +239,8 @@ main(int argc, char** argv) {
   setSvgOptions(config,svgOptions);
   
   // Process the model
+  assert(svgOptions.maxLinePoints <= OutlinerSvgMaxLinePoints);
+  assert(svgOptions.maxLinePoints >= OutlinerSvgMinLinePoints);
   Processor processor(config.planViewOutputFile,
                       processorOptions,
                       svgOptions,
@@ -344,11 +346,16 @@ setProcessorOptions(const MainConfig& config,
 static void
 setSvgOptions(const MainConfig& config,
               SvgOptions& options) {
+  assert(config.svgMaxLinePoints <= OutlinerSvgMaxLinePoints);
+  assert(config.svgMaxLinePoints >= OutlinerSvgMinLinePoints);
   options.multiplier = config.multiplier;
   options.smooth = config.smooth;
   options.mergedLines = config.mergedLines;
   options.linewidth = config.linewidth;
   options.ySwap = config.svgYSwap;
+  options.maxLinePoints = config.svgMaxLinePoints;
+  assert(options.maxLinePoints <= OutlinerSvgMaxLinePoints);
+  assert(options.maxLinePoints >= OutlinerSvgMinLinePoints);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -89,6 +89,11 @@ Processor::Processor(const char* fileNameIn,
   nCrossSections(nCrossSectionsIn),
   crossSections(crossSectionsIn),
   indexed(indexedIn) {
+
+  assert(svgOptionsIn.maxLinePoints <= OutlinerSvgMaxLinePoints);
+  assert(svgOptionsIn.maxLinePoints >= OutlinerSvgMinLinePoints);
+  assert(svgOptions.maxLinePoints <= OutlinerSvgMaxLinePoints);
+  assert(svgOptions.maxLinePoints >= OutlinerSvgMinLinePoints);
   debugf("algorithm %u=%u", algorithm, algorithmIn);
   if (options.holeThreshold > outlinermaxholethreshold) {
     errf("Cannot compute hole thresholds larger than %u (%u given)",
@@ -1062,6 +1067,8 @@ Processor::createSvg(const char* svgFileName,
         xSizeInt*svgOptions.multiplier, ySizeInt*svgOptions.multiplier);
   
   // Create the object
+  assert(svgOptions.maxLinePoints <= OutlinerSvgMaxLinePoints);
+  assert(svgOptions.maxLinePoints >= OutlinerSvgMinLinePoints);
   SvgCreator* result = new SvgCreator(svgFileName,
                                       xSizeInt,ySizeInt,
                                       xOutputStart,yOutputStart,

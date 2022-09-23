@@ -108,6 +108,7 @@ Options:
     --jagged                  Set the line drawings use hard lines (default).
     --svgyreverse             Reverse Y axis in the SVG (to maintain same Y coordinate
                               direction as in the model).
+    --maxlinemerge            How many line segments may be combined in one SVG line? 
     --holethreshold n         Ignore holes in the model if they are n or less pixels.
     --lineholethreshold n     Ignore holes in cross-section  lines if they are n or less pixels.
     --dustthreshold n         Ignore small amount of material if not connected and less

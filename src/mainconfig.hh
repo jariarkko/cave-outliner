@@ -116,6 +116,9 @@ public:
 
   /// True if we should swap model and SVG y coordinates from 0..n to n...0 (this is the default).
   bool svgYSwap;
+
+  /// How many line points can be combined in one line?
+  unsigned int svgMaxLinePoints;
   
   /// How many tiles should we have in each of the two (x,y)
   /// dimensions? Each tile represents a fast index to the 3D model

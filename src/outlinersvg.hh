@@ -33,8 +33,10 @@
 // Data types /////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-#define OutlinerSvgMaxLineSegments  511
-#define OutlinerSvgMaxLinePoints    (OutlinerSvgMaxLineSegments+1)
+#define OutlinerSvgMaxLineSegments     511
+#define OutlinerSvgMaxLinePoints       (OutlinerSvgMaxLineSegments+1)
+#define OutlinerSvgDefaultLinePoints   OutlinerSvgMaxLinePoints
+#define OutlinerSvgMinLinePoints       10
 
 #define OutlinerRgb                 uint8_t
 

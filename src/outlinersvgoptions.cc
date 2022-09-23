@@ -28,6 +28,7 @@
 #include "outlinerhighprecision.hh"
 #include "outlinerdebug.hh"
 #include "outlinersvgoptions.hh"
+#include "outlinersvg.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Class functions ////////////////////////////////////////////////////////////////////////////
@@ -38,24 +39,31 @@ SvgOptions::SvgOptions()  :
   smooth(0),
   mergedLines(1),
   linewidth(outlinerdefaultlinewidth),
-  ySwap(1) {
+  ySwap(1),
+  maxLinePoints(OutlinerSvgDefaultLinePoints) {
 }
 
 SvgOptions::SvgOptions(const unsigned int multiplierIn,
                        const bool smoothIn,
                        const bool mergedLinesIn,
                        const outlinerreal linewidthIn,
-                       const bool ySwapIn) :
+                       const bool ySwapIn,
+		       const unsigned int maxLinePointsIn) :
   multiplier(multiplierIn),
   smooth(smoothIn),
   mergedLines(mergedLinesIn),
   linewidth(linewidthIn),
-  ySwap(ySwapIn) {
+  ySwap(ySwapIn),
+  maxLinePoints((maxLinePointsIn < OutlinerSvgMinLinePoints ?
+		 OutlinerSvgMinLinePoints :
+		 (maxLinePointsIn > OutlinerSvgMaxLinePoints ? OutlinerSvgMaxLinePoints : maxLinePointsIn))) {
   assert(multiplier >= 1);
   assert(smooth == 0 || smooth == 1);
   assert(mergedLines == 0 || mergedLines == 1);
   assert(linewidth > 0.0);
   assert(ySwap == 0 || ySwap == 1);
+  assert(maxLinePoints >= OutlinerSvgMinLinePoints);
+  assert(maxLinePoints <= OutlinerSvgMaxLinePoints);
 }
 
 SvgOptions::SvgOptions(const SvgOptions& input) :
@@ -63,7 +71,12 @@ SvgOptions::SvgOptions(const SvgOptions& input) :
   smooth(input.smooth),
   mergedLines(input.mergedLines),
   linewidth(input.linewidth),
-  ySwap(input.ySwap) {
+  ySwap(input.ySwap),
+  maxLinePoints(input.maxLinePoints) {
+  assert(input.maxLinePoints >= OutlinerSvgMinLinePoints);
+  assert(input.maxLinePoints <= OutlinerSvgMaxLinePoints);
+  assert(maxLinePoints >= OutlinerSvgMinLinePoints);
+  assert(maxLinePoints <= OutlinerSvgMaxLinePoints);
 }
 
 SvgOptions&
@@ -73,6 +86,11 @@ SvgOptions::operator=(const SvgOptions& input) {
   mergedLines = input.mergedLines;
   linewidth = input.linewidth;
   ySwap = input.ySwap;
+  maxLinePoints = input.maxLinePoints;
+  assert(input.maxLinePoints >= OutlinerSvgMinLinePoints);
+  assert(input.maxLinePoints <= OutlinerSvgMaxLinePoints);
+  assert(maxLinePoints >= OutlinerSvgMinLinePoints);
+  assert(maxLinePoints <= OutlinerSvgMaxLinePoints);
   return(*this);
 }
 

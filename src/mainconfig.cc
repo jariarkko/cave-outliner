@@ -32,6 +32,7 @@
 #include "outlinerprocessor.hh"
 #include "outlinerdebug.hh"
 #include "mainconfig.hh"
+#include "outlinersvg.hh"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // Class functions ////////////////////////////////////////////////////////////////////////////
@@ -58,6 +59,7 @@ MainConfig::MainConfig() :
   smooth(0),
   mergedLines(1),
   svgYSwap(1),
+  svgMaxLinePoints(OutlinerSvgDefaultLinePoints),
   tiles(outlinertiledivision),
   holeThreshold(0),
   lineHoleThreshold(0),
