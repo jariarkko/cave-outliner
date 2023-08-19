@@ -57,25 +57,46 @@ MainTest::~MainTest() {
 
 void
 MainTest::test(void) {
+  
   infof("running tests");
+
+  // Vectors
   OutlinerVector2D::test();
   OutlinerVector3D::test();
+
+  // Lines
   OutlinerLine2D::test();
   OutlinerLine3D::test();
+
+  // Boxes
   OutlinerBox1D::test();
   OutlinerBox2D::test();
   OutlinerBox3D::test();
+
+  // Triangles
   OutlinerTriangle2D::test();
   OutlinerTriangle3D::test();
+
+  // Math
   OutlinerMath::mathTests();
+
+  // Matrices
   MaterialMatrix2D::test();
   MaterialMatrix3D::test();
   FormMatrix2D::test();
+
+  // Depth maps
   DepthMap::test();
+
+  // SVG
   SvgCreator::test();
   SvgReader::test();
   SvgStacker::test();
+
+  // Result composer
   Composer::test(tempFiler);
+
+  // Done
   infof("tests ok");
 }
 
