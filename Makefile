@@ -738,6 +738,16 @@ cave1-composite-test:
 			 test/cave1.stl test/cave1-composite.svg
 	@diff -q test/cave1-composite.svg test/cave1-composite.svg.expected
 
+cave1-composite-article-test:
+	@echo 'Running test case cave1-composite-test...'
+	@./cave-outliner --quiet --label --borderline --smooth --multiplier 1 \
+			 --composite --location "Siuntio, Finland" --coordinates "N 60.161948 E 24.137638" \
+			 --mapdate "June 1, 2022" \
+			 --crosssections x 3 --crosssections y 1 \
+			 --step 0.05 --holethreshold 10 \
+			 test/cave1.stl test/cave1-composite.svg
+	@diff -q test/cave1-composite.svg test/cave1-composite.svg.expected
+
 cave1-composite-multiplier-test:
 	@echo 'Running test case cave1-composite-multiplier-test...'
 	@./cave-outliner --quiet --label --borderline --smooth --multiplier 5 \
@@ -752,6 +762,7 @@ example-tests:	cave1-example-orig-test \
 		cave1-example-form-test \
 		cave1-example-form-long-test \
 		cave1-example-composite-test \
+		cave1-example-article-composite-test \
 		cave1-example-composite-dimension-test
 
 cave1-example-orig-test:
@@ -798,6 +809,21 @@ cave1-example-composite-test:
 		  --crosssections y 1 test/cave1-example-composite-y-cross%.svg \
                   test/cave1.stl test/cave1-example-composite.svg > test/cave1-example-composite.out
 	@diff -q test/cave1-example-composite.svg test/cave1-example-form-long-planview.svg.expected
+
+cave1-example-article-composite-test:
+	@echo 'Running test case cave1-example-article-composite-test...'
+	@./cave-outliner --label --dimensions --borderline \
+		  --composite \
+		  --name "Grottberget" \
+		  --location "Siuntio, Finland" \
+		  --coordinates "N 60.1619 E 24.1376" \
+		  --mapdate "August 17, 2023" \
+		  --crosssectionwidth 3 \
+		  --crosssections x 1 test/cave1-example-article-composite-x-cross%.svg \
+		  --crosssection y 1.6 test/cave1-example-article-composite-y-cross0.svg \
+                  --multiplier 3 --step 0.05 --holethreshold 10 --formanalysis 1 \
+                  test/cave1.stl test/cave1-example-article-composite.svg > test/cave1-example-article-composite.out
+	@diff -q test/cave1-example-article-composite.svg test/cave1-example-article-composite.svg.expected
 
 cave2-form-test:
 	@echo 'Running test case cave2-form-test...'
