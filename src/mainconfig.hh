@@ -117,6 +117,9 @@ public:
   /// True if we should swap model and SVG y coordinates from 0..n to n...0 (this is the default).
   bool svgYSwap;
 
+  /// True if we should employ a white background rectangle behind all images
+  bool svgFill;
+  
   /// How many line points can be combined in one line?
   unsigned int svgMaxLinePoints;
   

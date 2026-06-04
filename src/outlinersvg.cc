@@ -78,7 +78,8 @@ SvgCreator::SvgCreator(const char* fileNameIn,
          xStart, yStart, xFactor, yFactor, options.linewidth);
 
   lineTableInit();
-  preamble(file,xSize,ySize,options,1);
+  debugf("svgcreator fill = %u", options.fill);
+  preamble(file,xSize,ySize,options,options.fill);
 }
 
 SvgCreator::~SvgCreator() {
@@ -885,6 +886,7 @@ SvgCreator::preamble(std::ofstream& outputFile,
 		     const bool setBackground) {
 
   // Debugs
+  debugf("preamble setBackground = %u fill = %u", setBackground, options.fill);
   debugf("preamble");
   
   // Basics for all SVGs
@@ -1344,7 +1346,7 @@ SvgCreator::lineTableOutput(void) {
 void
 SvgCreator::test(void) {
   SvgOptions opt(2,
-                 0,1,1,0,20);
+                 0,1,1,1,0,20);
   SvgCreator svg("/tmp/foo.svg",
                  10,10,
                  0,0,

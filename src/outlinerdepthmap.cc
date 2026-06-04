@@ -425,6 +425,7 @@ void
 DepthMap::toImage(const char* filename,
                   const unsigned int multiplier,
                   const bool svgYSwap,
+		  const bool svgFill,
                   const bool diff,
                   unsigned int step) const {
 
@@ -437,11 +438,14 @@ DepthMap::toImage(const char* filename,
 	rangeMin, rangeMax);
   
   // Allocate an image object
+  debugf("depthmap:toMap fill = %u", svgFill);
   SvgOptions imageOptions(multiplier,
                           0,0,
                           1,
                           svgYSwap,
+			  svgFill,
 			  OutlinerSvgMaxLinePoints);
+  debugf("depthmap:toMap fill = %u", imageOptions.fill);
   SvgCreator image(filename,
                    xIndexSize,yIndexSize,
                    0,0,
@@ -626,9 +630,11 @@ DepthMap::test(void) {
     map3.toImage(depthmaptestfile,
 		 1,
 		 1,
+		 1,
 		 0,
 		 1);
     map3.toImage(depthdiffmaptestfile,
+		 1,
 		 1,
 		 1,
 		 1,

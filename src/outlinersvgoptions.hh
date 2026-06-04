@@ -51,6 +51,7 @@ public:
              const bool mergedLinesIn,
              const outlinerreal linewidthIn,
              const bool ySwapIn,
+	     const bool fill,
 	     const unsigned int maxLinePointsIn);
 
   /// Create the configuration object, as a copy of another object
@@ -67,6 +68,7 @@ public:
   bool mergedLines;
   outlinerreal linewidth;
   bool ySwap;
+  bool fill;
   unsigned int maxLinePoints;
   
 };

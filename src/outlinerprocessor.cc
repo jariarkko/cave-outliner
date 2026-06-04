@@ -90,6 +90,7 @@ Processor::Processor(const char* fileNameIn,
   crossSections(crossSectionsIn),
   indexed(indexedIn) {
 
+  debugf("Processor::Processor fill = %u %u", svgOptionsIn.fill, svgOptions.fill);
   assert(svgOptionsIn.maxLinePoints <= OutlinerSvgMaxLinePoints);
   assert(svgOptionsIn.maxLinePoints >= OutlinerSvgMinLinePoints);
   assert(svgOptions.maxLinePoints <= OutlinerSvgMaxLinePoints);
@@ -210,12 +211,12 @@ Processor::processScene(const aiScene* scene) {
   if (options.floorDepthMap != 0) {
     infof("Producing a floor depth map...");
     const DepthMap& map = formAnalyzer.getFloorDepthMap();
-    map.toImage(options.floorDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,options.formCondense);
+    map.toImage(options.floorDepthMap,svgOptions.multiplier,svgOptions.ySwap,svgOptions.fill,options.floorStyleDiff,options.formCondense);
   }
   if (options.roofDepthMap != 0) {
     infof("Producing a roof depth map...");
     const DepthMap& map = formAnalyzer.getRoofDepthMap();
-    map.toImage(options.roofDepthMap,svgOptions.multiplier,svgOptions.ySwap,options.floorStyleDiff,options.formCondense);
+    map.toImage(options.roofDepthMap,svgOptions.multiplier,svgOptions.ySwap,svgOptions.fill,options.floorStyleDiff,options.formCondense);
   }
   
   // Main result (plan view) is also done, flush the image output
@@ -1069,6 +1070,7 @@ Processor::createSvg(const char* svgFileName,
   // Create the object
   assert(svgOptions.maxLinePoints <= OutlinerSvgMaxLinePoints);
   assert(svgOptions.maxLinePoints >= OutlinerSvgMinLinePoints);
+  debugf("Processor::createImage fill = %u", svgOptions.fill);
   SvgCreator* result = new SvgCreator(svgFileName,
                                       xSizeInt,ySizeInt,
                                       xOutputStart,yOutputStart,

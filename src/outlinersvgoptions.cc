@@ -40,6 +40,7 @@ SvgOptions::SvgOptions()  :
   mergedLines(1),
   linewidth(outlinerdefaultlinewidth),
   ySwap(1),
+  fill(1),
   maxLinePoints(OutlinerSvgDefaultLinePoints) {
 }
 
@@ -48,12 +49,14 @@ SvgOptions::SvgOptions(const unsigned int multiplierIn,
                        const bool mergedLinesIn,
                        const outlinerreal linewidthIn,
                        const bool ySwapIn,
+		       const bool fillIn,
 		       const unsigned int maxLinePointsIn) :
   multiplier(multiplierIn),
   smooth(smoothIn),
   mergedLines(mergedLinesIn),
   linewidth(linewidthIn),
   ySwap(ySwapIn),
+  fill(fillIn),
   maxLinePoints((maxLinePointsIn < OutlinerSvgMinLinePoints ?
 		 OutlinerSvgMinLinePoints :
 		 (maxLinePointsIn > OutlinerSvgMaxLinePoints ? OutlinerSvgMaxLinePoints : maxLinePointsIn))) {
@@ -62,6 +65,7 @@ SvgOptions::SvgOptions(const unsigned int multiplierIn,
   assert(mergedLines == 0 || mergedLines == 1);
   assert(linewidth > 0.0);
   assert(ySwap == 0 || ySwap == 1);
+  assert(fill == 0 || fill == 1);
   assert(maxLinePoints >= OutlinerSvgMinLinePoints);
   assert(maxLinePoints <= OutlinerSvgMaxLinePoints);
 }
@@ -72,6 +76,7 @@ SvgOptions::SvgOptions(const SvgOptions& input) :
   mergedLines(input.mergedLines),
   linewidth(input.linewidth),
   ySwap(input.ySwap),
+  fill(input.fill),
   maxLinePoints(input.maxLinePoints) {
   assert(input.maxLinePoints >= OutlinerSvgMinLinePoints);
   assert(input.maxLinePoints <= OutlinerSvgMaxLinePoints);

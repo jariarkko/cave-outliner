@@ -59,6 +59,7 @@ MainConfig::MainConfig() :
   smooth(0),
   mergedLines(1),
   svgYSwap(1),
+  svgFill(1),
   svgMaxLinePoints(OutlinerSvgDefaultLinePoints),
   tiles(outlinertiledivision),
   holeThreshold(0),

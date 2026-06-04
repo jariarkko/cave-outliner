@@ -98,6 +98,7 @@ public:
   void toImage(const char* filename,
                const unsigned int multiplier,
                const bool svgYSwap,
+	       const bool svgFill,
                const bool diff,
                unsigned int step) const;
   

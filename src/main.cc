@@ -353,6 +353,7 @@ setSvgOptions(const MainConfig& config,
   options.mergedLines = config.mergedLines;
   options.linewidth = config.linewidth;
   options.ySwap = config.svgYSwap;
+  options.fill = config.svgFill;
   options.maxLinePoints = config.svgMaxLinePoints;
   assert(options.maxLinePoints <= OutlinerSvgMaxLinePoints);
   assert(options.maxLinePoints >= OutlinerSvgMinLinePoints);

@@ -120,6 +120,8 @@ MainOptions::processCommandLineOption(int& argc,
     config.algorithm = alg_borderline;
   } else if (strcmp(argv[1],"--borderactual") == 0) {
     config.algorithm = alg_borderactual;
+  } else if (strcmp(argv[1],"--nofill") == 0) {
+    config.svgFill = 0;
   } else if (strcmp(argv[1],"--crosssections") == 0 && argc > 3) {
     if (config.nCrossSections == outlinermaxcrosssections) {
       errf("Maximum number of cross sections (%u) reached", outlinermaxcrosssections);
