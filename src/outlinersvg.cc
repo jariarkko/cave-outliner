@@ -566,6 +566,8 @@ SvgCreator::coordinateNormalization(const outlinerreal x,
                                     const outlinerreal y,
                                     unsigned int& xInt,
                                     unsigned int& yInt) const {
+  // infof("x %f xstart %f", x, xStart);
+  // infof("y %f ystart %f", y, yStart);
   assert(x >= xStart);
   assert(y >= yStart);
   outlinerreal xNormalized = (x - xStart) * xFactor;
